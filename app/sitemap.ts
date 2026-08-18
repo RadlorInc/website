@@ -1,11 +1,11 @@
 import type { MetadataRoute } from 'next'
-import { NAV, SITE_URL } from '@/site'
+import { PAGES, SITE_URL } from '@/site'
 import { posts } from '@/content/posts'
 
-/** Built from `NAV` and `posts`, so a new page cannot be added without appearing here. */
+/** Built from `PAGES` and `posts`, so a new page cannot be added without appearing here. */
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
-    ...NAV.map(n => ({
+    ...PAGES.map(n => ({
       url: `${SITE_URL}${n.href === '/' ? '' : n.href}`,
       changeFrequency: 'monthly' as const,
       priority: n.href === '/' ? 1 : 0.8,

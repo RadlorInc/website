@@ -1,4 +1,4 @@
-import { APP_NAME, APP_URL, COMPANY, SITE_URL, SUPPORT_EMAIL, TAGLINE } from '@/site'
+import { APP_NAME, APP_URL, COMPANY, PAGES, SITE_URL, SUPPORT_EMAIL, TAGLINE } from '@/site'
 import { posts } from '@/content/posts'
 
 /**
@@ -8,6 +8,20 @@ import { posts } from '@/content/posts'
  * static one drifts the first time a page is renamed and nothing tells you.
  */
 export const dynamic = 'force-static'
+
+/** One line per page, saying what a reader would find there. Keyed by href so a new page in
+ *  `PAGES` fails the type-check here until it has one — the list cannot go quietly stale. */
+const BLURB: Record<(typeof PAGES)[number]['href'], string> = {
+  '/': `what ${COMPANY} builds and why`,
+  '/adaptivelearn': `how ${APP_NAME} works, what is covered at each age, and parent FAQs`,
+  '/pricing': `what ${APP_NAME} costs: free during early access, with no card and no trial timer`,
+  '/for-schools': 'using it with a class: how a teacher sets one up and what they see',
+  '/writing': 'notes on building adaptive learning software',
+  '/about': `why ${COMPANY} started and how we work`,
+  '/contact': 'early access, schools, support, press',
+  '/data-and-safety': "what we store about a child, what the camera does, and what we do not collect",
+  '/privacy': 'the privacy policy for this website, which collects nothing',
+}
 
 export function GET() {
   const text = `# ${COMPANY}
@@ -24,15 +38,7 @@ entirely on the child's own device and no video frame or hand position is ever u
 chapter can also be answered by tapping.
 
 ## Pages
-${[
-  ['/', 'Home — what we build and why'],
-  ['/adaptivelearn', `${APP_NAME} — how it works, what is covered by age, and parent FAQs`],
-  ['/about', `About ${COMPANY} — why we started and how we work`],
-  ['/writing', 'Writing — notes on building adaptive learning software'],
-  ['/contact', 'Contact — early access, schools, support, press'],
-]
-  .map(([href, desc]) => `- [${desc}](${SITE_URL}${href === '/' ? '' : href})`)
-  .join('\n')}
+${PAGES.map(p => `- [${p.label} — ${BLURB[p.href]}](${SITE_URL}${p.href === '/' ? '' : p.href})`).join('\n')}
 
 ## Writing
 ${posts.map(p => `- [${p.title}](${SITE_URL}/writing/${p.slug}): ${p.description}`).join('\n')}

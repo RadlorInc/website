@@ -21,14 +21,28 @@ export const SUPPORT_EMAIL = 'support@radlor.com'
 export const APP_URL = 'https://adaptivelearn.radlor.com'
 export const APP_NAME = 'AdaptiveLearn'
 
-/** Header + footer navigation, and the sitemap. One list so they cannot drift. */
-export const NAV = [
-  { href: '/', label: 'Home' },
-  { href: '/adaptivelearn', label: 'AdaptiveLearn' },
-  { href: '/about', label: 'About' },
-  { href: '/writing', label: 'Writing' },
-  { href: '/contact', label: 'Contact' },
+/**
+ * Every page on the site, in one list — the header, the footer and the sitemap all read it, so a
+ * page cannot exist in one and be missing from another.
+ *
+ * `where` is only about the HEADER: at nine pages the header can no longer hold them all, and the
+ * ones it drops are the ones a visitor reaches from a link in the text rather than by browsing.
+ * The footer carries everything.
+ */
+export const PAGES = [
+  { href: '/', label: 'Home', where: 'footer' },
+  { href: '/adaptivelearn', label: 'AdaptiveLearn', where: 'both' },
+  { href: '/pricing', label: 'Pricing', where: 'both' },
+  { href: '/for-schools', label: 'Schools', where: 'both' },
+  { href: '/writing', label: 'Writing', where: 'both' },
+  { href: '/about', label: 'About', where: 'both' },
+  { href: '/contact', label: 'Contact', where: 'footer' },
+  { href: '/data-and-safety', label: 'Data & safety', where: 'footer' },
+  { href: '/privacy', label: 'Privacy', where: 'footer' },
 ] as const
+
+export const HEADER = PAGES.filter(p => p.where === 'both')
+export const FOOTER = PAGES.filter(p => p.href !== '/')
 
 /**
  * ⚠️ FILL THESE IN — they are the only strings on the site I could not derive from the product.

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Inter, Instrument_Serif } from 'next/font/google'
 import './globals.css'
-import { APP_NAME, APP_URL, COMPANY, FOUNDED_YEAR, LOCATION, NAV, SITE_URL, SOCIAL, SUPPORT_EMAIL, TAGLINE } from '@/site'
+import { APP_NAME, APP_URL, COMPANY, FOOTER, FOUNDED_YEAR, HEADER, LOCATION, SITE_URL, SOCIAL, SUPPORT_EMAIL, TAGLINE } from '@/site'
 
 const sans = Inter({ variable: '--font-sans-src', subsets: ['latin'] })
 const display = Instrument_Serif({ variable: '--font-display-src', subsets: ['latin'], weight: '400' })
@@ -77,8 +77,8 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
             {/* No hamburger. On a narrow frame the links drop out of the header and the footer — which
                 carries the same list — becomes the navigation. One CTA is what a phone has room for. */}
             <nav className="flex items-center gap-5 text-sm">
-              <div className="hidden sm:flex items-center gap-5">
-                {NAV.slice(1).map(n => (
+              <div className="hidden md:flex items-center gap-5">
+                {HEADER.map(n => (
                   <Link key={n.href} href={n.href} className="text-muted hover:text-foreground transition-colors">
                     {n.label}
                   </Link>
@@ -102,7 +102,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
               © {FOUNDED_YEAR} {COMPANY}. {TAGLINE}
             </p>
             <div className="flex flex-wrap gap-x-5 gap-y-2">
-              {NAV.slice(1).map(n => (
+              {FOOTER.map(n => (
                 <Link key={n.href} href={n.href} className="hover:text-foreground transition-colors">
                   {n.label}
                 </Link>

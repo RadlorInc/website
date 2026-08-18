@@ -12,13 +12,22 @@ This repo is **radlor.com**: the marketing and company site for Radlor. It is NO
 | **The product** | `adaptivelearn.radlor.com` — a **separate repo and a separate Vercel project**, at `../milo-story-mode` on this machine (GitHub `RadlorMain/learn`). Deliberately separate: that repo carries ~1,100 tests, an AR/camera stack and a deploy pipeline that has broken silently more than once. A marketing edit must never be able to take the app down, and vice versa. |
 | **Every shared fact** | [`site.ts`](site.ts) — origin, support address, product URL, nav, company facts. **Put a string there before you put it in a page.** The product repo learned this the hard way: its support address lived as a literal in four files, so a brand change meant four edits and hoping none was missed. |
 | **Facts I could not derive** | [`docs/brand-facts.md`](docs/brand-facts.md) — the `TODO`s in `site.ts` and what they feed. |
+| **What the site claims** | `/privacy` and `/data-and-safety` make **checkable** claims (no third-party requests; the camera never uploads). Both files carry a header comment saying what was measured. Break one and fix the page in the same commit. |
 | **Session state** | [`handoff.md`](handoff.md) — read it first, update it when the session wraps. |
 
 ## The rules this site is built on
 
-**One source per fact.** `NAV` drives the header, the footer AND the sitemap, so a new page cannot
-exist without appearing in all three. `posts.ts` drives the writing index, the sitemap, `llms.txt`
-and the JSON-LD. If you add a page, add it to `NAV` — don't hand-write a `<Link>` and a sitemap row.
+**One source per fact.** `PAGES` in `site.ts` drives the header, the footer, the sitemap AND
+`llms.txt`, so a new page cannot exist in one and be missing from another. `posts.ts` does the same
+for the writing index, the sitemap, `llms.txt` and the JSON-LD.
+
+To add a page: add a row to `PAGES` (`where: 'both'` puts it in the header, `'footer'` keeps it out)
+and a line to `BLURB` in `app/llms.txt/route.ts` — which is typed against `PAGES`, so the build
+**fails** until you write one. Don't hand-write a `<Link>` and a sitemap row.
+
+**Every page needs exactly one `<h1>`, a `canonical`, and a description whose FIRST SENTENCE stands
+alone under ~155 characters.** Search results truncate around there. Longer is fine — the rest still
+feeds answer engines — as long as what survives the cut is a complete thought.
 
 **Say true things.** No invented testimonials, no invented numbers, no "trusted by thousands". The
 product is in early access with a handful of families and the copy says so. A claim that a parent

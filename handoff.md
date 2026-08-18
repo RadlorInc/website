@@ -9,17 +9,26 @@
 **Built, unshipped.** Nothing is deployed and there is no GitHub repo yet — deliberately. The site
 runs locally and is complete enough to look at.
 
-`npx tsc --noEmit` clean · `npm run build` clean · 13 routes prerendered static · 0 console errors ·
-no horizontal overflow at 360 / 375 / 768 / 1280.
+`npx tsc --noEmit` clean · `npm run build` clean · **17 routes** prerendered static · 0 console
+errors · no horizontal overflow at 360 / 375 / 768 / 1024 / 1280 · all 10 pages have exactly one
+`<h1>`, a unique canonical, an `og:image` and the JSON-LD they should.
 
 ## What exists
 
+**Ten pages.** `PAGES` in `site.ts` is the list; header shows five, footer shows all.
+
 ```
-site.ts                    every shared fact (origin, support email, product URL, NAV, company TODOs)
+site.ts                    every shared fact + PAGES (the one page list) + company TODOs
 app/layout.tsx             metadata + Organization/WebSite JSON-LD + header + footer
 app/page.tsx               home — what we believe, the product card, latest writing
-app/adaptivelearn/         the product page: how a chapter works, answering with hands,
-                           the six age bands, 6 parent FAQs + SoftwareApplication & FAQPage JSON-LD
+app/adaptivelearn/         how a chapter works, answering with hands, the six age bands,
+                           6 parent FAQs · SoftwareApplication + FAQPage
+app/pricing/               free during early access, what free includes, what happens
+                           when it stops · Product + Offer
+app/for-schools/           setting up a class, good-at / not-built-for, 5 FAQs · FAQPage
+app/data-and-safety/       the camera, what we store, who else sees it, deleting it,
+                           and what we have NOT finished
+app/privacy/               this website only: no cookies, no analytics, no third parties
 app/about/  app/contact/
 app/writing/               index + [slug], markdown via `marked`, Article JSON-LD
 app/robots.ts  app/sitemap.ts  app/llms.txt/route.ts  app/opengraph-image.tsx
@@ -38,6 +47,15 @@ content/posts.ts + content/posts/*.md    one seed post
   until there are two.
 - **`/writing`, not `/blog`.** Same content, less of a promise about frequency.
 - **One dependency added: `marked`.** No CMS, no MDX, no component library, no analytics.
+- **Nine pages, then stop.** `/features`, `/faq`, `/team` and comparison pages were considered and
+  refused: they would compete with pages that already exist. Everything after this should be an
+  ARTICLE, not a marketing page — GEO comes from articles.
+- **`/privacy` and `/data-and-safety` are separate on purpose.** One is about this website (which
+  collects nothing), one is about the product (which necessarily does). Merging them buries the
+  interesting half.
+- **No compliance badge anywhere.** `/data-and-safety` describes what we do and has a section
+  headed *what we have not finished*, which states plainly that email-and-password signup is not a
+  formal age-verification method. ⚠️ Do not "improve" this into a claim of COPPA compliance.
 
 ## Next steps, in order
 
