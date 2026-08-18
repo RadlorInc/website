@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fbfaf7;
+  --surface: #ffffff;
+  --foreground: #191713;
+  --muted: #5f5a51;
+  --line: #e5e0d6;
+  --accent: #b4491f;
+  --accent-soft: #f3e4dc;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #131211;
+    --surface: #1b1a18;
+    --foreground: #f0ece5;
+    --muted: #a49d92;
+    --line: #302d29;
+    --accent: #e8825a;
+    --accent-soft: #2b201b;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --font-sans: var(--font-sans-src);
+  --font-display: var(--font-display-src);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans-src), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Prose for the writing pages. Small enough to keep here rather than pull in a plugin. */
+.prose { max-width: 68ch; }
+.prose h2 { font-family: var(--font-display-src), Georgia, serif; font-size: 1.6rem; line-height: 1.25; margin: 2.4rem 0 0.8rem; }
+.prose h3 { font-size: 1.15rem; font-weight: 600; margin: 1.8rem 0 0.6rem; }
+.prose p, .prose ul, .prose ol { margin: 1rem 0; line-height: 1.75; color: var(--muted); }
+.prose ul { list-style: disc; padding-left: 1.3rem; }
+.prose ol { list-style: decimal; padding-left: 1.3rem; }
+.prose li { margin: 0.35rem 0; }
+.prose strong { color: var(--foreground); font-weight: 600; }
+.prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
