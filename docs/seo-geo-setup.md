@@ -9,7 +9,7 @@ Sections A–B are code. C–F need a person with a login or a keyboard.
 
 ---
 
-## ⚠️ 0. THE BLOCKER: THE PRODUCT HAS TWO NAMES
+## ✅ 0. SETTLED — THE PRODUCT IS `AdaptiveLearn`
 
 | Where | Calls it |
 |---|---|
@@ -17,18 +17,18 @@ Sections A–B are code. C–F need a person with a login or a keyboard.
 | The product's own `<title>`, `applicationName`, manifest, Apple web-app title | **Milo** |
 | The URL both live under | `adaptivelearn.radlor.com` |
 
-This was my assumption from the subdomain and it may be the wrong one. **Nothing else on this list
-is worth doing until it is settled**, because every signal below — the sitemap, the schema, the
-articles, the Search Console properties, the `sameAs` links — attaches the authority to a *name*.
-Two names means two half-piles, and an answer engine asked "what is Milo" and "what is AdaptiveLearn"
-gets two different half-answers with no way to tell they are one product.
+**Resolved 2026-08-19 (founder's call): the product is AdaptiveLearn, and Milo is the character.**
+The app was renamed in `../milo-story-mode` the same day — 17 naming strings across the metadata,
+the manifest, the landing wordmark, the sign-in headline and the legal definitions. `tsc` 0,
+1122/1122 tests, build clean, service worker v120 → v121. **Not pushed.**
 
-Pick one. Then whichever loses becomes a sentence on this site — *"AdaptiveLearn was previously
-called Milo"* — so the old name still resolves to the right thing rather than to nothing.
+⚠️ **The character was deliberately left alone** — ~1,300 occurrences of "Milo" in that repo and
+almost all of them are the pony speaking. It is the Duo/Duolingo split. The full rule is in that
+repo's `handoff.md`; do not "fix" it toward consistency in either direction.
 
-⚠️ Renaming inside the product is not a find-and-replace. `applicationName`, `manifest.json`, the
-Apple web-app title and the icon set are four separate places, and a changed manifest `name` prompts
-an install refresh on every device that has it on a home screen.
+▶ **What is still owed on this item:** one sentence on this site saying the product used to be
+called Milo, so the old name resolves to the right thing rather than to nothing. Worth adding to
+`/adaptivelearn` once anything with the old name has been indexed.
 
 ---
 
@@ -51,12 +51,12 @@ an install refresh on every device that has it on a home screen.
 
 | | What | Blocked on |
 |---|---|---|
-| B1 | ⚠️ **Replace the favicon.** `app/favicon.ico` is still create-next-app's Next.js logo, and no `icons` metadata is declared. It is currently shipping as Radlor's brand mark in every browser tab and bookmark. | A logo |
+| ~~B1~~ ✅ | ~~**Replace the favicon.**~~ Done — `app/icon.tsx` + `app/apple-icon.tsx` generate a wordmark and the Next.js logo is deleted. ⚠️ Still a placeholder: `app/favicon.ico` is still create-next-app's Next.js logo, and no `icons` metadata is declared. It is currently shipping as Radlor's brand mark in every browser tab and bookmark. | A logo |
 | B2 | **`sameAs` in the `Organization` schema.** The single strongest GEO signal available — it is what ties the string "Radlor" to profiles that corroborate it. Currently an empty array. | C4 |
 | B3 | **`Person` schema for the founder** on `/about`, plus a named byline on posts. Answer engines resolve people as entities the same way they resolve companies. | A decision to put your name on it |
-| B4 | **`BreadcrumbList` on posts** (`Home → Writing → post`). Small; shows as a breadcrumb trail in results instead of a raw URL. | Nothing — say the word |
-| B5 | **Per-post OG images.** Every post currently shares one generic card. | Nothing — say the word |
-| B6 | **Make the AI-crawler policy explicit in `robots.ts`**, with a comment. It already allows them via `*`; writing it down stops someone "hardening" it later. See D3. | Nothing — say the word |
+| ~~B4~~ ✅ | ~~**`BreadcrumbList` on posts**~~ Done. (`Home → Writing → post`). Small; shows as a breadcrumb trail in results instead of a raw URL. | Nothing — say the word |
+| ~~B5~~ ✅ | ~~**Per-post OG images.**~~ Done — `app/writing/[slug]/opengraph-image.tsx`, pre-rendered per post. Every post currently shares one generic card. | Nothing — say the word |
+| ~~B6~~ ✅ | ~~**Make the AI-crawler policy explicit in `robots.ts`**~~ Done — every agent named in a comment, with why blocking them would be the wrong trade., with a comment. It already allows them via `*`; writing it down stops someone "hardening" it later. See D3. | Nothing — say the word |
 
 ## C. Accounts and dashboards — only you can do these
 
