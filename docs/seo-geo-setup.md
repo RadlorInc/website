@@ -139,13 +139,63 @@ work is and it is the only item on this list that has no shortcut.
    number of independent sources. Product Hunt, an education directory, a podcast, one guest post.
    One good third-party mention outweighs five more of your own pages.
 
+## F0. THE BASELINE, as measured on 2026-08-19
+
+Captured hours after `radlor.com` first went live and was submitted to Search Console, Bing and
+IndexNow. **This is the "before" picture. Re-run the same queries monthly and compare.**
+
+### Google — query `radlor`
+
+> **AI Overview:** *"It looks like you might mean a **radler** (a mixed beer drink) or made a typo.
+> If you meant the refreshing drink, a radler is a mix of beer and fruit soda or lemonade."*
+>
+> **Knowledge panel:** `RADLOR LIMITED people — Companies House, GOV.UK`
+
+⚠️ **Google's entity for "radlor" is currently a dissolved British company, and its AI thinks the
+word is a misspelling of a beer.** Not a competitor, not a disaster — just the honest starting point.
+
+**Organic results:** `radlor.com/about` and `radlor.com/data-and-safety` were both indexed **within
+hours** of submission, which is fast. ⚠️ The `/about` snippet still read *"adaptive maths for ages"* —
+Google crawled before the US-spelling fix deployed, so the cached copy was one deploy stale.
+
+### The name is clear, but not empty
+
+| what exists on the name "Radlor" | |
+|---|---|
+| `RADLOR LIMITED`, company no. **16329916** | **DISSOLVED 23 June 2026.** A Companies House record with no business behind it — but structured, authoritative, government data, which is exactly why Google reaches for it over a site that is hours old |
+| `instagram.com/radlor` | taken, unrelated |
+| *Peluquería RadloR*, Madrid | a hair salon |
+
+No live company holds the name. **The competition is not a rival — it is a stale record with better
+provenance than us**, and the fix is provenance of our own: `sameAs`, content, third-party mentions.
+
+⚠️ **This is what makes `sameAs` (§B2) the highest-priority code item, not a nicety.** Right now
+nothing corroborates that Radlor is a real, live company. One LinkedIn company page would.
+
+### Still to capture — nobody has asked these yet
+
+Run them and paste the answers here. They are the GEO half, and Google's AI Overview is only one of
+four voices:
+
+```
+ChatGPT      "what is Radlor"  ·  "what is AdaptiveLearn"  ·  "best adaptive math app for a 7 year old"
+Claude       same three
+Perplexity   same three
+Copilot      same three   ← reads Bing's index, so this one should move first
+```
+
+⚠️ Expect all of them to say they have never heard of it. **Record that anyway** — "never heard of
+it" on a dated line is a measurement; a vague memory of it is not.
+
+---
+
 ## F. Measure — do this BEFORE anything above, so there is a baseline
 
-1. **Ask the engines about yourself today and save the answers.** ChatGPT, Claude, Perplexity, Google
-   AI Overviews: *"what is Radlor"*, *"what is AdaptiveLearn"* (and *"Milo maths app"*), *"best
-   adaptive maths app for a 7 year old"*. Right now the answers will be nothing or wrong. **That is
-   the measurement** — without it, in three months there is no way to tell whether any of this
-   worked. Re-run monthly, same questions.
+1. ✅ **BASELINE RECORDED — see §F0 below.** Re-run those exact queries monthly.
+
+   The point of a baseline is that "did this work?" is otherwise unanswerable. An answer engine that
+   has never heard of you produces a confident wrong answer, not an empty one, and in three months
+   nobody remembers what the wrong answer used to be.
 2. **Validate the structured data** once deployed: Google's Rich Results Test and validator.schema.org
    on `/`, `/adaptivelearn`, `/pricing`, `/for-schools` and one post.
 3. **Search Console, weekly for the first month**: coverage (is every page indexed), then queries.
