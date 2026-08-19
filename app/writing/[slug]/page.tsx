@@ -21,10 +21,8 @@ export async function generateMetadata({ params }: PageProps<'/writing/[slug]'>)
       description: post.description,
       publishedTime: post.date,
       modifiedTime: post.updated ?? post.date,
-      // Overriding `openGraph` drops the root's file-based card, so name it back.
-      // ponytail: one shared card for every post; give posts their own
-      // `app/writing/[slug]/opengraph-image.tsx` when one is actually being shared.
-      images: ['/opengraph-image'],
+      // Overriding `openGraph` drops the root's file-based card; `opengraph-image.tsx` in this
+      // same folder supplies the per-post one, and Next attaches it once it is not overridden here.
     },
   }
 }
@@ -55,6 +53,7 @@ export default async function Article({ params }: PageProps<'/writing/[slug]'>) 
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             '@context': 'https://schema.org',
+            '@graph': [{
             '@type': 'Article',
             headline: post.title,
             description: post.description,
@@ -63,6 +62,15 @@ export default async function Article({ params }: PageProps<'/writing/[slug]'>) 
             mainEntityOfPage: `${SITE_URL}/writing/${post.slug}`,
             author: { '@type': 'Organization', name: COMPANY, url: SITE_URL },
             publisher: { '@id': `${SITE_URL}/#organization` },
+            }, {
+              // So a result shows `radlor.com › Writing › …` instead of a raw URL.
+              '@type': 'BreadcrumbList',
+              itemListElement: [
+                { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+                { '@type': 'ListItem', position: 2, name: 'Writing', item: `${SITE_URL}/writing` },
+                { '@type': 'ListItem', position: 3, name: post.title },
+              ],
+            }],
           }),
         }}
       />
