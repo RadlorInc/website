@@ -2,7 +2,7 @@ Every learning app has to answer one question before it writes a line of code: *
 see when they get something wrong?**
 
 The common answer is a score, a level and a streak. It is easy to build and it feels motivating in a
-demo. In practice it turns a maths lesson into a verdict, and a child who has decided they are "a
+demo. In practice it turns a math lesson into a verdict, and a child who has decided they are "a
 level 2" stops trying to be anything else.
 
 We took the other road. In AdaptiveLearn the difficulty moves constantly and is never shown.

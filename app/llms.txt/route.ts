@@ -29,7 +29,7 @@ export function GET() {
 > ${TAGLINE}
 
 ${COMPANY} is a software company building learning tools that adapt to the person using them.
-Our first product is ${APP_NAME}: adaptive maths for ages 3 to 18, available at ${APP_URL}.
+Our first product is ${APP_NAME}: adaptive math for ages 3 to 18, available at ${APP_URL}.
 
 ${APP_NAME} places a child with a short check rather than assuming their school year, then teaches
 through story chapters whose difficulty moves question by question and is never shown on screen.

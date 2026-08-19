@@ -95,7 +95,7 @@ export default function Pricing() {
             offers: {
               '@type': 'Offer',
               price: '0',
-              priceCurrency: 'INR',
+              priceCurrency: 'USD',
               availability: 'https://schema.org/LimitedAvailability',
               description: `Free for all users during ${COMPANY}'s early access period.`,
               url: APP_URL,

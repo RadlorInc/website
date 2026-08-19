@@ -17,7 +17,7 @@ export default function Home() {
         <p className="mt-6 text-lg text-muted max-w-2xl leading-relaxed">
           Most educational apps give every child the same questions in the same order. We build the other kind:
           software that watches how a child answers and changes the next question because of it. Our first
-          product, <strong className="text-foreground font-medium">{APP_NAME}</strong>, teaches maths to ages 3–18.
+          product, <strong className="text-foreground font-medium">{APP_NAME}</strong>, teaches math to ages 3–18.
         </p>
         <div className="mt-9 flex flex-wrap gap-3">
           <a
@@ -44,7 +44,7 @@ export default function Home() {
               p: 'A child should never be shown a level, a rank or a red cross. The software moves the difficulty; the child just keeps playing. Getting something wrong is answered warmly and then taught again.',
             },
             {
-              h: 'The maths has to be done, not guessed',
+              h: 'The math has to be done, not guessed',
               p: 'A question with two options is a coin flip. Every answer surface is built so a child who does not have the skill cannot reach the right answer by elimination — they have to actually work it out.',
             },
             {
@@ -71,7 +71,7 @@ export default function Home() {
             <span className="text-xs uppercase tracking-widest text-accent">Live</span>
           </div>
           <p className="mt-3 text-muted max-w-2xl leading-relaxed">
-            Adaptive maths for ages 3–18. A placement check finds where a child actually is, then story chapters
+            Adaptive math for ages 3–18. A placement check finds where a child actually is, then story chapters
             teach from there — with the difficulty moving question by question. Younger bands answer by
             <em> holding up fingers to the camera</em>; older bands work on a chalkboard.
           </p>

@@ -41,7 +41,7 @@ export default function ForSchools() {
           Thirty children, thirty different questions.
         </h1>
         <p className="mt-6 text-lg text-muted max-w-2xl leading-relaxed">
-          The hard part of teaching maths to a class is that they are not in the same place, and one
+          The hard part of teaching math to a class is that they are not in the same place, and one
           worksheet cannot be in two places at once. {APP_NAME} gives each child the question they are
           actually ready for, and gives you one screen that says where each of them is.
         </p>
@@ -79,8 +79,8 @@ export default function ForSchools() {
             <ul className="mt-4 space-y-3 text-muted leading-relaxed">
               <li>— Independent practice where every child is on the right question.</li>
               <li>— Finding the child who is quietly two years behind and has learned to hide it.</li>
-              <li>— The bit before the maths: what a fraction, an angle or a decimal actually is.</li>
-              <li>— Children who have decided they are bad at maths. Nothing on screen ever tells them so.</li>
+              <li>— The bit before the math: what a fraction, an angle or a decimal actually is.</li>
+              <li>— Children who have decided they are bad at math. Nothing on screen ever tells them so.</li>
             </ul>
           </div>
           <div>

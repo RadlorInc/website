@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import { APP_ID, APP_NAME, APP_URL, COMPANY, SITE_URL } from '@/site'
 
 export const metadata: Metadata = {
-  title: `${APP_NAME} — adaptive maths for ages 3 to 18`,
+  title: `${APP_NAME} — adaptive math for ages 3 to 18`,
   description:
-    'AdaptiveLearn places a child with a short check, then teaches maths through story chapters whose difficulty moves question by question. Younger bands answer by holding fingers up to the camera; hand tracking runs entirely on the device.',
+    'AdaptiveLearn places a child with a short check, then teaches math through story chapters whose difficulty moves question by question. Younger bands answer by holding fingers up to the camera; hand tracking runs entirely on the device.',
   alternates: { canonical: '/adaptivelearn' },
 }
 
@@ -14,13 +14,13 @@ const BANDS = [
   { age: '9–11', world: 'Camera chapters', what: 'Decimals, factors and multiples, comparing fractions, unit conversion, angles and symmetry, area and perimeter, data and graphs.' },
   { age: '12–14', world: 'Field lab', what: 'Ratio and proportion, negative numbers, linear equations, coordinate geometry, probability, statistics.' },
   { age: '15–16', world: 'Design studio', what: 'Algebra I and geometry — quadratics, functions, similarity, trigonometry, proof.' },
-  { age: '17–18', world: 'Maths studio', what: 'Algebra II, pre-calculus, statistics and an introduction to calculus.' },
+  { age: '17–18', world: 'Math studio', what: 'Algebra II, pre-calculus, statistics and an introduction to calculus.' },
 ]
 
 const FAQ = [
   {
     q: 'What age is AdaptiveLearn for?',
-    a: 'Ages 3 to 18. The content is organised into six bands, and each band looks and works differently — a five-year-old gets a narrated story world with drawn animation, while a sixteen-year-old gets a design studio with a working chalkboard.',
+    a: 'Ages 3 to 18. The content is organized into six bands, and each band looks and works differently — a five-year-old gets a narrated story world with drawn animation, while a sixteen-year-old gets a design studio with a working chalkboard.',
   },
   {
     q: 'How does it know what to teach my child?',
@@ -63,11 +63,11 @@ export default function AdaptiveLearn() {
       <section className="mx-auto max-w-5xl px-6 pt-20 pb-14">
         <p className="text-sm uppercase tracking-[0.18em] text-accent font-medium">A {COMPANY} product</p>
         <h1 className="font-display text-5xl sm:text-6xl leading-[1.05] mt-4 max-w-3xl">
-          {APP_NAME}: maths that changes as your child answers.
+          {APP_NAME}: math that changes as your child answers.
         </h1>
         <p className="mt-6 text-lg text-muted max-w-2xl leading-relaxed">
           A short check finds where your child actually is. From there, every chapter is a small world with
-          characters, a job to do, and a question that can only be answered by doing the maths — not by
+          characters, a job to do, and a question that can only be answered by doing the math — not by
           picking the likelier of two buttons.
         </p>
         <a
@@ -101,7 +101,7 @@ export default function AdaptiveLearn() {
         <p className="mt-5 text-muted max-w-2xl leading-relaxed">
           In the 9–11 band a question is often answered by showing rather than tapping: hold up a number of
           fingers, tilt a hand to set an angle, hold two hands apart to say how wide something is. It puts the
-          maths back into the body, which is where a nine-year-old still does most of it.
+          math back into the body, which is where a nine-year-old still does most of it.
         </p>
         <p className="mt-4 text-muted max-w-2xl leading-relaxed">
           <strong className="text-foreground font-medium">The tracking runs on your device.</strong> Frames from
@@ -150,7 +150,7 @@ export default function AdaptiveLearn() {
                 description: metadata.description,
                 publisher: { '@id': `${SITE_URL}/#organization` },
                 audience: { '@type': 'EducationalAudience', educationalRole: 'student' },
-                offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', availability: 'https://schema.org/LimitedAvailability' },
+                offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', availability: 'https://schema.org/LimitedAvailability' },
               },
               {
                 '@type': 'FAQPage',
