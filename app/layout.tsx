@@ -60,7 +60,7 @@ function OrganizationJsonLd() {
       },
     ],
   }
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }} />
+  return <script type="application/ld+json">{JSON.stringify(json)}</script>
 }
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {

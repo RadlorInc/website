@@ -22,6 +22,23 @@ export const APP_URL = 'https://adaptivelearn.radlor.com'
 export const APP_NAME = 'AdaptiveLearn'
 
 /**
+ * The app's entity id, declared HERE and referenced by the app itself at the same string.
+ *
+ * ⚠️ Two sites describing one product is only a strength if they agree it IS one product. Both
+ * emit `SoftwareApplication` with this exact `@id` and both point `publisher` at
+ * `${SITE_URL}/#organization`, so the two pages merge into one node instead of competing as two.
+ * Change this string and you silently split the product in half. The app's copy lives in
+ * `../milo-story-mode/src/app/site.ts` as `APP_ID`.
+ *
+ * ⚠️ AND THIS MATTERS MORE THAN IT LOOKS, BECAUSE "AdaptiveLearn" IS A GENERIC PHRASE.
+ * Measured 2026-08-19: searching it returns "adaptive learning" the concept plus AdaptedMind,
+ * bettermarks, DreamBox and Prodigy — the category, not us. "Radlor" is distinctive and
+ * effectively unclaimed. So the brand is what makes the product resolvable, and every schema
+ * block, title and page must keep the two attached.
+ */
+export const APP_ID = `${APP_URL}/#app`
+
+/**
  * Every page on the site, in one list — the header, the footer and the sitemap all read it, so a
  * page cannot exist in one and be missing from another.
  *

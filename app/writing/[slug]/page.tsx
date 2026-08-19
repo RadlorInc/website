@@ -46,12 +46,15 @@ export default async function Article({ params }: PageProps<'/writing/[slug]'>) 
         <p className="mt-5 text-lg text-muted max-w-2xl leading-relaxed">{post.description}</p>
       </header>
 
+      {/* The one raw-HTML write on the site, and it is unavoidable: rendering markdown IS
+          producing HTML. The input is our own `content/posts/*.md`, never anything a visitor
+          supplies — the moment that stops being true this needs sanitizing.
+          ⚠️ The JSON-LD blocks deliberately do NOT use this. React escapes `</script>` inside a
+          text child while leaving the JSON byte-identical, so `<script …>{json}</script>` is both
+          safe and correct — measured, not assumed. The app repo gates on exactly this. */}
       <div className="prose mt-12" dangerouslySetInnerHTML={{ __html: html }} />
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+      <script type="application/ld+json">{JSON.stringify({
             '@context': 'https://schema.org',
             '@graph': [{
             '@type': 'Article',
@@ -71,9 +74,7 @@ export default async function Article({ params }: PageProps<'/writing/[slug]'>) 
                 { '@type': 'ListItem', position: 3, name: post.title },
               ],
             }],
-          }),
-        }}
-      />
+          })}</script>
     </article>
   )
 }

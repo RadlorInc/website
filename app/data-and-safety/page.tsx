@@ -149,10 +149,7 @@ export default function DataAndSafety() {
         </p>
       </div>
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+      <script type="application/ld+json">{JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'WebPage',
             '@id': `${SITE_URL}/data-and-safety`,
@@ -160,9 +157,7 @@ export default function DataAndSafety() {
             description: metadata.description,
             isPartOf: { '@id': `${SITE_URL}/#website` },
             publisher: { '@id': `${SITE_URL}/#organization` },
-          }),
-        }}
-      />
+          })}</script>
     </section>
   )
 }

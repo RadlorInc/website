@@ -118,10 +118,7 @@ export default function ForSchools() {
         </p>
       </section>
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+      <script type="application/ld+json">{JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'FAQPage',
             '@id': `${SITE_URL}/for-schools#faq`,
@@ -130,9 +127,7 @@ export default function ForSchools() {
               name: f.q,
               acceptedAnswer: { '@type': 'Answer', text: f.a },
             })),
-          }),
-        }}
-      />
+          })}</script>
     </>
   )
 }

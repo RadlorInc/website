@@ -100,10 +100,7 @@ export default function Home() {
         </section>
       )}
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+      <script type="application/ld+json">{JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'WebPage',
             '@id': `${SITE_URL}/#webpage`,
@@ -111,9 +108,7 @@ export default function Home() {
             name: `${COMPANY} — learning software that adapts to the child in front of it`,
             isPartOf: { '@id': `${SITE_URL}/#website` },
             about: { '@id': `${SITE_URL}/#organization` },
-          }),
-        }}
-      />
+          })}</script>
     </>
   )
 }

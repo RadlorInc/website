@@ -47,6 +47,25 @@ called Milo, so the old name resolves to the right thing rather than to nothing.
 - No horizontal overflow at 360–1280 (mobile usability is a ranking factor and a broken phone layout
   is the commonest way to fail it).
 
+## A2. The two properties are now ONE entity — done 2026-08-19
+
+⚠️ **This is the fix for the generic-name problem in §0, and it is the least obvious item here.**
+"AdaptiveLearn" resolves to the *category* on its own (measured: the search returns "adaptive
+learning" the concept plus AdaptedMind, bettermarks, DreamBox, Prodigy). "Radlor" is distinctive and
+effectively unclaimed — only an Instagram handle and a hair salon in Madrid. So the brand has to
+carry the entity, in three places at once:
+
+- **Both sites emit `SoftwareApplication` with the identical `@id`** — `https://adaptivelearn.radlor.com/#app`
+  — so the product page here and the app itself merge into one node instead of competing as two.
+- **Both point `publisher` at `https://radlor.com/#organization`**, which is declared ONCE (here) and
+  only *referenced* by the app. Two declarations would be two companies with one name.
+- **The app links to radlor.com visibly** in its footer (*"AdaptiveLearn is made by Radlor"*), because
+  a claim that exists only in schema is weaker than one a reader and a crawler both see.
+
+⚠️ The `@id` strings live in `site.ts` here and `src/app/site.ts` there. **Retyping either one
+silently splits the product in half**, which is why both files carry a warning and the app's gate
+asserts the exact values.
+
 ## B. Code left to do
 
 | | What | Blocked on |
@@ -76,8 +95,14 @@ called Milo, so the old name resolves to the right thing rather than to nothing.
    with a README on `RadlorMain` (free, already exists, currently empty), **Crunchbase**, then X.
    ⚠️ `github.com/radlor` is taken; `radlorhq` / `radlor-labs` / `getradlor` were free on 2026-08-19.
    Send me the handles and B2 takes two minutes.
-5. **The product site's own metadata**, once §0 is settled — it is a second property competing in the
-   same results and it needs its own title, description and canonical to not fight this one.
+5. ~~**The product site's own metadata**~~ ✅ **DONE 2026-08-19** — and it was worse than expected.
+   Measured live: **four of the five public routes declared no canonical at all**, all five inherited
+   the landing page's marketing description (so the privacy policy advertised a placement check),
+   `/diagnostic` — the highest-intent page in the product — had **no title and no `<h1>` of its own**
+   because it is `'use client'` and a client component cannot export `metadata`, and there was **zero
+   structured data anywhere in the app**. All fixed, gated by
+   `../milo-story-mode/src/__tests__/publicSeo.test.ts` (13 assertions, 5 planted regressions all
+   caught).
 
 ## D. Decisions to make
 

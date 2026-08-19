@@ -85,10 +85,7 @@ export default function Pricing() {
         </p>
       </section>
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+      <script type="application/ld+json">{JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'Product',
             name: APP_NAME,
@@ -103,9 +100,7 @@ export default function Pricing() {
               description: `Free for all users during ${COMPANY}'s early access period.`,
               url: APP_URL,
             },
-          }),
-        }}
-      />
+          })}</script>
     </>
   )
 }

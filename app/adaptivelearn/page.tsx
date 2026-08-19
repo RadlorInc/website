@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { APP_NAME, APP_URL, COMPANY, SITE_URL } from '@/site'
+import { APP_ID, APP_NAME, APP_URL, COMPANY, SITE_URL } from '@/site'
 
 export const metadata: Metadata = {
   title: `${APP_NAME} — adaptive maths for ages 3 to 18`,
@@ -37,6 +37,10 @@ const FAQ = [
   {
     q: 'Does it work offline?',
     a: 'Yes, once it has loaded. The app installs to the home screen and caches itself, so a chapter already opened will play without a connection. Progress syncs when the device is back online.',
+  },
+  {
+    q: 'Was AdaptiveLearn called something else before?',
+    a: 'Yes — it was called Milo until August 2026. Milo is still there: he is the pony who walks through the story chapters and does the explaining. The app around him is AdaptiveLearn, made by Radlor.',
   },
   {
     q: 'How much does it cost?',
@@ -131,15 +135,15 @@ export default function AdaptiveLearn() {
         </div>
       </section>
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+      <script type="application/ld+json">{JSON.stringify({
             '@context': 'https://schema.org',
             '@graph': [
               {
                 '@type': 'SoftwareApplication',
+                // The SAME id the app itself declares, so the two pages describe one node.
+                '@id': APP_ID,
                 name: APP_NAME,
+                alternateName: [`${APP_NAME} by ${COMPANY}`, 'Milo'],
                 url: APP_URL,
                 applicationCategory: 'EducationalApplication',
                 operatingSystem: 'Web browser',
@@ -157,9 +161,7 @@ export default function AdaptiveLearn() {
                 })),
               },
             ],
-          }),
-        }}
-      />
+          })}</script>
     </>
   )
 }
