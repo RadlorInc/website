@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { APP_NAME, APP_URL, COMPANY, SITE_URL, SUPPORT_EMAIL } from '@/site'
+import { APP_ID, APP_NAME, APP_URL, COMPANY, SITE_URL, SUPPORT_EMAIL } from '@/site'
 
 export const metadata: Metadata = {
   title: `Pricing — ${APP_NAME} is free during early access`,
@@ -85,13 +85,30 @@ export default function Pricing() {
         </p>
       </section>
 
+      {/*
+        ⚠️ NOT `Product`. It was one until 2026-08-20, and Search Console reported six issues
+        against it: four Merchant listings (missing `image` — CRITICAL — plus
+        `hasMerchantReturnPolicy`, `shippingDetails`, and `brand` rejected as an invalid object
+        type for a bare `@id` reference) and two Product snippets (`aggregateRating`, `review`).
+        Every one of them is retail: a thing that ships, is returned, and is reviewed. This is
+        free web software with no reviews, and inventing ratings to satisfy a validator is
+        exactly what Google's own guidelines forbid.
+
+        So the type is the fix. `SoftwareApplication` at the SAME `@id` the app and
+        `/adaptivelearn` declare merges this page into that one node instead of standing up a
+        competing retail product — and it carries the price perfectly well, which is the only
+        reason the block exists.
+      */}
       <script type="application/ld+json">{JSON.stringify({
             '@context': 'https://schema.org',
-            '@type': 'Product',
+            '@type': 'SoftwareApplication',
+            '@id': APP_ID,
             name: APP_NAME,
-            url: `${SITE_URL}/pricing`,
+            url: APP_URL,
+            applicationCategory: 'EducationalApplication',
+            operatingSystem: 'Web browser',
             description: metadata.description,
-            brand: { '@id': `${SITE_URL}/#organization` },
+            publisher: { '@id': `${SITE_URL}/#organization` },
             offers: {
               '@type': 'Offer',
               price: '0',
