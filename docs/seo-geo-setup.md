@@ -41,8 +41,8 @@ called Milo, so the old name resolves to the right thing rather than to nothing.
 - `llms.txt` — generated from the same two sources.
 - `og:image` (1200×630) + Twitter summary card on every page.
 - Structured data: `Organization` + `WebSite` sitewide · `SoftwareApplication` + `FAQPage` on
-  `/adaptivelearn` · `Product` + `Offer` on `/pricing` · `FAQPage` on `/for-schools` · `Article` on
-  each post · `WebPage` on the rest.
+  `/adaptivelearn` · `SoftwareApplication` + `Offer` on `/pricing` (⚠️ **NOT `Product`** — see §A3)
+  · `FAQPage` on `/for-schools` · `Article` on each post · `WebPage` on the rest.
 - Every route prerendered static. No third-party requests, self-hosted fonts, no render-blocking JS.
 - No horizontal overflow at 360–1280 (mobile usability is a ranking factor and a broken phone layout
   is the commonest way to fail it).
@@ -65,6 +65,48 @@ carry the entity, in three places at once:
 ⚠️ The `@id` strings live in `site.ts` here and `src/app/site.ts` there. **Retyping either one
 silently splits the product in half**, which is why both files carry a warning and the app's gate
 asserts the exact values.
+
+## A3. ⚠️ A FREE PRODUCT MUST NOT CARRY `@type: Product` — added 2026-08-20
+
+`/pricing` was `Product` + `Offer` from launch until 2026-08-20, when Search Console sent **two
+separate emails about one JSON-LD block**:
+
+| report | field | severity |
+|---|---|---|
+| Merchant listings | missing `image` | **critical — blocks the page from Search features** |
+| Merchant listings | missing `hasMerchantReturnPolicy` (in `offers`) | non-critical |
+| Merchant listings | missing `shippingDetails` (in `offers`) | non-critical |
+| Merchant listings | invalid object type for `brand` | non-critical |
+| Product snippets | missing `aggregateRating` | non-critical |
+| Product snippets | missing `review` | non-critical |
+
+**One word opted the page into two retail audits at once.** A `Product` carrying `offers` is
+evaluated as a merchant listing *and* as a product snippet, and every field above is about a thing
+that ships in a box, is sent back, and is reviewed by the person who bought it.
+
+⚠️ **THE TRAP IS THAT THE ERROR LIST READS LIKE A TO-DO LIST, AND WORKING THROUGH IT IS THE WRONG
+MOVE.** There is no image of a web app, no returns policy for something free, no shipping on a URL —
+and `aggregateRating` and `review` cannot be supplied at all without **inventing ratings, which
+Google's own structured-data guidelines specifically forbid** and which would be a lie printed in
+machine-readable form on a page aimed at parents. A validator asking for a field is not evidence
+that the field should exist. **When every requirement of a rich result is unsatisfiable, the type is
+wrong — do not fill the fields in.**
+
+**The fix was the type.** `/pricing` now emits `SoftwareApplication` at the same `@id` as §A2, so it
+merges into the one product node instead of standing up a competing retail listing beside it. The
+`Offer` stays: it is how the page says *free*, which is the only reason the block exists, and
+`SoftwareApplication` carries it perfectly well. Shipped `98a00b3`; verified on production that
+`https://radlor.com/pricing` serves no `"@type":"Product"` at all.
+
+⚠️ **The rule for anything added later:** `Product` is for something a person BUYS AND RECEIVES.
+Software is `SoftwareApplication`, a class or course is `Course`, a piece of writing is `Article`.
+Reach for `Product` only when a return address would make sense.
+
+⚠️ **And `brand: { '@id': … }` was rejected as an invalid object type even though the reference
+resolves.** Google's validator wants `brand` inline as a `Brand` or `Organization`, not an `@id`
+pointer — a `@id` reference is correct schema.org and is *not* universally accepted by consumers.
+Same lesson the app repo already wrote down about `THREE.Color`: **valid according to the spec is
+not evidence that the consumer implements the spec.**
 
 ## B. Code left to do
 
