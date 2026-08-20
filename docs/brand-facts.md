@@ -8,7 +8,7 @@ plausible. Fill them in and delete the row.
 |---|---|---|
 | `FOUNDED_YEAR` | `'2026'` — a guess from the domain registration (radlor.com was registered 2026-08-17) | `Organization.foundingDate` in JSON-LD, the About page, the footer copyright |
 | `LOCATION` | `TODO` | The `PostalAddress` block, which is **omitted entirely while it says TODO** rather than shipping a placeholder. A local business address is a meaningful ranking and trust signal. |
-| `SOCIAL` | empty | `Organization.sameAs` — the strongest single GEO signal there is, because it is what ties the name "Radlor" to profiles that corroborate it. `github.com/radlor` is TAKEN; `radlorhq` / `radlor-labs` / `getradlor` were free as of 2026-08-19. |
+| ~~`SOCIAL`~~ ✅ | **Filled 2026-08-20** — LinkedIn, Instagram, X, Threads (all `radlor_inc` / `radlor-inc`) and Facebook. Feeds `sameAs` **and** a visible footer row. Four go through our own `*.radlor.com` GoDaddy forwards so a handle change is a DNS edit, not a deploy; Facebook is the one raw URL, because GoDaddy never issued a cert for its forward. **`scripts/check-social.sh` is the gate** — it follows each link and fails on a bare homepage, which is the failure that would tell an answer engine that Radlor *is Facebook*. GitHub added 2026-08-20 as `github.com/RadlorInc`. ⚠️ **The org was RENAMED from `RadlorMain` on or before 2026-08-20** — GitHub 301s the old name until somebody else claims it, so nothing may rely on `RadlorMain`. (`github.com/radlor` is a separate, unrelated User account with 1 repo.) |
 | Founder / team | not on the site at all | The About page currently has no named person. A named founder with a `Person` schema block is worth adding once you decide you want your name on it. |
 
 ## Two claims on the site to keep honest

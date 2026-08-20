@@ -71,7 +71,7 @@ asserts the exact values.
 | | What | Blocked on |
 |---|---|---|
 | ~~B1~~ ✅ | ~~**Replace the favicon.**~~ Done — `app/icon.tsx` + `app/apple-icon.tsx` generate a wordmark and the Next.js logo is deleted. ⚠️ Still a placeholder: `app/favicon.ico` is still create-next-app's Next.js logo, and no `icons` metadata is declared. It is currently shipping as Radlor's brand mark in every browser tab and bookmark. | A logo |
-| B2 | **`sameAs` in the `Organization` schema.** The single strongest GEO signal available — it is what ties the string "Radlor" to profiles that corroborate it. Currently an empty array. | C4 |
+| ~~B2~~ ✅ | ~~**`sameAs` in the `Organization` schema.**~~ Done 2026-08-20 — five profiles, gated by `scripts/check-social.sh`. ⚠️ **Run that script before any deploy that touches `SOCIAL`, and after any GoDaddy forwarding edit**: four of the five are our own `*.radlor.com` forwards, so the strongest GEO signal on the site depends on rows in a panel nothing in this repo can see. A forward left pointing at a platform homepage still 301s, still looks configured, and corroborates the WRONG entity. | Nothing — GitHub org profile is the one profile still missing |
 | B3 | **`Person` schema for the founder** on `/about`, plus a named byline on posts. Answer engines resolve people as entities the same way they resolve companies. | A decision to put your name on it |
 | ~~B4~~ ✅ | ~~**`BreadcrumbList` on posts**~~ Done. (`Home → Writing → post`). Small; shows as a breadcrumb trail in results instead of a raw URL. | Nothing — say the word |
 | ~~B5~~ ✅ | ~~**Per-post OG images.**~~ Done — `app/writing/[slug]/opengraph-image.tsx`, pre-rendered per post. Every post currently shares one generic card. | Nothing — say the word |
@@ -91,9 +91,14 @@ asserts the exact values.
    Copilot read; skipping it means being invisible to a large share of answer traffic no matter how
    well Google is doing. It can import the whole property from Search Console in two clicks.
 4. **The social profiles that feed `sameAs`.** In order of how much an answer engine trusts them:
-   **LinkedIn company page** (the one models reach for on "what is <company>"), **GitHub org profile**
-   with a README on `RadlorMain` (free, already exists, currently empty), **Crunchbase**, then X.
-   ⚠️ `github.com/radlor` is taken; `radlorhq` / `radlor-labs` / `getradlor` were free on 2026-08-19.
+   **LinkedIn company page** (the one models reach for on "what is <company>"), **GitHub org profile**,
+   **Crunchbase**, then X.
+   ✅ Done 2026-08-20 — LinkedIn, Instagram, X, Threads, Facebook and GitHub are all in `SOCIAL`.
+   The GitHub org profile README lives in `RadlorInc/.github` at `profile/README.md`; it is what an
+   answer engine lands on when it follows that `sameAs`, so it states the company/product/character
+   split and the on-device camera claim rather than listing repos.
+   ⚠️ **The org was renamed `RadlorMain` → `RadlorInc`.** GitHub 301s the old name only until
+   somebody claims it — nothing may reference `RadlorMain`. Crunchbase is the one still missing.
    Send me the handles and B2 takes two minutes.
 5. ~~**The product site's own metadata**~~ ✅ **DONE 2026-08-19** — and it was worse than expected.
    Measured live: **four of the five public routes declared no canonical at all**, all five inherited

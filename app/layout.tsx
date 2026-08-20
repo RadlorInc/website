@@ -39,7 +39,7 @@ function OrganizationJsonLd() {
         description: TAGLINE,
         foundingDate: FOUNDED_YEAR,
         email: SUPPORT_EMAIL,
-        ...(SOCIAL.length ? { sameAs: SOCIAL } : {}),
+        ...(SOCIAL.length ? { sameAs: SOCIAL.map(s => s.url) } : {}),
         ...(LOCATION.city === 'TODO'
           ? {}
           : {
@@ -110,6 +110,17 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
               <a href={`mailto:${SUPPORT_EMAIL}`} className="hover:text-foreground transition-colors">
                 {SUPPORT_EMAIL}
               </a>
+              {SOCIAL.map(s => (
+                <a
+                  key={s.url}
+                  href={s.url}
+                  rel="me noopener"
+                  target="_blank"
+                  className="hover:text-foreground transition-colors"
+                >
+                  {s.name}
+                </a>
+              ))}
             </div>
           </div>
         </footer>

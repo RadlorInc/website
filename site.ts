@@ -68,7 +68,37 @@ export const FOOTER = PAGES.filter(p => p.href !== '/')
  */
 export const FOUNDED_YEAR = '2026'
 export const LOCATION = { city: 'TODO', region: 'TODO', country: 'IN' }
-export const SOCIAL: string[] = [
-  // 'https://github.com/radlorhq',
-  // 'https://www.linkedin.com/company/radlor',
+/**
+ * The company's own profiles. Feeds BOTH `Organization.sameAs` and the visible footer row — a
+ * schema-only claim is the weaker half, exactly as the app links back here visibly rather than
+ * only in JSON-LD.
+ *
+ * ⚠️ THESE ARE OUR OWN `*.radlor.com` VANITY FORWARDS, WHICH IS A DELIBERATE CHOICE WITH ONE
+ * HARD CONDITION: each one must 301 to the PROFILE, never to the platform's homepage. Founder's
+ * call — one set of links, ours, that we can repoint without a code deploy when a handle changes.
+ * The cost is that the whole thing is only as good as four GoDaddy rows, so it is gated rather
+ * than trusted: `scripts/check-social.sh` follows every URL here and FAILS if it lands on a bare
+ * homepage.
+ *
+ * ⚠️ WHY THAT GATE IS NOT PAPERWORK. `sameAs` is the strongest GEO signal we have, and a crawler
+ * that follows `facebook.radlor.com` to `facebook.com/` corroborates FACEBOOK as the entity named
+ * Radlor. Measured 2026-08-19, Google already answers "radlor" with a radler and a dissolved
+ * Companies House record — a wrong `sameAs` argues against us rather than for us, so an empty
+ * array beats a wrong one and the script is what tells the two apart.
+ */
+export const SOCIAL: { name: string; url: string }[] = [
+  { name: 'LinkedIn', url: 'https://linkedin.radlor.com' },
+  { name: 'Instagram', url: 'https://instagram.radlor.com' },
+  // ⚠️ THE ONE RAW URL, AND ONLY BECAUSE GODADDY WOULD NOT ISSUE A CERT FOR THE FORWARD.
+  // `facebook.radlor.com` 301s to exactly this page over HTTP, but its 443 never opened — it sat
+  // on GoDaddy's non-SSL forwarding pool (600s TTL, port 443 closed) for hours, so the https URL
+  // a crawler would actually fetch was dead. A dead `sameAs` entry is worth less than none.
+  // Swap it back to 'https://facebook.radlor.com' once `scripts/check-social.sh` passes on it.
+  { name: 'Facebook', url: 'https://www.facebook.com/people/Radlor-Inc/61593729350767/' },
+  { name: 'X', url: 'https://x.radlor.com' },
+  { name: 'Threads', url: 'https://threads.radlor.com' },
+  // Raw for now — there is no `github.radlor.com` forward yet. Worth having in `sameAs` out of
+  // proportion to its traffic: the org page independently states name=Radlor, blog=radlor.com and
+  // email=admin@radlor.com, so it corroborates the entity rather than just listing another handle.
+  { name: 'GitHub', url: 'https://github.com/RadlorInc' },
 ]

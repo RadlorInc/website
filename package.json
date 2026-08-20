@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "check:social": "scripts/check-social.sh"
   },
   "dependencies": {
     "marked": "^18.0.10",
