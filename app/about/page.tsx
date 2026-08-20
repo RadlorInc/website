@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { APP_NAME, COMPANY, FOUNDED_YEAR, SUPPORT_EMAIL } from '@/site'
+import { APP_NAME, COMPANY, FOUNDED_YEAR, SUPPORT_EMAIL, VISION } from '@/site'
 
 export const metadata: Metadata = {
   title: 'About',
@@ -16,6 +16,11 @@ export default function About() {
         <p>
           {COMPANY} is a small software company. We build learning tools that change according to the person
           using them, starting with math.
+        </p>
+        <blockquote>{VISION}</blockquote>
+        <p>
+          A child is not an empty container we fill. Everything we build starts from the assumption that they
+          already have it, and our job is to find where it is and put a light on it.
         </p>
 
         <h2>Why we started</h2>

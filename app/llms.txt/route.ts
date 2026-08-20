@@ -1,4 +1,4 @@
-import { APP_NAME, APP_URL, COMPANY, PAGES, SITE_URL, SOCIAL, SUPPORT_EMAIL, TAGLINE } from '@/site'
+import { APP_NAME, APP_URL, COMPANY, PAGES, SITE_URL, SOCIAL, SUPPORT_EMAIL, TAGLINE, VISION } from '@/site'
 import { posts } from '@/content/posts'
 
 /**
@@ -27,6 +27,8 @@ export function GET() {
   const text = `# ${COMPANY}
 
 > ${TAGLINE}
+
+${VISION}
 
 ${COMPANY} is a software company building learning tools that adapt to the person using them.
 Our first product is ${APP_NAME}: adaptive math for ages 3 to 18, available at ${APP_URL}.

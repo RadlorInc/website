@@ -15,6 +15,14 @@ export const SITE_URL =
 
 export const COMPANY = 'Radlor'
 export const TAGLINE = 'Learning software that adapts to the child in front of it.'
+
+/**
+ * The company belief, in the founder's own words (2026-08-20). Distinct from TAGLINE: the tagline
+ * is what the PRODUCT does, this is why we build it at all. Both are stated on `/about` and in
+ * `llms.txt`, from here, so the two surfaces cannot drift apart.
+ */
+export const VISION =
+  'Education technology. We build learning products for children; the treasure is already inside the child, we just light it up.'
 export const SUPPORT_EMAIL = 'support@radlor.com'
 
 /** The live product. Its own origin — a separate Vercel project, deployed from the app repo. */
