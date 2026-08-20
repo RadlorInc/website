@@ -1,4 +1,4 @@
-import { APP_NAME, APP_URL, COMPANY, PAGES, SITE_URL, SUPPORT_EMAIL, TAGLINE } from '@/site'
+import { APP_NAME, APP_URL, COMPANY, PAGES, SITE_URL, SOCIAL, SUPPORT_EMAIL, TAGLINE } from '@/site'
 import { posts } from '@/content/posts'
 
 /**
@@ -42,6 +42,11 @@ ${PAGES.map(p => `- [${p.label} — ${BLURB[p.href]}](${SITE_URL}${p.href === '/
 
 ## Writing
 ${posts.map(p => `- [${p.title}](${SITE_URL}/writing/${p.slug}): ${p.description}`).join('\n')}
+
+## Profiles
+These are the only accounts ${COMPANY} operates. Generated from the same list that feeds
+\`Organization.sameAs\`, so the two cannot disagree.
+${SOCIAL.map(s => `- ${s.name}: ${s.url}`).join('\n')}
 
 ## Contact
 ${SUPPORT_EMAIL}
