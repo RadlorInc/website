@@ -28,33 +28,41 @@ const FAQ = [
   },
   {
     q: 'How many children can we add?',
-    a: 'There is no cap, and it is free during early access. We are small enough that we will set the first class up with you personally — which at this stage is faster than any form we could build.',
+    a: 'There is no cap on class size. A class is not a family, so the per-child family price does not fit one and we have not published a school price — we set the first class up with you personally and work out the cost with you. At our size that is genuinely faster than any form we could build.',
   },
 ]
 
 export default function ForSchools() {
   return (
     <>
-      <section className="mx-auto max-w-5xl px-6 pt-20 pb-14">
-        <p className="text-sm uppercase tracking-[0.18em] text-accent font-medium">For schools</p>
-        <h1 className="font-display text-5xl sm:text-6xl leading-[1.05] mt-4 max-w-3xl">
-          Thirty children, thirty different questions.
+      <section className="relative isolate overflow-hidden">
+        {/* Decorative, `aria-hidden`, behind the text — a screen reader gets the copy alone. */}
+        <div className="rl-lightfield" aria-hidden="true">
+          <div className="rl-glow rl-parallax" style={{ '--p': '32px' } as React.CSSProperties} />
+        </div>
+        <div className="relative z-10 mx-auto max-w-5xl px-6 pt-20 pb-14">
+        <p className="rl-rise text-sm uppercase tracking-[0.18em] text-accent font-medium">For schools</p>
+        <h1 className="rl-focus font-display text-5xl sm:text-6xl leading-[1.05] mt-4 max-w-3xl" style={{ '--d': '0.09s' } as React.CSSProperties}>
+          Thirty children, thirty <span className="rl-lit" style={{ '--lit': 0.62 } as React.CSSProperties}>different</span> questions.
         </h1>
-        <p className="mt-6 text-lg text-muted max-w-2xl leading-relaxed">
+        <p className="rl-rise mt-6 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.18s' } as React.CSSProperties}>
           The hard part of teaching math to a class is that they are not in the same place, and one
           worksheet cannot be in two places at once. {APP_NAME} gives each child the question they are
           actually ready for, and gives you one screen that says where each of them is.
         </p>
         <a
           href={`mailto:${SUPPORT_EMAIL}?subject=AdaptiveLearn%20for%20our%20school`}
-          className="mt-9 inline-block rounded-full bg-accent px-6 py-3 text-white font-medium hover:opacity-90 transition-opacity"
+          className="rl-rise rl-cta mt-9 inline-block rounded-full bg-accent px-6 py-3 text-on-accent font-medium hover:opacity-90"
+          style={{ '--d': '0.27s' } as React.CSSProperties}
         >
           Talk to us about a class
         </a>
+        </div>
       </section>
 
-      <section className="mx-auto max-w-5xl px-6 py-14 border-t border-line">
-        <h2 className="font-display text-3xl">Setting up a class</h2>
+      <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
+      <section className="mx-auto max-w-5xl px-6 py-14">
+        <h2 className="rl-reveal-focus font-display text-3xl">Setting up a class</h2>
         <ol className="mt-10 grid gap-8 sm:grid-cols-4">
           {[
             ['Make a group', 'Pick the age band and tick the chapters it should contain — your sequence, not ours.'],
@@ -62,19 +70,21 @@ export default function ForSchools() {
             ['They place themselves', 'A short check finds where each child actually is, rather than assuming the year group.'],
             ['You watch it move', 'One list: who is on what, who has stalled, who has run ahead.'],
           ].map(([h, p], i) => (
-            <li key={h}>
-              <span className="font-display text-3xl text-accent">{i + 1}</span>
-              <h3 className="font-medium mt-2">{h}</h3>
+            <li key={h} className="rl-reveal" style={{ '--i': i + 1 } as React.CSSProperties}>
+              <span className="rl-num font-display text-3xl text-accent" style={{ '--i': i + 1 } as React.CSSProperties}>{i + 1}</span>
+              <div className="rl-tick mt-2 mb-3" style={{ '--i': i + 1 } as React.CSSProperties} aria-hidden="true" />
+              <h3 className="font-medium">{h}</h3>
               <p className="mt-2 text-sm text-muted leading-relaxed">{p}</p>
             </li>
           ))}
         </ol>
       </section>
 
-      <section className="mx-auto max-w-5xl px-6 py-14 border-t border-line">
-        <h2 className="font-display text-3xl">What it is good at, and what it is not</h2>
+      <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
+      <section className="mx-auto max-w-5xl px-6 py-14">
+        <h2 className="rl-reveal-focus font-display text-3xl">What it is good at, and what it is not</h2>
         <div className="mt-8 grid gap-10 sm:grid-cols-2 max-w-4xl">
-          <div>
+          <div className="rl-reveal" style={{ '--i': 1 } as React.CSSProperties}>
             <h3 className="font-medium text-lg">Good at</h3>
             <ul className="mt-4 space-y-3 text-muted leading-relaxed">
               <li>— Independent practice where every child is on the right question.</li>
@@ -83,7 +93,7 @@ export default function ForSchools() {
               <li>— Children who have decided they are bad at math. Nothing on screen ever tells them so.</li>
             </ul>
           </div>
-          <div>
+          <div className="rl-reveal" style={{ '--i': 2 } as React.CSSProperties}>
             <h3 className="font-medium text-lg">Not built for</h3>
             <ul className="mt-4 space-y-3 text-muted leading-relaxed">
               <li>— Replacing you. It is practice and teaching, not a curriculum you can hand over.</li>
@@ -99,11 +109,12 @@ export default function ForSchools() {
         </p>
       </section>
 
-      <section className="mx-auto max-w-5xl px-6 py-14 border-t border-line">
-        <h2 className="font-display text-3xl">Questions schools ask</h2>
+      <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
+      <section className="mx-auto max-w-5xl px-6 py-14">
+        <h2 className="rl-reveal-focus font-display text-3xl">Questions schools ask</h2>
         <div className="mt-8">
-          {FAQ.map(f => (
-            <div key={f.q} className="border-t border-line py-6">
+          {FAQ.map((f, i) => (
+            <div key={f.q} className="rl-block rl-reveal border-t border-line py-6" style={{ '--i': i + 1 } as React.CSSProperties}>
               <h3 className="font-medium text-lg">{f.q}</h3>
               <p className="mt-2 text-muted leading-relaxed max-w-2xl">{f.a}</p>
             </div>
@@ -111,7 +122,7 @@ export default function ForSchools() {
         </div>
         <p className="mt-8 text-muted">
           Anything about children&rsquo;s data is answered on{' '}
-          <Link href="/data-and-safety" className="text-accent hover:underline">
+          <Link href="/data-and-safety" className="rl-link text-accent">
             data and safety
           </Link>
           .

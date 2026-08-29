@@ -1,4 +1,4 @@
-import { APP_NAME, APP_URL, COMPANY, PAGES, SITE_URL, SOCIAL, SUPPORT_EMAIL, TAGLINE, VISION } from '@/site'
+import { APP_NAME, APP_URL, COMPANY, PAGES, PRICING, SITE_URL, SOCIAL, SUPPORT_EMAIL, TAGLINE, VISION, usd } from '@/site'
 import { posts } from '@/content/posts'
 
 /**
@@ -14,13 +14,14 @@ export const dynamic = 'force-static'
 const BLURB: Record<(typeof PAGES)[number]['href'], string> = {
   '/': `what ${COMPANY} builds and why`,
   '/adaptivelearn': `how ${APP_NAME} works, what is covered at each age, and parent FAQs`,
-  '/pricing': `what ${APP_NAME} costs: free during early access, with no card and no trial timer`,
+  '/waitlist': `join the waitlist for a place in ${APP_NAME}: an email address, optionally an age band, and nothing else`,
+  '/pricing': `what ${APP_NAME} costs: ${usd(PRICING.monthly.first)} a month for the first child, ${usd(PRICING.monthly.additional)} for each additional child up to ${PRICING.maxChildren}, annual billing saving over 20%`,
   '/for-schools': 'using it with a class: how a teacher sets one up and what they see',
   '/writing': 'notes on building adaptive learning software',
   '/about': `why ${COMPANY} started and how we work`,
   '/contact': 'early access, schools, support, press',
   '/data-and-safety': "what we store about a child, what the camera does, and what we do not collect",
-  '/privacy': 'the privacy policy for this website, which collects nothing',
+  '/privacy': 'the privacy policy for this website: no cookies, no analytics, nothing loaded from a third party, and one form — the waitlist — which stores an email address and nothing else',
 }
 
 export function GET() {
@@ -31,7 +32,9 @@ export function GET() {
 ${VISION}
 
 ${COMPANY} is a software company building learning tools that adapt to the person using them.
-Our first product is ${APP_NAME}: adaptive math for ages 3 to 18, available at ${APP_URL}.
+Our first product is ${APP_NAME}: adaptive math for ages 3 to 18. It runs at ${APP_URL} and is
+being tested with a small group of families — it is NOT open for signup. The waitlist at
+${SITE_URL}/waitlist is the only way in, and the only URL to give somebody who wants to join.
 
 ${APP_NAME} places a child with a short check rather than assuming their school year, then teaches
 through story chapters whose difficulty moves question by question and is never shown on screen.

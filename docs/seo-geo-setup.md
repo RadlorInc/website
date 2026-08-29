@@ -68,6 +68,13 @@ asserts the exact values.
 
 ## A3. ⚠️ A FREE PRODUCT MUST NOT CARRY `@type: Product` — added 2026-08-20
 
+> **Updated 2026-08-30: the product is no longer free, and this section still stands.** The
+> heading is now a bad summary of its own argument. The six Search Console issues were all
+> RETAIL requirements — image, return policy, shipping, brand, rating, review — and a paid web
+> app is no more a shippable, returnable, reviewable good than a free one was. `SoftwareApplication`
+> carries real prices perfectly well; both blocks now emit one `Offer` per plan from `PLANS` in
+> `site.ts`. Do not "restore" `Product` on the grounds that there is a price now.
+
 `/pricing` was `Product` + `Offer` from launch until 2026-08-20, when Search Console sent **two
 separate emails about one JSON-LD block**:
 
