@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --port 3021",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "check:social": "scripts/check-social.sh"
+    "check:social": "scripts/check-social.sh",
+    "check:pricing": "node --experimental-strip-types --no-warnings scripts/check-pricing.mjs",
+    "check:waitlist-rls": "node --no-warnings scripts/check-waitlist-rls.mjs"
   },
   "dependencies": {
     "marked": "^18.0.10",
