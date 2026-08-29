@@ -17,7 +17,22 @@ export type Post = {
   updated?: string
 }
 
+/** Newest first — nothing sorts this array, the writing index and llms.txt render it in order. */
 export const posts: Post[] = [
+  {
+    slug: 'the-gap-is-lower-than-the-grade',
+    title: "A sixteen-year-old's math gap is often in grade four",
+    description:
+      'Placing a child by their school year assumes the year taught them. When a teenager is stuck, the skill that is actually missing is frequently several grades below, so the placement check walks down the prerequisites of what failed rather than testing the grade.',
+    date: '2026-08-29',
+  },
+  {
+    slug: 'a-camera-claim-you-can-check',
+    title: 'A camera claim you can check',
+    description:
+      'A promise not to upload video is weaker than an app with no upload path. AdaptiveLearn reads hand gestures inside the browser, and a content security policy the build tests is what stops a frame leaving — here is how to check the same of any app.',
+    date: '2026-08-29',
+  },
   {
     slug: 'difficulty-should-be-invisible',
     title: 'A child should never see their level',
