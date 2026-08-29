@@ -37,18 +37,24 @@ const NEVER = [
 
 export default function DataAndSafety() {
   return (
-    <section className="mx-auto max-w-5xl px-6 pt-20">
-      <p className="text-sm uppercase tracking-[0.18em] text-accent font-medium">Data and safety</p>
-      <h1 className="font-display text-5xl mt-4 max-w-3xl">
-        What we know about your child, in plain English.
+    <section className="relative isolate overflow-hidden">
+      {/* Decorative, `aria-hidden`, behind the text — a screen reader gets the copy alone. */}
+      <div className="rl-progress" aria-hidden="true" />
+      <div className="rl-lightfield" aria-hidden="true">
+        <div className="rl-glow rl-parallax" style={{ '--p': '30px' } as React.CSSProperties} />
+      </div>
+      <div className="relative z-10 mx-auto max-w-5xl px-6 pt-20">
+      <p className="rl-rise text-sm uppercase tracking-[0.18em] text-accent font-medium">Data and safety</p>
+      <h1 className="rl-focus font-display text-5xl mt-4 max-w-3xl" style={{ '--d': '0.09s' } as React.CSSProperties}>
+        What we know about your child, in <span className="rl-lit" style={{ '--lit': 0.5 } as React.CSSProperties}>plain</span> English.
       </h1>
-      <p className="mt-6 text-lg text-muted max-w-2xl leading-relaxed">
+      <p className="rl-rise mt-6 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.18s' } as React.CSSProperties}>
         {APP_NAME} is used by children, so this page is written to be read rather than to protect us.
         It describes what we actually do. Where something is a limitation rather than a promise, it says
         so.
       </p>
 
-      <div className="prose mt-14">
+      <div className="rl-prose prose mt-14">
         <h2>The camera</h2>
         <p>
           Some chapters in the 9&ndash;11 band let a child answer by holding fingers up, tilting a hand,
@@ -82,8 +88,8 @@ export default function DataAndSafety() {
 
         <h2>What we store</h2>
         <div className="not-prose mt-6 grid gap-px bg-line border border-line rounded-2xl overflow-hidden">
-          {STORE.map(([h, p]) => (
-            <div key={h} className="bg-surface p-6 flex flex-wrap gap-x-8 gap-y-2">
+          {STORE.map(([h, p], i) => (
+            <div key={h} className="rl-reveal-left bg-surface p-6 flex flex-wrap gap-x-8 gap-y-2" style={{ '--i': i + 1 } as React.CSSProperties}>
               <p className="font-medium w-48 shrink-0">{h}</p>
               <p className="flex-1 min-w-56 text-muted leading-relaxed">{p}</p>
             </div>
@@ -145,7 +151,7 @@ export default function DataAndSafety() {
           The full legal policy is published inside the product at{' '}
           <a href={`${APP_URL}/legal/privacy`}>adaptivelearn.radlor.com/legal/privacy</a>; this page is
           the same facts without the lawyering. Privacy on this website — as opposed to in the product —
-          is <Link href="/privacy">its own short page</Link>.
+          is <Link href="/privacy" className="rl-link">its own short page</Link>.
         </p>
       </div>
 
@@ -158,6 +164,7 @@ export default function DataAndSafety() {
             isPartOf: { '@id': `${SITE_URL}/#website` },
             publisher: { '@id': `${SITE_URL}/#organization` },
           })}</script>
+      </div>
     </section>
   )
 }

@@ -34,16 +34,22 @@ export default async function Article({ params }: PageProps<'/writing/[slug]'>) 
   const html = await marked.parse(body(post.slug))
 
   return (
-    <article className="mx-auto max-w-5xl px-6 pt-20">
-      <Link href="/writing" className="text-sm text-accent hover:underline">
+    <article className="relative isolate overflow-hidden">
+      {/* Decorative, `aria-hidden`, behind the text — a screen reader gets the copy alone. */}
+      <div className="rl-progress" aria-hidden="true" />
+      <div className="rl-lightfield" aria-hidden="true">
+        <div className="rl-glow rl-parallax" style={{ '--p': '30px' } as React.CSSProperties} />
+      </div>
+      <div className="relative z-10 mx-auto max-w-5xl px-6 pt-20">
+      <Link href="/writing" className="rl-rise rl-link text-sm text-accent">
         ← Writing
       </Link>
       <header className="mt-6">
-        <time dateTime={post.date} className="text-sm text-muted tabular-nums">
+        <time dateTime={post.date} className="rl-rise block text-sm text-muted tabular-nums" style={{ '--d': '0.08s' } as React.CSSProperties}>
           {post.date}
         </time>
-        <h1 className="font-display text-4xl sm:text-5xl leading-tight mt-2 max-w-3xl">{post.title}</h1>
-        <p className="mt-5 text-lg text-muted max-w-2xl leading-relaxed">{post.description}</p>
+        <h1 className="rl-focus font-display text-4xl sm:text-5xl leading-tight mt-2 max-w-3xl" style={{ '--d': '0.14s' } as React.CSSProperties}>{post.title}</h1>
+        <p className="rl-rise mt-5 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.22s' } as React.CSSProperties}>{post.description}</p>
       </header>
 
       {/* The one raw-HTML write on the site, and it is unavoidable: rendering markdown IS
@@ -52,7 +58,7 @@ export default async function Article({ params }: PageProps<'/writing/[slug]'>) 
           ⚠️ The JSON-LD blocks deliberately do NOT use this. React escapes `</script>` inside a
           text child while leaving the JSON byte-identical, so `<script …>{json}</script>` is both
           safe and correct — measured, not assumed. The app repo gates on exactly this. */}
-      <div className="prose mt-12" dangerouslySetInnerHTML={{ __html: html }} />
+      <div className="rl-prose prose mt-12" dangerouslySetInnerHTML={{ __html: html }} />
 
       <script type="application/ld+json">{JSON.stringify({
             '@context': 'https://schema.org',
@@ -75,6 +81,7 @@ export default async function Article({ params }: PageProps<'/writing/[slug]'>) 
               ],
             }],
           })}</script>
+      </div>
     </article>
   )
 }

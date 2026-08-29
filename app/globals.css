@@ -1,24 +1,65 @@
 @import "tailwindcss";
 
+/**
+ * The brand palette, derived from the logo itself — `radlor_logo/Mark Full Color Light.png`
+ * and `Mark Full Color Dark.png`. Every value below is a colour that is actually IN the mark,
+ * or a darkened stop of one. `docs/brand-palette.md` records which pixel each came from and
+ * what it measured against.
+ *
+ * ⚠️ Mirrors `BRAND` in `site.ts` — read the rules there before changing a value.
+ * ⚠️ SUPERSEDES the amber palette that stood here until 2026-08-29. That one cited
+ * `Radlor Brand Kit/Radlor-brand-guide.pdf`, a file that is not in this repo and that nobody
+ * can open, and its Amber #E9A93A appears NOWHERE in the mark. The mark is the brand.
+ *
+ * Cyan #00E5FF · Blue #0061F3 · BlueInk #0B57C7 · Slate #4E6076 · Ink #0A1119 · Paper #F5F8FC
+ */
 :root {
-  --background: #fbfaf7;
-  --surface: #ffffff;
-  --foreground: #191713;
-  --muted: #5f5a51;
-  --line: #e5e0d6;
-  --accent: #b4491f;
-  --accent-soft: #f3e4dc;
+  --background: #f5f8fc;   /* Paper — the mark's own light ground, cooled toward its blue */
+  --surface: #ffffff;      /* the robot's body */
+  --foreground: #0a1119;   /* Ink — the visor. 17.8:1 on Paper */
+  --muted: #4e6076;        /* Slate — 6.1:1 on Paper */
+  --line: #dbe3ed;
+
+  /* Links and small accent text. A darkened stop of the mark's own blue: the literal
+     #0061F3 measures 4.96:1 and passes, but only just — and it is the identity colour, so it
+     should be free to be a GRAPHIC at full strength rather than pinned to a text job. */
+  --accent: #0b57c7;       /* 6.2:1 on Paper */
+  --on-accent: #ffffff;    /* what goes ON an accent surface. 6.6:1 */
+  --accent-soft: #e4eefd;
+
+  /* The identity blue, for GRAPHICS only — the ring's outer edge and the collar. */
+  --brand-blue: #0061f3;
+  --brand-deep: #062a6b;
+
+  /* THE LIGHT. The ring's core and the robot's eyes: the brightest thing in the mark and the
+     only part of it that glows. 1.4:1 on Paper — WORSE than the amber it replaces — so the
+     rule it inherits is absolute: never a text colour. It goes BEHIND words, or it is a
+     filled surface whose text is --on-glow. */
+  --glow: #00e5ff;
+  --on-glow: #0a1119;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #131211;
-    --surface: #1b1a18;
-    --foreground: #f0ece5;
-    --muted: #a49d92;
-    --line: #302d29;
-    --accent: #e8825a;
-    --accent-soft: #2b201b;
+    --background: #070b11;   /* the ground of `Mark Full Color Dark.png` */
+    --surface: #0e141c;
+    --foreground: #f5f8fc;
+    --muted: #b3c2d3;        /* 10.9:1 */
+    --line: #1e2833;
+
+    /* On a near-black ground the accent is the ring's light end, not its dark one. */
+    --accent: #7adfff;       /* 13.0:1 */
+    /* ⚠️ NOT white. White on this is 1.5:1 — which is what the CTA shipped as until
+       2026-08-29, because `text-white` was hard-coded in six files instead of tokenised. */
+    --on-accent: #0a1119;    /* 12.9:1 */
+    --accent-soft: #0f2231;
+
+    --brand-blue: #4da6ff;
+    --brand-deep: #062a6b;
+
+    /* The glow lifts on a dark ground, the way the ring reads brighter against black. */
+    --glow: #22e9ff;
+    --on-glow: #0a1119;
   }
 }
 
@@ -30,6 +71,11 @@
   --color-line: var(--line);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-deep: var(--brand-deep);
+  --color-glow: var(--glow);
+  --color-on-glow: var(--on-glow);
   --font-sans: var(--font-sans-src);
   --font-display: var(--font-display-src);
 }
@@ -52,3 +98,737 @@ body {
 .prose strong { color: var(--foreground); font-weight: 600; }
 .prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .prose blockquote { margin: 1.6rem 0; padding-left: 1.1rem; border-left: 3px solid var(--accent); font-family: var(--font-display-src), Georgia, serif; font-size: 1.3rem; line-height: 1.45; color: var(--foreground); }
+
+/* ============================================================================
+   MOTION — "the treasure is already inside the child, we just light it up."
+
+   The brand guide states the rule this whole layer obeys, about the mark:
+   *"Bulb ke andar kuch bhara nahi hai — jo dikhta hai woh background hai.
+   Roshni draw nahi ki gayi, jagah chhodi gayi hai."* The light is not drawn;
+   room is left for it.
+
+   So no page paints its headline cyan. Cyan is the light: it sits BEHIND the
+   word that carries the page's idea, which stays Ink and fully legible — the
+   light comes out of the subject rather than being applied to it, which is the
+   sentence the company is built on, and it also keeps an 18:1 headline instead
+   of cyan's 1.4:1 on Paper. ONE light source per page, and its centre is that
+   word. The lightfield behind the hero is the same light seen from further
+   away, not a second one.
+
+   ⚠️ EVERY ANIMATION HERE IS CSS ONLY. No JS, no package, no `use client`,
+   no IntersectionObserver. Pages stay statically prerendered, the bundle does
+   not grow, and the full copy is in the HTML a crawler receives on the first
+   byte — so this whole layer costs exactly nothing in SEO or GEO. That is the
+   reason it is written this way and not with a motion library.
+
+   Four rules that keep it honest:
+   1. ON-LOAD animations use `animation-fill-mode: both` and always END
+      visible. Above-the-fold copy can never be stuck at opacity 0.
+   2. SCROLL-DRIVEN animations live inside `@supports (animation-timeline:
+      view())`. A browser without support gets no animation and fully visible
+      content, rather than content hidden forever by an initial state.
+   3. Decorative layers are `aria-hidden` in the markup and `pointer-events:
+      none` here. A screen reader gets the copy alone.
+   4. `prefers-reduced-motion: reduce` turns the whole layer off, at the
+      bottom of this file so it wins.
+   ========================================================================= */
+
+/* An angle you can actually animate. Without `@property` a custom property is a
+   string, and a browser interpolates it by snapping at 50% — so on a browser that
+   lacks this the arc jumps once per lap instead of travelling. It still renders,
+   because `--rl-a` is also given a value on `:root` below. */
+@property --rl-a {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+:root { --rl-a: 0deg }
+
+/* --- keyframes ----------------------------------------------------------- */
+
+@keyframes rl-rise {
+  from { opacity: 0; transform: translateY(16px) }
+  to   { opacity: 1; transform: none }
+}
+
+/* The expressive one: copy arrives out of focus and settles. Used where a
+   block should feel like it resolved rather than appeared. */
+@keyframes rl-focus {
+  from { opacity: 0; transform: translateY(26px) scale(0.985); filter: blur(7px) }
+  to   { opacity: 1; transform: none;                          filter: blur(0) }
+}
+
+@keyframes rl-in-left {
+  from { opacity: 0; transform: translateX(-22px) }
+  to   { opacity: 1; transform: none }
+}
+
+/* The filament warming: the light arrives once, and unevenly, like a bulb. */
+@keyframes rl-lightup {
+  0%   { opacity: 0;    transform: translate(-50%, -50%) scale(0.6) }
+  55%  { opacity: 1;    transform: translate(-50%, -50%) scale(1.06) }
+  100% { opacity: 0.86; transform: translate(-50%, -50%) scale(1) }
+}
+
+/* ...and then never stops moving. Slow enough to feel alive, not to distract. */
+@keyframes rl-breathe {
+  0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1) }
+  50%      { opacity: 1;   transform: translate(-50%, -50%) scale(1.08) }
+}
+
+/* The arc travelling around the ring. It is the gradient that moves, not the
+   element — the element is holding the tilt and the squash that make the circle
+   read as an ellipse seen edge-on. */
+@keyframes rl-orbit {
+  to { --rl-a: 360deg }
+}
+
+/* The far ring, which turns as a whole because nothing is riding it. */
+@keyframes rl-turn {
+  from { transform: translate(-50%, -50%) rotate(-14deg) scaleY(var(--sq, 0.34)) rotate(0turn) }
+  to   { transform: translate(-50%, -50%) rotate(-14deg) scaleY(var(--sq, 0.34)) rotate(1turn) }
+}
+
+/* The room the light is in. Two glows drifting against each other on different
+   periods, so the hero never repeats a frame you have already looked at. */
+@keyframes rl-drift-a {
+  0%, 100% { transform: translate3d(-3%, 0, 0) scale(1) }
+  50%      { transform: translate3d(5%, -4%, 0) scale(1.1) }
+}
+
+@keyframes rl-drift-b {
+  0%, 100% { transform: translate3d(4%, 3%, 0) scale(1.06) }
+  50%      { transform: translate3d(-6%, -2%, 0) scale(1) }
+}
+
+@keyframes rl-fade-in {
+  from { opacity: 0 }
+  to   { opacity: 1 }
+}
+
+@keyframes rl-draw {
+  from { transform: scaleX(0) }
+  to   { transform: scaleX(1) }
+}
+
+/* A lamp coming on: the dot beside a belief lights from hairline to cyan. */
+@keyframes rl-lamp {
+  from { background: var(--line); box-shadow: 0 0 0 0 transparent }
+  to   { background: var(--glow);
+         box-shadow: 0 0 16px 3px color-mix(in oklab, var(--glow) 45%, transparent) }
+}
+
+/* A numeral arriving: it lands, rather than fading up like body copy. */
+@keyframes rl-land {
+  0%   { opacity: 0; transform: translateY(-10px) scale(0.7) }
+  62%  { opacity: 1; transform: translateY(0) scale(1.14) }
+  100% { opacity: 1; transform: none }
+}
+
+/* A stroke drawing itself. `--len` is set per path in the markup. */
+@keyframes rl-trace {
+  from { stroke-dashoffset: var(--len, 1200) }
+  to   { stroke-dashoffset: 0 }
+}
+
+/* --- on load ------------------------------------------------------------- */
+
+/* `both` is load-bearing: the element holds the END state, so it stays
+   visible even if the animation is interrupted or never runs. */
+.rl-rise {
+  animation: rl-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--d, 0s);
+}
+
+.rl-focus {
+  animation: rl-focus 1.15s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--d, 0s);
+}
+
+/* --- the room ------------------------------------------------------------ */
+
+/* The hero's light seen from across the room: a ray fan and two slow glows,
+   all anchored near the lit word so the page still reads as ONE source.
+   Decorative, `aria-hidden` in the markup, and never interactive. */
+.rl-lightfield {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  contain: paint;
+  /* Without this the clip leaves a hard horizontal edge across the page where the
+     hero ends — a visible cyan band, which is the one thing a light must not be. */
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 52%, transparent 96%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 52%, transparent 96%);
+}
+
+.rl-halo {
+  position: absolute;
+  left: 14%;
+  top: 74%;
+  width: 96vmax;
+  aspect-ratio: 1;
+  --sq: 0.34;
+  transform: translate(-50%, -50%) rotate(-14deg) scaleY(var(--sq));
+  opacity: 0;
+  border-radius: 9999px;
+  /* The same ring as the mark, at the scale of a room. Drawn as an annulus mask over
+     a flat fill, then squashed — squashing the mask WITH the fill is what gives the
+     stroke a real ring's uneven weight, thin at the top and bottom of the ellipse,
+     instead of the even outline a `border` would draw. */
+  /* Cyan carries far more luminance than the amber this replaced, so the same alpha
+     that read as warm light reads as a painted panel. Every value here is roughly
+     half what the amber version used. */
+  background:
+    conic-gradient(
+      from 200deg,
+      color-mix(in oklab, var(--brand-blue) 13%, transparent),
+      color-mix(in oklab, var(--glow) 15%, transparent) 120deg,
+      color-mix(in oklab, var(--brand-blue) 8%, transparent) 250deg,
+      color-mix(in oklab, var(--brand-blue) 13%, transparent) 360deg
+    );
+  -webkit-mask-image: radial-gradient(circle, transparent 47%, #000 48.6%, #000 49.6%, transparent 51%);
+  mask-image: radial-gradient(circle, transparent 47%, #000 48.6%, #000 49.6%, transparent 51%);
+  filter: blur(1.5px);
+  animation:
+    rl-fade-in 3s ease-out 0.6s both,
+    rl-turn 240s linear 0.6s infinite;
+}
+
+.rl-glow {
+  position: absolute;
+  left: 22%;
+  top: 34%;
+  width: 62vmax;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  filter: blur(60px);
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--glow) 12%, transparent) 0%,
+    color-mix(in oklab, var(--glow) 4%, transparent) 40%,
+    transparent 68%
+  );
+  animation:
+    rl-fade-in 2.2s ease-out 0.2s both,
+    rl-drift-a 34s ease-in-out 2.2s infinite;
+}
+
+/* The cool half of the brand, opposite the warm one, so the ground has depth
+   rather than a single wash. Blue is a GRAPHICS colour at this lightness —
+   there is no text on it. */
+.rl-glow-core {
+  left: auto;
+  right: -6%;
+  top: 62%;
+  width: 46vmax;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--brand-blue) 11%, transparent) 0%,
+    color-mix(in oklab, var(--brand-blue) 4%, transparent) 42%,
+    transparent 70%
+  );
+  animation:
+    rl-fade-in 2.6s ease-out 0.4s both,
+    rl-drift-b 47s ease-in-out 2.6s infinite;
+}
+
+/* --- the light, anchored to the word ------------------------------------- */
+
+/* `isolation` gives the span its own stacking context, so the `z-index: -1`
+   layer below paints UNDER its text and OVER the page — never behind the page
+   background, and never on top of the letters. The word itself is untouched:
+   no gradient, no clip, no colour change.
+
+   The rays live in `.rl-lightfield` now, not here, so a page can put this on a
+   headline word without dragging a second ray fan onto the page. `--lit`
+   scales the whole thing for a smaller inner-page headline. */
+.rl-lit {
+  position: relative;
+  isolation: isolate;
+  white-space: nowrap;
+}
+
+/* Both layers are sized in `em`, so the light scales with the headline at every
+   breakpoint instead of needing its own media queries. */
+.rl-lit::before,
+.rl-lit::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.rl-lit::before {
+  transform: translate(-50%, -50%);
+  width: calc(13em * var(--lit, 1));
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  /* Cyan, and mostly transparent — a light in a room, not a highlighter. */
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--glow) 30%, transparent) 0%,
+    color-mix(in oklab, var(--glow) 10%, transparent) 34%,
+    transparent 62%
+  );
+  filter: blur(18px);
+  animation:
+    rl-lightup 1.9s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both,
+    rl-breathe 11s ease-in-out 2.3s infinite;
+}
+
+/* THE RING. In the mark, the light is not a bulb — it is an orbit, and the bright
+   part of it is the arc that happens to be coming toward you. So the word is not
+   sitting under a lamp, it is sitting inside a ring, and the arc goes round it once
+   every nine seconds.
+
+   The element is a CIRCLE that gets squashed and tilted by the transform. The mask
+   is squashed with it, which is what makes the stroke thin at the top and bottom of
+   the ellipse the way a real tilted ring does — a `border` on an ellipse would draw
+   an even outline and read as a flat oval instead. */
+.rl-lit::after {
+  width: calc(5.4em * var(--lit, 1));
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  /* Wide enough to enclose the word and no wider. At 8.4em the arc ran through the
+     words either side of it, which is a ring drawn ON the headline rather than one
+     the headline sits inside. */
+  transform: translate(-50%, -50%) rotate(-13deg) scaleY(0.44);
+  background: conic-gradient(
+    from var(--rl-a),
+    transparent 0deg,
+    color-mix(in oklab, var(--glow) 62%, transparent) 34deg,
+    color-mix(in oklab, var(--brand-blue) 42%, transparent) 76deg,
+    transparent 130deg,
+    transparent 302deg,
+    color-mix(in oklab, var(--brand-blue) 22%, transparent) 360deg
+  );
+  -webkit-mask-image: radial-gradient(circle, transparent 45%, #000 47.5%, #000 49.4%, transparent 50.8%);
+  mask-image: radial-gradient(circle, transparent 45%, #000 47.5%, #000 49.4%, transparent 50.8%);
+  filter: blur(0.5px) drop-shadow(0 0 5px color-mix(in oklab, var(--glow) 32%, transparent));
+  opacity: 0;
+  animation:
+    rl-fade-in 1.6s ease-out 0.75s both,
+    rl-orbit 9s linear 0.75s infinite;
+}
+
+
+/* --- reading progress ---------------------------------------------------- */
+
+/* A scroll-driven progress rule on long pages. `scroll(root block)` needs no
+   listener and no JS; where it is unsupported the bar sits at `scaleX(0)` and
+   is simply never seen. */
+.rl-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  height: 2px;
+  z-index: 50;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  pointer-events: none;
+  background: linear-gradient(90deg, var(--brand-blue), var(--glow));
+}
+
+/* --- on scroll ----------------------------------------------------------- */
+
+.rl-rule {
+  height: 1px;
+  background: var(--line);
+  transform-origin: left;
+  border: 0;
+}
+
+/* The marker under a step numeral. A step list is a SEQUENCE, so it draws ALONG
+   the sequence, left to right, one column after another — the line is doing the
+   same job the numbering is, rather than decorating it. */
+.rl-tick {
+  height: 1px;
+  background: linear-gradient(90deg, var(--glow), var(--line));
+  transform-origin: left;
+}
+
+.rl-lampdot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: var(--glow);
+  box-shadow: 0 0 16px 3px color-mix(in oklab, var(--glow) 45%, transparent);
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* `--i` staggers by shifting the RANGE, not by delaying — a scroll-driven
+       animation has no wall clock, so `animation-delay` would do nothing.
+       Both ends sit inside `entry`, so an element is fully opaque as soon as
+       it is fully in view rather than at some later scroll depth. */
+    .rl-reveal {
+      animation: rl-rise linear both;
+      animation-timeline: view();
+      animation-range: entry calc(4% + var(--i, 0) * 6%) entry calc(64% + var(--i, 0) * 6%);
+    }
+
+    /* The same idea with the blur, for section openers and big statements. */
+    .rl-reveal-focus {
+      animation: rl-focus linear both;
+      animation-timeline: view();
+      animation-range: entry calc(2% + var(--i, 0) * 6%) entry calc(70% + var(--i, 0) * 6%);
+    }
+
+    /* Rows of a table or a list: they arrive from the side, one after another,
+       which reads as a list being dealt rather than a block appearing. */
+    .rl-reveal-left {
+      animation: rl-in-left linear both;
+      animation-timeline: view();
+      animation-range: entry calc(4% + var(--i, 0) * 5%) entry calc(58% + var(--i, 0) * 5%);
+    }
+
+    .rl-rule {
+      animation: rl-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 85%;
+    }
+
+    .rl-tick {
+      animation: rl-draw linear both;
+      animation-timeline: view();
+      animation-range: entry calc(10% + var(--i, 0) * 7%) entry calc(70% + var(--i, 0) * 7%);
+    }
+
+    .rl-lampdot {
+      animation: rl-lamp linear both;
+      animation-timeline: view();
+      animation-range: entry calc(12% + var(--i, 0) * 6%) entry calc(72% + var(--i, 0) * 6%);
+    }
+
+    .rl-num {
+      display: inline-block;
+      animation: rl-land linear both;
+      animation-timeline: view();
+      animation-range: entry calc(8% + var(--i, 0) * 7%) entry calc(66% + var(--i, 0) * 7%);
+    }
+
+    /* An SVG stroke that draws as you reach it. `--len` is the path length,
+       set on the element; the dash array is the same value. */
+    .rl-trace {
+      stroke-dasharray: var(--len, 1200);
+      stroke-dashoffset: 0;
+      animation: rl-trace linear both;
+      animation-timeline: view();
+      animation-range: entry 12% cover 42%;
+    }
+
+    .rl-progress {
+      animation: rl-draw linear both;
+      animation-timeline: scroll(root block);
+    }
+
+    /* Long prose: every top-level block rises as it is reached. Applied by the
+       PARENT, because the article body is markdown we do not hand-write — there
+       is nowhere to put a class on each paragraph, and adding a renderer plugin
+       to do it would be JS on a page whose whole point is that it is text. */
+    .rl-prose > * {
+      animation: rl-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 6% entry 62%;
+    }
+
+    /* Parallax, and a small amount of it. `cover` spans the element's whole
+       pass through the viewport, so the drift is continuous rather than
+       finishing early like the `entry`-ranged reveals above. */
+    .rl-parallax {
+      animation: rl-parallax linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}
+
+@keyframes rl-parallax {
+  from { transform: translateY(calc(var(--p, 30px) * 1)) }
+  to   { transform: translateY(calc(var(--p, 30px) * -1)) }
+}
+
+/* --- hover --------------------------------------------------------------- */
+
+/* The product card lights from its top-left corner — the same warm source as
+   the hero, so the page has one light and not several. */
+.rl-card {
+  position: relative;
+  isolation: isolate;
+  transition: border-color 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rl-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  background: radial-gradient(
+    70% 120% at 18% 0%,
+    color-mix(in oklab, var(--glow) 20%, transparent),
+    transparent 68%
+  );
+}
+
+.rl-card:hover::before,
+.rl-card:focus-visible::before { opacity: 1 }
+.rl-card:hover { transform: translateY(-3px) }
+
+/* A writing row: the accent wipes in from the left rather than appearing. */
+.rl-row {
+  position: relative;
+  transition: color 0.3s ease, padding-left 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rl-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 2px;
+  height: 0;
+  border-radius: 2px;
+  background: var(--glow);
+  transform: translateY(-50%);
+  transition: height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rl-row:hover::before,
+.rl-row:focus-visible::before { height: 58% }
+.rl-row:hover, .rl-row:focus-visible { padding-left: 0.9rem }
+
+/* A nav or inline link: the rule sweeps out from the side it was entered on,
+   rather than blinking on. `currentColor`, so it works in header and footer,
+   light and dark, without a second declaration. */
+.rl-link {
+  position: relative;
+}
+
+.rl-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rl-link:hover::after,
+.rl-link:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+/* A block that answers a question: hovering it lights its left edge, the same
+   cyan, so a long FAQ has something to hold on to without collapsing any of
+   it behind a toggle. The answers stay in the HTML — an FAQ hidden inside a
+   `<details>` is an FAQ an answer engine has to work harder to read. */
+.rl-block {
+  position: relative;
+  transition: border-color 0.4s ease;
+}
+
+.rl-block::before {
+  content: '';
+  position: absolute;
+  left: -1rem;
+  top: 1.5rem;
+  bottom: 1.5rem;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--glow);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rl-block:hover::before,
+.rl-block:focus-within::before { transform: scaleY(1) }
+
+/* The primary CTA carries a halo of the same light that grows on
+   hover: the button is a light too. */
+.rl-cta {
+  box-shadow: 0 0 0 0 color-mix(in oklab, var(--glow) 40%, transparent);
+  transition: box-shadow 0.45s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rl-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px -8px color-mix(in oklab, var(--glow) 65%, transparent);
+}
+
+.rl-cta-quiet:hover {
+  box-shadow: 0 10px 30px -12px color-mix(in oklab, var(--brand-deep) 35%, transparent);
+}
+
+/* --- the home hero ------------------------------------------------------- */
+
+/* THE HERO IS DARK IN BOTH THEMES. It is the mark's own dark lockup, not a themed
+   surface, so it pins the dark side of the palette locally rather than reading
+   `--foreground` — which on Paper would flip to Ink and put dark text on a dark ground.
+   Both layers are set on purpose: the raw tokens because `.rl-glow` / `.rl-halo` /
+   `.rl-lit` read `var(--glow)` and `var(--brand-blue)` directly, and the `--color-*`
+   tokens because `@theme inline` resolves those AT `:root`, so overriding only the raw
+   ones would never reach `text-muted` or `bg-accent`. */
+.rl-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  /* NOT 100vh, deliberately: the next section peeks over the fold, so the page reads as
+     scrollable rather than as a landing page that ends here. */
+  min-height: min(88vh, 780px);
+
+  --background: #070b11;
+  --surface: #0e141c;
+  --foreground: #f5f8fc;
+  --muted: #b3c2d3;
+  --line: #1e2833;
+  --accent: #7adfff;
+  --on-accent: #0a1119;
+  --accent-soft: #0f2231;
+  --brand-blue: #4da6ff;
+  --glow: #22e9ff;
+
+  --color-background: #070b11;
+  --color-surface: #0e141c;
+  --color-foreground: #f5f8fc;
+  --color-muted: #b3c2d3;
+  --color-line: #1e2833;
+  --color-accent: #7adfff;
+  --color-on-accent: #0a1119;
+  --color-accent-soft: #0f2231;
+  --color-brand-blue: #4da6ff;
+  --color-glow: #22e9ff;
+
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* The scrim sits between the ground and the copy so the type holds its contrast no
+   matter how bright the ground gets under it.
+
+   ⚠️ THE FLOOR IS 0.64, NOT 0.55. Against a pure-white pixel — the upper bound for ANY
+   content that could ever sit here, a video included — 0.55 measures 4.11:1 on the
+   headline, which fails the 4.5:1 this scrim exists to guarantee. 0.64 measures 5.68:1.
+   The floor is what does the work; raising it is cheaper than discovering a bright frame
+   later. Today the ground is near-black and the real number is far better than either. */
+.rl-hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(7, 11, 17, 0.88) 0%,
+    rgba(7, 11, 17, 0.70) 44%,
+    rgba(7, 11, 17, 0.64) 68%,
+    rgba(7, 11, 17, 0.92) 100%
+  );
+}
+
+/* THE RING, DIMMED FOR THIS GROUND — and this is the one thing the hero could not
+   inherit. `.rl-lit::after` was tuned against Paper, where 62% cyan reads as a soft
+   tint. Over a near-black hero the same arc measures rgb(36,163,189), and where it
+   crosses behind the headline the local contrast falls to **2.80:1** — under the 3:1
+   floor for large text. The scrim cannot help: `.rl-lit` lives in the content layer
+   at z-index 10, above it.
+
+   So the mix comes down here rather than the ring coming off. Percentages, not
+   `opacity`: `rl-fade-in` fills `opacity` forwards to 1 and an animated value beats a
+   static declaration, so `opacity` would silently do nothing. Re-measure with the
+   probe in scratchpad if you touch these numbers. */
+.rl-hero .rl-lit::after {
+  background: conic-gradient(
+    from var(--rl-a),
+    transparent 0deg,
+    color-mix(in oklab, var(--glow) 30%, transparent) 34deg,
+    color-mix(in oklab, var(--brand-blue) 20%, transparent) 76deg,
+    transparent 130deg,
+    transparent 302deg,
+    color-mix(in oklab, var(--brand-blue) 11%, transparent) 360deg
+  );
+  filter: blur(0.5px) drop-shadow(0 0 5px color-mix(in oklab, var(--glow) 15%, transparent));
+}
+
+/* The bulb behind the word comes down with it, or it just becomes the bright thing
+   the ring used to be. */
+.rl-hero .rl-lit::before {
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--glow) 17%, transparent) 0%,
+    color-mix(in oklab, var(--glow) 6%, transparent) 34%,
+    transparent 62%
+  );
+}
+
+/* The four facts. A grid rather than a flex row so the columns stay equal and the
+   longest label cannot push the others out of line at 360 px. */
+.rl-hero-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem 2rem;
+}
+
+@media (min-width: 768px) {
+  .rl-hero-facts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.rl-hero-facts dt {
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* The row is one link, so the whole block reacts rather than a word inside it. */
+.rl-hero-factlink {
+  display: block;
+  border-radius: 1rem;
+  outline-offset: 4px;
+  transition: opacity 0.25s ease;
+}
+
+.rl-hero-factlink:hover {
+  opacity: 0.82;
+}
+
+/* --- off ----------------------------------------------------------------- */
+
+/* Last, so it wins. Everything lands in its final, readable state. The light
+   stays — it is the brand, not the animation — it simply stops moving. */
+@media (prefers-reduced-motion: reduce) {
+  .rl-rise, .rl-focus, .rl-reveal, .rl-reveal-focus, .rl-reveal-left,
+  .rl-rule, .rl-tick, .rl-lampdot, .rl-num, .rl-trace, .rl-parallax,
+  .rl-lit::before, .rl-lit::after, .rl-halo, .rl-glow, .rl-prose > * {
+    animation: none !important;
+  }
+  .rl-rise, .rl-focus, .rl-reveal, .rl-reveal-focus, .rl-reveal-left, .rl-num, .rl-prose > * {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+  .rl-rule, .rl-tick, .rl-parallax { transform: none !important }
+  .rl-trace { stroke-dashoffset: 0 !important }
+  .rl-progress { display: none }
+  .rl-lit::before { opacity: 0.86 }
+  .rl-lit::after { opacity: 0.9 }
+  .rl-halo { opacity: 0.6 }
+  .rl-glow { opacity: 1 }
+  .rl-card:hover { transform: none }
+  .rl-cta:hover { transform: none }
+  .rl-row:hover, .rl-row:focus-visible { padding-left: 0 }
+}

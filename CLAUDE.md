@@ -12,6 +12,7 @@ This repo is **radlor.com**: the marketing and company site for Radlor. It is NO
 | **The product** | `adaptivelearn.radlor.com` — a **separate repo and a separate Vercel project**, at `../milo-story-mode` on this machine (GitHub `RadlorMain/learn`). Deliberately separate: that repo carries ~1,100 tests, an AR/camera stack and a deploy pipeline that has broken silently more than once. A marketing edit must never be able to take the app down, and vice versa. |
 | **Every shared fact** | [`site.ts`](site.ts) — origin, support address, product URL, nav, company facts. **Put a string there before you put it in a page.** The product repo learned this the hard way: its support address lived as a literal in four files, so a brand change meant four edits and hoping none was missed. |
 | **Facts I could not derive** | [`docs/brand-facts.md`](docs/brand-facts.md) — the `TODO`s in `site.ts` and what they feed. |
+| **Every colour** | [`docs/brand-palette.md`](docs/brand-palette.md) — read off the LOGO, with the pixel each came from and its contrast. ⚠️ The amber palette that cited a brand-guide PDF not in this repo is superseded; do not restore it. |
 | **What the site claims** | `/privacy` and `/data-and-safety` make **checkable** claims (no third-party requests; the camera never uploads). Both files carry a header comment saying what was measured. Break one and fix the page in the same commit. |
 | **Session state** | [`handoff.md`](handoff.md) — read it first, update it when the session wraps. |
 

@@ -9,10 +9,17 @@ export const metadata: Metadata = {
 
 export default function About() {
   return (
-    <section className="mx-auto max-w-5xl px-6 pt-20">
-      <h1 className="font-display text-5xl">About {COMPANY}</h1>
+    <section className="relative isolate overflow-hidden">
+      {/* Decorative, `aria-hidden`, behind the text — a screen reader gets the copy alone. */}
+      <div className="rl-lightfield" aria-hidden="true">
+        <div className="rl-glow rl-parallax" style={{ '--p': '30px' } as React.CSSProperties} />
+      </div>
+      <div className="relative z-10 mx-auto max-w-5xl px-6 pt-20">
+      <h1 className="rl-focus font-display text-5xl">
+        About <span className="rl-lit" style={{ '--lit': 0.55 } as React.CSSProperties}>{COMPANY}</span>
+      </h1>
 
-      <div className="prose mt-10">
+      <div className="rl-prose prose mt-10">
         <p>
           {COMPANY} is a small software company. We build learning tools that change according to the person
           using them, starting with math.
@@ -48,6 +55,7 @@ export default function About() {
           would like an account, or you are a school that wants to try it with a class, write to{' '}
           <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
         </p>
+      </div>
       </div>
     </section>
   )
