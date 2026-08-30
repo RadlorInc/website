@@ -109,7 +109,19 @@ export default function Home() {
 
       {/* The four facts on their own band below the hero, sharing its dark ground. They were
           inside the hero once and did not fit a single screen alongside the headline, the subhead
-          and two CTAs on a short laptop. This layout outlived the scrub that prompted it.
+          and two CTAs on a short laptop.
+
+          ⚠️ FOUR LINKS, NOT ONE. This was a single <Link href="/data-and-safety"> wrapped around
+          the whole list, so pressing any fact — the price, the age range — landed on data and
+          safety. A reader outside the team hit it immediately: "Idk if we can press and it takes
+          u to explain further but on my end I see the data and safety information instead."
+          Each fact now goes to the page that substantiates THAT fact. If you add a fact, give it
+          a destination that explains it; a fact linking to the wrong page is worse than a fact
+          that does not link at all.
+
+          ⚠️ A <ul>, NOT A <dl>. Making each item its own link inside a <dl> cannot be done
+          validly: the spec lets a <div> child of <dl> contain only <dt> and <dd>, so an <a>
+          wrapping the pair is invalid markup. A list of four links is what this actually is.
 
           ⚠️ THE ANIMATION IS `rl-reveal` HERE, and the earlier note saying it could not work was
           right AT THE TIME. `rl-reveal` is scroll-driven, so it does nothing for an element
@@ -118,21 +130,21 @@ export default function Home() {
           `--i` staggers them. Still no counters: "3–18" cannot count up from zero. */}
       <section className="rl-hero-band">
         <div className="mx-auto w-full max-w-5xl px-6 py-16">
-          <Link href="/data-and-safety" className="rl-hero-factlink">
-            <dl className="rl-hero-facts">
-              {[
-                ['Ages 3–18', 'every band, not a sample of the youngest'],
-                ['6 age bands', 'each looks and works differently'],
-                ['0 frames uploaded', 'hand tracking runs on the device'],
-                [`From ${usd(PRICING.monthly.first)}/month`, `first child; ${usd(PRICING.monthly.additional)} each additional`],
-              ].map(([k, v], i) => (
-                <div key={k} className="rl-reveal" style={{ '--i': i + 1 } as React.CSSProperties}>
-                  <dt className="font-display text-xl sm:text-2xl leading-tight">{k}</dt>
-                  <dd className="mt-1.5 text-sm text-muted leading-relaxed">{v}</dd>
-                </div>
-              ))}
-            </dl>
-          </Link>
+          <ul className="rl-hero-facts">
+            {[
+              ['Ages 3–18', 'every band, not a sample of the youngest', '/adaptivelearn'],
+              ['6 age bands', 'each looks and works differently', '/adaptivelearn'],
+              ['0 frames uploaded', 'hand tracking runs on the device', '/data-and-safety'],
+              [`From ${usd(PRICING.monthly.first)}/month`, `first child; ${usd(PRICING.monthly.additional)} each additional`, '/pricing'],
+            ].map(([term, detail, href], i) => (
+              <li key={term} className="rl-reveal" style={{ '--i': i + 1 } as React.CSSProperties}>
+                <Link href={href} className="rl-hero-factlink">
+                  <span className="rl-fact-term font-display text-xl sm:text-2xl leading-tight">{term}</span>
+                  <span className="rl-fact-detail mt-1.5 text-sm text-muted leading-relaxed">{detail}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

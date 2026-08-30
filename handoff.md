@@ -329,6 +329,29 @@ never fill.
 `hero-source.mp4` is the Higgsfield master, gitignored: 2.9 MB the site never serves, kept locally
 so the derivatives can be re-encoded.
 
+## The four facts — 2026-08-30
+
+⚠️ **THEY WERE ALL ONE LINK AND IT WENT TO THE WRONG PAGE.** A single
+`<Link href="/data-and-safety">` wrapped the whole list, so pressing the price, or the age range,
+landed on data and safety. A reader outside the team found it in her first pass: *"Idk if we can
+press and it takes u to explain further but on my end I see the data and safety information
+instead."* Each fact now links to the page that substantiates that fact — ages and bands to
+`/adaptivelearn`, the camera claim to `/data-and-safety`, the price to `/pricing`. **Add a fact,
+give it a destination that explains it.**
+
+⚠️ **IT IS A `<ul>` NOW, NOT A `<dl>`, AND THAT IS FORCED.** Making each item its own link inside a
+`<dl>` is invalid markup: the spec lets a `<div>` child of `<dl>` contain only `<dt>` and `<dd>`, so
+an `<a>` wrapping the pair has nowhere legal to sit. Four links in a list is what this actually is.
+
+⚠️ **NOTHING EVER OVERFLOWED, AND THE FIX IS STILL REAL.** The same reader reported the second
+fact's last character looking clipped. Measured at 320, 360, 375, 390, 414, 430, 768, 1024 and
+1280: `scrollWidth` never exceeds `clientWidth`, no word is wider than its column, the document
+never scrolls sideways. What she saw was a line ending **3px** from the column edge — "each looks
+and works" ran to 348 in a column ending at 351 — which at 2x with subpixel antialiasing reads as
+clipped. Chasing that with the column gap alone is whack-a-mole, because ragged-right text lands
+where it lands and every gap value leaves some width near-flush. The guarantee is `padding-right`
+on the card: **minimum slack went from 1-3px to 14px at every width measured.**
+
 ## The home hero
 
 A full-bleed dark section: `min-height: min(88vh, 780px)`, the looping video as the ground, the

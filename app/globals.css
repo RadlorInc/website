@@ -836,34 +836,54 @@ body {
 }
 
 /* The four facts. A grid rather than a flex row so the columns stay equal and the
-   longest label cannot push the others out of line at 360 px. */
+   longest label cannot push the others out of line at 360 px.
+
+   ⚠️ NOTHING HERE EVER OVERFLOWED, AND THE FIX IS STILL REAL. A reader outside the team
+   reported the second fact's last character looking clipped at the card edge. Measured at
+   320, 360, 375, 390, 414, 430, 768, 1024 and 1280: `scrollWidth` never exceeds
+   `clientWidth`, no word is wider than its column, and the document never scrolls sideways.
+   What she saw was a line ending 3px from the column edge — "each looks and works" ran to
+   348 in a column ending at 351 — which at 2x with subpixel antialiasing reads as clipped.
+
+   Chasing that with the gap alone is whack-a-mole: ragged-right text lands wherever it
+   lands, and every gap value leaves SOME width with a near-flush line. So the guarantee is
+   `padding-right` on the card — text can never reach the cell edge, at any width, whatever
+   the copy becomes. The narrower gap is what pays for that padding without costing a line. */
 .rl-hero-facts {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.5rem 2rem;
+  gap: 1.5rem 1.25rem;
 }
 
 @media (min-width: 768px) {
   .rl-hero-facts {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: 2rem;
   }
 }
 
-.rl-hero-facts dt {
-  font-weight: 500;
-  letter-spacing: -0.01em;
-}
-
-/* The row is one link, so the whole block reacts rather than a word inside it. */
+/* ⚠️ EACH FACT IS ITS OWN LINK. This was one <Link> around the whole list, so every fact
+   led to /data-and-safety — including the price. The whole card still reacts, which is
+   what the hover is for; it just reacts as four cards now. `display: flex` + `column` so
+   the two spans stack: they are inline elements inside an <a>, not a <dt>/<dd> pair. */
 .rl-hero-factlink {
-  display: block;
+  display: flex;
+  flex-direction: column;
   border-radius: 1rem;
   outline-offset: 4px;
+  /* The guaranteed right margin. See the note above: this is what makes "the text is
+     visibly clear of the edge" true at every width rather than at most of them. */
+  padding-right: 0.75rem;
   transition: opacity 0.25s ease;
 }
 
 .rl-hero-factlink:hover {
   opacity: 0.82;
+}
+
+.rl-fact-term {
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 /* --- off ----------------------------------------------------------------- */
