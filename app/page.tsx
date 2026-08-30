@@ -119,6 +119,20 @@ export default function Home() {
           a destination that explains it; a fact linking to the wrong page is worse than a fact
           that does not link at all.
 
+          ⚠️ FOUR FACTS, FOUR DIFFERENT QUESTIONS — and that rule is what fixed the jargon here.
+          The same reader asked "what does 6 age bands mean?", which reads as a vocabulary
+          problem and was really a structure problem: facts 1 and 2 BOTH answered "who is it
+          for", so the second had no question of its own left to answer and fell back on our
+          internal word for a content-organisation decision. It now answers "how does it know
+          where my child is", which is a question a parent actually has. The four are: is it for
+          my child's age, how does it know where to start, is my child safe, what does it cost.
+          Add a fifth only if it answers a fifth question.
+
+          "six stages that look nothing alike" keeps the idea that "6 age bands" was reaching
+          for — the idea was never the problem, the label was. It is `/adaptivelearn`'s own
+          claim: a five-year-old gets a narrated story world, a sixteen-year-old a design studio
+          with a working chalkboard.
+
           ⚠️ A <ul>, NOT A <dl>. Making each item its own link inside a <dl> cannot be done
           validly: the spec lets a <div> child of <dl> contain only <dt> and <dd>, so an <a>
           wrapping the pair is invalid markup. A list of four links is what this actually is.
@@ -132,8 +146,8 @@ export default function Home() {
         <div className="mx-auto w-full max-w-5xl px-6 py-16">
           <ul className="rl-hero-facts">
             {[
-              ['Ages 3–18', 'every band, not a sample of the youngest', '/adaptivelearn'],
-              ['6 age bands', 'each looks and works differently', '/adaptivelearn'],
+              ['Ages 3–18', 'one app, six stages that look nothing alike', '/adaptivelearn'],
+              ['Starts where your child is', 'a short check, not their school year', '/adaptivelearn'],
               ['0 frames uploaded', 'hand tracking runs on the device', '/data-and-safety'],
               [`From ${usd(PRICING.monthly.first)}/month`, `first child; ${usd(PRICING.monthly.additional)} each additional`, '/pricing'],
             ].map(([term, detail, href], i) => (
@@ -210,6 +224,14 @@ export default function Home() {
                 All posts →
               </Link>
             </div>
+            {/* ⚠️ THIS LINE EXISTS BECAUSE A READER ASKED "I don't understand the writing
+                portion?" — a bare <h2>Writing</h2> over three dated rows says what the section
+                is CALLED, not what it is. One line, doing one job: what the posts are, and why
+                to open one. It deliberately claims nothing about frequency, which is the same
+                reason the URL is /writing and not /blog. */}
+            <p className="rl-reveal mt-3 text-muted max-w-2xl">
+              What we&rsquo;ve learned building it — one finding per post.
+            </p>
             <ul className="mt-8 divide-y divide-line">
               {posts.slice(0, 3).map((p, i) => (
                 <li key={p.slug} className="rl-reveal" style={{ '--i': i + 1 } as React.CSSProperties}>

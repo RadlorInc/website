@@ -28,7 +28,20 @@ linked to `RadlorInc/learn` — even though the dashboard shows `website` on the
 the connector's grant is scoped to that one project. The practical cost: **a failed deploy cannot
 be seen from here.** Nobody can read the build log, confirm a SHA, or notice a silent break — it
 would only surface as "production did not change". Re-grant the Vercel connector access to the
-`website` project. Until then, verify deploys by fetching radlor.com, the way this one was.
+`website` project.
+
+⚠️ **UNTIL THEN, VERIFY A DEPLOY BY NAVIGATING A REAL BROWSER TO radlor.com. DO NOT POLL IT WITH
+`curl`.** This instruction used to say "fetch radlor.com" and that is now wrong in a way that costs
+a session: Vercel's Attack Challenge Mode is armed on this project, and a `curl` loop trips it
+within a couple of minutes. Once tripped, **every** `curl` gets `HTTP 403` and a 34 KB
+"Vercel Security Checkpoint" page instead of the site — which looks exactly like a failed deploy,
+and is not one. Headless Chrome is challenged too, so it cannot verify production either.
+
+**The tell is the response header `x-vercel-mitigated: challenge`** (alongside
+`x-vercel-challenge-token`). If you see it, the deploy is fine and you are the bot. Stop polling
+and open the page in the Browser pane, which clears the challenge transparently in one navigation
+and can then read the live DOM — `document.querySelectorAll(...)` on the real page is a stronger
+check than grepping HTML anyway. If you must know *when* a deploy lands, wait once and look once.
 
 ## The palette came off the logo (2026-08-29)
 
@@ -331,6 +344,16 @@ so the derivatives can be re-encoded.
 
 ## The four facts — 2026-08-30
 
+⚠️ **FOUR FACTS, FOUR DIFFERENT QUESTIONS.** The same reader asked *"what does 6 age bands
+mean?"*, which reads as a vocabulary problem and was really a structure problem: facts 1 and 2
+both answered *who is it for*, so the second had no question left of its own and fell back on our
+internal word for a content-organisation decision. The four now answer four different first-visit
+questions — **is it for my child's age** (Ages 3–18), **how does it know where to start**
+(Starts where your child is), **is my child safe** (0 frames uploaded), **what does it cost**
+(From $7.99/month). Add a fifth only if it answers a fifth question. "six stages that look nothing
+alike" keeps the idea "6 age bands" was reaching for: the idea was never the problem, the label
+was.
+
 ⚠️ **THEY WERE ALL ONE LINK AND IT WENT TO THE WRONG PAGE.** A single
 `<Link href="/data-and-safety">` wrapped the whole list, so pressing the price, or the age range,
 landed on data and safety. A reader outside the team found it in her first pass: *"Idk if we can
@@ -351,6 +374,18 @@ and works" ran to 348 in a column ending at 351 — which at 2x with subpixel an
 clipped. Chasing that with the column gap alone is whack-a-mole, because ragged-right text lands
 where it lands and every gap value leaves some width near-flush. The guarantee is `padding-right`
 on the card: **minimum slack went from 1-3px to 14px at every width measured.**
+
+## The Writing section on the home page
+
+It was a bare `<h2>Writing</h2>`, an "All posts →" link and three dated rows. A reader outside the
+team: *"I don't understand the writing portion?"* — the heading said what the section was CALLED,
+not what it was. There is now one line under it:
+
+> What we've learned building it — one finding per post.
+
+⚠️ **IT CLAIMS NOTHING ABOUT FREQUENCY, ON PURPOSE** — same reason the URL is `/writing` and not
+`/blog`. A longer draft ended "…with the working shown"; it was cut because a line whose whole job
+is to stop someone being confused should not carry a third clause.
 
 ## The home hero
 
