@@ -71,8 +71,33 @@ favicon is ever actually seen at.
 |---|---|---|
 | `app/icon.png` | 256 | the browser tab |
 | `app/apple-icon.png` | 180 | the iOS home screen |
-| `public/mark-black.png` | 228×160 | the header, drawn at 57×40, on a light ground |
-| `public/mark-white.png` | 228×160 | the header, drawn at 57×40, on a dark ground |
+| `public/wordmark.png` | 280×96 | **the header** — the full lockup, drawn at 93×32 (`h-8`) |
+| `public/mark-black.png` | 228×160 | both share cards, inlined at build |
+| `public/mark-white.png` | 228×160 | ⚠️ **nothing, since 2026-08-31** — see below |
+
+⚠️ **Updated 2026-08-31: the header is now the full LOCKUP, not the mark plus a text wordmark.**
+`public/wordmark.png` is the chrome "radlor" with the robot in the 'o' and the cyan orbit, cut
+from `radlor_logo/logo.png` with the black ground keyed to alpha — 67% of it is fully
+transparent and another ~32% is partially so, which is the glow. That soft alpha is why it only
+composites correctly on the palette's near-black values and is washed out on Paper.
+
+So **the header is pinned dark in BOTH themes** (`.rl-header` in `globals.css`), on
+`--background`'s dark value rather than `#000`, which also makes the header and the home hero one
+continuous surface instead of two dark bands with a seam. It pins the `--color-*` tokens as well
+as the raw ones — Tailwind utilities read the former, and `@theme inline` resolves them at
+`:root`, so pinning only the raw tokens would leave every nav link at the LIGHT theme's Ink on a
+dark band: invisible, and only in light mode.
+
+Measured in light theme after the change: nav link **10.87:1**, hover **18.51:1**, CTA label
+**12.49:1**, CTA surface **12.98:1**. Unpinned it would have been 3.06:1 and 1.04:1.
+
+The `<span>Radlor</span>` beside the mark is gone because the image contains the word, so the
+image's `alt` is **"Radlor"** and must never go back to `""` — it is the only accessible name the
+home link has. Verified in the accessibility tree, not assumed.
+
+⚠️ `public/mark-white.png` is now used by nothing: the `<picture>` in the header was its only
+consumer. Kept rather than deleted because it is the brand's dark-ground mono mark and the recipe
+below regenerates it; delete it if a month passes and nothing wants it.
 
 ⚠️ **Updated 2026-08-30. The header used to show a full-colour `public/mark.png` on its own
 near-black tile**, on the reasoning that the robot's white body could not be keyed transparent

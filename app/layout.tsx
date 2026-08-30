@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Inter, Instrument_Serif } from 'next/font/google'
 import './globals.css'
@@ -76,28 +77,30 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       <body className="min-h-full flex flex-col">
         <OrganizationJsonLd />
 
-        <header className="border-b border-line">
+        <header className="rl-header border-b border-line">
           <div className="mx-auto max-w-5xl px-6 h-16 flex items-center justify-between gap-6">
-            {/* The mark, then the name. `alt` is empty on purpose: the word beside it says
-                "Radlor" already, and a screen reader announcing it twice is worse than not
-                announcing the picture at all. The wordmark used to carry a drawn glow here —
-                it does not need one now that the thing it was imitating is actually present. */}
-            <Link href="/" className="flex items-center gap-2.5">
-              {/* Two artworks, not one inverted. In the white mark the head is solid with the
-                  visor cut out of it; in the black one the head is an outline. `filter: invert()`
-                  would therefore draw the wrong picture, which is why the brand ships both files
-                  and why this is a `<picture>` rather than a CSS trick.
+              {/* The whole lockup is now ONE image — the chrome wordmark with the robot in the
+                  'o'. The `<span>Radlor</span>` that used to sit beside the mark is gone because
+                  the picture contains the word.
 
-                  `<picture>` art-directs on the system theme with no JS and no client boundary —
-                  `next/image` cannot do it, having no art-direction, so the plain `<img>` is the
-                  feature that fits rather than a step down. `width`/`height` are set so the row
-                  does not reflow while it loads. */}
-              <picture>
-                <source srcSet="/mark-white.png" media="(prefers-color-scheme: dark)" />
-                <img src="/mark-black.png" alt="" width={57} height={40} />
-              </picture>
-              <span className="font-display text-2xl tracking-tight">{COMPANY}</span>
-            </Link>
+                  ⚠️ `alt` IS "Radlor" AND MUST NOT GO BACK TO "". It was empty while real text sat
+                  next to it and would otherwise have been announced twice. Now the picture IS the
+                  word, so an empty alt leaves this link — the home link, on every page — with no
+                  accessible name at all.
+
+                  ⚠️ One artwork, not two. The black ground is keyed to alpha, so it composites on
+                  any of the palette's dark values; that is why the header is pinned dark rather
+                  than art-directed per theme the way the old mono marks were. */}
+              <Link href="/" className="flex items-center">
+                <Image
+                  src="/wordmark.png"
+                  alt={COMPANY}
+                  width={280}
+                  height={96}
+                  priority
+                  className="h-8 w-auto"
+                />
+              </Link>
             {/* No hamburger. On a narrow frame the links drop out of the header and the footer — which
                 carries the same list — becomes the navigation. One CTA is what a phone has room for. */}
             <nav className="flex items-center gap-5 text-sm">

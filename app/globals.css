@@ -673,6 +673,50 @@ body {
   box-shadow: 0 10px 30px -12px color-mix(in oklab, var(--brand-deep) 35%, transparent);
 }
 
+/* --- the header ---------------------------------------------------------- */
+
+/* THE HEADER IS DARK IN BOTH THEMES, because the lockup in it is chrome and cyan and is
+   washed out to unreadable on Paper. Same technique as `.rl-hero`: pin the dark side of
+   the palette locally rather than reading the theme's.
+
+   ⚠️ BOTH TOKEN LAYERS, ON PURPOSE. The `--color-*` set is what Tailwind utilities read
+   (`text-muted`, `bg-accent`, `border-line`), and `@theme inline` resolves those AT `:root`
+   — so overriding only the raw tokens would leave every nav link resolving to the LIGHT
+   theme's Ink on a dark band. That is the bug this file exists to prevent: dark-on-dark,
+   invisible, and only in light mode, which is the mode a developer on a dark laptop never
+   looks at.
+
+   The ground is `--background`'s dark value, NOT #000 — the wordmark's black was keyed to
+   alpha and its remaining glow composites against this exact family. It also means the
+   header and the hero are the same surface on the home page rather than two dark bands
+   with a seam between them. */
+.rl-header {
+  --background: #070b11;
+  --surface: #0e141c;
+  --foreground: #f5f8fc;
+  --muted: #b3c2d3;
+  --line: #1e2833;
+  --accent: #7adfff;
+  --on-accent: #0a1119;
+  --accent-soft: #0f2231;
+  --brand-blue: #4da6ff;
+  --glow: #22e9ff;
+
+  --color-background: #070b11;
+  --color-surface: #0e141c;
+  --color-foreground: #f5f8fc;
+  --color-muted: #b3c2d3;
+  --color-line: #1e2833;
+  --color-accent: #7adfff;
+  --color-on-accent: #0a1119;
+  --color-accent-soft: #0f2231;
+  --color-brand-blue: #4da6ff;
+  --color-glow: #22e9ff;
+
+  background: var(--background);
+  color: var(--foreground);
+}
+
 /* --- the home hero ------------------------------------------------------- */
 
 /* THE HERO IS DARK IN BOTH THEMES. It is the mark's own dark lockup, not a themed
