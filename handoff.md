@@ -6,29 +6,29 @@
 
 ## Where it is right now
 
-**Shipped, and behind.** ⚠️ This section said *"Nothing is deployed and there is no GitHub repo
-yet"* until 2026-08-30, long after both became false. It is wrong twice over:
+**Live at radlor.com**, as the Vercel project `website`, from `github.com/RadlorInc/website`.
+Production tracks the tip of `main` — **do not pin a SHA here**, it is stale the next time anyone
+pushes and this file has already cost one session by being believed when wrong. Check it instead:
+`git log --oneline -1 origin/main`, then confirm production actually moved. Last verified at
+`c29ec14` on 2026-08-30 against production rather than the dashboard:
+`/pricing` serves `$7.99`, `Free while` returns zero hits, `/waitlist` and both outcome pages are
+200, the JSON-LD carries 8 offers all pointing at `radlor.com/waitlist`, and a form-encoded POST
+with no JavaScript persisted a row to the `ghuvnq` Supabase project and was then deleted. The
+waitlist table is empty and ready.
 
-- the repo is **`github.com/RadlorInc/website`**
-- it is **live on Vercel at radlor.com**, as the project `website` on the Hobby account
+> ⚠️ **This section has been wrong twice, in opposite directions.** It said *"nothing is deployed
+> and there is no GitHub repo"* for ten days after both became false, which cost a session. It was
+> then rewritten to say the work was *unpushed* — and went stale again within the hour, when it
+> was pushed. A handoff nobody updates is worse than no handoff, because it is believed.
+> **If you change where something lives, change it here in the same commit.**
 
-The deployed commit is **`1c7101d`** — the newest commit in this repo. So everything since it
-(the motion layer, the logo-derived palette, the real mark, pricing, the waitlist) is
-**uncommitted and NOT live**. radlor.com is still showing "free during early access".
-
-> This is the second time a stale line in this file sent a session down the wrong path — the
-> first claimed `sameAs` was empty when it had been filled for ten days. **If you change where
-> something lives, change it here in the same commit.** A handoff nobody updates is worse than
-> no handoff, because it is believed.
-
-`npx tsc --noEmit` clean · `npm run build` clean · **18 routes** prerendered static (16 `○` plus
-the 2 `●` under `/writing/[slug]` — the post and its `opengraph-image`; the unmarked
-`/writing/[slug]` lines are group headers, not routes) · 0 console errors · no horizontal overflow
-at 360 / 375 / 768 / 1024 / 1280 · all 10 pages have exactly one `<h1>`, a unique canonical, an
-`og:image` and the JSON-LD they should.
-
-> This said **17** until 2026-08-28. It was a miscount of the build output, not a regression —
-> nothing has ever been dynamic here. Count the markers, not the lines.
+⚠️ **The Vercel connector cannot see this project.** Both this session and the last one called
+`list_projects` on `kuwari84-2322's projects` and got back exactly one project — `adaptivelearn`,
+linked to `RadlorInc/learn` — even though the dashboard shows `website` on the same account. So
+the connector's grant is scoped to that one project. The practical cost: **a failed deploy cannot
+be seen from here.** Nobody can read the build log, confirm a SHA, or notice a silent break — it
+would only surface as "production did not change". Re-grant the Vercel connector access to the
+`website` project. Until then, verify deploys by fetching radlor.com, the way this one was.
 
 ## The palette came off the logo (2026-08-29)
 
