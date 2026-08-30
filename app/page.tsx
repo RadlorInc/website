@@ -17,41 +17,75 @@ import { posts } from '@/content/posts'
 export default function Home() {
   return (
     <>
-      {/* THE HERO IS FLAT COLOUR AND CSS MOTION, AND THAT IS THE POINT.
+      {/* THE HERO GROUND IS A LOOPING VIDEO, AND IT LOOPS BY CONSTRUCTION.
 
-          It was briefly a 400vh sticky section scrubbing 180 pre-rendered frames off a canvas —
-          4.4 MB on desktop, and on a phone the mark and the copy fought for the same pixels no
-          gradient could separate. It is gone. What replaced it is what the rest of the site
-          already uses: `rl-rise`, `rl-focus`, and `rl-lit` on the one word the whole company
-          claim turns on. The light still arrives on `child` and radiates from behind it — that
-          was always the idea, and it never needed a frame set to say it.
+          The generated clip pushes in and drifts left over 8 seconds, so its last frame is
+          nowhere near its first — frame 1 vs frame 193 measured a mean absolute difference of
+          29.5/255 against 1.8 for an ordinary frame step, which is a snap you would see every
+          loop, forever. `public/hero.*` is therefore the first 4 seconds PING-PONGED: forward,
+          then the same frames reversed, with the duplicate frame dropped at both the turn and
+          the seam. The end now equals the start by construction. Measured on the shipped files
+          the loop seam is 1.07 mean / 1.59% of pixels, BELOW a normal frame step — the push-in
+          reads as a slow breath in and out rather than as a clip restarting.
 
-          ⚠️ NOTHING HERE IS A CLIENT COMPONENT. No canvas, no video, no image. The page is a
-          server component with zero page-level JS, the route prerenders, and every word is in the
-          HTML on the first byte. If a future idea needs `'use client'` to animate the hero, that
-          is a reason to want the idea less. */}
+          ⚠️ NO 'use client', NO CANVAS, NO SCROLL LISTENER. This is a plain <video>: the page is
+          a server component, the route prerenders, and every word is in the HTML on the first
+          byte. The last hero tied frames to scroll and had to be deleted; do not tie this one. */}
       <section className="rl-hero">
-        {/* THE GROUND, AND IT IS CSS. Decorative, `aria-hidden`, behind the text — a screen
-            reader gets the copy alone. Every other page on the site already carries a
-            `.rl-lightfield`; the home page gets the full set, halo included, because it is the
-            one that has to look like the mark. No image, no video, no canvas: these are
-            gradients, so they cost bytes only in the stylesheet that already ships. */}
-        <div className="rl-lightfield" aria-hidden="true">
-          <div className="rl-halo" />
-          <div className="rl-glow rl-parallax" style={{ '--p': '40px' } as React.CSSProperties} />
-          <div className="rl-glow rl-glow-core rl-parallax" style={{ '--p': '-70px' } as React.CSSProperties} />
-        </div>
+        {/* ⚠️ `media` ON <source> IS LOAD-BEARING AND IS THE ONLY REASON THERE IS NO JS HERE.
+            The resource-selection algorithm picks the first <source> whose media matches; when
+            NOTHING matches — which is what `prefers-reduced-motion: reduce` produces — the
+            element loads no resource at all. Not hidden, not paused: never requested. That is
+            the difference between honouring the preference and pretending to. Verified by
+            counting requests, not by reading CSS.
+
+            It also picks the orientation, because a 16:9 clip in a 375x715 box crops to its
+            middle 30% and the mark lands off-screen entirely. The portrait file is the same
+            ping-pong letterboxed onto its own black with the mark in the top third.
+
+            ⚠️ Media here is evaluated ONCE, at resource selection — it does not re-run when the
+            viewport changes. Fine for orientation; it does mean a desktop window dragged below
+            768px keeps the landscape file, which is the right file anyway.
+
+            The poster is a CSS background rather than the `poster` attribute, so that the
+            portrait poster can be chosen by media query too. The attribute takes one URL, and
+            on a phone that URL would be the landscape still — 63 KB fetched to show a frame
+            whose subject is cropped out of the box. */}
+        <video
+          className="rl-hero-video"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+        >
+          <source
+            src="/hero-portrait.webm"
+            type="video/webm"
+            media="(prefers-reduced-motion: no-preference) and (max-width: 768px)"
+          />
+          <source
+            src="/hero-portrait.mp4"
+            type="video/mp4"
+            media="(prefers-reduced-motion: no-preference) and (max-width: 768px)"
+          />
+          <source src="/hero.webm" type="video/webm" media="(prefers-reduced-motion: no-preference)" />
+          <source src="/hero.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)" />
+        </video>
+        <div className="rl-hero-scrim" aria-hidden="true" />
 
         <div className="relative z-10 mx-auto w-full max-w-5xl px-6 py-20 sm:py-24">
           <p className="rl-rise text-sm uppercase tracking-[0.18em] text-accent font-medium">Radlor</p>
-          {/* ⚠️ 38rem, NOT `max-w-3xl`. Kept from the scrub work, where it was measured: the
-              headline stays two lines on a laptop and the subhead stays four, and neither runs
-              the full 64rem container, which is past a comfortable measure for a 60px display
-              face. It survives the frames because it was never about the frames. */}
-          <h1 className="rl-focus font-display text-[2.6rem] sm:text-6xl leading-[1.05] mt-4 max-w-[38rem]" style={{ '--d': '0.09s' } as React.CSSProperties}>
+          {/* ⚠️ 30rem, AND THE NUMBER COMES FROM THE MARK'S EYES. The subhead needs scrim 0.72
+              wherever it crosses the mark's white chrome, and an eye needs 0.13 or less to stay
+              #00E5FF. At the old 38rem the copy ended at x=758 and the left eye reached x=752 —
+              six pixels, no gradient fits in that. At 30rem the copy ends at x=608, leaving 144px
+              for the falloff. Widen this and the mark goes grey. */}
+          <h1 className="rl-focus font-display text-[2.6rem] sm:text-6xl leading-[1.05] mt-4 max-w-[30rem]" style={{ '--d': '0.09s' } as React.CSSProperties}>
             Learning software that adapts to the <span className="rl-lit">child</span> in front of it.
           </h1>
-          <p className="rl-rise mt-5 sm:mt-6 text-base sm:text-lg text-muted max-w-[38rem] leading-relaxed" style={{ '--d': '0.18s' } as React.CSSProperties}>
+          <p className="rl-rise mt-5 sm:mt-6 text-base sm:text-lg text-muted max-w-[30rem] leading-relaxed" style={{ '--d': '0.18s' } as React.CSSProperties}>
             Most educational apps give every child the same questions in the same order. We build the other kind:
             software that watches how a child answers and changes the next question because of it. Our first
             product, <strong className="text-foreground font-medium">{APP_NAME}</strong>, teaches math to ages 3–18.

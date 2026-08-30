@@ -236,46 +236,106 @@ now records a re-measurement taken after the form landed: 0 external hosts on fo
 
 ## The scroll-scrubbed hero — REMOVED, 2026-08-30
 
-**It is gone. Do not rebuild it.** For a few days the home page was a 400vh sticky section
-scrubbing 180 pre-rendered frames onto a `<canvas>` — `app/HeroScrub.tsx`, `public/hero/`,
-`.rl-scrub-*`, and a `check:hero-contrast` gate. All of it is deleted in one commit. Two reasons,
-both of which a rebuild would meet again:
+**It is gone and it is not coming back.** For a few days the home page was a 400vh sticky section
+scrubbing 180 pre-rendered frames onto a `<canvas>`. It was not smooth enough — it stepped, because
+it was stepping — and on a phone the mark's face sat behind the headline where the subhead needed
+scrim 0.72 and the eyes needed 0.13, thirty pixels apart. `app/HeroScrub.tsx`, `public/hero/` and
+`.rl-scrub-*` are all deleted. **Do not tie a hero to scroll again.**
 
-- **It was not smooth enough.** Frame count, scroll-per-frame and a two-pass loader were all
-  tuned; the scrub still reads as stepping, because it is stepping.
-- **The mobile composition could not be fixed by CSS.** The portrait crop put the mark's face
-  behind the headline. The subhead needed scrim 0.72 wherever it crossed white and the eyes
-  needed ≤0.13, and those two demands landed **30 px apart**. Re-rendered artwork moved the mark
-  up and out of the text band, and the constraint simply reappeared 7 px further along, this time
-  between the eyes and the orbit arc crossing the eyebrow. The geometry, not the gradient, was the
-  problem — and the fix for that is not a hero.
+## The hero is a looping background video — 2026-08-30
 
-**Weight, measured on `next start` with compression, home page initial load:**
+`public/hero.webm|mp4` (1600x900) and `public/hero-portrait.webm|mp4` (720x1280), plus a poster
+each. No JavaScript at all: `app/page.tsx` is still a server component, the route still prerenders.
 
-| | before | after |
+### The clip needed fixing before it could be used
+
+Higgsfield produced it from `hero-seed.jpg`. Two generations were measured and **both failed the
+same way**: the subject transform animates. v2 (the one Rafi picked) grows the chrome head from
+820x568 to 1220x888 — 1.49x by 1.56x — and drifts 198px left, 10% of the frame width. Camera
+prompts did not bind it.
+
+The zoom was accepted as art direction. The **loop was not**: frame 1 against frame 193 measured a
+mean absolute difference of **29.5/255 with 24.5% of pixels over 24**, against **1.8 / 2.2%** for an
+ordinary frame step — a snap you would see every eight seconds, forever.
+
+⚠️ **THE FIX IS A PING-PONG, AND IT IS WHY THE FILE IS 189 FRAMES AND NOT 193.** The shipped clip
+is the first **4 seconds** forward, then the same frames reversed, with the duplicate frame dropped
+at BOTH the turn and the seam (`trim=start_frame=1:end_frame=NF-1` on the reversed stream — without
+it each end holds a frame twice). The end equals the start by construction. Measured on the shipped
+encodes the loop seam is **1.07 mean / 1.59%**, *below* a normal frame step of 1.78 / 2.36%.
+
+**4 seconds, not the full 8, and that was measured too.** At the midpoint of a full-8s ping-pong the
+mark's left edge reaches x=265 — 21% across, pure white inside the headline box — and no gradient
+survives that. At 4s it reaches x=515.
+
+| variant | loop | webm | mp4 | mark's left edge at the midpoint |
+|---|---|---|---|---|
+| full 8s | 16.0s | 1,320,602 B | 957,541 B | x=265 (21% across) — unusable |
+| **first 4s** | **7.88s** | **779,142 B** | **622,351 B** | **x=515 (40%)** |
+| first 5s | 9.88s | 765,108 B | 515,222 B | x=481 (38%) |
+
+### Numbers to not re-derive
+
+| | desktop | mobile |
 |---|---|---|
-| desktop initial | 307,056 B (300 KB) | **260,946 B (255 KB)** |
-| mobile initial | 284,118 B (277 KB) | **260,946 B (255 KB)** |
-| + a full scroll, desktop | + ~4.3 MB of frames | **0** |
-| + a full scroll, mobile | + 510,150 B of frames | **0** |
+| file served | `hero.webm` 761 KB | `hero-portrait.webm` 182 KB |
+| first load, motion allowed | 1,194,609 B (1167 KB) | 520,747 B (509 KB) |
+| first load, reduced motion | 415,132 B (405 KB) | 352,943 B (345 KB) |
+| video requests, reduced motion | **0** | **0** |
+| subhead / headline worst case | 5.06:1 / 9.41:1 | 11.16:1 / 19.03:1 |
+| mark body / eye at the loop start | `#d0d1d4` luma 209 / `#17dbed` g 219 | `#d8dade` luma 218 / `#1fe0f0` g 224 |
 
-So a desktop reader who scrolled the hero went from ~4.6 MB to 255 KB — **about 18× less** — and
-the page no longer ships a client component at all (the 1,362 B `HeroScrub` chunk is gone, and the
-stylesheet dropped 438 B).
+⚠️ **THE COPY IS 30rem AND THE NUMBER COMES FROM THE MARK'S EYES.** The subhead needs scrim 0.72
+wherever it crosses white chrome; an eye needs 0.13 or less to stay `#00E5FF`. At 38rem the copy
+ended at x=758 and the left eye reaches x=752 — six pixels, and no gradient fits in six pixels. At
+30rem the copy ends at x=608, leaving 144px of falloff. **Widen the copy and the mark goes grey.**
 
-⚠️ **What was KEPT, because none of it was the problem:** the header lockup, the four facts on
-their own band below the hero (`.rl-hero-band`, sharing the hero's token block rather than
-repeating it), and the **38rem cap** on the headline and subhead. The cap was measured again
-without the frames: at 38rem, 42rem and 48rem the headline is 2 lines and the subhead is 4 —
-identical structure — but 38rem gives the headline a ~36-character measure and the subhead ~66,
-against ~43 and ~72 at the old `max-w-3xl`/`max-w-2xl`. It is the better typography on its own
-merits, so it stays.
+⚠️ **REDUCED MOTION IS `media` ON `<source>`, NOT CSS.** When no `<source>` matches, the resource
+selection algorithm loads nothing — not hidden, not paused, never requested. Verified by counting
+requests in headless Chrome with `Emulation.setEmulatedMedia`: **zero** video requests, one poster.
+The same attribute picks the orientation. *Caveat:* `media` on `<source>` is specced and works in
+Chromium; a browser that ignored it would fetch the video under reduced motion. Re-measure if that
+matters more than it does today.
+
+⚠️ **`object-position: 50% 0` ON THE PORTRAIT VIDEO IS LOAD-BEARING.** A tablet in portrait gives a
+hero box of 768x780 — nearly square — and cover-fitting a 9:16 file into it crops 586px of height.
+Centred, the mark landed at y −139..91, its top half sliced off. Anchored to the top it is whole.
+
+⚠️ **THE MOBILE MARK IS SMALL ON PURPOSE.** The mobile hero has only ~140px of clear height above
+the eyebrow, so the portrait file crops tight to the mark (`crop=882:648:604:143`), scales it to
+300px and seats it at y 15..130 — above the copy, and clear of the eyebrow horizontally too. A
+letterboxed full-width version put the ring straight through the headline.
+
+### The check that catches all of it
+
+`npm run check:hero-contrast` decodes both files through the ffmpeg bundled in `imageio-ffmpeg`
+(no system ffmpeg) and gates **two opposing things**: the copy at the real text boxes, and a floor
+under how dark the mark's body and eyes may go. The first is always winnable by painting everything
+black; the second is what stops that. It also reports the midpoint frame separately, because that
+is where the mark is largest and nearest the copy.
+
+⚠️ **ITS BOXES ARE HERO-RELATIVE, NOT VIEWPORT-RELATIVE, AND THE DIFFERENCE IS 65 PIXELS.** The
+video and the scrim are `inset: 0` inside `.rl-hero`, which starts below the sticky header. With
+viewport coordinates the check passed the mobile headline at 19:1 while a screenshot plainly showed
+the ring crossing it. **A screenshot caught what the measurement missed; take both.**
+
+⚠️ **THE EYE DETECTOR HAS THREE FIXES IN IT, EACH FROM A WRONG NUMBER.** The cyan mask is clipped
+to the head's 10th–90th percentile box (a plain bbox let the ring's rim report as an "eye" at scrim
+0.74); candidates are separated in BLOCK indices, not pixel coordinates (mixing them returned two
+blocks of one blob as "two eyes"); and the pair is chosen for being LEVEL, since the head is drawn
+with a slight tilt. Block size is 4 — the portrait file scales the mark down until larger blocks
+never fill.
+
+`hero-source.mp4` is the Higgsfield master, gitignored: 2.9 MB the site never serves, kept locally
+so the derivatives can be re-encoded.
 
 ## The home hero
 
-A full-bleed dark section: `min-height: min(88vh, 780px)`, the ambient `rl-lightfield` layers as
-the ground, the headline and CTAs, and a row of four checkable facts on their own band below,
-linking to `/data-and-safety`. **No scrim, no image, no video, no canvas, and no client JS.**
+A full-bleed dark section: `min-height: min(88vh, 780px)`, the looping video as the ground, the
+headline and CTAs, and a row of four checkable facts on their own band below, linking to
+`/data-and-safety`. **No client JS.** `.rl-lightfield` is NOT in this hero — the video covers it —
+which is why `.rl-halo` and `.rl-glow-core` were deleted; `.rl-lightfield` and `.rl-glow` still run
+on the ten other pages.
 
 **It was specced with a looping video and shipped without one.** The clip supplied was abstract
 dunes under a sky of floating digits — measured **0.00% cyan/brand-blue, 54.5% warm pink-orange**,
@@ -291,14 +351,12 @@ Three things worth not relearning:
   (`--glow`, `--brand-blue` — read directly by `.rl-glow` / `.rl-lit`) *and* the `--color-*` ones,
   because `@theme inline` resolves `--color-*` at `:root`; overriding only the raw tokens would
   never reach `text-muted` or `bg-accent`.
-- ⚠️ **`.rl-hero-scrim` IS DELETED, AND ITS ABSENCE IS PROVEN RATHER THAN ASSUMED.** It existed
-  to hold contrast over an image or a video that never arrived. The ground is `--background` plus
-  the `.rl-lightfield` gradients, and those are bounded: both `.rl-glow` layers at full centre
-  alpha on the same pixel with zero blur attenuation — which cannot occur, they sit apart and are
-  blurred 60px — reaches `rgb(18,52,69)`. Against that upper bound the copy measures **foreground
-  12.35:1, muted 7.25:1, accent 8.66:1**. A gradient over a ground that cannot brighten is a no-op
-  that reads as a safeguard. **If a ground that VARIES ever returns, the scrim returns with it —
-  and so does a check that samples the real text boxes, not the frame's brightest pixel.**
+- ⚠️ **`.rl-hero-scrim` WAS DELETED WHEN THE GROUND WAS FLAT AND IS BACK NOW THAT IT MOVES.** With
+  a flat token background a gradient over it was a measurable no-op and it went. The video goes to
+  pure white on the mark's chrome, so it is earning its place again — horizontal on desktop
+  (0.74 out to 47.7%, effectively off past 58.6%), vertical on mobile. Mobile's measured
+  requirement is **0.00 at every row**, because the portrait file seats the mark above the copy;
+  the mobile scrim is insurance against a future re-crop, not a fix.
 - ⚠️ **`.rl-lit`'s ring had to be dimmed for this ground, and this is the one thing the hero could
   not inherit.** It was tuned against Paper, where 62% cyan is a soft tint; over near-black the arc
   measured `rgb(36,163,189)` and dropped the headline to **2.80:1**, under the 3:1 large-text

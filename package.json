@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "check:social": "scripts/check-social.sh",
+    "check:hero-contrast": "node --no-warnings scripts/check-hero-contrast.mjs",
     "check:pricing": "node --experimental-strip-types --no-warnings scripts/check-pricing.mjs",
     "check:waitlist-rls": "node --no-warnings scripts/check-waitlist-rls.mjs"
   },

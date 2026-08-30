@@ -42,3 +42,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# the Higgsfield master for the hero clip. public/hero*.webm|mp4|jpg are encoded FROM it
+# (see handoff.md); it is 2.9 MB of source that the site never serves, so it stays local.
+/hero-source.mp4

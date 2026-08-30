@@ -264,39 +264,6 @@ body {
   mask-image: linear-gradient(180deg, #000 0%, #000 52%, transparent 96%);
 }
 
-.rl-halo {
-  position: absolute;
-  left: 14%;
-  top: 74%;
-  width: 96vmax;
-  aspect-ratio: 1;
-  --sq: 0.34;
-  transform: translate(-50%, -50%) rotate(-14deg) scaleY(var(--sq));
-  opacity: 0;
-  border-radius: 9999px;
-  /* The same ring as the mark, at the scale of a room. Drawn as an annulus mask over
-     a flat fill, then squashed — squashing the mask WITH the fill is what gives the
-     stroke a real ring's uneven weight, thin at the top and bottom of the ellipse,
-     instead of the even outline a `border` would draw. */
-  /* Cyan carries far more luminance than the amber this replaced, so the same alpha
-     that read as warm light reads as a painted panel. Every value here is roughly
-     half what the amber version used. */
-  background:
-    conic-gradient(
-      from 200deg,
-      color-mix(in oklab, var(--brand-blue) 13%, transparent),
-      color-mix(in oklab, var(--glow) 15%, transparent) 120deg,
-      color-mix(in oklab, var(--brand-blue) 8%, transparent) 250deg,
-      color-mix(in oklab, var(--brand-blue) 13%, transparent) 360deg
-    );
-  -webkit-mask-image: radial-gradient(circle, transparent 47%, #000 48.6%, #000 49.6%, transparent 51%);
-  mask-image: radial-gradient(circle, transparent 47%, #000 48.6%, #000 49.6%, transparent 51%);
-  filter: blur(1.5px);
-  animation:
-    rl-fade-in 3s ease-out 0.6s both,
-    rl-turn 240s linear 0.6s infinite;
-}
-
 .rl-glow {
   position: absolute;
   left: 22%;
@@ -315,25 +282,6 @@ body {
   animation:
     rl-fade-in 2.2s ease-out 0.2s both,
     rl-drift-a 34s ease-in-out 2.2s infinite;
-}
-
-/* The cool half of the brand, opposite the warm one, so the ground has depth
-   rather than a single wash. Blue is a GRAPHICS colour at this lightness —
-   there is no text on it. */
-.rl-glow-core {
-  left: auto;
-  right: -6%;
-  top: 62%;
-  width: 46vmax;
-  background: radial-gradient(
-    circle,
-    color-mix(in oklab, var(--brand-blue) 11%, transparent) 0%,
-    color-mix(in oklab, var(--brand-blue) 4%, transparent) 42%,
-    transparent 70%
-  );
-  animation:
-    rl-fade-in 2.6s ease-out 0.4s both,
-    rl-drift-b 47s ease-in-out 2.6s infinite;
 }
 
 /* --- the light, anchored to the word ------------------------------------- */
@@ -722,8 +670,8 @@ body {
 /* THE HERO IS DARK IN BOTH THEMES. It is the mark's own dark lockup, not a themed
    surface, so it pins the dark side of the palette locally rather than reading
    `--foreground` — which on Paper would flip to Ink and put dark text on a dark ground.
-   Both layers are set on purpose: the raw tokens because `.rl-glow` / `.rl-halo` /
-   `.rl-lit` read `var(--glow)` and `var(--brand-blue)` directly, and the `--color-*`
+   Both layers are set on purpose: the raw tokens because `.rl-glow` / `.rl-lit`
+   read `var(--glow)` and `var(--brand-blue)` directly, and the `--color-*`
    tokens because `@theme inline` resolves those AT `:root`, so overriding only the raw
    ones would never reach `text-muted` or `bg-accent`. */
 
@@ -769,19 +717,88 @@ body {
   min-height: min(88vh, 780px);
 }
 
-/* ⚠️ THERE IS NO SCRIM HERE ANY MORE, AND IT IS NOT NEEDED — WHICH IS PROVEN, NOT ASSUMED.
-   `.rl-hero-scrim` existed to hold the copy's contrast over an image or a video that might
-   sit behind it. Nothing does. The ground is `--background` plus the `.rl-lightfield`
-   gradients, and those are BOUNDED: take both `.rl-glow` layers at their full centre alpha
-   on the same pixel with zero blur attenuation — which cannot happen, they sit apart and
-   are blurred 60px — and the ground reaches rgb(18,52,69). Against that upper bound the
-   copy measures foreground 12.35:1, muted 7.25:1, accent 8.66:1. On the flat ground alone
-   muted is 10.87:1.
+/* THE VIDEO IS THE GROUND. It covers the hero, so nothing behind it is visible — which is why
+   `.rl-lightfield` is NOT in this hero any more (it still runs on every other page).
 
-   A gradient over a ground that cannot get bright is a no-op that reads as a safeguard. If
-   a ground that VARIES ever comes back — a video, a frame set — then so does the scrim, and
-   so does a check that measures it at the real text boxes rather than at the brightest pixel
-   somewhere in the frame. Getting that wrong cost a hero once already. */
+   The poster is a CSS background rather than the `poster` attribute, so the portrait still can
+   be chosen by media query. Exactly one of the two is ever fetched. Black behind it, matching
+   the clip's own rgb(0,0,0) ground, so there is no seam where the letterboxing starts. */
+.rl-hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+  background: #000 center / cover no-repeat url('/hero-poster.jpg');
+}
+
+/* ⚠️ `object-position: 50% 0` IS NOT COSMETIC — IT IS WHAT MAKES 768 WORK. The portrait file
+   puts the mark in its top third, which is right for a phone: at 375x715 the cover fit is
+   height-exact and crops only the sides, so vertical anchoring does nothing there. But a tablet
+   in portrait gives a hero box of 768x780 — nearly square — and cover-fitting a 9:16 file into
+   it crops 586px of HEIGHT. Centred, that slices the mark's top half off. Anchored to the top
+   it stays whole. Measured at 360x780, 375x600, 375x812 and 768x1024. */
+@media (max-width: 768px) {
+  .rl-hero-video {
+    background-image: url('/hero-poster-portrait.jpg');
+    background-position: 50% 0;
+    object-position: 50% 0;
+  }
+}
+
+/* THE SCRIM IS BACK, AND THIS TIME IT IS EARNING IT. The previous hero was flat colour, so a
+   gradient over it was a no-op and it was deleted. The ground now MOVES and goes to pure white
+   on the mark's chrome, so the copy needs it again — and it is measured at the real text boxes
+   over every frame, never at the frame's brightest pixel wherever that happens to be.
+
+   DESKTOP IS HORIZONTAL because the copy is left and the mark is right. 0.74 out to 47.7%
+   (x=610 at 1280) covers the subhead's worst pixel; past 58.6% (x=750) it is effectively off and
+   the mark renders at its own colours. ⚠️ THOSE TWO NUMBERS ARE A PAIR AND THE COPY WIDTH IS THE
+   THIRD: at 38rem the copy ended at x=758 and the mark's left eye reaches x=752, and no gradient
+   fits in six pixels. 30rem ends the copy at x=608 and buys 144px of falloff. Change any one of
+   the three and re-run the check.
+
+   MOBILE IS VERTICAL because the copy spans the full width there, so a horizontal gradient has
+   nothing to weight. The portrait file puts the mark in the TOP third on purpose, which is what
+   makes a vertical gradient work at all — dark under the copy, near-clear over the mark.
+
+   Percentages run along the gradient line — the hero's width for `to right`, its height for
+   `180deg` — which is what scripts/check-hero-contrast.mjs models. Change these and change the
+   `stops` there in the same commit. */
+.rl-hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    rgba(7, 11, 17, 0.88) 0%,
+    rgba(7, 11, 17, 0.84) 36%,
+    rgba(7, 11, 17, 0.74) 47.7%,
+    rgba(7, 11, 17, 0.07) 58.6%,
+    rgba(7, 11, 17, 0.04) 100%
+  );
+}
+
+/* ⚠️ MOBILE'S SCRIM IS INSURANCE, NOT A FIX. Measured, the required alpha under the copy is
+   0.00 at every row: the portrait file seats the mark ABOVE the copy — y 15..130 in a 715px
+   hero, clearing the eyebrow horizontally too — and everything below it is the clip's own black. So this stays near-clear over the mark and rises to
+   0.55 under the copy, where 0.55 over black is indistinguishable from black. It costs the mark
+   nothing, and it means a future re-crop that moves the mark down cannot silently ship
+   unreadable copy — the check will catch it first. */
+@media (max-width: 768px) {
+  .rl-hero-scrim {
+    background: linear-gradient(
+      180deg,
+      rgba(7, 11, 17, 0.04) 0%,
+      rgba(7, 11, 17, 0.06) 19%,
+      rgba(7, 11, 17, 0.55) 26%,
+      rgba(7, 11, 17, 0.6) 100%
+    );
+  }
+}
 
 /* THE RING, DIMMED FOR THIS GROUND — and this is the one thing the hero could not
    inherit. `.rl-lit::after` was tuned against Paper, where 62% cyan reads as a soft
@@ -856,7 +873,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .rl-rise, .rl-focus, .rl-reveal, .rl-reveal-focus, .rl-reveal-left,
   .rl-rule, .rl-tick, .rl-lampdot, .rl-num, .rl-trace, .rl-parallax,
-  .rl-lit::before, .rl-lit::after, .rl-halo, .rl-glow, .rl-prose > * {
+  .rl-lit::before, .rl-lit::after, .rl-glow, .rl-prose > * {
     animation: none !important;
   }
   .rl-rise, .rl-focus, .rl-reveal, .rl-reveal-focus, .rl-reveal-left, .rl-num, .rl-prose > * {
@@ -869,7 +886,6 @@ body {
   .rl-progress { display: none }
   .rl-lit::before { opacity: 0.86 }
   .rl-lit::after { opacity: 0.9 }
-  .rl-halo { opacity: 0.6 }
   .rl-glow { opacity: 1 }
   .rl-card:hover { transform: none }
   .rl-cta:hover { transform: none }
