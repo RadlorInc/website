@@ -234,17 +234,56 @@ JSON-LD `Offer` sets, the FAQ answers and the home fact row. **No price is typed
 now records a re-measurement taken after the form landed: 0 external hosts on four pages,
 0 cookies, 0 storage keys, no `supabase.co` in the HTML.
 
+## The scroll-scrubbed hero — REMOVED, 2026-08-30
+
+**It is gone. Do not rebuild it.** For a few days the home page was a 400vh sticky section
+scrubbing 180 pre-rendered frames onto a `<canvas>` — `app/HeroScrub.tsx`, `public/hero/`,
+`.rl-scrub-*`, and a `check:hero-contrast` gate. All of it is deleted in one commit. Two reasons,
+both of which a rebuild would meet again:
+
+- **It was not smooth enough.** Frame count, scroll-per-frame and a two-pass loader were all
+  tuned; the scrub still reads as stepping, because it is stepping.
+- **The mobile composition could not be fixed by CSS.** The portrait crop put the mark's face
+  behind the headline. The subhead needed scrim 0.72 wherever it crossed white and the eyes
+  needed ≤0.13, and those two demands landed **30 px apart**. Re-rendered artwork moved the mark
+  up and out of the text band, and the constraint simply reappeared 7 px further along, this time
+  between the eyes and the orbit arc crossing the eyebrow. The geometry, not the gradient, was the
+  problem — and the fix for that is not a hero.
+
+**Weight, measured on `next start` with compression, home page initial load:**
+
+| | before | after |
+|---|---|---|
+| desktop initial | 307,056 B (300 KB) | **260,946 B (255 KB)** |
+| mobile initial | 284,118 B (277 KB) | **260,946 B (255 KB)** |
+| + a full scroll, desktop | + ~4.3 MB of frames | **0** |
+| + a full scroll, mobile | + 510,150 B of frames | **0** |
+
+So a desktop reader who scrolled the hero went from ~4.6 MB to 255 KB — **about 18× less** — and
+the page no longer ships a client component at all (the 1,362 B `HeroScrub` chunk is gone, and the
+stylesheet dropped 438 B).
+
+⚠️ **What was KEPT, because none of it was the problem:** the header lockup, the four facts on
+their own band below the hero (`.rl-hero-band`, sharing the hero's token block rather than
+repeating it), and the **38rem cap** on the headline and subhead. The cap was measured again
+without the frames: at 38rem, 42rem and 48rem the headline is 2 lines and the subhead is 4 —
+identical structure — but 38rem gives the headline a ~36-character measure and the subhead ~66,
+against ~43 and ~72 at the old `max-w-3xl`/`max-w-2xl`. It is the better typography on its own
+merits, so it stays.
+
 ## The home hero
 
-Rebuilt 2026-08-29 as a full-bleed dark section: `min-height: min(88vh, 780px)`, the ambient
-`rl-lightfield` layers as the ground, a scrim over them, the existing headline and CTAs, and a
-row of four checkable facts linking to `/data-and-safety`.
+A full-bleed dark section: `min-height: min(88vh, 780px)`, the ambient `rl-lightfield` layers as
+the ground, the headline and CTAs, and a row of four checkable facts on their own band below,
+linking to `/data-and-safety`. **No scrim, no image, no video, no canvas, and no client JS.**
 
 **It was specced with a looping video and shipped without one.** The clip supplied was abstract
 dunes under a sky of floating digits — measured **0.00% cyan/brand-blue, 54.5% warm pink-orange**,
 against a brand whose signature colour is `#00E5FF`. It also put a wall of numerals on the front
 door of a company whose own post argues a child should never see the number. The ground stayed
-CSS. **A `<video>` slots into `app/page.tsx` under `.rl-hero-scrim` and nothing else changes.**
+CSS — and then a frame set was tried in its place and removed too, for the reasons above. **Two
+attempts at a moving ground have now failed on measurement. The bar for a third is a ground that
+is measurably on-brand and a legibility check written before it ships, not after.**
 
 Three things worth not relearning:
 
@@ -252,13 +291,18 @@ Three things worth not relearning:
   (`--glow`, `--brand-blue` — read directly by `.rl-glow` / `.rl-lit`) *and* the `--color-*` ones,
   because `@theme inline` resolves `--color-*` at `:root`; overriding only the raw tokens would
   never reach `text-muted` or `bg-accent`.
-- **The scrim floor is 0.64, not the 0.55 first specced.** Against a pure-white pixel — the upper
-  bound for any content that could sit here, a video included — 0.55 measures 4.11:1 on the
-  headline and fails the 4.5:1 the scrim exists to provide. 0.64 measures 5.68:1.
+- ⚠️ **`.rl-hero-scrim` IS DELETED, AND ITS ABSENCE IS PROVEN RATHER THAN ASSUMED.** It existed
+  to hold contrast over an image or a video that never arrived. The ground is `--background` plus
+  the `.rl-lightfield` gradients, and those are bounded: both `.rl-glow` layers at full centre
+  alpha on the same pixel with zero blur attenuation — which cannot occur, they sit apart and are
+  blurred 60px — reaches `rgb(18,52,69)`. Against that upper bound the copy measures **foreground
+  12.35:1, muted 7.25:1, accent 8.66:1**. A gradient over a ground that cannot brighten is a no-op
+  that reads as a safeguard. **If a ground that VARIES ever returns, the scrim returns with it —
+  and so does a check that samples the real text boxes, not the frame's brightest pixel.**
 - ⚠️ **`.rl-lit`'s ring had to be dimmed for this ground, and this is the one thing the hero could
   not inherit.** It was tuned against Paper, where 62% cyan is a soft tint; over near-black the arc
   measured `rgb(36,163,189)` and dropped the headline to **2.80:1**, under the 3:1 large-text
-  floor. The scrim cannot fix it — `.rl-lit` is in the content layer above it. The mix is lowered
+  floor. Nothing behind it can fix it — `.rl-lit` is in the content layer above any ground. The mix is lowered
   in `.rl-hero .rl-lit::after` instead. Use percentages, **not `opacity`**: `rl-fade-in` fills
   opacity forwards to 1 and an animated value beats a static declaration, so `opacity` there
   silently does nothing.
@@ -273,10 +317,12 @@ antialiasing could not pollute the background sample):
 | eyebrow | `rgb(9,35,42)` | **10.76:1** | 4.5 |
 | fact labels / descriptions | `rgb(7,14,20)` | **17.9 / 10.8:1** | 3.0 / 4.5 |
 
-⚠️ **On phones the hero is taller than its `min-height` and the next section does not peek** —
-855 px at 360×780, 829 at 375×812, because the content is simply that tall. It peeks properly at
-768 (179 px visible) and 1280 (31 px). The facts row is clipped at the fold, which is what signals
-scrollability there. Cutting another ~90 px means dropping the subhead or the facts row.
+✅ **The old "hero is taller than its `min-height` on phones and nothing peeks" problem is fixed,**
+and moving the facts onto their own band is what fixed it. The hero now sits AT its `min-height`
+everywhere and the band below peeks at every width measured: **29 px at 360×780** (hero 686),
+**32 px at 375×812** (hero 715), **179 px at 768×1024** (hero 780, capped), and it peeks at 1280
+too. It used to be 855 px at 360×780 with nothing visible below the fold. No horizontal overflow
+at 360 or 375.
 
 ## What exists
 

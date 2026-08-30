@@ -17,25 +17,41 @@ import { posts } from '@/content/posts'
 export default function Home() {
   return (
     <>
+      {/* THE HERO IS FLAT COLOUR AND CSS MOTION, AND THAT IS THE POINT.
+
+          It was briefly a 400vh sticky section scrubbing 180 pre-rendered frames off a canvas —
+          4.4 MB on desktop, and on a phone the mark and the copy fought for the same pixels no
+          gradient could separate. It is gone. What replaced it is what the rest of the site
+          already uses: `rl-rise`, `rl-focus`, and `rl-lit` on the one word the whole company
+          claim turns on. The light still arrives on `child` and radiates from behind it — that
+          was always the idea, and it never needed a frame set to say it.
+
+          ⚠️ NOTHING HERE IS A CLIENT COMPONENT. No canvas, no video, no image. The page is a
+          server component with zero page-level JS, the route prerenders, and every word is in the
+          HTML on the first byte. If a future idea needs `'use client'` to animate the hero, that
+          is a reason to want the idea less. */}
       <section className="rl-hero">
-        {/* Decorative, `aria-hidden`, and behind the text — a screen reader gets the copy alone.
-            These layers ARE the ground. They were going to be dropped for a video; the clip we
-            were given was abstract dunes and floating digits with 0.00% of the brand's cyan in
-            it, so the ground stayed CSS. A `<video>` slots in here later, under the scrim, and
-            nothing else in this file has to change. */}
+        {/* THE GROUND, AND IT IS CSS. Decorative, `aria-hidden`, behind the text — a screen
+            reader gets the copy alone. Every other page on the site already carries a
+            `.rl-lightfield`; the home page gets the full set, halo included, because it is the
+            one that has to look like the mark. No image, no video, no canvas: these are
+            gradients, so they cost bytes only in the stylesheet that already ships. */}
         <div className="rl-lightfield" aria-hidden="true">
           <div className="rl-halo" />
           <div className="rl-glow rl-parallax" style={{ '--p': '40px' } as React.CSSProperties} />
           <div className="rl-glow rl-glow-core rl-parallax" style={{ '--p': '-70px' } as React.CSSProperties} />
         </div>
-        <div className="rl-hero-scrim" aria-hidden="true" />
 
-        <div className="relative z-10 mx-auto w-full max-w-5xl px-6 py-14 sm:py-20">
+        <div className="relative z-10 mx-auto w-full max-w-5xl px-6 py-20 sm:py-24">
           <p className="rl-rise text-sm uppercase tracking-[0.18em] text-accent font-medium">Radlor</p>
-          <h1 className="rl-focus font-display text-[2.6rem] sm:text-6xl leading-[1.05] mt-4 max-w-3xl" style={{ '--d': '0.09s' } as React.CSSProperties}>
+          {/* ⚠️ 38rem, NOT `max-w-3xl`. Kept from the scrub work, where it was measured: the
+              headline stays two lines on a laptop and the subhead stays four, and neither runs
+              the full 64rem container, which is past a comfortable measure for a 60px display
+              face. It survives the frames because it was never about the frames. */}
+          <h1 className="rl-focus font-display text-[2.6rem] sm:text-6xl leading-[1.05] mt-4 max-w-[38rem]" style={{ '--d': '0.09s' } as React.CSSProperties}>
             Learning software that adapts to the <span className="rl-lit">child</span> in front of it.
           </h1>
-          <p className="rl-rise mt-5 sm:mt-6 text-base sm:text-lg text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.18s' } as React.CSSProperties}>
+          <p className="rl-rise mt-5 sm:mt-6 text-base sm:text-lg text-muted max-w-[38rem] leading-relaxed" style={{ '--d': '0.18s' } as React.CSSProperties}>
             Most educational apps give every child the same questions in the same order. We build the other kind:
             software that watches how a child answers and changes the next question because of it. Our first
             product, <strong className="text-foreground font-medium">{APP_NAME}</strong>, teaches math to ages 3–18.
@@ -54,26 +70,29 @@ export default function Home() {
               How it works
             </Link>
           </div>
+        </div>
+      </section>
 
-          {/* Four facts, every one of them checkable and every one already stated on the page
-              that substantiates it. No counters: "3–18" cannot count up from zero, and animating
-              a number would need JS on the one page that must stay a server component. The
-              stagger is `rl-rise` with `--d`, NOT `rl-reveal` with `--i` — `rl-reveal` is
-              scroll-driven, and an element that is already in view on load has passed its range,
-              so it would never animate here. `--d` is the on-load lever. */}
-          <Link
-            href="/data-and-safety"
-            className="rl-hero-factlink rl-rise mt-9 sm:mt-12"
-            style={{ '--d': '0.36s' } as React.CSSProperties}
-          >
+      {/* The four facts on their own band below the hero, sharing its dark ground. They were
+          inside the hero once and did not fit a single screen alongside the headline, the subhead
+          and two CTAs on a short laptop. This layout outlived the scrub that prompted it.
+
+          ⚠️ THE ANIMATION IS `rl-reveal` HERE, and the earlier note saying it could not work was
+          right AT THE TIME. `rl-reveal` is scroll-driven, so it does nothing for an element
+          already in view on load — which these were, inside the old hero. Below the fold they
+          enter the viewport as you scroll, so the scroll timeline is exactly the right lever and
+          `--i` staggers them. Still no counters: "3–18" cannot count up from zero. */}
+      <section className="rl-hero-band">
+        <div className="mx-auto w-full max-w-5xl px-6 py-16">
+          <Link href="/data-and-safety" className="rl-hero-factlink">
             <dl className="rl-hero-facts">
               {[
                 ['Ages 3–18', 'every band, not a sample of the youngest'],
                 ['6 age bands', 'each looks and works differently'],
                 ['0 frames uploaded', 'hand tracking runs on the device'],
                 [`From ${usd(PRICING.monthly.first)}/month`, `first child; ${usd(PRICING.monthly.additional)} each additional`],
-              ].map(([k, v]) => (
-                <div key={k}>
+              ].map(([k, v], i) => (
+                <div key={k} className="rl-reveal" style={{ '--i': i + 1 } as React.CSSProperties}>
                   <dt className="font-display text-xl sm:text-2xl leading-tight">{k}</dt>
                   <dd className="mt-1.5 text-sm text-muted leading-relaxed">{v}</dd>
                 </div>

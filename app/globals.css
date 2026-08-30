@@ -726,16 +726,12 @@ body {
    `.rl-lit` read `var(--glow)` and `var(--brand-blue)` directly, and the `--color-*`
    tokens because `@theme inline` resolves those AT `:root`, so overriding only the raw
    ones would never reach `text-muted` or `bg-accent`. */
-.rl-hero {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  /* NOT 100vh, deliberately: the next section peeks over the fold, so the page reads as
-     scrollable rather than as a landing page that ends here. */
-  min-height: min(88vh, 780px);
 
+/* The facts band directly below carries the SAME tokens, so it shares this declaration
+   rather than repeating twenty lines of it — the hero and the band read as one dark
+   thing that happens to be two sections. Only the hero gets the layout below. */
+.rl-hero,
+.rl-hero-band {
   --background: #070b11;
   --surface: #0e141c;
   --foreground: #f5f8fc;
@@ -762,34 +758,37 @@ body {
   color: var(--foreground);
 }
 
-/* The scrim sits between the ground and the copy so the type holds its contrast no
-   matter how bright the ground gets under it.
-
-   ⚠️ THE FLOOR IS 0.64, NOT 0.55. Against a pure-white pixel — the upper bound for ANY
-   content that could ever sit here, a video included — 0.55 measures 4.11:1 on the
-   headline, which fails the 4.5:1 this scrim exists to guarantee. 0.64 measures 5.68:1.
-   The floor is what does the work; raising it is cheaper than discovering a bright frame
-   later. Today the ground is near-black and the real number is far better than either. */
-.rl-hero-scrim {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    rgba(7, 11, 17, 0.88) 0%,
-    rgba(7, 11, 17, 0.70) 44%,
-    rgba(7, 11, 17, 0.64) 68%,
-    rgba(7, 11, 17, 0.92) 100%
-  );
+.rl-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  /* NOT 100vh, deliberately: the next section peeks over the fold, so the page reads as
+     scrollable rather than as a landing page that ends here. */
+  min-height: min(88vh, 780px);
 }
+
+/* ⚠️ THERE IS NO SCRIM HERE ANY MORE, AND IT IS NOT NEEDED — WHICH IS PROVEN, NOT ASSUMED.
+   `.rl-hero-scrim` existed to hold the copy's contrast over an image or a video that might
+   sit behind it. Nothing does. The ground is `--background` plus the `.rl-lightfield`
+   gradients, and those are BOUNDED: take both `.rl-glow` layers at their full centre alpha
+   on the same pixel with zero blur attenuation — which cannot happen, they sit apart and
+   are blurred 60px — and the ground reaches rgb(18,52,69). Against that upper bound the
+   copy measures foreground 12.35:1, muted 7.25:1, accent 8.66:1. On the flat ground alone
+   muted is 10.87:1.
+
+   A gradient over a ground that cannot get bright is a no-op that reads as a safeguard. If
+   a ground that VARIES ever comes back — a video, a frame set — then so does the scrim, and
+   so does a check that measures it at the real text boxes rather than at the brightest pixel
+   somewhere in the frame. Getting that wrong cost a hero once already. */
 
 /* THE RING, DIMMED FOR THIS GROUND — and this is the one thing the hero could not
    inherit. `.rl-lit::after` was tuned against Paper, where 62% cyan reads as a soft
    tint. Over a near-black hero the same arc measures rgb(36,163,189), and where it
    crosses behind the headline the local contrast falls to **2.80:1** — under the 3:1
-   floor for large text. The scrim cannot help: `.rl-lit` lives in the content layer
-   at z-index 10, above it.
+   floor for large text. Nothing behind it can help: `.rl-lit` lives in the content
+   layer at z-index 10, above any ground.
 
    So the mix comes down here rather than the ring coming off. Percentages, not
    `opacity`: `rl-fade-in` fills `opacity` forwards to 1 and an animated value beats a
