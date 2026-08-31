@@ -18,6 +18,31 @@ this site go in **`RadlorInc/video-reviewer`**, which is private, under `docs/`.
 This is not a claim that anything here is sensitive. It is a claim that nobody had checked, and
 that "no CI risk" and "safe to publish" are separate questions which have to be asked separately.
 
+## ⚠️ DO NOT `supabase db push` FROM THIS REPO — 2026-08-31
+
+The `ghuvnq` project now has a **partial migration history**, and this repo is on the wrong side of
+it.
+
+It had **no** history at all: `supabase/migrations/20260830000000_waitlist.sql` was applied by hand
+in the SQL editor, so nothing was ever recorded. On 2026-08-31 a second tool
+(`RadlorInc/video-reviewer`, private) added its own schema to the same project through the Supabase
+MCP connector — and the connector **records** what it applies. So the history now contains three
+migrations belonging to that repo and **not** this repo's waitlist migration.
+
+**The practical consequence:** `supabase db push` from here would see `20260830000000_waitlist.sql`
+as unapplied and try to run it against a database where `public.waitlist` already exists. That file
+is written `create table if not exists` / `create extension if not exists`, so it would most likely
+survive — but "most likely" is not a reason to run a migration over a live table, and the next file
+added here may not be written so defensively.
+
+**Apply schema changes to this project the same way they have always been applied: paste them into
+the SQL editor.** If you ever do want `db push` to work from here, the fix is to backfill the
+waitlist migration into `supabase_migrations.schema_migrations` first so the history matches
+reality — a deliberate step, not something to discover mid-push.
+
+Nothing in `public` was altered by the other tool: `waitlist` was checked before and after and is
+byte-identical — same 5 columns, same 4 constraints, RLS on, 0 policies, no grants, 0 rows.
+
 ## Where it is right now
 
 **Live at radlor.com**, as the Vercel project `website`, from `github.com/RadlorInc/website`.
