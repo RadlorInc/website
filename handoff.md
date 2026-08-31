@@ -115,6 +115,66 @@ a letter **R**; the share cards had no mark at all.
 was not permitted to delete files, and **Next cannot have both `icon.tsx` and `icon.png`** — the
 build may pick the wrong one until that folder is gone.
 
+## ⚠️ `entry` RANGES WERE A BUG FOR THE WHOLE SCROLL LAYER — fixed 2026-08-31
+
+Rafi reported "no motion on scroll". It was running; nobody could see it.
+
+**The misconception:** `entry 4% → 64%` was written believing those were percentages of the
+VIEWPORT. They are not. Per spec the `entry` range runs from the element's top edge crossing the
+viewport's bottom edge to its bottom edge crossing the same line — **its length is exactly the
+element's own height.** So the percentages are of the element, and the window collapses as
+elements get smaller. Raising them cannot help.
+
+Measured on the live page at a 1440x900 viewport, before:
+
+| class | height | animation ran over | completed at |
+|---|---|---|---|
+| `.rl-reveal` fact card | 82px | **45px of scroll** | 93% down the screen |
+| `.rl-reveal-focus` h2 | 35px | **15px** | 97% down |
+| `.rl-rule` | 1px | **0px** | never animated — it appeared |
+| `.rl-tick` | 1px | **0px** | the same |
+| `.rl-lampdot` | 8px | 8px | — |
+
+Every one finished in the bottom 3–7% of the screen, before a reader's eye arrived.
+
+**The fix is `cover`, not bigger numbers.** `cover` runs from the element's top edge at the
+viewport's bottom to its bottom edge at the viewport's top, so its length is VIEWPORT + ELEMENT —
+901px to 1188px across this site, viewport-dominated and near-constant. Ratio of longest to
+shortest range went from **288:1** (1px rule vs 288px card) to **1.3:1**. After:
+
+| class | animation runs over | completes at |
+|---|---|---|
+| `.rl-reveal` fact card | **450px of scroll** | 49% down — mid-screen |
+| `.rl-reveal-focus` h2 | **420px** | 52% down |
+| `.rl-rule` | **405px** | 54% down |
+
+Same page, same scroll position with the fact row 72% down: before, all four cards sat at opacity
+**1.00**; after, **0.60 / 0.53 / 0.46 / 0.40** across the row — a visible fade and a visible
+stagger.
+
+⚠️ **THE 3% STAGGER IS DERIVED IN PIXELS, NOT INHERITED.** It was 6%, which on `entry` was ~5px
+per step — the stagger this file claimed for months **did not exist**. On `cover` the same 6% is
+~60px per step, and `--i` reaches **7** on this site: item 7 would have finished 44px from the TOP
+of the screen, i.e. after the reader had scrolled past it. 3% is ~30px per step and leaves item 7
+finishing 234px down. **Re-derive in pixels if a group ever grows past `--i: 7`.**
+
+`var(--i, 1) - 1` so the first item of a group — and anything with no `--i` — gets exactly
+`cover 0% → 45%`.
+
+⚠️ **THE MINIFIER REWRITES THESE AND IT IS LOSSLESS.** The production CSS contains
+`animation-range:cover cover 45%` and bare `animation-range:cover`. Verified at runtime against
+`next start`: they resolve to `cover 0% cover 45%` and `cover 0% cover 100%`. Do not "fix" them.
+
+**Browser support, measured 2026-08-31:** Chrome 152 **yes**, Safari 26.5 **yes**. Safari blocks
+WebDriver and Apple-Events JS on this machine, so it was measured with a CSS-only `@supports`
+probe read off the screen — the probe is worth rebuilding if the question ever returns. Firefox
+not installed, not measured. **There is no no-JS fallback decision to make.**
+
+⚠️ **`.rl-rise` AND `.rl-focus` ARE NOT IN THE `@supports` GATE** — they are time-based on-load
+animations. That is why the symptom was deceptive: the hero animates everywhere, so "the hero
+moves, nothing below does" looks like a broken scroll layer and is equally consistent with one
+that runs and finishes unseen.
+
 ## The motion layer
 
 **All 10 pages animate, and it is 100% CSS.** The whole system lives in the `MOTION` block at the

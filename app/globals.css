@@ -410,21 +410,49 @@ body {
 
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    /* `--i` staggers by shifting the RANGE, not by delaying — a scroll-driven
-       animation has no wall clock, so `animation-delay` would do nothing.
-       Both ends sit inside `entry`, so an element is fully opaque as soon as
-       it is fully in view rather than at some later scroll depth. */
+    /* ⚠️ EVERY RANGE IN HERE IS `cover`, AND `entry` IS A TRAP. IT WAS ALL `entry` ONCE.
+       The belief was that `entry 4% → 64%` meant "4% to 64% of the viewport". It does not.
+       Per spec the `entry` range runs from the element's TOP edge crossing the viewport's
+       BOTTOM edge to its BOTTOM edge crossing the same line — so its length is exactly the
+       ELEMENT'S OWN HEIGHT. Measured on the live page at a 900px viewport, that meant:
+
+         .rl-reveal, 82px fact card   45px of scroll, complete while 93% down the screen
+         .rl-reveal-focus, 35px h2    37px of scroll, complete while 97% down the screen
+         .rl-rule, 1px                ONE pixel of scroll — it never animated, it appeared
+         .rl-tick, 1px                the same
+         .rl-lampdot, 8px             eight pixels
+
+       Every one finished in the bottom 3-7% of the screen, before a reader's eye arrived.
+       It animated; nobody ever saw it. Raising the percentages cannot fix that, because the
+       window they are percentages OF collapses with the element.
+
+       `cover` runs from the element's top edge at the viewport's bottom to its bottom edge
+       at the viewport's top, so its length is VIEWPORT + ELEMENT — 901px to 1188px across
+       this whole site, viewport-dominated and near-constant. `cover 0% → 45%` is ~450px of
+       scroll and completes with the element at mid-screen: it finishes arriving exactly as
+       the eye reaches it. Measured before/after is in handoff.md.
+
+       ⚠️ THE 3% STAGGER IS DERIVED, NOT INHERITED. `--i` shifts the range rather than using
+       `animation-delay`, which does nothing on a timeline with no wall clock. It used to be
+       6%, which on `entry` was 5px per step — the stagger this file has always claimed did
+       not exist. On `cover` the same 6% is ~60px per step, and `--i` reaches 7 on this site:
+       item 7 would have ended 44px from the TOP of the screen, i.e. after it had gone past.
+       3% is ~30px per step and leaves item 7 finishing 234px down. Re-derive it if a group
+       ever grows past 7, and re-derive it in PIXELS.
+
+       `var(--i, 1) - 1` so the first item of a group, and anything with no `--i` at all,
+       gets exactly `cover 0% → 45%`. */
     .rl-reveal {
       animation: rl-rise linear both;
       animation-timeline: view();
-      animation-range: entry calc(4% + var(--i, 0) * 6%) entry calc(64% + var(--i, 0) * 6%);
+      animation-range: cover calc((var(--i, 1) - 1) * 3%) cover calc(45% + (var(--i, 1) - 1) * 3%);
     }
 
     /* The same idea with the blur, for section openers and big statements. */
     .rl-reveal-focus {
       animation: rl-focus linear both;
       animation-timeline: view();
-      animation-range: entry calc(2% + var(--i, 0) * 6%) entry calc(70% + var(--i, 0) * 6%);
+      animation-range: cover calc((var(--i, 1) - 1) * 3%) cover calc(45% + (var(--i, 1) - 1) * 3%);
     }
 
     /* Rows of a table or a list: they arrive from the side, one after another,
@@ -432,32 +460,32 @@ body {
     .rl-reveal-left {
       animation: rl-in-left linear both;
       animation-timeline: view();
-      animation-range: entry calc(4% + var(--i, 0) * 5%) entry calc(58% + var(--i, 0) * 5%);
+      animation-range: cover calc((var(--i, 1) - 1) * 3%) cover calc(45% + (var(--i, 1) - 1) * 3%);
     }
 
     .rl-rule {
       animation: rl-draw linear both;
       animation-timeline: view();
-      animation-range: entry 0% entry 85%;
+      animation-range: cover 0% cover 45%;
     }
 
     .rl-tick {
       animation: rl-draw linear both;
       animation-timeline: view();
-      animation-range: entry calc(10% + var(--i, 0) * 7%) entry calc(70% + var(--i, 0) * 7%);
+      animation-range: cover calc((var(--i, 1) - 1) * 3%) cover calc(45% + (var(--i, 1) - 1) * 3%);
     }
 
     .rl-lampdot {
       animation: rl-lamp linear both;
       animation-timeline: view();
-      animation-range: entry calc(12% + var(--i, 0) * 6%) entry calc(72% + var(--i, 0) * 6%);
+      animation-range: cover calc((var(--i, 1) - 1) * 3%) cover calc(45% + (var(--i, 1) - 1) * 3%);
     }
 
     .rl-num {
       display: inline-block;
       animation: rl-land linear both;
       animation-timeline: view();
-      animation-range: entry calc(8% + var(--i, 0) * 7%) entry calc(66% + var(--i, 0) * 7%);
+      animation-range: cover calc((var(--i, 1) - 1) * 3%) cover calc(45% + (var(--i, 1) - 1) * 3%);
     }
 
     /* An SVG stroke that draws as you reach it. `--len` is the path length,
@@ -467,7 +495,7 @@ body {
       stroke-dashoffset: 0;
       animation: rl-trace linear both;
       animation-timeline: view();
-      animation-range: entry 12% cover 42%;
+      animation-range: cover 0% cover 45%;
     }
 
     .rl-progress {
@@ -482,7 +510,7 @@ body {
     .rl-prose > * {
       animation: rl-rise linear both;
       animation-timeline: view();
-      animation-range: entry 6% entry 62%;
+      animation-range: cover 0% cover 45%;
     }
 
     /* Parallax, and a small amount of it. `cover` spans the element's whole
