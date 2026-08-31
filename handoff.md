@@ -4,6 +4,20 @@
 > This file is only "where work left off". Keep it short — the product repo's handoff grew to 60 KB
 > and is now a running cost on every session.
 
+## ⚠️ THIS REPOSITORY IS PUBLIC — 2026-08-31
+
+`RadlorInc/website` is **public**. That was established on 2026-08-31, by accident, after a commit
+had already been pushed to it. Assume every file here — this handoff included — is readable by
+anyone, and has been all along.
+
+**Do not write security findings, known-weakness notes or "not fixed" items in this repo.** One was
+added and reverted the same day (see `git log` for the revert and read its message: the revert is
+mitigation, not erasure — the section is still in history and this repo is public). Findings about
+this site go in **`RadlorInc/video-reviewer`**, which is private, under `docs/`.
+
+This is not a claim that anything here is sensitive. It is a claim that nobody had checked, and
+that "no CI risk" and "safe to publish" are separate questions which have to be asked separately.
+
 ## Where it is right now
 
 **Live at radlor.com**, as the Vercel project `website`, from `github.com/RadlorInc/website`.
