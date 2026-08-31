@@ -43,6 +43,40 @@ and open the page in the Browser pane, which clears the challenge transparently 
 and can then read the live DOM — `document.querySelectorAll(...)` on the real page is a stronger
 check than grepping HTML anyway. If you must know *when* a deploy lands, wait once and look once.
 
+## ⚠️ THE WAITLIST ROUTE HOLDS `service_role` ON A PUBLIC ENDPOINT — 2026-08-31
+
+**Not blocking anything, not fixed, and it did not turn up here.** It surfaced while scoping a
+different tool (the video reviewer, which now shares this Supabase project), and it is recorded
+here so it does not disappear with the thing that was actually being scoped.
+
+`app/api/waitlist/route.ts` is a **public, unauthenticated endpoint that accepts free input** and
+holds `SUPABASE_SERVICE_ROLE_KEY`. That key is scoped to the **project**, not to a table, and it
+bypasses RLS. So anything that compromises that route — a dependency in the supply chain, a Next.js
+RCE — reads and writes every table in `ghuvnq`, including `public.waitlist` itself: **email
+addresses and children's age-bands**.
+
+Nothing about the current design is careless. The route's own comments explain why the key is there
+(the browser must never contact supabase.co, which /privacy states as a checkable claim), the table
+has RLS on with no policies, and the grants are revoked from `anon`. The exposure is the key's
+scope, not the code.
+
+**What the fix would be, if it is ever worth it.** A dedicated Postgres role with `INSERT` on
+`public.waitlist` and nothing else, reached over a direct connection — *not* via PostgREST, because
+reaching a custom role there needs a JWT signed with the project's JWT secret, and that same secret
+signs a `service_role` token, so it buys nothing. Costed at roughly half a day for this route alone.
+
+⚠️ **Two things that should trigger revisiting it:**
+1. **The table filling up.** It held **zero rows on 2026-08-31**, which is the only reason the
+   video reviewer was allowed to share the project rather than spend 5–7 hours on a real boundary.
+   The moment it holds real people, both decisions reopen.
+2. **Doing it for one app only.** The video reviewer now holds the same key over the same table.
+   Hardening one route while the other stands open is a receipt, not a boundary — if this is worth
+   closing, close it for both at once.
+
+Cross-reference: `video_reviewer/SETUP.md` → "Blast radius", and
+`video_reviewer/scripts/check-blast-radius.mjs`, which asserts the exposure is what the docs say
+and prints the waitlist row count so the trigger above is a fact rather than someone remembering.
+
 ## The palette came off the logo (2026-08-29)
 
 **The site and the logo were two different brands.** `radlor_logo/` holds the mark — a white robot
