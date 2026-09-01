@@ -24,23 +24,7 @@ import { AGE_BANDS } from '@/site'
  */
 
 const SUPABASE_URL = process.env.SUPABASE_URL
-/**
- * ⚠️ REVERTED TO service_role ON 2026-09-01, TEMPORARILY, AND THIS IS NOT THE INTENDED END STATE.
- *
- * The narrow-anon change is done and correct AT THE DATABASE: `anon` has a column-level INSERT
- * grant on `public.waitlist` and one policy, and `scripts/check-waitlist-rls.mjs` passes against
- * it — anon can add a signup and can neither read nor delete. What is missing is
- * `SUPABASE_ANON_KEY` in this project's VERCEL environment. Deploying the anon version without it
- * took the live signup form down: every submission answered `/waitlist/problem` and no row landed.
- * Caught by submitting the real form and then reading the table with the service key, rather than
- * by trusting the 303.
- *
- * TO FINISH THIS: add `SUPABASE_ANON_KEY` in Vercel → Settings → Environment Variables for this
- * project (Production, Preview, Development), redeploy, then swap the two constants below back and
- * re-run `node scripts/check-waitlist-rls.mjs`. Until then this route keeps a project-wide key on a
- * public endpoint — the exposure written up in the review tool's docs/security-findings.md #1.
- */
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
+const ANON_KEY = process.env.SUPABASE_ANON_KEY
 
 const BAND_IDS = new Set<string>(AGE_BANDS.map(b => b.id))
 
@@ -108,9 +92,15 @@ export async function POST(request: Request) {
   const rawBand = String(form.get('age_band') ?? '').trim()
   const age_band = BAND_IDS.has(rawBand) ? rawBand : null
 
-  if (!SUPABASE_URL || !SERVICE_KEY) {
-    // Misconfiguration, not the visitor's fault — say so in the log, not in their face.
-    console.error('[waitlist] SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is not set')
+  if (!SUPABASE_URL || !ANON_KEY) {
+    /**
+     * Misconfiguration, not the visitor's fault — say so in the log, not in their face.
+     * ⚠️ AND THE LOG IS THE ONLY PLACE IT SHOWS. This route answers 303 either way, on purpose, so
+     * a broken deploy is invisible from outside — it was, for four minutes on 2026-09-01. The
+     * signal lives at /api/health (`anon_key_configured`), off the public path. Check that before
+     * deploying anything that changes which key this route needs.
+     */
+    console.error('[waitlist] SUPABASE_URL or SUPABASE_ANON_KEY is not set')
     return seeOther('/waitlist/problem')
   }
 
@@ -119,8 +109,8 @@ export async function POST(request: Request) {
     res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
       method: 'POST',
       headers: {
-        apikey: SERVICE_KEY,
-        Authorization: `Bearer ${SERVICE_KEY}`,
+        apikey: ANON_KEY,
+        Authorization: `Bearer ${ANON_KEY}`,
         'Content-Type': 'application/json',
         Prefer: 'return=minimal',
       },
