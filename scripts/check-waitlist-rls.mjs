@@ -1,15 +1,28 @@
 #!/usr/bin/env node
-// Prove the waitlist table is NOT reachable with the anon key — by trying it, against the real
-// endpoint, rather than by reading the config and trusting it.
+// Prove the waitlist table admits exactly ONE anon operation — inserting a signup — and refuses
+// every other, by trying them against the real endpoint rather than reading the config.
 //
 //   npm run check:waitlist-rls
 //
-// ⚠️ WHY THIS EXISTS. The table is protected by RLS being ON with NO policies, plus a REVOKE
-// from anon. That is a configuration, and configurations get loosened by somebody "making the
-// form work" — an INSERT policy added in the dashboard at 11pm would make the list both
-// harvestable and stuffable, and nothing in the repo would change. This is the only thing that
-// would notice. It is the same shape of gate as check-social.sh: follow the thing, do not
-// assume it.
+// ⚠️ THE POSTURE CHANGED ON 2026-09-01, AND THIS GATE CAUGHT THE CHANGE — which is the best
+// evidence it works. It used to assert that anon could do NOTHING, and it went red the moment a
+// narrow INSERT grant was added. Read its old warning: "an INSERT policy added in the dashboard at
+// 11pm would make the list both harvestable and stuffable, and nothing in the repo would change."
+// Half of that is now deliberate and half must never happen:
+//
+//   STUFFABLE — yes, deliberately. `/api/waitlist` used to hold SUPABASE_SERVICE_ROLE_KEY, which is
+//     scoped to the PROJECT and bypasses RLS, on a PUBLIC unauthenticated endpoint accepting free
+//     input. Anything compromising that route read and wrote every table. It now carries the anon
+//     key against a column-level INSERT grant, so the worst it can do is write a junk row. The
+//     per-IP rate limit, the honeypot and the unique index on `email` bound the stuffing; the anon
+//     key is published nowhere in this project (no NEXT_PUBLIC_ Supabase variable exists in either
+//     repo), so it is not simply lying in a bundle.
+//
+//   HARVESTABLE — no, never. SELECT is still refused. That is the assertion that protects people's
+//     email addresses, and it is the one that must never be "made to work".
+//
+// Configurations still get loosened by somebody making a form work at 11pm. This is still the only
+// thing that would notice.
 //
 // The anon key is DESIGNED to sit in browsers, so holding it is safe. It must still never be
 // exported as NEXT_PUBLIC_ here: nothing in this site should hand a Supabase key to a browser,
@@ -104,14 +117,15 @@ if (svcH) {
 }
 
 try {
-  // 1. INSERT as anon — the stuffing attack.
+  // 1. INSERT as anon — MUST SUCCEED. This is the form working, and it is also the control for
+  //    everything below: without it, "anon was refused" is equally consistent with a rejected key.
   const post = await classify(await fetch(T, {
     method: 'POST',
     headers: { ...anonH, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
     body: JSON.stringify({ email: 'anon-probe@radlor-test.invalid', source: 'anon-probe' }),
   }))
-  ok(post.status !== 201 && post.status !== 200 && !post.authFailed,
-    `POST as anon -> ${post.status}${post.authFailed ? '  ⚠️ AUTH failure, not a permission denial — probe void' : ' (denied)'}`)
+  ok((post.status === 201 || post.status === 200) && !post.authFailed,
+    `POST as anon -> ${post.status} ${post.status === 201 || post.status === 200 ? '(accepted — the form works, and the key is real)' : '❌ THE SIGNUP FORM IS BROKEN'}`)
 
   // 2. SELECT as anon — the harvesting attack. This is the one that leaks people's emails.
   const getRes = await fetch(`${T}?select=*`, { headers: anonH })
@@ -142,5 +156,5 @@ try {
 
 console.log(fail
   ? '\n❌ THE WAITLIST TABLE IS REACHABLE WITH THE ANON KEY, or the probe was void.\n   Anyone can harvest every signup email and stuff the list. RLS is on with NO policies by\n   design and anon is REVOKEd — check whether a policy or a GRANT was added.'
-  : '\n✅ anon can neither insert, read nor delete the waitlist')
+  : '\n✅ anon may add a signup and nothing else — it cannot read or delete the waitlist')
 process.exit(fail)

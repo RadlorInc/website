@@ -8,16 +8,23 @@ import { AGE_BANDS } from '@/site'
  * verify in the network tab, that every request goes to radlor.com. So:
  *   - there is no `supabase-js` anywhere in this repo. This uses `fetch` against the REST
  *     endpoint, which means no client bundle can ever pick the SDK up by accident.
- *   - the key here is the SERVICE ROLE key. It bypasses RLS, it is read from the server
- *     environment, and it is never serialised into HTML. Do NOT add a `NEXT_PUBLIC_` Supabase
- *     variable — that prefix is what puts a value in the browser bundle.
+ *   - the key here is the ANON key, NOT the service role key. ⚠️ It used to be `service_role`,
+ *     which is scoped to the PROJECT and bypasses RLS — so this public, unauthenticated endpoint
+ *     that accepts free input was the widest credential in the system, and anything that
+ *     compromised it read and wrote every table. It now carries the anon key against a
+ *     column-level INSERT grant and one policy, so the worst a compromise here does is write a
+ *     junk row. Verified by `scripts/check-waitlist-anon-narrow.mjs`: anon INSERT succeeds, anon
+ *     SELECT / UPDATE / DELETE are all refused with 42501.
+ *   - it is still SERVER-side and still never serialised into HTML. Do NOT add a `NEXT_PUBLIC_`
+ *     Supabase variable — that prefix is what puts a value in the browser bundle, and it is also
+ *     what would make the rate limit below bypassable by anyone who read the page source.
  *
  * ⚠️ IT MUST WORK WITH JAVASCRIPT OFF. Hence form-encoded input, a 303 redirect, and outcome
  * pages that are real URLs rather than client-rendered state. Nothing here assumes a fetch().
  */
 
 const SUPABASE_URL = process.env.SUPABASE_URL
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
+const ANON_KEY = process.env.SUPABASE_ANON_KEY
 
 const BAND_IDS = new Set<string>(AGE_BANDS.map(b => b.id))
 
@@ -85,9 +92,9 @@ export async function POST(request: Request) {
   const rawBand = String(form.get('age_band') ?? '').trim()
   const age_band = BAND_IDS.has(rawBand) ? rawBand : null
 
-  if (!SUPABASE_URL || !SERVICE_KEY) {
+  if (!SUPABASE_URL || !ANON_KEY) {
     // Misconfiguration, not the visitor's fault — say so in the log, not in their face.
-    console.error('[waitlist] SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is not set')
+    console.error('[waitlist] SUPABASE_URL or SUPABASE_ANON_KEY is not set')
     return seeOther('/waitlist/problem')
   }
 
@@ -96,8 +103,8 @@ export async function POST(request: Request) {
     res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
       method: 'POST',
       headers: {
-        apikey: SERVICE_KEY,
-        Authorization: `Bearer ${SERVICE_KEY}`,
+        apikey: ANON_KEY,
+        Authorization: `Bearer ${ANON_KEY}`,
         'Content-Type': 'application/json',
         Prefer: 'return=minimal',
       },
