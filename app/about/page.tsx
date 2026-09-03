@@ -21,39 +21,46 @@ export default function About() {
 
       <div className="rl-prose prose mt-10">
         <p>
-          {COMPANY} is a small software company. We build learning tools that change according to the person
-          using them, starting with math.
+          {COMPANY} is a software company building learning tools that adapt to the person using them —
+          starting with math.
         </p>
         <blockquote>{VISION}</blockquote>
-        <p>
-          A child is not an empty container we fill. Everything we build starts from the assumption that they
-          already have it, and our job is to find where it is and put a light on it.
-        </p>
 
         <h2>Why we started</h2>
         <p>
-          Every child in a classroom of thirty gets the same question at the same moment, and about four of them
-          are being asked the right one. Software does not have that constraint — it can ask a different question
-          of every child, and change it again on the next answer. Almost none of it does.
+          Every child learns differently, but traditional learning often asks every student the same question
+          at the same time. Software doesn&rsquo;t have to work that way. It can understand where a child is,
+          respond to how they learn, and change what comes next.
         </p>
         <p>
-          So we built {APP_NAME}: a short placement check that finds where a child actually is, and then chapters
-          that teach from there, with the difficulty moving question by question and never shown on screen.
+          That&rsquo;s why we built {APP_NAME}. It starts by finding what a child already knows, then adapts
+          the learning experience from there.
+        </p>
+
+        <h2>We believe the potential is already there</h2>
+        <p>
+          Our job isn&rsquo;t to fill an empty container. It&rsquo;s to help children discover what they
+          already have, build on it, and keep moving forward.
         </p>
 
         <h2>How we work</h2>
         <p>
-          We work in the open with the families using the product, and we would rather ship one chapter that
-          teaches something honestly than ten that look busy. A lot of our engineering time goes into a boring
-          question: <strong>could a child get this right without knowing the thing we are testing?</strong> If the
-          answer is yes, the chapter goes back, however good it looks.
+          We build closely with the families and educators using our products. We would rather create one
+          chapter that genuinely helps a child learn than ten that simply look impressive. That means
+          questioning everything, even the things that seem to work.
         </p>
+        <p>One question we come back to often is:</p>
+        <blockquote>
+          Could a child get this right without actually understanding what we&rsquo;re trying to teach?
+        </blockquote>
+        <p>If the answer is yes, we go back and fix it.</p>
 
         <h2>Where we are</h2>
         <p>
-          {COMPANY} was founded in {FOUNDED_YEAR}. {APP_NAME} is in early access with our first families. If you
-          would like an account, or you are a school that wants to try it with a class, write to{' '}
-          <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
+          {COMPANY} was founded in {FOUNDED_YEAR}, and {APP_NAME} is currently in early access with a small
+          group of families. We&rsquo;re still building, testing, and learning. If you&rsquo;d like to try{' '}
+          {APP_NAME} with your family or bring it to your classroom, we&rsquo;d love to hear from you — write
+          to <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
         </p>
       </div>
       </div>

@@ -162,6 +162,32 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ⚠️ THIS BLOCK IS HERE BECAUSE A READER ASKED FOR IT, AND ITS POSITION IS THE POINT.
+          Malaika's closing note: "consider moving the about section right after the main homepage?
+          That would help a parent know right from the start what the website is all about." A
+          parent landing cold met the headline, four facts, then our beliefs — and never a plain
+          sentence saying what Radlor IS. This is that sentence, above the beliefs, with the full
+          story still one click away. Keep it SHORT: the moment it grows into the /about page it
+          stops doing the job it was added for. */}
+      <section className="mx-auto max-w-5xl px-6">
+        <div className="rl-rule" />
+        <div className="py-14">
+          <h2 className="rl-reveal-focus font-display text-3xl">What is {COMPANY}?</h2>
+          <p className="rl-reveal mt-5 text-lg text-muted max-w-3xl leading-relaxed" style={{ '--i': 1 } as React.CSSProperties}>
+            {COMPANY} is a software company building learning tools that adapt to the person using
+            them — starting with math.
+          </p>
+          <p className="rl-reveal mt-4 text-muted max-w-3xl leading-relaxed" style={{ '--i': 2 } as React.CSSProperties}>
+            Every child learns differently, but traditional learning often asks every student the same
+            question at the same time. Software doesn&rsquo;t have to work that way. It can understand where a
+            child is, respond to how they learn, and change what comes next.
+          </p>
+          <Link href="/about" className="rl-link rl-reveal mt-6 inline-block text-sm text-accent" style={{ '--i': 3 } as React.CSSProperties}>
+            More about {COMPANY} →
+          </Link>
+        </div>
+      </section>
+
       <section className="mx-auto max-w-5xl px-6">
         <div className="rl-rule" />
         <div className="py-14">
@@ -194,7 +220,7 @@ export default function Home() {
       <section className="mx-auto max-w-5xl px-6">
         <div className="rl-rule" />
         <div className="py-14">
-          <h2 className="rl-reveal-focus font-display text-3xl">Our products</h2>
+          <h2 className="rl-reveal-focus font-display text-3xl">Learning that meets them where they are</h2>
           <Link
             href="/adaptivelearn"
             className="rl-reveal rl-card mt-8 block rounded-2xl border border-line bg-surface p-8 hover:border-accent"
@@ -204,10 +230,16 @@ export default function Home() {
               <h3 className="font-display text-2xl">{APP_NAME}</h3>
               <span className="text-xs uppercase tracking-widest text-accent">Live</span>
             </div>
+            <p className="mt-3 text-lg max-w-2xl leading-relaxed">
+              Math that changes as your child answers.
+            </p>
             <p className="mt-3 text-muted max-w-2xl leading-relaxed">
-              Adaptive math for ages 3–18. A placement check finds where a child actually is, then story chapters
-              teach from there — with the difficulty moving question by question. Younger bands answer by
-              <em> holding up fingers to the camera</em>; older bands work on a chalkboard.
+              Every child starts somewhere different. {APP_NAME} finds where your child is, then adjusts each
+              question as they learn. Real math. Real thinking. No guessing.
+            </p>
+            <p className="mt-3 text-muted max-w-2xl leading-relaxed">
+              {APP_NAME} is currently being tested with a small group of families. Join the waitlist to be among
+              the first to try it.
             </p>
             <p className="mt-5 text-sm text-accent">Read more →</p>
           </Link>

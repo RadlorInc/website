@@ -28,7 +28,7 @@ const FAQ = [
   },
   {
     q: 'How many children can we add?',
-    a: 'There is no cap on class size. A class is not a family, so the per-child family price does not fit one and we have not published a school price — we set the first class up with you personally and work out the cost with you. At our size that is genuinely faster than any form we could build.',
+    a: 'There is no cap on class size. A class is not a family, so the per-child family price does not fit one and we have not published a school price — we set the first class up with you personally and work out the cost with you.',
   },
 ]
 
@@ -43,12 +43,21 @@ export default function ForSchools() {
         <div className="relative z-10 mx-auto max-w-5xl px-6 pt-20 pb-14">
         <p className="rl-rise text-sm uppercase tracking-[0.18em] text-accent font-medium">For schools</p>
         <h1 className="rl-focus font-display text-5xl sm:text-6xl leading-[1.05] mt-4 max-w-3xl" style={{ '--d': '0.09s' } as React.CSSProperties}>
-          Thirty children, thirty <span className="rl-lit" style={{ '--lit': 0.62 } as React.CSSProperties}>different</span> questions.
+          A classroom doesn&rsquo;t have to mean every student gets the{' '}
+          <span className="rl-lit" style={{ '--lit': 0.62 } as React.CSSProperties}>same</span> questions.
         </h1>
         <p className="rl-rise mt-6 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.18s' } as React.CSSProperties}>
-          The hard part of teaching math to a class is that they are not in the same place, and one
-          worksheet cannot be in two places at once. {APP_NAME} gives each child the question they are
-          actually ready for, and gives you one screen that says where each of them is.
+          {APP_NAME} is designed to meet students where they are, adjusting the learning experience as
+          they work.
+        </p>
+        <p className="rl-rise mt-5 text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.22s' } as React.CSSProperties}>
+          We&rsquo;re currently working with schools to shape the best way to bring {APP_NAME} into the
+          classroom. Because every school and classroom is different, we haven&rsquo;t published a standard
+          school price yet. For our first schools, we&rsquo;ll work with you directly to set up your class,
+          understand your needs, and make sure {APP_NAME} is working for your students.
+        </p>
+        <p className="rl-rise mt-6 text-lg max-w-2xl" style={{ '--d': '0.25s' } as React.CSSProperties}>
+          Interested in bringing {APP_NAME} to your school?
         </p>
         <a
           href={`mailto:${SUPPORT_EMAIL}?subject=AdaptiveLearn%20for%20our%20school`}
@@ -97,7 +106,7 @@ export default function ForSchools() {
             <h3 className="font-medium text-lg">Not built for</h3>
             <ul className="mt-4 space-y-3 text-muted leading-relaxed">
               <li>— Replacing you. It is practice and teaching, not a curriculum you can hand over.</li>
-              <li>— Exam drilling against a specific board's paper. It teaches the idea, not the format.</li>
+              <li>— Exam drilling against a specific board&rsquo;s paper. It teaches the idea, not the format.</li>
               <li>— Homework you need marked and returned. Progress is visible; it does not generate reports.</li>
               <li>— Whole-class projection. Every screen is written for one child, close up.</li>
             </ul>

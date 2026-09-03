@@ -64,12 +64,14 @@ export default function Pricing() {
 
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
       <section className="mx-auto max-w-5xl px-6 py-14">
-        <h2 className="rl-reveal-focus font-display text-3xl">What it costs</h2>
+        <h2 className="rl-reveal-focus font-display text-3xl">Simple pricing for the whole family</h2>
         <p className="rl-reveal mt-5 text-muted max-w-2xl leading-relaxed" style={{ '--i': 1 } as React.CSSProperties}>
-          {first} for the first child and {additional} for each one after, so the price follows the
-          family rather than a tier. The annual column is the same thing paid once. The dollar saving
-          is exact; the percentage beside it is rounded <em>down</em>, so it is never larger than what
-          you actually save.
+          The first child is {first}/month, and each additional child is {additional}/month. Every child
+          gets access to the same complete {APP_NAME} experience.
+        </p>
+        <p className="rl-reveal mt-4 text-muted max-w-2xl leading-relaxed text-sm" style={{ '--i': 2 } as React.CSSProperties}>
+          The annual column is the same thing paid once. The dollar saving is exact; the percentage
+          beside it is rounded <em>down</em>, so it is never larger than what you actually save.
         </p>
 
         <div className="mt-9 overflow-x-auto">
@@ -103,10 +105,10 @@ export default function Pricing() {
           </table>
         </div>
 
-        <p className="rl-reveal mt-6 text-muted max-w-2xl leading-relaxed text-sm" style={{ '--i': 2 } as React.CSSProperties}>
-          A family plan covers up to {PRICING.maxChildren} children. If you have more,{' '}
-          <a href={`mailto:${SUPPORT_EMAIL}`} className="rl-link text-accent">write to us</a> — we would
-          rather work it out with you than publish a number we have not thought through.
+        <p className="rl-reveal mt-6 text-muted max-w-2xl leading-relaxed" style={{ '--i': 3 } as React.CSSProperties}>
+          Family plans cover up to {PRICING.maxChildren} children. Have more than four?{' '}
+          <a href={`mailto:${SUPPORT_EMAIL}`} className="rl-link text-accent">Write to us</a> and
+          we&rsquo;ll work with you.
         </p>
       </section>
 
@@ -115,16 +117,18 @@ export default function Pricing() {
         <h2 className="rl-reveal-focus font-display text-3xl">What every plan includes</h2>
         <ul className="mt-8 grid gap-6 sm:grid-cols-2 max-w-3xl">
           {[
-            'Every age band, 3 to 18 — not a sample of the youngest one.',
-            'Every chapter in every band, with no chapter held back for a paid tier.',
-            'The placement check, so the child starts where they actually are.',
-            'The parent view: where your child is, and what they last worked on.',
-            'The camera chapters, on any device with a webcam.',
-            'One price whichever way you pay — annual is the same product, billed once.',
-          ].map((t, i) => (
-            <li key={t} className="rl-reveal-left flex gap-3 text-muted leading-relaxed" style={{ '--i': i + 1 } as React.CSSProperties}>
+            ['Every age band', 'Ages 3–18.'],
+            ['Every chapter', 'Nothing is locked behind a higher tier.'],
+            ['Placement check', 'Helps your child start where they actually are.'],
+            ['Parent view', 'See where your child is and what they last worked on.'],
+            ['Camera chapters', 'Available on compatible devices with a webcam.'],
+            ['Full access', 'Annual and monthly plans include the same product.'],
+          ].map(([label, t], i) => (
+            <li key={label} className="rl-reveal-left flex gap-3 text-muted leading-relaxed" style={{ '--i': i + 1 } as React.CSSProperties}>
               <span className="text-accent shrink-0">—</span>
-              {t}
+              <span>
+                <strong className="text-foreground font-medium">{label}:</strong> {t}
+              </span>
             </li>
           ))}
         </ul>
@@ -134,10 +138,10 @@ export default function Pricing() {
       <section className="mx-auto max-w-5xl px-6 py-14">
         <h2 className="rl-reveal-focus font-display text-3xl">Schools</h2>
         <p className="rl-reveal mt-5 text-muted max-w-2xl leading-relaxed" style={{ '--i': 1 } as React.CSSProperties}>
-          A class is not a family and the per-child rule above does not fit one, so we have not
-          published a school price. We set the first class up with you rather than handing over a
-          form — at our size that is genuinely the faster way round, and it is when we work out what
-          it should cost.{' '}
+          A class is not a family, so the per-child price above does not fit one and we haven&rsquo;t
+          published a standard school price yet. For our first schools we&rsquo;ll work with you directly
+          to set up your class, understand your needs, and make sure {APP_NAME} is working for your
+          students.{' '}
           <Link href="/for-schools" className="rl-link text-accent">
             How it works with a class →
           </Link>

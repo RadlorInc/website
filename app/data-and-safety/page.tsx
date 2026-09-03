@@ -49,34 +49,39 @@ export default function DataAndSafety() {
         What we know about your child, in <span className="rl-lit" style={{ '--lit': 0.5 } as React.CSSProperties}>plain</span> English.
       </h1>
       <p className="rl-rise mt-6 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.18s' } as React.CSSProperties}>
-        {APP_NAME} is used by children, so this page is written to be read rather than to protect us.
-        It describes what we actually do. Where something is a limitation rather than a promise, it says
-        so.
+        {APP_NAME} is used by children, so you should be able to read this page and simply know where
+        you stand. It is in plain English, it describes what we actually do, and where something is a
+        limitation rather than a promise, it says so.
       </p>
 
       <div className="rl-prose prose mt-14">
         <h2>The camera</h2>
         <p>
-          Some chapters in the 9&ndash;11 band let a child answer by holding fingers up, tilting a hand,
-          or holding two hands apart. It is the best part of the product and it is also the part parents
-          ask about first, so here is exactly how it works.
-        </p>
-        <p>
           <strong>
-            The video never leaves the device, and neither do the hand positions read from it.
+            Nothing from the camera is uploaded or stored. No video, no photograph, no hand position.
           </strong>{' '}
-          The tracking runs inside your own browser. Each frame is looked at, turned into a few
-          coordinates, compared with the expected answer, and discarded — all on your machine. There is
-          no code in the app that uploads a frame or a hand position, and the app&rsquo;s security policy
-          blocks it from contacting anywhere it is not explicitly allowed to, so one could not be added
-          quietly.
+          Some chapters in the 9&ndash;11 band let a child answer by holding fingers up, tilting a hand or
+          holding two hands apart, and this is the part parents ask about first. That is the short answer.
+          The detail is below.
         </p>
         <p>
-          Two things we will not hide. First, the tracking software itself is a file that has to be
-          downloaded the first time it is used, and it comes from Google&rsquo;s and jsDelivr&rsquo;s
-          public file servers. Those servers see that a device asked for a file — the same thing they see
-          when any website loads any library. They are not sent anything about your child and they never
-          see the camera. Second, the browser asks your permission before the camera turns on, and that
+          The tracking runs inside your own browser, on your own device. Each frame is looked at, turned
+          into a few coordinates, compared with the expected answer, and thrown away — all on your machine,
+          in a fraction of a second. Nothing is written to a file and nothing is sent anywhere.
+        </p>
+        <p>
+          Two things make that hard to break by accident. There is no code anywhere in the app that sends a
+          camera frame or a hand position &mdash; not one that is switched off, none at all. And the app
+          carries a list of the only places it is allowed to contact, enforced by the browser itself, which
+          does not include anywhere those images could go. Adding an upload would mean changing both, in
+          public, in this repository.
+        </p>
+        <p>
+          Two things we will not hide. First, the tracking software has to be downloaded the first time it
+          is used, and it comes from file servers run by Google and jsDelivr. Those two companies see that
+          a device asked them for a file &mdash; the same thing they see when any website loads any
+          library. <strong>They do not receive camera footage, hand data, or anything about your
+          child.</strong> Second, the browser asks your permission before the camera turns on, and that
           permission is yours to refuse.
         </p>
         <p>
@@ -107,19 +112,27 @@ export default function DataAndSafety() {
           ))}
         </ul>
 
-        <h2>Who else can see it</h2>
+        <h2>Who can access it?</h2>
         <p>
-          Nobody who is not you. A parent account can see its own children and no one else&rsquo;s; a
-          teacher can see the children in a class they created. That is not a policy we wrote down and
-          hope everybody follows — the database itself refuses to return another family&rsquo;s rows, and
-          we test that by trying it.
+          <strong>You.</strong> A parent account can see its own children, and no other family&rsquo;s.
+          That is not a rule we wrote down and hope everybody follows — the database itself refuses to
+          return another family&rsquo;s rows, and we test that by trying it.
         </p>
         <p>
-          Two companies hold the data on our behalf, because we do not run our own servers:{' '}
-          <strong>Supabase</strong> stores the database and{' '}
-          <strong>Vercel</strong> serves the app. Neither uses it for anything of their own. If you sign
-          in with Google, Google confirms to us that the email address is yours and tells us nothing
-          else.
+          <strong>Your child&rsquo;s teacher, if a school is using it.</strong> A teacher can see the
+          children in a class they created, and nothing outside it. If you are not using {APP_NAME}
+          through a school, no teacher can see anything.
+        </p>
+        <p>
+          <strong>Two companies that hold it for us,</strong> because we do not run our own servers.{' '}
+          <strong>Supabase</strong> stores the database and <strong>Vercel</strong> serves the app. They
+          store it on our behalf under contract and use it for nothing of their own. If you sign in with
+          Google, Google confirms to us that the email address is yours and tells us nothing else about
+          you.
+        </p>
+        <p>
+          Nobody else. We do not sell it, rent it or share it with advertisers, and we have no
+          advertisers to share it with.
         </p>
 
         <h2>Deleting it</h2>

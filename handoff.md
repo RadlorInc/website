@@ -486,6 +486,51 @@ not what it was. There is now one line under it:
 `/blog`. A longer draft ended "…with the working shown"; it was cut because a line whose whole job
 is to stop someone being confused should not carry a third clause.
 
+## Malaika's marketing notes — applied 2026-08-31
+
+Source: `Script_Marketing (1).pdf`, 6 pages of notes from a reader outside the team. Her framing:
+the site should answer **what is Radlor / what makes it different / how does it work / why should
+I trust it**, with shorter paragraphs and a stronger visual hierarchy. Everything below is applied.
+
+| # | Page | Change |
+|---|---|---|
+| 1 | home | product card is now "Learning that meets them where they are" + her shorter copy |
+| 2 | home | **new short "What is Radlor?" block directly after the facts**, above the beliefs |
+| 3 | /adaptivelearn | hero: "Every child starts somewhere different…" + "Real math. Real thinking. No guessing." |
+| 4 | /adaptivelearn | chapter steps rewritten (Intro / Demo / Your turn / Practice) |
+| 5 | /adaptivelearn | hands section: "Math you can show, not just tap", simple answer first |
+| 6 | /adaptivelearn | age-band syllabus in her wording; 9–11 world renamed **Interactive math** |
+| 7 | /adaptivelearn | FAQ rewritten, new "How is AdaptiveLearn different from other math apps?", + two links |
+| 8 | /pricing | "Simple pricing for the whole family", her intro, up-to-4 line, label-first plan list |
+| 9 | /pricing + /for-schools | schools copy in her words |
+| 10 | /for-schools | **removed** "At our size that is genuinely faster than any form we could build" |
+| 11 | /about | rewritten to her structure (Why we started / potential / How we work / Where we are) |
+| 12 | /data-and-safety | all seven of her points |
+
+⚠️ **"What about ages 17–18?" — HER LIST STOPPED AT 15–16; THE SITE DID NOT.** `AGE_BANDS` in
+`site.ts` has always had a sixth band (17–18, Math studio: Algebra II, pre-calculus, statistics,
+intro to calculus) and the page renders all six from that array. Nothing was missing; her source
+document only listed five. **Do not "add" a 17–18 band — it is there.**
+
+⚠️ **TWO FAQ ANSWERS ARE KEPT THAT HER LIST DOES NOT CONTAIN**, deliberately, and they are marked
+in the file: *"Was AdaptiveLearn called something else before?"* is the only place on the site that
+connects **Milo** to AdaptiveLearn, and families who used Milo still search that name; *"Does it
+work offline?"* is a real parent question. She wrote "keep whatever you feel suits you". Deleting
+them should be a decision, not tidying.
+
+⚠️ **THE `/data-and-safety` REWRITE CHANGED TONE, NOT FACTS.** Simple answer first, technical
+detail underneath; "no upload path" and "content security policy" are now explained in words rather
+than named; "Nobody who is not you" became **"Who can access it?"** with parent / teacher /
+service-provider spelled out separately, because the old absolute contradicted the Supabase and
+Vercel paragraph two lines later. Every underlying claim is unchanged and still true.
+
+The jargon survives in two places on purpose: the engineering comment at the top of the file, and
+`content/posts/a-camera-claim-you-can-check.md`, which is written for a technical reader who wants
+to verify the claim themselves.
+
+**Not done, on instruction:** the general copy-shortening pass. Malaika is writing those notes up
+separately and it gets done once, not twice.
+
 ## The home hero
 
 A full-bleed dark section: `min-height: min(88vh, 780px)`, the looping video as the ground, the

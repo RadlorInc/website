@@ -14,51 +14,74 @@ export const metadata: Metadata = {
 const BANDS = AGE_BANDS.map((b, i) => ({
   age: b.label,
   ...[
-    { world: 'Story worlds', what: 'Counting, number order and recognition, matching and comparing quantities, first addition and subtraction, measurement.' },
-    { world: 'Story worlds', what: 'Adding and subtracting to 100, place value, telling the time, shapes, patterns, fractions as sharing.' },
-    { world: 'Camera chapters', what: 'Decimals, factors and multiples, comparing fractions, unit conversion, angles and symmetry, area and perimeter, data and graphs.' },
-    { world: 'Field lab', what: 'Ratio and proportion, negative numbers, linear equations, coordinate geometry, probability, statistics.' },
-    { world: 'Design studio', what: 'Algebra I and geometry — quadratics, functions, similarity, trigonometry, proof.' },
-    { world: 'Math studio', what: 'Algebra II, pre-calculus, statistics and an introduction to calculus.' },
+    { world: 'Story worlds', what: 'Counting, number recognition, number order, comparing quantities, early addition and subtraction, and measurement.' },
+    { world: 'Story worlds', what: 'Addition and subtraction to 100, place value, telling time, shapes, patterns, and fractions through sharing.' },
+    { world: 'Interactive math', what: 'Decimals, factors and multiples, fractions, unit conversion, angles, symmetry, area and perimeter, data, and graphs.' },
+    { world: 'Field lab', what: 'Ratios and proportions, negative numbers, linear equations, coordinate geometry, probability, and statistics.' },
+    { world: 'Design studio', what: 'Algebra, geometry, functions, quadratics, similarity, trigonometry, and proof.' },
+    { world: 'Math studio', what: 'Algebra II, pre-calculus, statistics, and an introduction to calculus.' },
   ][i],
 }))
 
-const FAQ = [
+const FAQ: { q: string; a: string; href?: string; hrefLabel?: string }[] = [
   {
     q: 'What age is AdaptiveLearn for?',
-    a: 'Ages 3 to 18. The content is organized into six bands, and each band looks and works differently — a five-year-old gets a narrated story world with drawn animation, while a sixteen-year-old gets a design studio with a working chalkboard.',
+    a: `${APP_NAME} is designed for children ages 3–18, with different learning experiences built around each age group.`,
   },
   {
-    q: 'How does it know what to teach my child?',
-    a: 'A short placement check at the start finds where the child actually is, rather than assuming their school year. After that the difficulty moves inside every chapter: three correct in a row raises it, three wrong stops the scoring and teaches the idea again.',
+    q: 'How does AdaptiveLearn know what to teach my child?',
+    a: `${APP_NAME} starts with a short placement check to understand what your child already knows. From there, the learning experience adapts as they answer and learn.`,
+  },
+  {
+    q: 'Does my child need to use the camera?',
+    a: 'No. Camera-based interactions are optional. Chapters that use hand gestures can also be completed using taps.',
   },
   {
     q: 'Does the camera record my child?',
-    a: 'No. In the camera chapters the hand tracking runs entirely inside the browser on your own device. No video frame and no hand position is ever sent to us or to anyone else, and the app has no upload path for either. The camera is optional — every camera chapter can be answered by tapping instead.',
+    a: 'No. Hand tracking is designed to run directly on the child’s device. Camera images and hand-position data are not uploaded or stored.',
   },
   {
-    q: 'Do we need the camera to use it?',
-    a: 'No. Every chapter that accepts a hand gesture also accepts taps, and a child who declines the camera prompt lands straight on the tap version with nothing withheld.',
+    q: 'How is AdaptiveLearn different from other math apps?',
+    a: `Instead of giving every child the same questions in the same order, ${APP_NAME} adjusts the learning experience based on what each child actually knows and how they respond.`,
   },
+  {
+    // ⚠️ NOT ONE PRICE IS TYPED HERE. Every figure comes from PRICING in site.ts, so this answer,
+    // the /pricing table and the JSON-LD offers cannot disagree.
+    q: 'How much does AdaptiveLearn cost?',
+    a: `${APP_NAME} is ${usd(PRICING.monthly.first)}/month for the first child and ${usd(PRICING.monthly.additional)}/month for each additional child, with up to ${PRICING.maxChildren} children on one family plan.`,
+    href: '/pricing',
+    hrefLabel: 'See pricing →',
+  },
+  {
+    q: 'When can I try AdaptiveLearn?',
+    a: `${APP_NAME} is currently being tested with a small group of families. Join the waitlist to be notified when more families are invited.`,
+    href: '/waitlist',
+    hrefLabel: 'Join the waitlist →',
+  },
+  // ⚠️ THE TWO BELOW ARE NOT IN MALAIKA'S LIST AND ARE KEPT ON PURPOSE. The rename answer is the
+  // only place on the site that connects "Milo" to AdaptiveLearn, and families who used Milo still
+  // search for it; the offline answer is a real question from a parent on a train. Delete them
+  // only as a deliberate decision, not as tidying.
   {
     q: 'Does it work offline?',
     a: 'Yes, once it has loaded. The app installs to the home screen and caches itself, so a chapter already opened will play without a connection. Progress syncs when the device is back online.',
   },
   {
     q: 'Was AdaptiveLearn called something else before?',
-    a: 'Yes — it was called Milo until August 2026. Milo is still there: he is the pony who walks through the story chapters and does the explaining. The app around him is AdaptiveLearn, made by Radlor.',
-  },
-  {
-    q: 'How much does it cost?',
-    a: `${usd(PRICING.monthly.first)} a month for the first child and ${usd(PRICING.monthly.additional)} for each additional child, up to ${PRICING.maxChildren} on one family plan. Annual billing saves over 20%. Every age band and every chapter is on every plan — nothing is held back for a higher tier. The way in is the waitlist.`,
+    a: `Yes — it was called Milo until August 2026. Milo is still there: he is the pony who walks through the story chapters and does the explaining. The app around him is ${APP_NAME}, made by ${COMPANY}.`,
   },
 ]
 
-function Q({ q, a, i }: { q: string; a: string; i: number }) {
+function Q({ q, a, href, hrefLabel, i }: { q: string; a: string; href?: string; hrefLabel?: string; i: number }) {
   return (
     <div className="rl-block rl-reveal border-t border-line py-6" style={{ '--i': i } as React.CSSProperties}>
       <h3 className="font-medium text-lg">{q}</h3>
       <p className="mt-2 text-muted leading-relaxed max-w-2xl">{a}</p>
+      {href && hrefLabel && (
+        <Link href={href} className="rl-link mt-3 inline-block text-sm text-accent">
+          {hrefLabel}
+        </Link>
+      )}
     </div>
   )
 }
@@ -77,15 +100,17 @@ export default function AdaptiveLearn() {
           {APP_NAME}: math that <span className="rl-lit" style={{ '--lit': 0.62 } as React.CSSProperties}>changes</span> as your child answers.
         </h1>
         <p className="rl-rise mt-6 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.18s' } as React.CSSProperties}>
-          A short check finds where your child actually is. From there, every chapter is a small world with
-          characters, a job to do, and a question that can only be answered by doing the math — not by
-          picking the likelier of two buttons.
+          Every child starts somewhere different. {APP_NAME} finds where your child is, then adjusts each
+          question as they learn.
         </p>
-        <p className="rl-rise mt-6 text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.22s' } as React.CSSProperties}>
+        <p className="rl-rise mt-5 font-display text-2xl max-w-2xl" style={{ '--d': '0.22s' } as React.CSSProperties}>
+          Real math. Real thinking. No guessing.
+        </p>
+        <p className="rl-rise mt-6 text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.26s' } as React.CSSProperties}>
           <strong className="text-foreground font-medium">
-            {APP_NAME} is being tested with a small group of families.
+            {APP_NAME} is currently being tested with a small group of families.
           </strong>{' '}
-          The waitlist is how you get in when we open it up.
+          Join the waitlist to be among the first to try it.
         </p>
         <Link
           href="/waitlist"
@@ -102,10 +127,10 @@ export default function AdaptiveLearn() {
         <h2 className="rl-reveal-focus font-display text-3xl">How a chapter works</h2>
         <ol className="mt-10 grid gap-8 sm:grid-cols-4">
           {[
-            ['Intro', 'One card. Who is here, and what they need.'],
-            ['Demo', 'A worked example, narrated, with the working animated rather than asserted.'],
-            ['Your turn', 'One unscored go, with the help still on.'],
-            ['Practice', 'Ten scored rounds — with the difficulty moving, and the help fading.'],
+            ['Intro', 'Meet the characters, the world, and the problem to solve.'],
+            ['Demo', 'See the math worked out step by step, with each part brought to life.'],
+            ['Your turn', 'Try one yourself, with guidance still available.'],
+            ['Practice', 'Ten scored rounds. As your child improves, the questions adjust and the help gradually fades.'],
           ].map(([h, p], i) => (
             <li key={h} className="rl-reveal" style={{ '--i': i + 1 } as React.CSSProperties}>
               <span className="rl-num font-display text-3xl text-accent" style={{ '--i': i + 1 } as React.CSSProperties}>{i + 1}</span>
@@ -147,17 +172,25 @@ export default function AdaptiveLearn() {
 
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
       <section className="mx-auto max-w-5xl px-6 py-14">
-        <h2 className="rl-reveal-focus font-display text-3xl">Answering with your hands</h2>
-        <p className="mt-5 text-muted max-w-2xl leading-relaxed">
-          In the 9–11 band a question is often answered by showing rather than tapping: hold up a number of
-          fingers, tilt a hand to set an angle, hold two hands apart to say how wide something is. It puts the
-          math back into the body, which is where a nine-year-old still does most of it.
+        <h2 className="rl-reveal-focus font-display text-3xl">Math you can show, not just tap</h2>
+        <p className="rl-reveal mt-5 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--i': 1 } as React.CSSProperties}>
+          Sometimes the best way to answer a math question is to show it.
         </p>
-        <p className="mt-4 text-muted max-w-2xl leading-relaxed">
-          <strong className="text-foreground font-medium">The tracking runs on your device.</strong> Frames from
-          the camera and the hand positions read from them never leave the browser — there is no upload path in
-          the software for either. Every one of those chapters also accepts taps, so the camera is never the only
-          way through.
+        <p className="rl-reveal mt-4 text-muted max-w-2xl leading-relaxed" style={{ '--i': 2 } as React.CSSProperties}>
+          In some chapters, children can use their hands to answer instead of tapping a button — holding up
+          fingers to show a number, tilting a hand to show an angle, or using both hands to show distance. It
+          makes learning more interactive, and gives children another way to express what they know.
+        </p>
+        <p className="rl-reveal mt-8 font-display text-2xl max-w-2xl" style={{ '--i': 3 } as React.CSSProperties}>
+          Your child&rsquo;s camera stays private.
+        </p>
+        <p className="rl-reveal mt-4 text-muted max-w-2xl leading-relaxed" style={{ '--i': 4 } as React.CSSProperties}>
+          Hand tracking happens right on your child&rsquo;s device. Camera images and hand movements are
+          processed there and are never uploaded or stored.
+        </p>
+        <p className="rl-reveal mt-4 text-muted max-w-2xl leading-relaxed" style={{ '--i': 5 } as React.CSSProperties}>
+          And because the camera is optional, every chapter that uses hand tracking can also be completed by
+          tapping on the screen.
         </p>
       </section>
 
