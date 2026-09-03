@@ -173,16 +173,15 @@ export default function Home() {
         <div className="rl-rule" />
         <div className="py-14">
           <h2 className="rl-reveal-focus font-display text-3xl">What is {COMPANY}?</h2>
+          {/* ⚠️ ONE PARAGRAPH, AND IT STAYS ONE PARAGRAPH. It had a second that began "Every child
+              learns differently…" — which is now the heading of the product section further down
+              this same page, and Malaika's first note was "sometimes less is more. There are only
+              certain parts where the extra information is needed." The full answer is /about. */}
           <p className="rl-reveal mt-5 text-lg text-muted max-w-3xl leading-relaxed" style={{ '--i': 1 } as React.CSSProperties}>
             {COMPANY} is a software company building learning tools that adapt to the person using
-            them — starting with math.
+            them — starting with math. Our first product is {APP_NAME}: adaptive math for ages 3&ndash;18.
           </p>
-          <p className="rl-reveal mt-4 text-muted max-w-3xl leading-relaxed" style={{ '--i': 2 } as React.CSSProperties}>
-            Every child learns differently, but traditional learning often asks every student the same
-            question at the same time. Software doesn&rsquo;t have to work that way. It can understand where a
-            child is, respond to how they learn, and change what comes next.
-          </p>
-          <Link href="/about" className="rl-link rl-reveal mt-6 inline-block text-sm text-accent" style={{ '--i': 3 } as React.CSSProperties}>
+          <Link href="/about" className="rl-link rl-reveal mt-6 inline-block text-sm text-accent" style={{ '--i': 2 } as React.CSSProperties}>
             More about {COMPANY} →
           </Link>
         </div>
@@ -220,7 +219,15 @@ export default function Home() {
       <section className="mx-auto max-w-5xl px-6">
         <div className="rl-rule" />
         <div className="py-14">
-          <h2 className="rl-reveal-focus font-display text-3xl">Learning that meets them where they are</h2>
+          {/* ⚠️ THIS HEADING IS ONE OF TWO MALAIKA OFFERED AND THE OTHER IS STILL LIVE.
+              Her note on the draft: "Possible tagline? also thought of: every child learns
+              differently. their math should too". The alternative is "Learning that meets them
+              where they are" — swap the string if that one wins. It is NOT the company tagline:
+              that is TAGLINE in site.ts, which sets every page <title> and the OG image, and
+              changing it is a brand decision rather than a copy one. */}
+          <h2 className="rl-reveal-focus font-display text-3xl">
+            Every child learns differently. Their math should too.
+          </h2>
           <Link
             href="/adaptivelearn"
             className="rl-reveal rl-card mt-8 block rounded-2xl border border-line bg-surface p-8 hover:border-accent"
@@ -234,12 +241,8 @@ export default function Home() {
               Math that changes as your child answers.
             </p>
             <p className="mt-3 text-muted max-w-2xl leading-relaxed">
-              Every child starts somewhere different. {APP_NAME} finds where your child is, then adjusts each
-              question as they learn. Real math. Real thinking. No guessing.
-            </p>
-            <p className="mt-3 text-muted max-w-2xl leading-relaxed">
-              {APP_NAME} is currently being tested with a small group of families. Join the waitlist to be among
-              the first to try it.
+              {APP_NAME} finds where your child is, then adjusts each question as they learn. Real math. Real
+              thinking. No guessing.
             </p>
             <p className="mt-5 text-sm text-accent">Read more →</p>
           </Link>

@@ -528,8 +528,34 @@ The jargon survives in two places on purpose: the engineering comment at the top
 `content/posts/a-camera-claim-you-can-check.md`, which is written for a technical reader who wants
 to verify the claim themselves.
 
-**Not done, on instruction:** the general copy-shortening pass. Malaika is writing those notes up
-separately and it gets done once, not twice.
+### Her margin comments on the same document — applied 2026-09-01
+
+Four comments in the Google Doc margin, which are the "notes coming separately" the copy pass was
+waiting for:
+
+- **2:06am, "sometimes less is more. There are only certain parts where the extra information is
+  needed."** The home "What is Radlor?" block is now ONE paragraph — its second began "Every child
+  learns differently…", which is the heading of the product section further down the same page.
+- **2:20am, "Possible tagline? also thought of: every child learns differently. their math should
+  too"** — that line is now the product section's heading on the home page. ⚠️ **The alternative,
+  "Learning that meets them where they are", is recorded in a comment right above it; swap the
+  string if that one wins.** It is deliberately NOT `TAGLINE` in `site.ts` — that sets every page
+  `<title>` and the OG image, so changing it is a brand decision, not a copy one.
+- **2:22am, "it should only be Join the Waitlist. the family part feels like extra information that
+  the customer doesnt HAVE to know"** — the "currently being tested with a small group of families"
+  sentence is gone **from the home card**. ⚠️ It is deliberately KEPT on `/adaptivelearn` and
+  `/pricing`: on the home page it is throat-clearing, but on the pricing page it is the reason
+  nobody is being charged yet, which is a material fact rather than extra information.
+- **2:38am, "tagline to add to this part"** on *Math you can show, not just tap* — already the
+  section heading on `/adaptivelearn`.
+- **7:04am on the About section, "had to be shortened by a lot… it should have a question the
+  parent might ask like what is this company with a quick and easy answer"** — `/about` now opens
+  with **"What is Radlor?"** answered in two sentences, and went from ~350 words to ~190. The
+  second blockquote and the "We believe the potential is already there" heading were cut as the
+  same point made a third way. **If you add to that page, take something out.**
+
+Her praise, recorded so nobody "improves" it away: *"Love the visuals with the chart here!"* (the
+difficulty line on `/adaptivelearn`) and *"The chart with pricing looks perfect"*.
 
 ## The home hero
 

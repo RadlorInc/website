@@ -19,48 +19,42 @@ export default function About() {
         About <span className="rl-lit" style={{ '--lit': 0.55 } as React.CSSProperties}>{COMPANY}</span>
       </h1>
 
+      {/* ⚠️ THIS PAGE IS SHORT ON PURPOSE AND IT USED TO BE THREE TIMES LONGER.
+          Malaika, reading the draft: "I think that this section had to be shortened by a lot.
+          There were a lot of different styles of expressing the point. for the about it should
+          have a question the parent might ask like what is this company with a quick and easy
+          answer." So it opens with the question and answers it in two sentences, and each heading
+          below gets one short paragraph. The second blockquote and the "We believe the potential
+          is already there" heading were cut as the same point said a third way. If you add to this
+          page, take something out. */}
       <div className="rl-prose prose mt-10">
+        <h2>What is {COMPANY}?</h2>
         <p>
           {COMPANY} is a software company building learning tools that adapt to the person using them —
-          starting with math.
+          starting with math. Our first product is {APP_NAME}: adaptive math for ages 3&ndash;18.
         </p>
         <blockquote>{VISION}</blockquote>
 
         <h2>Why we started</h2>
         <p>
-          Every child learns differently, but traditional learning often asks every student the same question
-          at the same time. Software doesn&rsquo;t have to work that way. It can understand where a child is,
-          respond to how they learn, and change what comes next.
-        </p>
-        <p>
-          That&rsquo;s why we built {APP_NAME}. It starts by finding what a child already knows, then adapts
-          the learning experience from there.
-        </p>
-
-        <h2>We believe the potential is already there</h2>
-        <p>
-          Our job isn&rsquo;t to fill an empty container. It&rsquo;s to help children discover what they
-          already have, build on it, and keep moving forward.
+          Every child learns differently, but traditional learning asks every student the same question at
+          the same time. Software doesn&rsquo;t have to work that way — it can find where a child is and
+          change what comes next. That&rsquo;s why we built {APP_NAME}.
         </p>
 
         <h2>How we work</h2>
         <p>
-          We build closely with the families and educators using our products. We would rather create one
-          chapter that genuinely helps a child learn than ten that simply look impressive. That means
-          questioning everything, even the things that seem to work.
+          We build closely with the families and educators using our products, and we would rather make one
+          chapter that genuinely helps a child than ten that look impressive. The question we keep coming
+          back to is: <strong>could a child get this right without actually understanding what we&rsquo;re
+          trying to teach?</strong> If the answer is yes, we go back and fix it.
         </p>
-        <p>One question we come back to often is:</p>
-        <blockquote>
-          Could a child get this right without actually understanding what we&rsquo;re trying to teach?
-        </blockquote>
-        <p>If the answer is yes, we go back and fix it.</p>
 
         <h2>Where we are</h2>
         <p>
-          {COMPANY} was founded in {FOUNDED_YEAR}, and {APP_NAME} is currently in early access with a small
-          group of families. We&rsquo;re still building, testing, and learning. If you&rsquo;d like to try{' '}
-          {APP_NAME} with your family or bring it to your classroom, we&rsquo;d love to hear from you — write
-          to <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
+          {COMPANY} was founded in {FOUNDED_YEAR}, and {APP_NAME} is in early access with a small group of
+          families. If you&rsquo;d like to try it with your family or bring it to your classroom, write to{' '}
+          <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
         </p>
       </div>
       </div>
