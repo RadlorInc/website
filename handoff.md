@@ -48,12 +48,14 @@ byte-identical — same 5 columns, same 4 constraints, RLS on, 0 policies, no gr
 **Live at radlor.com**, as the Vercel project `website`, from `github.com/RadlorInc/website`.
 Production tracks the tip of `main` — **do not pin a SHA here**, it is stale the next time anyone
 pushes and this file has already cost one session by being believed when wrong. Check it instead:
-`git log --oneline -1 origin/main`, then confirm production actually moved. Last verified at
-`c29ec14` on 2026-08-30 against production rather than the dashboard:
-`/pricing` serves `$7.99`, `Free while` returns zero hits, `/waitlist` and both outcome pages are
-200, the JSON-LD carries 8 offers all pointing at `radlor.com/waitlist`, and a form-encoded POST
-with no JavaScript persisted a row to the `ghuvnq` Supabase project and was then deleted. The
-waitlist table is empty and ready.
+`git log --oneline -1 origin/main`, then confirm production actually moved.
+
+**Last verified 2026-09-01**, against production in a real browser rather than the dashboard: the
+home page serves the current headings, `/about` is the shortened version, the hero video plays and
+the copy changes from Malaika's notes are all live. Earlier verifications also confirmed `/pricing`
+serving `$7.99`, `/waitlist` and both outcome pages at 200, JSON-LD carrying 8 offers all pointing
+at `radlor.com/waitlist`, and a form-encoded POST with no JavaScript persisting a row to the
+`ghuvnq` Supabase project (then deleted). The waitlist table is empty and ready.
 
 > ⚠️ **This section has been wrong twice, in opposite directions.** It said *"nothing is deployed
 > and there is no GitHub repo"* for ten days after both became false, which cost a session. It was
@@ -225,7 +227,7 @@ reads.**
 
 | | |
 |---|---|
-| **On load** | `rl-rise` (copy lifts), `rl-focus` (headline resolves out of blur), `rl-lit` (the ring AND its light around ONE word — `--lit` scales both), `rl-lightfield` / `rl-halo` / `rl-glow` (the room) |
+| **On load** | `rl-rise` (copy lifts), `rl-focus` (headline resolves out of blur), `rl-lit` (the ring AND its light around ONE word — `--lit` scales both), `rl-lightfield` / `rl-glow` (the room, on every page except home — the home hero's ground is the video) |
 | **On scroll** | `rl-reveal`, `rl-reveal-focus`, `rl-reveal-left`, `rl-rule`, `rl-tick`, `rl-lampdot`, `rl-num`, `rl-trace` (an SVG stroke drawing itself), `rl-parallax`, `rl-progress`, `rl-prose` |
 | **On hover** | `rl-card`, `rl-row`, `rl-block`, `rl-link`, `rl-cta` |
 
@@ -236,11 +238,15 @@ scroll timeline, so `animation-delay` does nothing. `--d` delays an on-load one,
 brand guide described a bulb. In the actual mark the light is an orbit, so `rl-lit::after` is now a
 circle squashed and tilted into an ellipse, with a bright arc lapping it every nine seconds — the
 mask is squashed with the fill, which is what gives the stroke a real ring's uneven weight instead
-of the even outline a `border` would draw. `rl-halo` is the same ring at the scale of a room.
-The arc rides an `@property` angle; without `@property` it still renders, it just jumps once a lap.
+of the even outline a `border` would draw. The arc rides an `@property` angle; without `@property`
+it still renders, it just jumps once a lap.
+
+⚠️ **`rl-halo` AND `rl-glow-core` ARE GONE** — they were the home hero's extra layers, the video
+covers them completely, and dead CSS is not kept for sentiment. `rl-lightfield` and `rl-glow` still
+run on the ten other pages. This table listed `rl-halo` as live for a day after it was deleted.
 
 **One light per page**, and it lands on the word carrying that page's idea: `child` on home,
-`changes` on `/adaptivelearn`, the price on `/pricing`, `different` on `/for-schools`, `plain` on
+`changes` on `/adaptivelearn`, the price on `/pricing`, `same` on `/for-schools`, `plain` on
 `/data-and-safety`. Amber never touches the letters — it goes behind them, so the headline keeps
 13:1 instead of amber's 1.9:1 on Paper.
 
@@ -563,6 +569,15 @@ waiting for:
   second blockquote and the "We believe the potential is already there" heading were cut as the
   same point made a third way. **If you add to that page, take something out.**
 
+⚠️ **ONE OPEN ITEM, FLAGGED TO RAFI AND NOT YET DECIDED.** The product section on the home page now
+says the same thing three times: the heading *"Question difficulty moves with your child."*, the
+card lead *"Math that changes as your child answers."*, and the card body's first clause
+*"AdaptiveLearn finds where your child is, then adjusts each question as they learn."* That is
+exactly what Malaika's "less is more" note was about, but the lead and the body are both **her own
+lines** from the document, so they were not cut unilaterally. The proposal on the table is to drop
+the body's first clause, leaving *"Real math. Real thinking. No guessing."* — which is the most
+distinctive sentence on that card and is currently hidden behind a longer one.
+
 Her praise, recorded so nobody "improves" it away: *"Love the visuals with the chart here!"* (the
 difficulty line on `/adaptivelearn`) and *"The chart with pricing looks perfect"*.
 
@@ -626,36 +641,52 @@ at 360 or 375.
 ```
 site.ts                    every shared fact + PAGES (the one page list) + company TODOs
 app/layout.tsx             metadata + Organization/WebSite JSON-LD + header + footer
-app/page.tsx               home — what we believe, the product card, latest writing
-app/adaptivelearn/         how a chapter works, answering with hands, the six age bands,
-                           6 parent FAQs · SoftwareApplication + FAQPage
+app/page.tsx               home — looping hero video, four fact links, "What is Radlor?",
+                           what we believe, the product card, latest writing
+app/adaptivelearn/         how a chapter works, math you can show, the six age bands,
+                           9 parent FAQs · SoftwareApplication + FAQPage
 app/pricing/               the price table, generated from PRICING in site.ts; what every
                            plan includes; schools · SoftwareApplication + Offers
 app/waitlist/              the form (+ /thanks, /problem — static outcome pages, noindex)
 app/api/waitlist/          Route Handler; the ONLY thing that talks to Supabase
 app/for-schools/           setting up a class, good-at / not-built-for, 5 FAQs · FAQPage
-app/data-and-safety/       the camera, what we store, who else sees it, deleting it,
-                           and what we have NOT finished
+app/data-and-safety/       the camera, what we store, what we never store, who can access it,
+                           deleting it, and what we have NOT finished
 app/privacy/               this website only: no cookies, no analytics, no third parties
 app/about/  app/contact/
 app/writing/               index + [slug], markdown via `marked`, Article JSON-LD
 app/robots.ts  app/sitemap.ts  app/llms.txt/route.ts  app/opengraph-image.tsx
-content/posts.ts + content/posts/*.md    one seed post
+content/posts.ts + content/posts/*.md    three posts
+public/hero.{webm,mp4}     the looping hero, 1600x900 · hero-portrait.* is the 720x1280 crop
+public/hero-poster*.jpg    one poster per orientation, chosen by media query in CSS
+scripts/                   check-hero-contrast · check-pricing · check-social ·
+                           check-waitlist-rls · indexnow
 ```
+
+**Four gates, all wired to `npm run check:*`.** Run them before pushing:
+
+| | what it proves |
+|---|---|
+| `check:hero-contrast` | the hero copy clears AA over every frame of both videos **and** the mark stays bright — two opposing gates |
+| `check:pricing` | every published pricing claim holds across all 4 plans |
+| `check:social` | all 6 `sameAs` links land on a real Radlor profile |
+| `check:waitlist-rls` | anon can add a signup and nothing else — it cannot read or delete |
 
 ## Decisions made, and why
 
 - **Separate repo from the product** (`../milo-story-mode`), not a subfolder of it. The company site
   is the parent of the product, not a child of it — and practically, that repo's Vercel pipeline has
   broken silently more than once and must not be able to take radlor.com with it.
-- **No GitHub repo chosen yet.** Local `git` only. Decide the remote when it is time to deploy;
-  nothing here depends on the answer.
+- ~~**No GitHub repo chosen yet.**~~ ⚠️ **This line was false for days and sat two screens below a
+  section saying the repo is public.** The remote is `github.com/RadlorInc/website`, it is public,
+  and production tracks its `main`. Kept struck through rather than deleted, as the example of what
+  this file does when nobody updates it.
 - **Next 16 + Tailwind 4**, same as the product, so there is one framework to know.
 - **`/adaptivelearn`, not `/products/adaptivelearn`.** Shorter URL, one product, no folder needed
   until there are two.
 - **`/writing`, not `/blog`.** Same content, less of a promise about frequency.
 - **One dependency added: `marked`.** No CMS, no MDX, no component library, no analytics.
-- **Nine pages, then stop.** `/features`, `/faq`, `/team` and comparison pages were considered and
+- **Ten pages, then stop.** `/features`, `/faq`, `/team` and comparison pages were considered and
   refused: they would compete with pages that already exist. Everything after this should be an
   ARTICLE, not a marketing page — GEO comes from articles.
 - **`/privacy` and `/data-and-safety` are separate on purpose.** One is about this website (which
@@ -667,6 +698,10 @@ content/posts.ts + content/posts/*.md    one seed post
 
 ## Next steps, in order
 
+⚠️ **Steps 2 and 3 of the old list are done and were still sitting here as "next".** "Deploy" was
+listed as pending while the site had been live for days. **Cross a step off in the commit that
+finishes it.**
+
 1. ~~**Fill in `docs/brand-facts.md`**~~ — **done 2026-08-29, except the founder row.** `sameAs`
    carries six profiles and `npm run check:social` follows every one to a real Radlor profile;
    `FOUNDED_YEAR` is confirmed `2026`; `LOCATION` is the Delaware address and the `PostalAddress`
@@ -674,26 +709,23 @@ content/posts.ts + content/posts/*.md    one seed post
    been filled on 2026-08-20 and this line was never updated. **Only `docs/brand-facts.md` is
    authoritative about which facts are open; this list drifts.** The one still open is *Founder /
    team*, which is a decision, not a lookup.
-2. **Look at the copy.** Every word is mine, written from what the product actually does. The About
-   page's "why we started" especially — it should be in the founder's voice, not mine.
-3. **Deploy.** New Vercel project (NOT the existing one), `radlor.com` as its production domain,
-   `NEXT_PUBLIC_SITE_URL=https://radlor.com`, plus the two the waitlist needs —
-   **`SUPABASE_URL`** (no trailing slash) and **`SUPABASE_SERVICE_ROLE_KEY`** — in
-   **Production AND Preview**. ⚠️ Env vars are read at build/run time, so adding them does **not**
-   change an existing deployment: **redeploy.** Names and where each value comes from are in
-   `.env.example` and README.md. ⚠️ Never `NEXT_PUBLIC_` either Supabase var — that inlines it into
-   the browser bundle, and a service key there is write access to every table. ⚠️ The key must be
-   the radlor-site project's, **not** the product's (`qaymxunzlarwusogwyak`), which holds
-   children's data. Without them the site builds fine and every signup 303s to /waitlist/problem.
-   ⚠️ **The product repo's lesson applies here too: after
-   connecting Git, push once and confirm a deployment actually appears. A green settings page is not
-   evidence.** ⚠️ And Vercel Hobby will not host a private org-owned repo via the Git integration —
-   keep the repo public until Pro.
+2. ~~**Deploy.**~~ — **done.** Live at radlor.com from `RadlorInc/website`, env vars set, waitlist
+   writing to `ghuvnq`. The deployment notes that were here (never `NEXT_PUBLIC_` a Supabase var;
+   the key must not be the product's `qaymxunzlarwusogwyak`, which holds children's data; env vars
+   need a redeploy to take effect; Vercel Hobby will not host a private org-owned repo via the Git
+   integration) are still true and now live in `.env.example` and `README.md`, which is where
+   somebody setting up a second environment will look.
+3. ~~**Look at the copy.**~~ — **done 2026-08-31/09-01**, against Malaika's document and her margin
+   comments. See the two sections above. **Still open:** the About page's *why we started* should be
+   in the founder's voice rather than mine, and the product-card body still repeats what the section
+   heading above it now says — one clause to cut, flagged to Rafi and awaiting his call.
 4. **Write two or three more posts.** For GEO this is the whole game: answer engines cite articles,
-   not homepages. Each post's `description` should state a finding a model can quote.
-5. **Legal pages.** The product carries `/legal/privacy` and `/legal/terms` on its own origin. This
-   site collects nothing, so it needs at most a short privacy note — but it should say so out loud
-   rather than have nothing.
+   not homepages. Each post's `description` should state a finding a model can quote. Three exist.
+5. ~~**Legal pages.**~~ — **done.** `/privacy` covers this website (which collects nothing) and
+   `/data-and-safety` covers the product. The full legal policy stays on the product's own origin at
+   `adaptivelearn.radlor.com/legal/privacy`.
+6. **Re-grant the Vercel connector access to the `website` project.** Until that happens a failed
+   deploy cannot be seen from here at all — see the warning at the top of this file.
 
 ## The one-shot check
 
@@ -713,6 +745,19 @@ for (const p of ['/', '/adaptivelearn', '/about', '/writing', '/contact']) {
 }
 ```
 
-For overflow, render each path in a 360 px-wide off-screen `<iframe>` and compare
-`scrollWidth` to `clientWidth`. Both the header nav and the footer link row have overflowed there
-once already, so it is worth re-running after any layout change.
+For overflow, the method that actually works is **headless Chrome over CDP**:
+`Emulation.setDeviceMetricsOverride` at each width, then compare `document.documentElement`'s
+`scrollWidth` with `innerWidth` on every path. The current sweep is 360 / 375 / 768 / 1280, and it
+also asserts exactly one `<h1>` per page. Both the header nav and the footer link row have
+overflowed at 360 once already, so re-run it after any layout change.
+
+⚠️ **THE BROWSER PANE CANNOT MEASURE ANYTHING SCROLL-DRIVEN.** Its renderer runs hidden, so
+`requestAnimationFrame` does not fire and `await`ing one hangs the call for 45 s. Scroll-driven
+animation, video decode and anything else that needs a live compositor must be driven through
+headless Chrome over CDP instead. The pane is still the right tool for reading a rendered DOM, for
+screenshots, and for verifying production — it is the only client here that clears Vercel's bot
+challenge.
+
+⚠️ **AND A SCREENSHOT CATCHES WHAT A MEASUREMENT MISSES.** The hero contrast check passed the
+mobile headline at 19:1 while a screenshot plainly showed the ring running through it, because the
+check's boxes were viewport-relative and the hero starts 65 px below the header. Take both.
