@@ -537,10 +537,19 @@ waiting for:
   needed."** The home "What is Radlor?" block is now ONE paragraph — its second began "Every child
   learns differently…", which is the heading of the product section further down the same page.
 - **2:20am, "Possible tagline? also thought of: every child learns differently. their math should
-  too"** — that line is now the product section's heading on the home page. ⚠️ **The alternative,
-  "Learning that meets them where they are", is recorded in a comment right above it; swap the
-  string if that one wins.** It is deliberately NOT `TAGLINE` in `site.ts` — that sets every page
-  `<title>` and the OG image, so changing it is a brand decision, not a copy one.
+  too"** — shipped briefly, then **replaced with "Question difficulty moves with your child."** on
+  Rafi's call. ⚠️ **Both of Malaika's options were wrong twice over and the reason is worth
+  keeping.** GRAMMAR: "should too" borrows the verb from the first clause, so it reads as *"their
+  math should LEARN DIFFERENTLY too"* — and math does not learn. Swapping "math" for "questions"
+  does not help; the borrowed verb is the problem, not the noun. A mirrored line only works when
+  both halves can share one verb ("Every child is different. Their math should be too."). MEANING:
+  "their math should be different" can be read as mathematics itself differing per child, which is
+  the opposite of the same card's "Real math. Real thinking. No guessing."
+  ⚠️ **The verb is "moves", not "rises", and it must stay that way.** Difficulty goes UP after
+  three right and DOWN after three wrong. "Gets harder as your child gets better" is half the
+  mechanism — and the half that would put off the parent of a struggling child, who is exactly the
+  parent this product is for. `TAGLINE` in `site.ts` is untouched: it sets every page `<title>` and
+  the OG image, so it is a brand decision rather than a copy one.
 - **2:22am, "it should only be Join the Waitlist. the family part feels like extra information that
   the customer doesnt HAVE to know"** — the "currently being tested with a small group of families"
   sentence is gone **from the home card**. ⚠️ It is deliberately KEPT on `/adaptivelearn` and

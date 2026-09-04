@@ -219,14 +219,30 @@ export default function Home() {
       <section className="mx-auto max-w-5xl px-6">
         <div className="rl-rule" />
         <div className="py-14">
-          {/* ⚠️ THIS HEADING IS ONE OF TWO MALAIKA OFFERED AND THE OTHER IS STILL LIVE.
-              Her note on the draft: "Possible tagline? also thought of: every child learns
-              differently. their math should too". The alternative is "Learning that meets them
-              where they are" — swap the string if that one wins. It is NOT the company tagline:
-              that is TAGLINE in site.ts, which sets every page <title> and the OG image, and
-              changing it is a brand decision rather than a copy one. */}
+          {/* ⚠️ THIS HEADING STATES THE PRODUCT CLAIM, AND THE TWO IT REPLACED DID NOT.
+              Malaika offered "Learning that meets them where they are" and, in a margin comment,
+              "every child learns differently. their math should too". The second shipped briefly
+              and is wrong twice over:
+
+                * GRAMMAR. "should too" carries the verb from the first clause, so it reads as
+                  "their math should LEARN DIFFERENTLY too" — and math does not learn. Swapping
+                  "math" for "questions" does not help; the borrowed verb is the problem, not the
+                  noun. A mirrored line only works when both halves can share one verb
+                  ("Every child is different. Their math should be too.").
+                * MEANING. "their math should be different" can be read as mathematics itself
+                  being different per child, which is the opposite of the card's own
+                  "Real math. Real thinking. No guessing."
+
+              What the product actually does is set the difficulty of the next question from how
+              the child answered the last one — up after three right, and down after three wrong,
+              which is why the verb is "moves" and not "rises". Do not shorten it to "gets harder":
+              that is half the mechanism, and the half that would put off the parent of a child who
+              is struggling — who is exactly the parent this is for.
+
+              The company tagline is TAGLINE in site.ts. It sets every page <title> and the OG
+              image; changing it is a brand decision, not a copy one, and it is untouched. */}
           <h2 className="rl-reveal-focus font-display text-3xl">
-            Every child learns differently. Their math should too.
+            Question difficulty moves with your child.
           </h2>
           <Link
             href="/adaptivelearn"
