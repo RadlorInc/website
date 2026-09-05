@@ -34,6 +34,21 @@ feeds answer engines — as long as what survives the cut is a complete thought.
 product is in early access with a handful of families and the copy says so. A claim that a parent
 could disprove in one click is worse than no claim.
 
+⚠️ **AND A MEASUREMENT WRITTEN INTO PROSE IS TRUE ONLY ON THE DAY IT WAS TAKEN.** Four instances
+turned up on 2026-09-05 alone — a migration comment that had been the opposite of production for
+four days, two `handoff.md` paragraphs describing the waitlist as "0 policies, no grants, 0 rows"
+and "empty and ready", and the retention number in three files. Prose has no mechanism that can go
+red, so a measured fact in the present tense reads as current until somebody re-measures — and the
+migration comment was an *instruction* to revoke the grant the live signup form depends on.
+
+**Where a page or a doc states a fact about the live system, either gate it against that system or
+replace it with a pointer to the check that re-measures it.** Gated: `/privacy` and `/terms` claim
+no analytics and no cookies, and `check:site-claims` fails if that stops being true. Pointed: the
+waitlist paragraph in `handoff.md` now says to run `check:waitlist-rls` rather than trust it. **The
+pointer is the standard move.** If you can do neither, date the sentence and write it in the past
+tense — "as measured 2026-09-05" is honest; the same words in the present tense are a claim about
+tomorrow that nobody can keep.
+
 **Structured data on every page that has a shape.** `Organization` + `WebSite` sit in the root
 layout; `SoftwareApplication` + `FAQPage` on `/adaptivelearn`; `Article` on each post. This is the
 half of SEO that also does the **GEO** work — an answer engine that cannot resolve who Radlor *is*

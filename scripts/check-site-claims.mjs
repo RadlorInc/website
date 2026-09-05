@@ -20,8 +20,16 @@ const BASE = (process.argv[2] ?? 'https://radlor.com').replace(/\/$/, '')
 // third party to arrive (a CAPTCHA, an embed, a browser-side database client).
 const PAGES = ['/', '/privacy', '/terms', '/waitlist']
 
+/**
+ * ⚠️ THREE STATES, THREE EXIT CODES: 2 "could not look", 1 "looked and found a defect", 0 "looked
+ * and it was clean". A page that would not load is NOT evidence of a violation and must not be
+ * reported as one — it is the check being blind, and a reader who cannot tell those apart will
+ * eventually treat a real finding as an outage. See CLAUDE.md.
+ */
 let fail = 0
+let blind = 0
 const ok = (good, msg) => { console.log(`  ${good ? 'ok ' : '❌ '} ${msg}`); if (!good) fail = 1 }
+const cannotSee = msg => { console.log(`  ⚠️  ${msg}`); blind = 1 }
 
 /**
  * Cross-origin URLs on elements that actually CAUSE THE BROWSER TO FETCH SOMETHING.
@@ -107,10 +115,10 @@ const origin = new URL(BASE).origin
 for (const path of PAGES) {
   let res
   try { res = await fetch(BASE + path, { redirect: 'follow' }) } catch (e) {
-    ok(false, `${path} — could not be fetched (${e.message}); NOT reporting clean`)
+    cannotSee(`${path} — could not be fetched (${e.message}); NOT reporting clean`)
     continue
   }
-  if (!res.ok) { ok(false, `${path} -> ${res.status}; NOT reporting clean`); continue }
+  if (!res.ok) { cannotSee(`${path} -> ${res.status}; could not look, NOT reporting clean`); continue }
   const html = await res.text()
 
   const cookies = res.headers.getSetCookie?.() ?? (res.headers.get('set-cookie') ? [res.headers.get('set-cookie')] : [])
@@ -129,7 +137,13 @@ const privacy = await fetch(`${BASE}/privacy`).then(r => r.text()).catch(() => '
 ok(/runs no analytics/i.test(privacy),
   '/privacy still claims "runs no analytics" — this gate is the thing keeping that true')
 
-console.log(fail
-  ? `\n❌ ${BASE} DOES NOT MATCH WHAT /privacy AND /terms CLAIM.\n   Either remove what was added, or change both pages in the same commit. Do not ship the\n   claim and the contradiction together.`
-  : `\n✅ ${BASE} matches its own claims: no cookies, no analytics, nothing off-origin`)
-process.exit(fail)
+if (fail) {
+  console.log(`\n❌ ${BASE} DOES NOT MATCH WHAT /privacy AND /terms CLAIM.\n   Either remove what was added, or change both pages in the same commit. Do not ship the\n   claim and the contradiction together.`)
+  process.exit(1)
+}
+if (blind) {
+  console.log(`\n⚠️  COULD NOT CHECK ${BASE} FULLY — a page above did not load, so this run proves\n   nothing about it. Not a violation, and NOT a clean bill of health either.`)
+  process.exit(2)
+}
+console.log(`\n✅ ${BASE} matches its own claims: no cookies, no analytics, nothing off-origin`)
+process.exit(0)

@@ -80,13 +80,29 @@ const LEDGER_SQL =
  * run when the ledger could not be read — a provenance gate that cannot see the ledger reports
  * exactly the state it exists to catch.
  *
- * ⚠️ AND THERE IS A THIRD WAY THAT WAS DELIBERATELY NOT TAKEN: a Supabase Management API personal
- * access token. It would need no production change, but a PAT reaches the WHOLE ACCOUNT — every
- * project, including the app's production database with children's data in it — so putting one in
- * a developer's `.env.local` to check a list of filenames trades a much larger exposure than the
- * one being detected. See CLAUDE.md: a gate is not worth a capability more dangerous than what it
- * detects. Exposing `supabase_migrations` read-only is the smaller change, and it is the founder's
- * to make, not this script's.
+ * ⚠️ TWO ROUTES WERE COSTED AND REFUSED. See CLAUDE.md: a gate is not worth a capability more
+ * dangerous than what it detects.
+ *
+ *   1. A Supabase Management API personal access token. No production change, but a PAT reaches the
+ *      WHOLE ACCOUNT — every project, including the app's production database with children's data
+ *      in it. Putting one in a developer's `.env.local` to check a list of filenames trades a far
+ *      larger exposure than the one being detected.
+ *
+ *   2. Exposing `supabase_migrations` over PostgREST. ⚠️ An earlier version of this comment called
+ *      that "the smaller change". IT WAS WRONG, and measured on 2026-09-05: the table is owned by
+ *      `postgres` and granted to `postgres` ALONE, and **`service_role` does not even have USAGE on
+ *      the schema**. So exposure is not a config flag — it needs `GRANT USAGE` plus `GRANT SELECT`
+ *      to some role, and that role then reads the schema-evolution history over the public REST
+ *      surface for as long as the project exists. Grant it to `anon` or `authenticated` and the
+ *      history is published to anyone holding the anon key. Grant it to `service_role` only and
+ *      anon stays denied today — but this project has already been bitten by DEFAULT PRIVILEGES
+ *      being inherited across a restore and silently reopening access nobody re-granted, so
+ *      "narrow today" is not the same as "narrow permanently". Permanent REST surface, to detect a
+ *      rare event that a one-line SQL export already answers.
+ *
+ * So the ledger is passed IN: `--ledger <file>`, produced by whoever already holds credentials —
+ * the SQL editor, or a session with the Supabase MCP connector. Zero new capability, and the gate
+ * still refuses to report clean when it has not seen the ledger.
  */
 async function readLedger() {
   const argIdx = process.argv.indexOf('--ledger')
@@ -122,8 +138,10 @@ if (!ledger) {
   console.error('     (Supabase SQL editor → copy the JSON result)')
   console.error('     npm run check:migrations -- --ledger ledger.json')
   console.error('')
-  console.error('   ...or expose the schema read-only so this runs unattended. That is a')
-  console.error('   production change and a decision, not something this script should make.')
+  console.error('   Exposing the schema over PostgREST is NOT the cheap alternative it looks')
+  console.error('   like: service_role has no USAGE on it, so it needs GRANT USAGE + GRANT')
+  console.error('   SELECT to a named role, permanently, on the public REST surface. See the')
+  console.error('   comment at the top of this file.')
   console.error('')
   console.error('   Exiting 2 — NOT 0. A provenance gate that cannot see the ledger is reporting')
   console.error('   the exact condition it exists to detect.')
@@ -170,7 +188,10 @@ if (!matchedHere.length) {
   for (const u of unresolved.length ? unresolved : ['(none — the ledger itself looks wrong)']) {
     console.error(`     ${u}`)
   }
-  process.exit(1)
+  // ⚠️ 2, NOT 1. This branch is "could not look", not "looked and found a defect" — the orphan
+  // count is untrustworthy here, so reporting it as a finding would overstate what was measured.
+  // Three states, three codes: 2 blind, 1 defect, 0 clean. See CLAUDE.md.
+  process.exit(2)
 }
 
 // THE ASSERTION. A row with no file in this repo and no named sibling owner is an orphan.

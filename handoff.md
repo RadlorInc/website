@@ -87,12 +87,28 @@ enumerated version by version in `scripts/check-migration-provenance.mjs`, never
 because a regex over "looks like a review thing" would absorb the next orphan in silence. It
 survives whatever ownership is chosen later, which is why it was worth more than choosing one now.
 
-⚠️ It needs the ledger, and `supabase_migrations` is not exposed over PostgREST. Pass an export
-(`--ledger ledger.json`) or expose that schema read-only — **a production change, and a founder's
-decision.** It deliberately does NOT use a Management API PAT: that token reaches every project on
-the account, including the app's production database with children's data, which is a far larger
-exposure than the list of filenames it would be checking. It exits **2**, never 0, when it cannot
-see the ledger.
+⚠️ **It needs the ledger, and the ledger is passed IN — `--ledger ledger.json`, exported by whoever
+already holds credentials (the SQL editor, or a session with the Supabase MCP connector). No new
+capability at all.** It exits **2**, never 0, when it cannot see the ledger.
+
+Two other routes were costed and refused:
+
+- **A Supabase Management API PAT** reaches the whole account — every project, including the app's
+  production database with children's data — to check a list of filenames.
+- **Exposing `supabase_migrations` over PostgREST.** ⚠️ An earlier version of this note called that
+  "the smaller change" and **that was wrong** — corrected 2026-09-05 after measuring instead of
+  assuming. The table is owned by `postgres` and granted to `postgres` alone, and **`service_role`
+  does not have USAGE on the schema**, so exposure is not a config flag: it needs `GRANT USAGE` and
+  `GRANT SELECT` to a *named role*, permanently, on the public REST surface. To `anon` or
+  `authenticated` that publishes our schema-evolution history to anyone with the anon key; to
+  `service_role` only it is denied to anon today, but this project has already been bitten by
+  DEFAULT PRIVILEGES inherited across a restore silently reopening access nobody re-granted — so
+  narrow today is not narrow permanently.
+
+⚠️ **This repo has no CI**, so "run it automatically" is not one config line away: it would mean a
+new workflow, plus a credential that can reach the ledger, plus the secret to hold it. That is a
+real amount of new surface for an event that happens rarely and that one SQL export already answers.
+Run it by hand at deploy time until that trade changes.
 
 ⚠️ **The canonical two-trigger note is not in this repo.** It appears to live in the private
 `RadlorInc/video-reviewer` under `docs/`, which is not cloned on this machine — so this third
