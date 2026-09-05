@@ -113,6 +113,18 @@ export default function Waitlist() {
           <a href={`mailto:${SUPPORT_EMAIL}`} className="rl-link text-accent">{SUPPORT_EMAIL}</a>.{' '}
           <Link href="/privacy" className="rl-link text-accent">What this website stores →</Link>
         </p>
+
+        {/* ⚠️ The WEBSITE's terms. Joining the waitlist is not creating an account, so the app's
+            Terms of Service do not apply here and this must never be relabelled as if they did —
+            they are accepted at signup, on the app's own origin, and they are a different and much
+            longer agreement about a child's data. */}
+        <p className="mt-4 text-sm text-muted max-w-xl leading-relaxed">
+          Using this site is covered by our{' '}
+          <Link href="/terms" className="rl-link text-accent">Terms of Use</Link> — a draft, not yet
+          reviewed by a lawyer. Joining the waitlist does not create an account, so the{' '}
+          {APP_NAME} app&rsquo;s own terms are not part of this and you would accept those separately
+          if a place comes up.
+        </p>
       </section>
     </>
   )

@@ -5,7 +5,7 @@ import { APP_NAME, COMPANY, SITE_URL, SUPPORT_EMAIL } from '@/site'
 export const metadata: Metadata = {
   title: 'Privacy on this website',
   description:
-    'radlor.com sets no cookies, runs no analytics and loads nothing from a third party. There is one form — the waitlist — and it stores an email address and nothing else. This page says exactly what does and does not happen when you read it.',
+    'radlor.com sets no cookies, runs no analytics and loads nothing from a third party. There is one form — the waitlist — and it stores an email address and, if you pick one, an age band. Nothing else. This page says exactly what does and does not happen when you read it.',
   alternates: { canonical: '/privacy' },
 }
 
@@ -31,6 +31,14 @@ export const metadata: Metadata = {
  * If you add ANYTHING that talks to another origin — an analytics snippet, an embedded video, a
  * hosted font, a map, a CAPTCHA, or a browser-side Supabase client — this page is wrong and has to
  * change in the same commit. Re-run the check above; it is four lines in a console.
+ *
+ * ⚠️ AND IT IS NOW GATED, BECAUSE THIS PAGE CAN GO FALSE WITH NO DIFF AT ALL. Vercel Web Analytics
+ * is a DASHBOARD TOGGLE: flipping it injects a script into every page while `git status` stays
+ * clean and this comment keeps claiming otherwise. `npm run check:site-claims` loads the live pages
+ * and fails on any off-origin fetch, any Set-Cookie, or the insights script. It has positive
+ * controls — it proves its detectors can see a real cookie and a real foreign script before it
+ * trusts their silence — because an absence-only check is the exact failure this repo keeps
+ * hitting. /terms §3 makes the same claim and depends on the same gate.
  */
 export default function Privacy() {
   return (

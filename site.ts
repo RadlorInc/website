@@ -194,6 +194,9 @@ export const PAGES = [
   { href: '/contact', label: 'Contact', where: 'footer' },
   { href: '/data-and-safety', label: 'Data & safety', where: 'footer' },
   { href: '/privacy', label: 'Privacy', where: 'footer' },
+  // ⚠️ The WEBSITE's terms, not the app's. The app has its own, longer Terms of Service on its
+  // own origin covering an account and a child's data. Do not point this row at that document.
+  { href: '/terms', label: 'Terms', where: 'footer' },
 ] as const
 
 export const HEADER = PAGES.filter(p => p.where === 'both')
