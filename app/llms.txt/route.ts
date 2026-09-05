@@ -21,7 +21,7 @@ const BLURB: Record<(typeof PAGES)[number]['href'], string> = {
   '/about': `why ${COMPANY} started and how we work`,
   '/contact': 'early access, schools, support, press',
   '/data-and-safety': "what we store about a child, what the camera does, and what we do not collect",
-  '/terms': 'the terms of use for this website — a DRAFT, not reviewed by a lawyer and not in force; the AdaptiveLearn app has its own separate Terms of Service on its own origin',
+  '/terms': 'the terms of use for this website, in force since 6 September 2026 — what this site is, what it collects, and what its content does and does not promise; the AdaptiveLearn app has its own separate Terms of Service on its own origin',
   '/privacy': 'the privacy policy for this website: no cookies, no analytics, nothing loaded from a third party, and one form — the waitlist — which stores an email address and an optional age band, and nothing else',
 }
 

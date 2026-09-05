@@ -13,9 +13,10 @@ import { DRAFT, WEBSITE_TERMS, unresolvedPlaceholders } from '@/content/legal'
  * who follows "Terms" from a marketing footer and lands on an agreement about their child's data has
  * been shown the wrong contract.
  *
- * ⚠️ NO `noindex`, DELIBERATELY. The banner says the text is a draft, out loud, to every reader
- * including a crawler; hiding the page would hide the banner too and leave the site with a footer
- * link to nothing. `DRAFT` is what communicates the status, not robots metadata.
+ * ⚠️ NO `noindex`. These are live, binding terms as of 2026-09-06 and a crawler should have them.
+ * While `DRAFT` was true the same reasoning applied in reverse: the banner said "not final" out
+ * loud to every reader including a crawler, and hiding the page would have hidden the banner too.
+ * `DRAFT` is what communicates status here, never robots metadata.
  */
 export const metadata: Metadata = {
   title: 'Terms of Use',
@@ -43,10 +44,15 @@ export default async function Terms() {
         </p>
 
         {/**
-          * ⚠️ LOUD, NOT SUBTLE, AND FIRST. A legal page that looks finished and is not is worse than
-          * no page — a reader would rely on it. `role="note"` rather than `alert`: it is a standing
-          * condition of the page, not something that just happened, and an alert would interrupt a
-          * screen reader mid-sentence on every visit.
+          * ⚠️ DORMANT, NOT DELETED — `DRAFT` has been false since 2026-09-06, so this renders
+          * nothing today. KEEP IT. The next revision a lawyer has not seen flips `DRAFT` back to
+          * true and the banner returns; deleting it would mean the next unreviewed draft ships
+          * looking exactly like a reviewed one, which is the failure the whole mechanism exists
+          * to prevent.
+          *
+          * When it does render: loud, not subtle, and first. `role="note"` rather than `alert` —
+          * it is a standing condition of the page, not something that just happened, and an alert
+          * would interrupt a screen reader mid-sentence on every visit.
           */}
         {DRAFT && (
           <div
@@ -75,10 +81,14 @@ export default async function Terms() {
           <Link href="/data-and-safety" className="rl-link text-accent">data and safety</Link>.
         </p>
 
-        {/* ⚠️ NO `TermsOfService` / `DigitalDocument` JSON-LD while `DRAFT` is true. Structured data
-            is a machine-readable assertion that this IS the governing agreement, and an answer
-            engine cannot see the banner. `WebPage` states what the page is without claiming it
-            binds anyone. Add the stronger type when a lawyer has signed it off. */}
+        {/* ⚠️ STILL `WebPage`, AND THE EARLIER COMMENT HERE WAS WRONG. It said to "add the
+            stronger type when a lawyer has signed it off" and named `TermsOfService` — **there is
+            no such schema.org type.** Measured 2026-09-06: schema.org/TermsOfService returns 404
+            and it does not appear in the official vocabulary dump. Emitting it would have been a
+            machine-readable claim in a vocabulary that does not define it, which is worse than the
+            weaker-but-true type. `WebPage` is correct and validates.
+            `creativeWorkStatus: 'Draft'` now drops out on its own, because it is conditioned on
+            `DRAFT` — the JSON-LD stopped calling this a draft the moment the page did. */}
         <script type="application/ld+json">{JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'WebPage',

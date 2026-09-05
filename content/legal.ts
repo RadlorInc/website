@@ -1,7 +1,7 @@
 import { COMPANY, LOCATION, SITE_URL, SUPPORT_EMAIL } from '@/site'
 
 /**
- * The site's legal copy, and the mechanism that stops a draft rendering as if it were binding.
+ * The site's legal copy, and the mechanism that stops an unreviewed draft rendering as binding.
  *
  * ⚠️ THIS IS THE MARKETING SITE'S DOCUMENT AND ONLY THAT — radlor.com, the pages a visitor reads
  * before they ever sign up. The APP has its own, much longer Terms of Service covering an account
@@ -16,19 +16,35 @@ import { COMPANY, LOCATION, SITE_URL, SUPPORT_EMAIL } from '@/site'
  */
 
 /**
- * ⚠️ TRUE UNTIL A HUMAN SETS IT FALSE, AND A LAWYER IS THE ONLY REASON TO SET IT FALSE.
- * While it is true, /terms renders a loud banner saying the text is not final. A legal page that
- * LOOKS reviewed and is not is worse than no page at all, because a reader would believe it.
+ * ⚠️ FALSE SINCE 2026-09-06: AN ATTORNEY HAS REVIEWED THIS DOCUMENT AND IT IS NOW LIVE, BINDING
+ * TERMS. Founder confirmed the review covers §11 (Delaware governing law and courts) and §9 (the
+ * liability cap); Delaware stands as written.
+ *
+ * ⚠️ IT GOES BACK TO `true` THE MOMENT THE TEXT CHANGES IN A WAY A LAWYER HAS NOT SEEN. That is
+ * what this switch is for — it is not a one-way door. A legal page that LOOKS reviewed and is not
+ * is worse than no page at all, because a reader would believe it. The whole mechanism below
+ * (`PLACEHOLDERS`, `draftGuardError`, the module-scope throw) stays wired precisely so the next
+ * revision cannot go out unreviewed by accident: add a marker while this is `false` and the build
+ * dies. Do not delete it now that the banner is off.
  */
-export const DRAFT = true
+export const DRAFT = false
 
 export interface LegalDoc { slug: string; title: string; updated: string; body: string }
 
 /**
  * From `radlor-website-terms.md`, minus its markdown H1 (the page renders its own <h1> from
- * `title`). `[DATE]` and the `[LAWYER REVIEW]` on §11 are untouched and MUST stay that way: they
- * mark decisions that are not a developer's to make, and resolving one silently is how a draft
- * becomes a false statement.
+ * `title`).
+ *
+ * ⚠️ EVERY PLACEHOLDER IS NOW RESOLVED, AND EACH ONE WAS RESOLVED BY A DECISION SOMEBODY MADE —
+ * never to make the page look finished. That distinction is the whole rule (see CLAUDE.md):
+ *   · `[DATE]` → **6 September 2026**, the day the document went live.
+ *   · §11's `[LAWYER REVIEW]` (Delaware governing law and courts) → removed on 2026-09-06 when the
+ *     founder confirmed an attorney had reviewed it, together with §9's liability cap. Delaware
+ *     stands as written; the clause text is unchanged.
+ *   · §3's `[LAWYER REVIEW]` (analytics) → resolved 2026-09-05 by measurement, recorded below.
+ *
+ * ⚠️ A NEW MARKER IN THIS TEXT NOW BREAKS THE BUILD, because `DRAFT` is `false`. That is correct:
+ * either the change has been reviewed, or `DRAFT` goes back to `true` and the banner returns.
  *
  * ⚠️ FOUR THINGS WERE CHANGED, ALL ON THE FOUNDER'S INSTRUCTION 2026-09-05, AND THE DISTINCTION
  * THAT PERMITTED IT IS WORTH KEEPING. A placeholder removed because the decision was made and
@@ -51,7 +67,8 @@ export interface LegalDoc { slug: string; title: string; updated: string; body: 
  *      Neither exists. There is one form — email, optional age band, and a honeypot — so it now
  *      says that. Same defect as the analytics sentence, one notch quieter.
  *   3. The "Note to Rafi, delete before publishing" blockquote is gone. It made the page read as
- *      something someone forgot to finish; `DRAFT` and the banner say "not final" deliberately.
+ *      something someone forgot to finish, which is a different thing from being marked unfinished
+ *      on purpose — that was the banner's job, while there still was one.
  *   4. `${SUPPORT_EMAIL}` and the address from `LOCATION` are interpolated rather than spelled
  *      out — identical strings, now unable to drift. See CLAUDE.md: one source per fact.
  *
@@ -61,8 +78,8 @@ export interface LegalDoc { slug: string; title: string; updated: string; body: 
 export const WEBSITE_TERMS: LegalDoc = {
   slug: 'terms',
   title: 'Terms of Use',
-  updated: '[DATE]',
-  body: `**Last updated: [DATE]**
+  updated: '6 September 2026',
+  body: `**Last updated: 6 September 2026**
 
 ---
 
@@ -172,7 +189,7 @@ We may update these Terms of Use. The current version is always at this address,
 with the date it was last changed at the top. Continued use of the site after a
 change means you accept it.
 
-## 11. Governing law **[LAWYER REVIEW]**
+## 11. Governing law
 
 These Terms of Use are governed by the laws of the State of Delaware, without
 regard to its conflict-of-laws rules, and disputes about this site will be
@@ -216,8 +233,10 @@ export function unresolvedPlaceholders(doc: LegalDoc): string[] {
  * hole still in the text stops the build rather than shipping a document that looks finished and
  * is not.
  *
- * Watched fail: `DRAFT = false` with the placeholders present → the build dies here naming the
- * document and the marker. Watched pass: with `DRAFT = true` it is inert, which is today's state.
+ * Watched fail (2026-09-05): `DRAFT = false` with the placeholders present → the build dies here
+ * naming the document and each marker. Watched pass (2026-09-06): `DRAFT = false` with every
+ * placeholder resolved → inert, which is today's state. It is inert while `DRAFT` is `true` too.
+ * ⚠️ Now that `DRAFT` is `false` this is LIVE on every build: the next unreviewed marker fails it.
  */
 export function draftGuardError(draft: boolean, docs: LegalDoc[]): string | null {
   if (draft) return null

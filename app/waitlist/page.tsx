@@ -120,10 +120,9 @@ export default function Waitlist() {
             longer agreement about a child's data. */}
         <p className="mt-4 text-sm text-muted max-w-xl leading-relaxed">
           Using this site is covered by our{' '}
-          <Link href="/terms" className="rl-link text-accent">Terms of Use</Link> — a draft, not yet
-          reviewed by a lawyer. Joining the waitlist does not create an account, so the{' '}
-          {APP_NAME} app&rsquo;s own terms are not part of this and you would accept those separately
-          if a place comes up.
+          <Link href="/terms" className="rl-link text-accent">Terms of Use</Link>. Joining the
+          waitlist does not create an account, so the {APP_NAME} app&rsquo;s own terms are not part
+          of this and you would accept those separately if a place comes up.
         </p>
       </section>
     </>
