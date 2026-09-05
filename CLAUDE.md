@@ -60,6 +60,21 @@ The `description` is both the `<meta description>` and the sentence an answer en
 npx tsc --noEmit && npm run build
 ```
 
+**Gates worth running before a deploy:** `check:waitlist-rls` (the live grant posture),
+`check:legal-draft` (/terms cannot render as final), `check:site-claims` (the live site matches what
+/privacy and /terms claim — run it against `http://localhost:3021` before the deploy and against
+production after), `check:migrations` (every migration production has run exists as a file
+somewhere), plus `check:pricing`, `check:social` and `check:hero-contrast`.
+
+⚠️ **A gate is not worth a capability more dangerous than what it detects.** `check:waitlist-rls`
+asserts the anon grant is column-scoped by trying two INSERTs that name `id` and `created_at`,
+rather than by adding an `exec_sql` RPC to production so it could read `information_schema` — a
+general SQL-execution endpoint on a live database would have been the most dangerous object in the
+project, created in the name of security. `check:migrations` refuses a Management API token for the
+same reason: it reaches every project on the account. When a check needs a new permission, endpoint,
+key or role, ask what it could observe instead of what it would like to query. The full rule is in
+the app repo's `CLAUDE.md`, beside the other instrument rules.
+
 Then drive it: `preview_start` the `radlor-site` config, and check **horizontal overflow at 360 and
 375 px** — both header and footer link rows have overflowed there once already. Per-page checks
 worth repeating: unique `<title>` and description, a `canonical`, an `og:image`, and the JSON-LD

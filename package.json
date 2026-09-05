@@ -12,7 +12,8 @@
     "check:pricing": "node --experimental-strip-types --no-warnings scripts/check-pricing.mjs",
     "check:waitlist-rls": "node --no-warnings scripts/check-waitlist-rls.mjs",
     "check:legal-draft": "node --no-warnings scripts/check-legal-draft.mjs",
-    "check:site-claims": "node --no-warnings scripts/check-site-claims.mjs"
+    "check:site-claims": "node --no-warnings scripts/check-site-claims.mjs",
+    "check:migrations": "node --no-warnings scripts/check-migration-provenance.mjs"
   },
   "dependencies": {
     "marked": "^18.0.10",

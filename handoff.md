@@ -40,8 +40,64 @@ the SQL editor.** If you ever do want `db push` to work from here, the fix is to
 waitlist migration into `supabase_migrations.schema_migrations` first so the history matches
 reality — a deliberate step, not something to discover mid-push.
 
-Nothing in `public` was altered by the other tool: `waitlist` was checked before and after and is
-byte-identical — same 5 columns, same 4 constraints, RLS on, 0 policies, no grants, 0 rows.
+Nothing in `public` was altered by the other tool: `waitlist` was checked before and after and was
+byte-identical at the time — same 5 columns, same 4 constraints, RLS on, 0 policies, no grants,
+0 rows.
+
+⚠️ **THAT SENTENCE DESCRIBED 2026-08-31 AND IS NO LONGER THE TABLE'S STATE — corrected 2026-09-05.**
+It now has **one policy** (`waitlist_anon_insert`), a **column-level INSERT grant** to `anon` on
+`(email, age_band, source)`, and **one real signup row**. The change is
+`20260901071510_waitlist_anon_narrow_insert.sql`. A frozen measurement written in the present tense
+reads as a current fact for as long as nobody re-measures — which is the same failure as the
+migration comment three paragraphs up, in a different file. `npm run check:waitlist-rls` is what
+tells you the live posture; prefer running it to trusting this paragraph.
+
+## ⚠️ A THIRD REASON THE SEPARATION QUESTION REOPENS — 2026-09-05
+
+The standing note on this shared database lists two conditions that reopen the question of whether
+`ghuvnq` should stay one project: **when `public.waitlist` gets rows** (it has one, since
+2026-08-31), and **when the review schema holds money**.
+
+There is now a third, and it is the only one that has already happened:
+
+> **Three codebases write migrations to one database with no single source of truth, and one of
+> those migrations has already gone missing.**
+
+`radlor-site` (public), `RadlorInc/video-reviewer` (private) and hand-pasted SQL all apply schema
+changes to `ghuvnq`. On 2026-09-01 the migration that took `service_role` out of this site's public
+waitlist endpoint was applied directly and committed to **no repository at all**. For four days the
+only copy of a security fix was a row in `supabase_migrations.schema_migrations` — in the database
+it had already modified. The change existed, worked, and was unreproducible. A `db reset` would have
+restored the previous migration's "deliberately no policies, do not add one" instruction and left
+nothing to contradict it.
+
+It was recovered on 2026-09-05 and is now
+`supabase/migrations/20260901071510_waitlist_anon_narrow_insert.sql`.
+
+**Not being fixed by reorganising today.** Rearranging three repositories around one database while
+sessions are live is how work gets lost, and picking an owner now would be a guess. What has been
+done instead is to make the specific failure detectable:
+
+```
+npm run check:migrations
+```
+
+Every ledger row must resolve to a file in this repo or to an explicitly **named** sibling repo —
+enumerated version by version in `scripts/check-migration-provenance.mjs`, never pattern-matched,
+because a regex over "looks like a review thing" would absorb the next orphan in silence. It
+survives whatever ownership is chosen later, which is why it was worth more than choosing one now.
+
+⚠️ It needs the ledger, and `supabase_migrations` is not exposed over PostgREST. Pass an export
+(`--ledger ledger.json`) or expose that schema read-only — **a production change, and a founder's
+decision.** It deliberately does NOT use a Management API PAT: that token reaches every project on
+the account, including the app's production database with children's data, which is a far larger
+exposure than the list of filenames it would be checking. It exits **2**, never 0, when it cannot
+see the ledger.
+
+⚠️ **The canonical two-trigger note is not in this repo.** It appears to live in the private
+`RadlorInc/video-reviewer` under `docs/`, which is not cloned on this machine — so this third
+trigger has been written here, where the shared-database problem is already documented, and still
+needs mirroring next to the other two.
 
 ## Where it is right now
 
@@ -55,7 +111,8 @@ home page serves the current headings, `/about` is the shortened version, the he
 the copy changes from Malaika's notes are all live. Earlier verifications also confirmed `/pricing`
 serving `$7.99`, `/waitlist` and both outcome pages at 200, JSON-LD carrying 8 offers all pointing
 at `radlor.com/waitlist`, and a form-encoded POST with no JavaScript persisting a row to the
-`ghuvnq` Supabase project (then deleted). The waitlist table is empty and ready.
+`ghuvnq` Supabase project (then deleted). ⚠️ **The waitlist is no longer empty — it holds one
+real signup, from 2026-08-31.** That matters beyond bookkeeping: see the blast-radius note below.
 
 > ⚠️ **This section has been wrong twice, in opposite directions.** It said *"nothing is deployed
 > and there is no GitHub repo"* for ten days after both became false, which cost a session. It was
