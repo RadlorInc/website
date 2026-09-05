@@ -1,14 +1,23 @@
 -- The waitlist behind /waitlist on radlor.com.
 --
--- ⚠️ THIS TABLE IS WRITTEN ONLY BY THE SERVICE ROLE, FROM A ROUTE HANDLER ON radlor.com.
--- The browser never holds a Supabase key and never contacts supabase.co — /privacy states as a
--- checkable claim that every request a visitor makes goes to radlor.com, and a browser-side
--- Supabase call would break it. See app/api/waitlist/route.ts.
+-- ⚠️ THIS FILE DESCRIBES THE TABLE AS IT WAS CREATED. IT IS NOT THE CURRENT POSTURE.
+-- `20260901071510_waitlist_anon_narrow_insert.sql` supersedes the access model below: the route
+-- no longer holds `service_role`, and anon HAS a column-level INSERT grant and one policy. Read
+-- that file for what production actually has. The paragraph that used to sit here said "RLS is on
+-- and there are deliberately no policies … do not add one" — which stopped being true on
+-- 2026-09-01 and would, if obeyed, revoke the grant the live signup form depends on and hand the
+-- public endpoint back its project-wide key. It is corrected rather than deleted because the
+-- reasoning it got wrong is worth seeing.
 --
--- ⚠️ RLS IS ON AND THERE ARE DELIBERATELY NO POLICIES. A policy-less table with RLS enabled is
--- deny-all for `anon` and `authenticated`; the service role bypasses RLS entirely. Adding an
--- INSERT policy "so the form works" would make the table world-writable from any browser with
--- the anon key. The form does not need one. Do not add one.
+-- ⚠️ WHAT IS STILL TRUE, AND IS THE POINT OF THE WHOLE DESIGN. The browser never holds a Supabase
+-- key and never contacts supabase.co — /privacy states as a checkable claim that every request a
+-- visitor makes goes to radlor.com, and a browser-side Supabase call would break it. The anon key
+-- lives on the SERVER, in a route handler. Do not add a NEXT_PUBLIC_ Supabase variable to either
+-- repo. See app/api/waitlist/route.ts.
+--
+-- ⚠️ AND WHAT MUST NEVER BE GRANTED: SELECT. That is the assertion protecting every signup's email
+-- address, and it is the one somebody loosens at 11pm to make a dashboard work.
+-- `npm run check:waitlist-rls` fails if it ever appears.
 
 -- ⚠️ `citext` GOES IN THE `extensions` SCHEMA, NOT `public`. Supabase's own security advisor
 -- flags extensions installed in public (extension_in_public): objects there are exposed through
@@ -33,11 +42,16 @@ create table if not exists public.waitlist (
 );
 
 comment on table public.waitlist is
-  'Waitlist signups from radlor.com. Service-role writes only; RLS on with no policies by design.';
+  'Waitlist signups from radlor.com. RLS on. anon may INSERT (email, age_band, source) and nothing '
+  'else - no SELECT, ever. See migration 20260901071510.';
 
 alter table public.waitlist enable row level security;
 
 -- Belt and braces: even if a policy is added by accident later, the grants are not there.
+-- ⚠️ `anon` WAS IN THIS LIST AND IS NOT ANY MORE — the later migration grants it INSERT on three
+-- named columns. Revoking all from anon here is still correct AT THIS POINT IN HISTORY: the grant
+-- comes afterwards, so a replay produces the narrow grant and not a wider one. Do not "tidy" this
+-- by adding anon back below the grant.
 revoke all on public.waitlist from anon, authenticated;
 
 create index if not exists waitlist_created_at_idx on public.waitlist (created_at desc);

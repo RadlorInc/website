@@ -13,8 +13,9 @@ import { AGE_BANDS } from '@/site'
  *     that accepts free input was the widest credential in the system, and anything that
  *     compromised it read and wrote every table. It now carries the anon key against a
  *     column-level INSERT grant and one policy, so the worst a compromise here does is write a
- *     junk row. Verified by `scripts/check-waitlist-anon-narrow.mjs`: anon INSERT succeeds, anon
- *     SELECT / UPDATE / DELETE are all refused with 42501.
+ *     junk row. Verified by `npm run check:waitlist-rls`, which asserts the whole posture
+ *     against the live database: anon INSERT succeeds on exactly (email, age_band, source),
+ *     while SELECT / UPDATE / DELETE and any attempt to name `id` or `created_at` are refused.
  *   - it is still SERVER-side and still never serialised into HTML. Do NOT add a `NEXT_PUBLIC_`
  *     Supabase variable — that prefix is what puts a value in the browser bundle, and it is also
  *     what would make the rate limit below bypassable by anyone who read the page source.

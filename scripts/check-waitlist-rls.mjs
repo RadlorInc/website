@@ -1,6 +1,13 @@
 #!/usr/bin/env node
-// Prove the waitlist table admits exactly ONE anon operation — inserting a signup — and refuses
-// every other, by trying them against the real endpoint rather than reading the config.
+// Prove the waitlist table admits exactly ONE anon operation — inserting a signup, on exactly the
+// three columns the form sends — and refuses every other, by trying them against the real endpoint
+// rather than reading the config.
+//
+// ⚠️ THE REPO SAID THE OPPOSITE OF PRODUCTION FOR FOUR DAYS. `20260830000000_waitlist.sql` told
+// every future reader "RLS is on and there are deliberately no policies … do not add one", while
+// the live form had depended on exactly that policy since 2026-09-01 — and the migration that
+// granted it had never been committed to any repo at all. Obeying the file would have revoked the
+// grant and broken signup. Comments cannot be trusted to describe a database; this asks it.
 //
 //   npm run check:waitlist-rls
 //
@@ -142,7 +149,65 @@ try {
   ok(del.status !== 200 && del.status !== 204 && !del.authFailed,
     `DELETE as anon -> ${del.status}${del.authFailed ? '  ⚠️ AUTH failure, not a permission denial — probe void' : ' (denied)'}`)
 
-  // 4. No key at all.
+  // 4. UPDATE as anon — editing somebody else's signup.
+  const upd = await classify(await fetch(`${T}?source=eq.website`, {
+    method: 'PATCH',
+    headers: { ...anonH, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ source: 'tampered' }),
+  }))
+  ok(upd.status !== 200 && upd.status !== 204 && !upd.authFailed,
+    `PATCH as anon -> ${upd.status}${upd.authFailed ? '  ⚠️ AUTH failure, not a permission denial — probe void' : ' (denied)'}`)
+
+  /**
+   * 5. THE GRANT IS COLUMN-SCOPED, NOT TABLE-WIDE — and this is the assertion that has no
+   *    black-box equivalent anywhere else. `grant insert (email, age_band, source)` and
+   *    `grant insert on public.waitlist` behave IDENTICALLY for every probe above: the form
+   *    works either way, and reads are refused either way. They differ only in whether the
+   *    caller may dictate `id` and `created_at` — so somebody "fixing" the grant by widening
+   *    it changes nothing anyone would notice, until a row arrives with a chosen primary key
+   *    or a backdated timestamp. These two probes are the difference, and they are why this
+   *    gate did not need an `exec_sql` RPC on production to read the catalog: a function that
+   *    runs arbitrary SQL through PostgREST is a far worse thing to own than the drift it finds.
+   */
+  for (const col of ['id', 'created_at']) {
+    const val = col === 'id' ? '00000000-0000-4000-8000-000000000000' : '2000-01-01T00:00:00Z'
+    const bodyFor = who => JSON.stringify({
+      email: `col-probe-${col}-${who}@radlor-test.invalid`, source: 'anon-probe', [col]: val,
+    })
+    const wide = await classify(await fetch(T, {
+      method: 'POST',
+      headers: { ...anonH, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+      body: bodyFor('anon'),
+    }))
+    const denied = wide.status === 401 || wide.status === 403 || /42501|permission denied/i.test(wide.body)
+
+    /**
+     * ⚠️ THE POSITIVE CONTROL, AND THIS PROBE IS WORTHLESS WITHOUT IT. A rejected INSERT naming
+     * `id` is ALSO what a typo'd column name, a renamed column or a malformed value looks like —
+     * every one of those denies the write for a reason that has nothing to do with the grant, and
+     * the assertion above would go green while testing nothing. So we send the SAME body as the
+     * service role, which holds the wide grant: it must succeed. If it does not, the request shape
+     * is the problem and the denial proved nothing, so we say the probe is void rather than pass.
+     */
+    let control = 'skipped (no service key — this probe is inconclusive)'
+    let controlOk = !svcH
+    if (svcH) {
+      const c = await fetch(T, {
+        method: 'POST',
+        headers: { ...svcH, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+        body: bodyFor('svc'),
+      })
+      controlOk = c.ok
+      control = c.ok
+        ? `service_role CAN write it (${c.status}) — so the anon refusal is the GRANT`
+        : `⚠️ service_role could not write it either (${c.status}) — PROBE VOID, the body is wrong`
+    }
+
+    ok(denied && !wide.authFailed && controlOk,
+      `INSERT naming \`${col}\` as anon -> ${wide.status} ${denied ? '(denied — the grant is column-scoped)' : '❌ ACCEPTED — the grant is TABLE-WIDE, not the three columns the migration states'}\n       · ${control}`)
+  }
+
+  // 6. No key at all.
   const bare = await fetch(`${T}?select=id&limit=1`)
   ok(bare.status === 401, `GET with no key -> ${bare.status} (401 expected)`)
 } finally {
@@ -155,6 +220,6 @@ try {
 }
 
 console.log(fail
-  ? '\n❌ THE WAITLIST TABLE IS REACHABLE WITH THE ANON KEY, or the probe was void.\n   Anyone can harvest every signup email and stuff the list. RLS is on with NO policies by\n   design and anon is REVOKEd — check whether a policy or a GRANT was added.'
-  : '\n✅ anon may add a signup and nothing else — it cannot read or delete the waitlist')
+  ? '\n❌ THE WAITLIST GRANTS ARE NOT WHAT THE MIGRATIONS SAY, or the probe was void.\n   Expected: anon may INSERT (email, age_band, source) and NOTHING else — no SELECT, no\n   UPDATE, no DELETE, and no say over `id` or `created_at`. Check whether a policy or a\n   GRANT was widened, and reconcile supabase/migrations/ with production before deploying.'
+  : '\n✅ anon may INSERT exactly (email, age_band, source) and nothing else — it cannot read,\n   edit or delete the waitlist, and cannot dictate `id` or `created_at`')
 process.exit(fail)
