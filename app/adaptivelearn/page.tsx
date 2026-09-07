@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SectionFigure } from '@/components/SectionFigure'
 import { SectionIcon } from '@/components/SectionIcon'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -176,6 +177,11 @@ export default function AdaptiveLearn() {
           ))}
         </ol>
 
+        <SectionFigure src="/fig-stages.webp" width={900} height={299}>
+          The four stages of a chapter. The scaffolding is heaviest at the first and has gone by the
+          last — the same &ldquo;help gradually fades&rdquo; the list above describes.
+        </SectionFigure>
+
         {/*
           The claim this page is built on, drawn instead of asserted: difficulty
           moving question by question, three right raising it and a wrong one
@@ -228,6 +234,11 @@ export default function AdaptiveLearn() {
           And because the camera is optional, every chapter that uses hand tracking can also be completed by
           tapping on the screen.
         </p>
+
+        <SectionFigure src="/fig-gestures.webp" width={900} height={391}>
+          Three ways to answer without tapping: digits held up for a number, a hand tilted to show
+          an angle, two hands apart to show a distance.
+        </SectionFigure>
       </section>
 
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
@@ -245,7 +256,11 @@ export default function AdaptiveLearn() {
             </div>
           ))}
         </div>
-      </section>
+      
+        <SectionFigure src="/fig-ages.webp" width={900} height={502}>
+          Six age bands, each building on the one before it.
+        </SectionFigure>
+</section>
 
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
       <section className="mx-auto max-w-5xl px-6 py-14">

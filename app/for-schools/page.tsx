@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SectionFigure } from '@/components/SectionFigure'
 import { SectionIcon } from '@/components/SectionIcon'
 import { MiloPanel } from '@/components/MiloPanel'
 import Link from 'next/link'
@@ -101,6 +102,11 @@ export default function ForSchools() {
             </li>
           ))}
         </ol>
+
+        <SectionFigure src="/fig-roster.webp" width={900} height={510}>
+          One list: each child sits at their own point along their own line — who has stalled, and
+          who has run ahead.
+        </SectionFigure>
       </section>
 
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>

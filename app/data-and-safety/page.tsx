@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SectionFigure } from '@/components/SectionFigure'
 import { SectionIcon } from '@/components/SectionIcon'
 import { MiloPanel } from '@/components/MiloPanel'
 import Link from 'next/link'
@@ -85,6 +86,10 @@ export default function DataAndSafety() {
           into a few coordinates, compared with the expected answer, and thrown away — all on your machine,
           in a fraction of a second. Nothing is written to a file and nothing is sent anywhere.
         </p>
+        <SectionFigure src="/fig-camera.webp" width={900} height={411}>
+          A frame becomes a few coordinates, is compared with the expected answer, and is thrown
+          away — inside the device, with no path out of it.
+        </SectionFigure>
         <p>
           Two things make that hard to break by accident. There is no code anywhere in the app that sends a
           camera frame or a hand position &mdash; not one that is switched off, none at all. And the app
@@ -122,6 +127,11 @@ export default function DataAndSafety() {
           you gave us and the age band you picked, from that request.
         </p>
 
+        <SectionFigure src="/fig-store.webp" width={900} height={592}>
+          Four things, and the tin is not full: the child&rsquo;s name, an age band, what they have
+          played, and the parent&rsquo;s email.
+        </SectionFigure>
+
         <SectionIcon src="/ico-empty.webp" />
         <h2>What we never store</h2>
         <ul>
@@ -130,10 +140,20 @@ export default function DataAndSafety() {
           ))}
         </ul>
 
+        <SectionFigure src="/fig-vault.webp" width={900} height={490}>
+          No video, no photographs, no audio, no hand positions, no date of birth, and nothing sold
+          or shared with an advertiser.
+        </SectionFigure>
+
         <SectionIcon src="/ico-key.webp" />
         <h2>Who can access it?</h2>
         <p>
           <strong>You.</strong> A parent account can see its own children, and no other family&rsquo;s.
+        </p>
+        <SectionFigure src="/fig-lockers.webp" width={900} height={444}>
+          A parent account opens its own family, and no other.
+        </SectionFigure>
+        <p>
           That is not a rule we wrote down and hope everybody follows — the database itself refuses to
           return another family&rsquo;s rows, and we test that by trying it.
         </p>
