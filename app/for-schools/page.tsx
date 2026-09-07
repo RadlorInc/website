@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SectionIcon } from '@/components/SectionIcon'
 import { MiloPanel } from '@/components/MiloPanel'
 import Link from 'next/link'
 import { APP_NAME, SITE_URL, SUPPORT_EMAIL } from '@/site'
@@ -83,6 +84,7 @@ export default function ForSchools() {
 
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
       <section className="mx-auto max-w-5xl px-6 py-14">
+        <SectionIcon src="/ico-grid.webp" />
         <h2 className="rl-reveal-focus font-display text-3xl">Setting up a class</h2>
         <ol className="mt-10 grid gap-8 sm:grid-cols-4">
           {[
@@ -103,6 +105,7 @@ export default function ForSchools() {
 
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
       <section className="mx-auto max-w-5xl px-6 py-14">
+        <SectionIcon src="/ico-scale.webp" />
         <h2 className="rl-reveal-focus font-display text-3xl">What it is good at, and what it is not</h2>
         <div className="mt-8 grid gap-10 sm:grid-cols-2 max-w-4xl">
           <div className="rl-reveal" style={{ '--i': 1 } as React.CSSProperties}>
@@ -132,6 +135,7 @@ export default function ForSchools() {
 
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
       <section className="mx-auto max-w-5xl px-6 py-14">
+        <SectionIcon src="/ico-bubble.webp" />
         <h2 className="rl-reveal-focus font-display text-3xl">Questions schools ask</h2>
         <div className="mt-8">
           {FAQ.map((f, i) => (

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SectionIcon } from '@/components/SectionIcon'
 import Image from 'next/image'
 import Link from 'next/link'
 import { AGE_BANDS, APP_ID, APP_NAME, APP_URL, COMPANY, PLANS, PRICING, SITE_URL, usd } from '@/site'
@@ -157,6 +158,7 @@ export default function AdaptiveLearn() {
 
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
       <section className="mx-auto max-w-5xl px-6 py-14">
+        <SectionIcon src="/ico-steps.webp" />
         <h2 className="rl-reveal-focus font-display text-3xl">How a chapter works</h2>
         <ol className="mt-10 grid gap-8 sm:grid-cols-4">
           {[
@@ -205,6 +207,7 @@ export default function AdaptiveLearn() {
 
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
       <section className="mx-auto max-w-5xl px-6 py-14">
+        <SectionIcon src="/ico-hands.webp" />
         <h2 className="rl-reveal-focus font-display text-3xl">Math you can show, not just tap</h2>
         <p className="rl-reveal mt-5 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--i': 1 } as React.CSSProperties}>
           Sometimes the best way to answer a math question is to show it.
@@ -229,6 +232,7 @@ export default function AdaptiveLearn() {
 
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
       <section className="mx-auto max-w-5xl px-6 py-14">
+        <SectionIcon src="/ico-stairs.webp" />
         <h2 className="rl-reveal-focus font-display text-3xl">What is covered, by age</h2>
         <div className="mt-10 grid gap-px bg-line border border-line rounded-2xl overflow-hidden">
           {BANDS.map((b, i) => (
@@ -245,6 +249,7 @@ export default function AdaptiveLearn() {
 
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
       <section className="mx-auto max-w-5xl px-6 py-14">
+        <SectionIcon src="/ico-bubble.webp" />
         <h2 className="rl-reveal-focus font-display text-3xl">Questions parents ask</h2>
         <div className="mt-8">
           {FAQ.map((f, i) => (

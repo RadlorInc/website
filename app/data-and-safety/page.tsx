@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SectionIcon } from '@/components/SectionIcon'
 import { MiloPanel } from '@/components/MiloPanel'
 import Link from 'next/link'
 import { APP_NAME, APP_URL, SITE_URL, SUPPORT_EMAIL } from '@/site'
@@ -69,6 +70,7 @@ export default function DataAndSafety() {
           </MiloPanel>
         </div>
 
+        <SectionIcon src="/ico-lens.webp" />
         <h2>The camera</h2>
         <p>
           <strong>
@@ -105,6 +107,7 @@ export default function DataAndSafety() {
           way.
         </p>
 
+        <SectionIcon src="/ico-store.webp" />
         <h2>What we store</h2>
         <div className="not-prose mt-6 grid gap-px bg-line border border-line rounded-2xl overflow-hidden">
           {STORE.map(([h, p], i) => (
@@ -119,6 +122,7 @@ export default function DataAndSafety() {
           you gave us and the age band you picked, from that request.
         </p>
 
+        <SectionIcon src="/ico-empty.webp" />
         <h2>What we never store</h2>
         <ul>
           {NEVER.map(t => (
@@ -126,6 +130,7 @@ export default function DataAndSafety() {
           ))}
         </ul>
 
+        <SectionIcon src="/ico-key.webp" />
         <h2>Who can access it?</h2>
         <p>
           <strong>You.</strong> A parent account can see its own children, and no other family&rsquo;s.
@@ -149,6 +154,7 @@ export default function DataAndSafety() {
           advertisers to share it with.
         </p>
 
+        <SectionIcon src="/ico-delete.webp" />
         <h2>Deleting it</h2>
         <p>
           Delete a child from your account and everything attached to them goes with it — every session,
@@ -157,6 +163,7 @@ export default function DataAndSafety() {
           will do it and confirm when it is done.
         </p>
 
+        <SectionIcon src="/ico-unfinished.webp" />
         <h2>What we have not finished</h2>
         <p>
           We would rather write this than let you find it out later. {APP_NAME} is early software.
@@ -172,6 +179,7 @@ export default function DataAndSafety() {
           the parts we have not built yet.
         </p>
 
+        <SectionIcon src="/ico-bubble.webp" />
         <h2>Asking us anything</h2>
         <p>
           <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a> reaches the people who built the thing.

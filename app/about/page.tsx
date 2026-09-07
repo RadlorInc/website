@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SectionIcon } from '@/components/SectionIcon'
 import { MiloPanel } from '@/components/MiloPanel'
 import { APP_NAME, COMPANY, FOUNDED_YEAR, SUPPORT_EMAIL, VISION } from '@/site'
 
@@ -45,6 +46,7 @@ export default function About() {
         </p>
         <blockquote>{VISION}</blockquote>
 
+        <SectionIcon src="/ico-light.webp" />
         <h2>Why we started</h2>
         <p>
           Every child learns differently, but traditional learning asks every student the same question at
@@ -52,6 +54,7 @@ export default function About() {
           change what comes next. That&rsquo;s why we built {APP_NAME}.
         </p>
 
+        <SectionIcon src="/ico-gears.webp" />
         <h2>How we work</h2>
         <p>
           We build closely with the families and educators using our products, and we would rather make one

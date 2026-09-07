@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SectionIcon } from '@/components/SectionIcon'
 import Link from 'next/link'
 import { APP_ID, APP_NAME, APP_URL, PLANS, PRICING, SITE_URL, SUPPORT_EMAIL, usd } from '@/site'
 
@@ -64,6 +65,7 @@ export default function Pricing() {
 
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
       <section className="mx-auto max-w-5xl px-6 py-14">
+        <SectionIcon src="/ico-family.webp" />
         <h2 className="rl-reveal-focus font-display text-3xl">Simple pricing for the whole family</h2>
         <p className="rl-reveal mt-5 text-muted max-w-2xl leading-relaxed" style={{ '--i': 1 } as React.CSSProperties}>
           The first child is {first}/month, and each additional child is {additional}/month. Every child
@@ -114,6 +116,7 @@ export default function Pricing() {
 
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
       <section className="mx-auto max-w-5xl px-6 py-14">
+        <SectionIcon src="/ico-cards.webp" />
         <h2 className="rl-reveal-focus font-display text-3xl">What every plan includes</h2>
         <ul className="mt-8 grid gap-6 sm:grid-cols-2 max-w-3xl">
           {[
@@ -136,6 +139,7 @@ export default function Pricing() {
 
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
       <section className="mx-auto max-w-5xl px-6 py-14">
+        <SectionIcon src="/ico-school.webp" />
         <h2 className="rl-reveal-focus font-display text-3xl">Schools</h2>
         <p className="rl-reveal mt-5 text-muted max-w-2xl leading-relaxed" style={{ '--i': 1 } as React.CSSProperties}>
           A class is not a family, so the per-child price above does not fit one and we haven&rsquo;t
