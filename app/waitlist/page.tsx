@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { MiloPanel } from '@/components/MiloPanel'
 import Link from 'next/link'
 import { AGE_BANDS, APP_NAME, PRICING, SUPPORT_EMAIL, usd } from '@/site'
 
@@ -39,6 +40,15 @@ export default function Waitlist() {
             <Link href="/pricing" className="rl-link text-accent">the full price list is here</Link>.
           </p>
         </div>
+      </section>
+
+      <section className="mx-auto max-w-5xl px-6 pb-2">
+        {/* Restates this page's own opening: "We are opening to new families a few at a time." */}
+        <MiloPanel src="/milo-waitlist.webp" width={760} height={743} size="sm">
+          <p className="text-lg">
+            We add families a few at a time. The list moves slowly, and that is deliberate.
+          </p>
+        </MiloPanel>
       </section>
 
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>

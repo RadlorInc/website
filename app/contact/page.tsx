@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { MiloPanel } from '@/components/MiloPanel'
 import Link from 'next/link'
 import { APP_NAME, COMPANY, SUPPORT_EMAIL } from '@/site'
 
@@ -34,6 +35,15 @@ export default function Contact() {
       >
         {SUPPORT_EMAIL}
       </a>
+
+      <div className="mt-12 max-w-2xl">
+        {/* Restates this page's own line — "One address, read by the people who build the thing" —
+            and /privacy's "a person at Radlor answers them". No new promise about response time:
+            the site has never made one and a mascot band is not where one starts. */}
+        <MiloPanel src="/milo-contact.webp" width={760} height={681} size="sm">
+          <p className="text-lg">One address, read by the people who build the thing.</p>
+        </MiloPanel>
+      </div>
 
       <div className="mt-16 grid gap-10 sm:grid-cols-2 border-t border-line pt-10">
         {REASONS.map((r, i) => (

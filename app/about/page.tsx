@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { MiloPanel } from '@/components/MiloPanel'
 import { APP_NAME, COMPANY, FOUNDED_YEAR, SUPPORT_EMAIL, VISION } from '@/site'
 
 export const metadata: Metadata = {
@@ -28,6 +29,15 @@ export default function About() {
           is already there" heading were cut as the same point said a third way. If you add to this
           page, take something out. */}
       <div className="rl-prose prose mt-10">
+        <div className="not-prose mb-10">
+          {/* ⚠️ This is `VISION` from site.ts, the same string the blockquote below renders — one
+              source, quoted twice on one page rather than retyped once. Malaika's note keeps this
+              page short, so the panel adds an image and no extra words. */}
+          <MiloPanel src="/milo-about.webp" width={760} height={726} priority>
+            <p className="text-lg">{VISION}</p>
+          </MiloPanel>
+        </div>
+
         <h2>What is {COMPANY}?</h2>
         <p>
           {COMPANY} is a software company building learning tools that adapt to the person using them —

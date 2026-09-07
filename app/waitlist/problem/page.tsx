@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { MiloPanel } from '@/components/MiloPanel'
 import Link from 'next/link'
 import { SUPPORT_EMAIL } from '@/site'
 
@@ -17,6 +18,13 @@ export const metadata: Metadata = {
 export default function Problem() {
   return (
     <section className="mx-auto max-w-5xl px-6 pt-20 pb-24">
+      <div className="mb-10 max-w-2xl">
+        {/* Restates this page's own line: "Nothing was stored." */}
+        <MiloPanel src="/milo-problem.webp" width={760} height={697} size="sm" priority>
+          <p className="text-lg">Nothing was stored, so there is nothing to undo.</p>
+        </MiloPanel>
+      </div>
+
       <h1 className="rl-focus font-display text-5xl leading-[1.05] max-w-3xl">
         That did not go through.
       </h1>

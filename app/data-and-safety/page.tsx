@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { MiloPanel } from '@/components/MiloPanel'
 import Link from 'next/link'
 import { APP_NAME, APP_URL, SITE_URL, SUPPORT_EMAIL } from '@/site'
 
@@ -55,6 +56,19 @@ export default function DataAndSafety() {
       </p>
 
       <div className="rl-prose prose mt-14">
+        <div className="not-prose mb-10">
+          {/* ⚠️ This page's camera claim is the one a regulator reads. The panel restates the
+              page's OWN sentence — "Nothing from the camera is uploaded or stored" — and adds
+              nothing. If the app's AR stack ever changes, this line changes with the section
+              below it, not separately. */}
+          <MiloPanel src="/milo-safety.webp" width={760} height={788}>
+            <p className="text-lg">
+              Nothing from the camera is uploaded or stored. The tracking runs inside your own
+              browser, on your own device.
+            </p>
+          </MiloPanel>
+        </div>
+
         <h2>The camera</h2>
         <p>
           <strong>

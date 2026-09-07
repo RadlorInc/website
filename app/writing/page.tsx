@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { MiloPanel } from '@/components/MiloPanel'
 import Link from 'next/link'
 import { posts } from '@/content/posts'
 
@@ -22,6 +23,15 @@ export default function Writing() {
         Notes on building learning software — design decisions, the ones we got wrong first, and what we
         changed because of it.
       </p>
+      <div className="mt-10">
+        {/* Restates this page's own intro — notes, and the ones we got wrong first. */}
+        <MiloPanel src="/milo-writing.webp" width={760} height={609} size="sm">
+          <p className="text-lg">
+            Design decisions, the ones we got wrong first, and what we changed because of it.
+          </p>
+        </MiloPanel>
+      </div>
+
       <ul className="mt-12 divide-y divide-line border-t border-line">
         {posts.map((p, i) => (
           <li key={p.slug} className="rl-reveal" style={{ '--i': i + 1 } as React.CSSProperties}>

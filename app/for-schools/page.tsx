@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { MiloPanel } from '@/components/MiloPanel'
 import Link from 'next/link'
 import { APP_NAME, SITE_URL, SUPPORT_EMAIL } from '@/site'
 
@@ -67,6 +68,17 @@ export default function ForSchools() {
           Talk to us about a class
         </a>
         </div>
+      </section>
+
+      <section className="mx-auto max-w-5xl px-6 pb-2">
+        {/* Copy restates this page's own h1 — "a classroom doesn't have to mean every student gets
+            the same questions". A decorative band must not be where a claim first appears. */}
+        <MiloPanel src="/milo-schools.webp" width={760} height={522}>
+          <p className="text-lg">
+            The class works through the same chapter, and each student gets the next question that
+            fits them.
+          </p>
+        </MiloPanel>
       </section>
 
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
