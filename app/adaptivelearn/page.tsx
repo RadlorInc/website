@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { AGE_BANDS, APP_ID, APP_NAME, APP_URL, COMPANY, PLANS, PRICING, SITE_URL, usd } from '@/site'
 
@@ -119,6 +120,38 @@ export default function AdaptiveLearn() {
         >
           Join the waitlist
         </Link>
+        </div>
+      </section>
+
+      {/* ⚠️ `rl-dark` PINS THIS BAND DARK IN BOTH THEMES. The mascot render is on a pure black
+          ground; on the light theme (#f5f8fc) an unpinned panel would frame it as a black
+          rectangle. The wordmark has exactly this property and the header solves it the same
+          way — one artwork, a dark surface under it, no light-mode second render.
+
+          ⚠️ THE COPY HERE STATES NO NEW CLAIM. "The difficulty moves ... never sees a level" is
+          already asserted in llms.txt, on the scoring section further down this page, and in the
+          post it links to. A band added for decoration must not become the place a claim first
+          appears — see CLAUDE.md, "say true things". */}
+      <section className="mx-auto max-w-5xl px-6 pb-4">
+        <div className="rl-dark rounded-2xl border border-line overflow-hidden">
+          <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10 p-8 sm:p-10">
+            <Image
+              src="/milo-cubes.webp"
+              alt=""
+              aria-hidden="true"
+              width={1100}
+              height={665}
+              className="rl-onblack w-56 sm:w-72 h-auto shrink-0"
+            />
+            <p className="text-lg leading-relaxed text-center sm:text-left">
+              The difficulty moves with every answer, and a child never sees a level, a rank or a
+              score — only the next question.{' '}
+              <Link href="/writing/difficulty-should-be-invisible" className="rl-link text-accent">
+                Why we build it that way
+              </Link>
+              .
+            </p>
+          </div>
         </div>
       </section>
 

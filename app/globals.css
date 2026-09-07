@@ -98,6 +98,20 @@ body {
 .prose strong { color: var(--foreground); font-weight: 600; }
 .prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .prose hr { border: 0; border-top: 1px solid var(--line); margin: 2.2rem 0; }
+
+/* ⚠️ THE MASCOT RENDERS ARE ON PURE BLACK (#000) AND THE DARK PANEL IS #070b11. Those are close
+   enough to look identical in a swatch and NOT close enough on screen: without this the image's
+   own box shows as a slightly-darker rectangle around the robot, which is the tell that a picture
+   was pasted onto a panel rather than sitting in it.
+
+   `screen` is the fix and it is exact, not approximate: screen(base, 0) === base, so every pure
+   black pixel resolves to whatever the panel is painted, and the seam cannot exist by arithmetic.
+   The cyan ring's glow composites additively on top, which is what that artwork wants anyway.
+
+   ⚠️ IT ONLY WORKS ON A DARK GROUND. On a light surface `screen` drives everything toward white
+   and the robot disappears. That is why every use of this class sits inside `.rl-dark` — the two
+   go together, and neither is decoration. */
+.rl-onblack { mix-blend-mode: screen; }
 .prose blockquote { margin: 1.6rem 0; padding-left: 1.1rem; border-left: 3px solid var(--accent); font-family: var(--font-display-src), Georgia, serif; font-size: 1.3rem; line-height: 1.45; color: var(--foreground); }
 
 /* ============================================================================
@@ -667,7 +681,15 @@ body {
    alpha and its remaining glow composites against this exact family. It also means the
    header and the hero are the same surface on the home page rather than two dark bands
    with a seam between them. */
-.rl-header {
+/* ⚠️ ONE PALETTE BLOCK, TWO USERS. `.rl-dark` shares this selector deliberately rather than
+   copying the values a third time — site.ts's BRAND is the source, globals.css is the one copy,
+   and a second copy here would be the drift this project keeps writing rules about.
+
+   `.rl-dark` exists because the Milo mascot renders are on a PURE BLACK ground. The site has a
+   light theme (#f5f8fc), where a black-backed image is a black rectangle. Same problem the
+   wordmark has, same fix the header already uses: pin the surface dark in both themes and let
+   the artwork's black composite into it. Do not art-direct a second light-mode render. */
+.rl-header, .rl-dark {
   --background: #070b11;
   --surface: #0e141c;
   --foreground: #f5f8fc;
