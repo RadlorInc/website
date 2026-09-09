@@ -3,6 +3,15 @@
 > **Read [CLAUDE.md](CLAUDE.md) first.** It says where every fact lives and what the rules are.
 > This file is only "where work left off". Keep it short — the product repo's handoff grew to 60 KB
 > and is now a running cost on every session.
+>
+> ⚠️ **AND THIS FILE IS NOW 72 KB — BIGGER THAN THE 60 KB IT WARNS ABOUT. Measured 2026-09-09.**
+> The rule above is being broken by the file that states it. Most of the excess is settled history
+> that no longer changes what anyone does next: the palette and logo sections (2026-08-29), the
+> removed scroll hero and the `entry`-ranges bug (2026-08-30/31), Malaika's notes (applied), the
+> four facts, and the pricing/waitlist build notes — roughly 300 lines between them. **The fix is a
+> split, not a delete:** move them to `docs/handoff-archive.md`, exactly as the product repo did,
+> so nothing is lost and the warnings inside them stay findable. That is a founder's call about
+> what stops being read every session, so it is item 0 in *Next steps* rather than done here.
 
 ## ⚠️ THIS REPOSITORY IS PUBLIC — 2026-08-31
 
@@ -122,13 +131,42 @@ Production tracks the tip of `main` — **do not pin a SHA here**, it is stale t
 pushes and this file has already cost one session by being believed when wrong. Check it instead:
 `git log --oneline -1 origin/main`, then confirm production actually moved.
 
-**Last verified 2026-09-01**, against production in a real browser rather than the dashboard: the
-home page serves the current headings, `/about` is the shortened version, the hero video plays and
-the copy changes from Malaika's notes are all live. Earlier verifications also confirmed `/pricing`
-serving `$7.99`, `/waitlist` and both outcome pages at 200, JSON-LD carrying 8 offers all pointing
-at `radlor.com/waitlist`, and a form-encoded POST with no JavaScript persisting a row to the
-`ghuvnq` Supabase project (then deleted). ⚠️ **The waitlist is no longer empty — it holds one
-real signup, from 2026-08-31.** That matters beyond bookkeeping: see the blast-radius note below.
+⚠️ **AS OF 2026-09-09 THE MASCOT-AND-ILLUSTRATION LAYER IS UNPUSHED AND PRODUCTION DOES NOT HAVE
+IT.** `origin/main` was at `38588b7`, the live Terms of Use; everything from `c81b351` onward —
+every image on this site — was sitting on local `main` only. **So radlor.com then had no images
+beyond the hero video and the wordmark.** Do not read the image sections below as describing the
+live site until this is cleared.
+
+⚠️ **DO NOT TRUST THE PARAGRAPH ABOVE — RUN THE COMMAND.** It is one line, it is never stale, and
+an exact count here would be wrong the moment anyone commits:
+
+```
+git log --oneline origin/main..HEAD     # prints nothing when production is current
+```
+
+The first draft of this very paragraph said "four commits", and was wrong within the minute — the
+commit that wrote it made five. That is this file's oldest failure, caught on itself: **a count is
+a measurement and goes stale; a command is a check and does not.**
+
+**Last verified against production 2026-09-06**, in the Browser pane: `/terms` returns 200 with the
+draft banner GONE and "Last updated: 6 September 2026" present, `[DATE]` and `[LAWYER REVIEW]` both
+at zero occurrences, the footer link to `/terms` resolving from `/`, `/privacy` and `/waitlist`, and
+`npm run check:site-claims` exiting 0 against `https://radlor.com` — no cookies, no analytics,
+nothing off-origin. Earlier verifications confirmed `/pricing` serving `$7.99`, `/waitlist` and both
+outcome pages at 200, JSON-LD carrying 8 offers all pointing at `radlor.com/waitlist`, and a
+form-encoded POST with no JavaScript persisting a row to the `ghuvnq` Supabase project.
+
+⚠️ **The waitlist is no longer empty — it holds one real signup, from 2026-08-31.** That matters
+beyond bookkeeping: see the blast-radius note above.
+
+> ⚠️ **A NOTE ON THE `curl` WARNING BELOW, WHICH I DISOBEYED AND GOT AWAY WITH.** Verifying the
+> 2026-09-06 deploy I polled `https://radlor.com/terms` with `curl` — twenty attempts, fifteen
+> seconds apart — and the challenge never armed; every response was a clean 200 or 404. **That is
+> one run, not a refutation.** The warning stays exactly as written: a tripped challenge looks
+> identical to a failed deploy, and the cost of being wrong is a wasted session while the deploy
+> was fine all along. Recorded because a warning nobody can reproduce eventually gets deleted by
+> somebody who assumes it was never true — this is the evidence that it is *sometimes* not armed,
+> which is a different thing from being safe.
 
 > ⚠️ **This section has been wrong twice, in opposite directions.** It said *"nothing is deployed
 > and there is no GitHub repo"* for ten days after both became false, which cost a session. It was
@@ -707,9 +745,78 @@ everywhere and the band below peeks at every width measured: **29 px at 360×780
 too. It used to be 855 px at 360×780 with nothing visible below the fold. No horizontal overflow
 at 360 or 375.
 
+## The image system — 2026-09-07
+
+Until this landed the site had **no images beyond the hero video and the wordmark**. It now has 35,
+governed by three components and two CSS rules. Read this before adding one.
+
+**Every render is on a PURE BLACK ground and the site has a light theme (`#f5f8fc`)**, so a
+black-backed image dropped on a page is a black rectangle. The wordmark has had this property since
+2026-08-30 and the header already solved it — pin the surface dark in both themes and let the
+artwork's black composite in:
+
+- **`.rl-dark`** shares the `.rl-header` selector in `globals.css`. One palette block, two users; a
+  third copy of those values is the drift this repo keeps writing rules about.
+- **`.rl-onblack`** is `mix-blend-mode: screen`, and it is **arithmetic, not taste**. `#000` against
+  the panel's `#070b11` looks identical in a swatch and does not on screen — the image's own box
+  shows as a darker rectangle around the subject. `screen(base, 0) === base`, so black resolves to
+  exactly the panel colour and the seam *cannot* exist. ⚠️ It only works on a dark ground; on a
+  light surface `screen` drives everything white and the subject vanishes. Both rules are welded
+  inside the components rather than left to a caller, for that reason.
+
+**Three components, each answering a different question.** A fourth should have to argue for itself.
+
+| | for |
+|---|---|
+| `MiloPanel` | a page's ONE mascot moment — dark band, mascot beside a line of copy |
+| `SectionIcon` | what a section is *about* — a 40px chip above an `<h2>`: a lens, a key, a balance |
+| `SectionFigure` | draws a specific sentence the copy already makes, with a `<figcaption>` |
+
+⚠️ **THE MASCOT MUST NOT BECOME WALLPAPER.** "Images in every sub-section" read literally is a Milo
+band under all 32 headings, which stops reading as a page and starts reading as a template. A
+**section** gets a small object; a **page** gets at most one mascot.
+
+⚠️ **NO ILLUSTRATION MAY INTRODUCE A CLAIM**, and a caption is the easiest place for one to slip in
+because it reads as illustration rather than copy. Every caption restates a sentence from its own
+section. `/data-and-safety`'s camera figure says what the camera section says and not one word more
+— that is the paragraph a regulator reads.
+
+⚠️ **THE CAPTION CARRIES THE INFORMATION; THE IMAGE IS DECORATIVE** (`alt=""` + `aria-hidden`) — the
+pattern the difficulty-line figure already uses. A crawler, an answer engine and a screen reader all
+read the caption; none can read a render. **`/privacy` and `/terms` get no illustrations at all:**
+their value is being sober, and a picture beside *What we never store* costs more credibility than
+it buys attention.
+
+### What went wrong, so it is not rediscovered
+
+- **Look at generated assets; never ship them straight.** Three of 11 mascot renders came back
+  off-character — green eyes on a cyan spec, **legs** on a character specced as floating, a flat 2D
+  envelope in a 3D render. The fix each time was **naming the constraint**, not restating the pose.
+- **One was generated and thrown away.** The balance for *good at / not built for* came back
+  **tilted**, cyan pan lower — reading as "more good than not", a claim that page does not make.
+  Throwing an asset away is cheaper than a claim nobody agreed to.
+- **A `<figure>` inside a `<p>` is invalid**; the browser silently auto-closes the paragraph. I
+  shipped one and caught it in my own diff. Check: `figs.some(f => f.closest('p') !== null)`.
+- **The Browser pane cannot exercise lazy loading** — hidden renderer, so IntersectionObserver never
+  fires and below-the-fold `next/image` never loads, which looks exactly like a broken image. ⚠️ I
+  called that a real bug once before proving otherwise. Verify with `fetch`, a fresh `Image()`, or
+  `loading = 'eager'` plus a `src` re-assign.
+- **Screenshots are unreliable at this pane size** — emulated viewport and pane scaling disagree, so
+  a screenshot returns blank or scrolled elsewhere while the DOM is perfect. Numeric assertions are
+  trustworthy; framing is not. To *see* the composite, reproduce it locally:
+  `PIL.ImageChops.screen(Image.new(size, (7,11,17)), render)` is exactly `screen` over `.rl-dark`.
+- **A detailed 3D render at 40px can be mush.** All 17 chips were composited at true display size
+  and looked at before shipping. Do that again rather than assuming.
+
+**Cost:** ~2 credits per image on Higgsfield, from the saved `radlor-milo-bot` reference so the
+robot stays the same robot; ~40 credits for the whole set. ⚠️ **Video is a different order of
+magnitude** — check the model's cost before starting one.
+
 ## What exists
 
-**Ten pages.** `PAGES` in `site.ts` is the list; header shows five, footer shows all.
+**Eleven pages.** `PAGES` in `site.ts` is the list; header shows five, footer shows all.
+`/terms` was the eleventh, added 2026-09-05. There is also `app/not-found.tsx`, which is not a
+row in `PAGES` because it is not a URL anybody navigates to on purpose.
 
 ```
 site.ts                    every shared fact + PAGES (the one page list) + company TODOs
@@ -726,24 +833,48 @@ app/for-schools/           setting up a class, good-at / not-built-for, 5 FAQs �
 app/data-and-safety/       the camera, what we store, what we never store, who can access it,
                            deleting it, and what we have NOT finished
 app/privacy/               this website only: no cookies, no analytics, no third parties
+app/terms/                 the WEBSITE's Terms of Use — live and lawyer-reviewed since 2026-09-06.
+                           NOT the app's Terms of Service, which are a different agreement on a
+                           different origin. Body + the DRAFT mechanism live in content/legal.ts
+app/not-found.tsx          the 404. Nav links built from HEADER, so a renamed page cannot leave a
+                           dead link on the one page people reach when a link is already wrong
 app/about/  app/contact/
 app/writing/               index + [slug], markdown via `marked`, Article JSON-LD
 app/robots.ts  app/sitemap.ts  app/llms.txt/route.ts  app/opengraph-image.tsx
+components/                MiloPanel · SectionIcon · SectionFigure — the only three, and each
+                           answers a different question. See "The image system" above.
 content/posts.ts + content/posts/*.md    three posts
+content/legal.ts           the Terms of Use body + DRAFT, PLACEHOLDERS and the module-scope guard
 public/hero.{webm,mp4}     the looping hero, 1600x900 · hero-portrait.* is the 720x1280 crop
 public/hero-poster*.jpg    one poster per orientation, chosen by media query in CSS
-scripts/                   check-hero-contrast · check-pricing · check-social ·
-                           check-waitlist-rls · indexnow
+public/milo-*.webp   (10)  the mascot, one pose per page
+public/ico-*.webp    (17)  section chips, 256x256, shown at 40px
+public/fig-*.webp     (8)  content figures, 900px wide
+                           ⚠️ 35 images, 576 KB TOTAL as measured 2026-09-09. Re-measure with
+                           `du -ch public/*.webp` rather than believing this number.
+supabase/migrations/       20260830000000_waitlist (the table) + 20260901071510_waitlist_anon_
+                           narrow_insert (recovered from production — read its header)
+scripts/                   check-hero-contrast · check-pricing · check-social · check-waitlist-rls ·
+                           check-legal-draft · check-site-claims · check-migration-provenance ·
+                           indexnow
 ```
 
-**Four gates, all wired to `npm run check:*`.** Run them before pushing:
+**Seven gates, all wired to `npm run check:*`.** Run them before pushing:
 
 | | what it proves |
 |---|---|
 | `check:hero-contrast` | the hero copy clears AA over every frame of both videos **and** the mark stays bright — two opposing gates |
 | `check:pricing` | every published pricing claim holds across all 4 plans |
 | `check:social` | all 6 `sameAs` links land on a real Radlor profile |
-| `check:waitlist-rls` | anon can add a signup and nothing else — it cannot read or delete |
+| `check:waitlist-rls` | anon may INSERT exactly `(email, age_band, source)` and nothing else — no SELECT, no UPDATE, no DELETE, and it cannot dictate `id` or `created_at`. The last two probes are the only way to tell a column-scoped grant from a table-wide one |
+| `check:legal-draft` | `/terms` does not misrepresent its own status, in either direction — and the dormant draft machinery is still wired |
+| `check:site-claims` | the LIVE site matches what `/privacy` and `/terms` claim. Takes a base URL; run it against `http://localhost:3021` before a deploy and `https://radlor.com` after |
+| `check:migrations` | every migration production has run exists as a file in a named repository. Needs `-- --ledger <export>`; see the third-reason section at the top |
+
+⚠️ **THREE STATES, THREE EXIT CODES.** `check:site-claims` and `check:migrations` exit **2** for
+"could not look", **1** for "looked and found a defect", **0** for "looked and it was clean". A
+`2` is not a failure of the site; it means the check was blind and you have learned nothing. Do not
+paper over it by treating non-zero as one thing.
 
 ## Decisions made, and why
 
@@ -759,9 +890,31 @@ scripts/                   check-hero-contrast · check-pricing · check-social 
   until there are two.
 - **`/writing`, not `/blog`.** Same content, less of a promise about frequency.
 - **One dependency added: `marked`.** No CMS, no MDX, no component library, no analytics.
-- **Ten pages, then stop.** `/features`, `/faq`, `/team` and comparison pages were considered and
-  refused: they would compete with pages that already exist. Everything after this should be an
-  ARTICLE, not a marketing page — GEO comes from articles.
+- **Ten marketing pages, then stop.** `/features`, `/faq`, `/team` and comparison pages were
+  considered and refused: they would compete with pages that already exist. Everything after this
+  should be an ARTICLE, not a marketing page — GEO comes from articles. ⚠️ `/terms` made it eleven
+  rows in `PAGES` and does **not** break this rule: it is a legal document, not a page competing
+  for a query, and it is `where: 'footer'` for that reason.
+- **The website's Terms of Use are a separate agreement from the app's Terms of Service**, and the
+  two must never be merged, cross-linked as equivalents, or have copy reused between them. One
+  covers reading radlor.com; the other covers using Milo with a child's data inside it. Every
+  placement of the `/terms` link carries a comment saying so, because "Terms" in a footer is exactly
+  the link somebody later repoints at the wrong document.
+- **The DRAFT mechanism stays wired even though it is switched off.** `DRAFT` is `false` since
+  2026-09-06, so the banner block, `PLACEHOLDERS` and the module-scope guard are all dormant — which
+  is precisely when somebody tidies them away as dead code. They are what makes the *next*
+  unreviewed revision detectable, `check:legal-draft` fails if any of the four goes missing, and
+  with `DRAFT` false the guard is live on every build: a new marker in reviewed terms breaks it.
+- **Three image components and no fourth without an argument.** `MiloPanel` for a page's one mascot
+  moment, `SectionIcon` for what a section is about, `SectionFigure` for drawing a sentence the copy
+  already makes. This is not the start of a component library — CLAUDE.md says ship the small
+  version, and each of these exists only to stop the same twenty lines being pasted onto eight
+  pages. See "The image system".
+- **A gate is not worth a capability more dangerous than what it detects.** `check:waitlist-rls`
+  proves the anon grant is column-scoped by trying two INSERTs rather than by adding an `exec_sql`
+  RPC to production; `check:migrations` takes its ledger as a file rather than a Management API
+  token that reaches every project on the account, children's data included. The full rule is in
+  the app repo's `CLAUDE.md` beside the other instrument rules.
 - **`/privacy` and `/data-and-safety` are separate on purpose.** One is about this website (which
   collects nothing), one is about the product (which necessarily does). Merging them buries the
   interesting half.
@@ -774,6 +927,13 @@ scripts/                   check-hero-contrast · check-pricing · check-social 
 ⚠️ **Steps 2 and 3 of the old list are done and were still sitting here as "next".** "Deploy" was
 listed as pending while the site had been live for days. **Cross a step off in the commit that
 finishes it.**
+
+0. ⚠️ **Split this file.** It is 72 KB and its own opening line says keep it short. Move the settled
+   history — palette, logo, the removed scroll hero, the `entry` bug, Malaika's notes, the four
+   facts, pricing/waitlist build notes — into `docs/handoff-archive.md`, following the product
+   repo's precedent. Nothing gets deleted; the warnings inside those sections stay findable. Left
+   undone deliberately: deciding what stops being read every session is not a decision to make
+   inside a routine update.
 
 1. ~~**Fill in `docs/brand-facts.md`**~~ — **done 2026-08-29, except the founder row.** `sameAs`
    carries six profiles and `npm run check:social` follows every one to a real Radlor profile;
@@ -799,6 +959,29 @@ finishes it.**
    `adaptivelearn.radlor.com/legal/privacy`.
 6. **Re-grant the Vercel connector access to the `website` project.** Until that happens a failed
    deploy cannot be seen from here at all — see the warning at the top of this file.
+7. ⚠️ **PUSH THE FOUR MASCOT COMMITS.** `c81b351`, `77e20b5`, `69d9566`, `70f1c47` are on local
+   `main` and not on `origin`. Production has none of the images. Everything is verified locally —
+   all seven gates green, no horizontal overflow at 360 or 375 on eleven pages — so this is a push
+   and a browser check, not more work. **Cross this off in the commit that does it.**
+8. ~~**Legal review of `/terms`.**~~ — **done 2026-09-06**, confirmed by the founder as covering §11
+   (Delaware governing law and courts) and §9 (the liability cap); Delaware stands as written.
+   `DRAFT` is now `false` and the page is live, binding terms. ⚠️ **It goes back to `true` the moment
+   the text changes in a way a lawyer has not seen** — that switch is not a one-way door.
+9. **Make `check:migrations` runnable without a hand-exported ledger, or decide not to.**
+   `supabase_migrations` is not exposed over PostgREST, and exposing it is **not** the cheap option
+   it looks like: the table is granted to `postgres` alone and `service_role` has no USAGE on the
+   schema, so it needs `GRANT USAGE` + `GRANT SELECT` to a *named* role, permanently, on the public
+   REST surface. This repo has no CI either, so "run it automatically" means a new workflow, a
+   credential that can reach the ledger, and a secret to hold it. Running it by hand at deploy time
+   is the current answer and may stay the answer.
+10. **Mirror the third blast-radius trigger into `RadlorInc/video-reviewer`.** The canonical
+    two-trigger note lives in that repo under `docs/` and it is not cloned on this machine, so the
+    third trigger — three codebases writing migrations to one database with no source of truth, one
+    of which already went missing — is written here instead. It still needs to sit beside the other
+    two.
+11. **`/pricing` has icons but no figures, deliberately.** The price table *is* the content there and
+    a figure would decorate rather than draw. Revisit only if the page grows an argument that a
+    picture could carry.
 
 ## The one-shot check
 
