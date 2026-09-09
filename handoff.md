@@ -131,24 +131,34 @@ Production tracks the tip of `main` — **do not pin a SHA here**, it is stale t
 pushes and this file has already cost one session by being believed when wrong. Check it instead:
 `git log --oneline -1 origin/main`, then confirm production actually moved.
 
-⚠️ **AS OF 2026-09-09 THE MASCOT-AND-ILLUSTRATION LAYER IS UNPUSHED AND PRODUCTION DOES NOT HAVE
-IT.** `origin/main` was at `38588b7`, the live Terms of Use; everything from `c81b351` onward —
-every image on this site — was sitting on local `main` only. **So radlor.com then had no images
-beyond the hero video and the wordmark.** Do not read the image sections below as describing the
-live site until this is cleared.
-
-⚠️ **DO NOT TRUST THE PARAGRAPH ABOVE — RUN THE COMMAND.** It is one line, it is never stale, and
-an exact count here would be wrong the moment anyone commits:
+⚠️ **DO NOT TRUST THIS SECTION — RUN THE COMMAND.** One line, never stale, and it is the only
+statement here that cannot rot:
 
 ```
 git log --oneline origin/main..HEAD     # prints nothing when production is current
 ```
 
-The first draft of this very paragraph said "four commits", and was wrong within the minute — the
-commit that wrote it made five. That is this file's oldest failure, caught on itself: **a count is
-a measurement and goes stale; a command is a check and does not.**
+> **Why it is written as a command and not a count.** For most of 2026-09-09 this paragraph said
+> the mascot-and-illustration layer was unpushed and radlor.com had no images on it. That was true
+> when written and false by the end of the same session. Its first draft said "four commits" and
+> was wrong within the minute, because the commit that wrote it made five. This file's two oldest
+> failures are the same shape — it said "nothing is deployed" for ten days, then said "unpushed" an
+> hour after the push. **A count is a measurement and goes stale; a command is a check and does
+> not.** Leave the command; do not replace it with a number.
 
-**Last verified against production 2026-09-06**, in the Browser pane: `/terms` returns 200 with the
+**Deployed and verified 2026-09-09**, in the Browser pane rather than by polling — the whole image
+layer is live. Measured on production: 13 pages served (`/no-such-page` correctly 404), exactly one
+`<h1>` and a canonical on every one, **37 illustrations across 11 pages**, all with `alt=""` and
+hidden from assistive tech, 8/8 loading on `/adaptivelearn` with **zero third-party hosts**, no
+cookie and empty storage, and **no horizontal overflow at 360 or 375 on any of the 13**.
+`npm run check:site-claims` exits 0 against `https://radlor.com`.
+
+⚠️ One measurement trap worth keeping: asserting `aria-hidden` **on the `<img>`** reports the
+section icons as non-decorative and is wrong. `SectionIcon` puts it on the wrapper `<div>`, which
+hides the whole subtree — correct, and sufficient. Assert
+`alt === '' && (img.ariaHidden || img.closest('[aria-hidden="true"]'))`.
+
+**Earlier, verified against production 2026-09-06**, in the Browser pane: `/terms` returns 200 with the
 draft banner GONE and "Last updated: 6 September 2026" present, `[DATE]` and `[LAWYER REVIEW]` both
 at zero occurrences, the footer link to `/terms` resolving from `/`, `/privacy` and `/waitlist`, and
 `npm run check:site-claims` exiting 0 against `https://radlor.com` — no cookies, no analytics,
@@ -959,10 +969,11 @@ finishes it.**
    `adaptivelearn.radlor.com/legal/privacy`.
 6. **Re-grant the Vercel connector access to the `website` project.** Until that happens a failed
    deploy cannot be seen from here at all — see the warning at the top of this file.
-7. ⚠️ **PUSH THE FOUR MASCOT COMMITS.** `c81b351`, `77e20b5`, `69d9566`, `70f1c47` are on local
-   `main` and not on `origin`. Production has none of the images. Everything is verified locally —
-   all seven gates green, no horizontal overflow at 360 or 375 on eleven pages — so this is a push
-   and a browser check, not more work. **Cross this off in the commit that does it.**
+7. ~~**Push the mascot commits.**~~ — **done 2026-09-09.** Pushed and deployed; verified on
+   production in the Browser pane, not by polling. See *Where it is right now* for the numbers.
+   ⚠️ The instruction that said to cross this off in the commit that finishes it was followed, and
+   this line is what that looks like — the alternative is the "deploy" step that sat here as
+   pending while the site had been live for days.
 8. ~~**Legal review of `/terms`.**~~ — **done 2026-09-06**, confirmed by the founder as covering §11
    (Delaware governing law and courts) and §9 (the liability cap); Delaware stands as written.
    `DRAFT` is now `false` and the page is live, binding terms. ⚠️ **It goes back to `true` the moment
