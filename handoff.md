@@ -339,8 +339,15 @@ app/page.tsx               home — looping hero video, four fact links, "What i
                            what we believe, the product card, latest writing
 app/adaptivelearn/         how a chapter works, math you can show, the six age bands,
                            9 parent FAQs · SoftwareApplication + FAQPage
-app/pricing/               the price table, generated from PRICING in site.ts; what every
-                           plan includes; schools · SoftwareApplication + Offers
+app/_pricing/              HIDDEN 2026-09-10 (founder's call) — the underscore keeps Next from
+                           routing it, so /pricing 404s and the row in PAGES is commented out,
+                           which drops it from header, footer, sitemap and llms.txt too. The
+                           page itself is unchanged: the price table generated from PRICING in
+                           site.ts, what every plan includes, schools · SoftwareApplication +
+                           Offers. Restore = rename the folder back, uncomment the PAGES row and
+                           the BLURB line in app/llms.txt/route.ts, and re-add the links removed
+                           from the home hero facts, /waitlist and the /adaptivelearn FAQ.
+                           PRICING itself stays live — those three still STATE the figures.
 app/waitlist/              the form (+ /thanks, /problem — static outcome pages, noindex)
 app/api/waitlist/          Route Handler; the ONLY thing that talks to Supabase
 app/for-schools/           setting up a class, good-at / not-built-for, 5 FAQs · FAQPage

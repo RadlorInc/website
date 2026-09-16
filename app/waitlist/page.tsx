@@ -36,8 +36,8 @@ export default function Waitlist() {
           <p className="rl-rise mt-6 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.18s' } as React.CSSProperties}>
             {APP_NAME} is early software and we would rather add families slowly than badly. Leave an
             email address and we will write when there is a place. Pricing starts at{' '}
-            {usd(PRICING.monthly.first)} a month for the first child —{' '}
-            <Link href="/pricing" className="rl-link text-accent">the full price list is here</Link>.
+            {usd(PRICING.monthly.first)} a month for the first child, {usd(PRICING.monthly.additional)} a
+            month for each additional child, up to {PRICING.maxChildren}.
           </p>
         </div>
       </section>

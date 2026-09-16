@@ -52,8 +52,6 @@ const FAQ: { q: string; a: string; href?: string; hrefLabel?: string }[] = [
     // the /pricing table and the JSON-LD offers cannot disagree.
     q: 'How much does AdaptiveLearn cost?',
     a: `${APP_NAME} is ${usd(PRICING.monthly.first)}/month for the first child and ${usd(PRICING.monthly.additional)}/month for each additional child, with up to ${PRICING.maxChildren} children on one family plan.`,
-    href: '/pricing',
-    hrefLabel: 'See pricing →',
   },
   {
     q: 'When can I try AdaptiveLearn?',

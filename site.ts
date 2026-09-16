@@ -183,7 +183,13 @@ export const PLANS = Array.from({ length: PRICING.maxChildren }, (_, i) => price
 export const PAGES = [
   { href: '/', label: 'Home', where: 'footer' },
   { href: '/adaptivelearn', label: 'AdaptiveLearn', where: 'both' },
-  { href: '/pricing', label: 'Pricing', where: 'both' },
+  // ⚠️ HIDDEN 2026-09-10, founder's call. The page still exists at `app/_pricing/` — the
+  // underscore keeps it out of routing, so /pricing 404s and it is absent from the header, the
+  // footer, the sitemap and llms.txt because all four read this list. Restore by renaming the
+  // folder back and putting this row back; the BLURB line in `app/llms.txt/route.ts` is kept
+  // beside its own note for the same reason. PRICING below stays live: /adaptivelearn, the home
+  // hero and /waitlist still state the figures, they just no longer link to a table.
+  // { href: '/pricing', label: 'Pricing', where: 'both' },
   { href: '/for-schools', label: 'Schools', where: 'both' },
   { href: '/writing', label: 'Writing', where: 'both' },
   { href: '/about', label: 'About', where: 'both' },

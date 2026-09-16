@@ -1,4 +1,4 @@
-import { APP_NAME, APP_URL, COMPANY, PAGES, PRICING, SITE_URL, SOCIAL, SUPPORT_EMAIL, TAGLINE, VISION, usd } from '@/site'
+import { APP_NAME, APP_URL, COMPANY, PAGES, SITE_URL, SOCIAL, SUPPORT_EMAIL, TAGLINE, VISION } from '@/site'
 import { posts } from '@/content/posts'
 
 /**
@@ -15,7 +15,9 @@ const BLURB: Record<(typeof PAGES)[number]['href'], string> = {
   '/': `what ${COMPANY} builds and why`,
   '/adaptivelearn': `how ${APP_NAME} works, what is covered at each age, and parent FAQs`,
   '/waitlist': `join the waitlist for a place in ${APP_NAME}: an email address, optionally an age band, and nothing else`,
-  '/pricing': `what ${APP_NAME} costs: ${usd(PRICING.monthly.first)} a month for the first child, ${usd(PRICING.monthly.additional)} for each additional child up to ${PRICING.maxChildren}, annual billing saving over 20%`,
+  // ⚠️ /pricing is hidden — see the commented row in `PAGES`. Kept here, commented, so restoring
+  // the page is one uncomment in each file rather than rewriting this sentence from the table.
+  // '/pricing': `what ${APP_NAME} costs: ${usd(PRICING.monthly.first)} a month for the first child, ${usd(PRICING.monthly.additional)} for each additional child up to ${PRICING.maxChildren}, annual billing saving over 20%`,
   '/for-schools': 'using it with a class: how a teacher sets one up and what they see',
   '/writing': 'notes on building adaptive learning software',
   '/about': `why ${COMPANY} started and how we work`,

@@ -149,7 +149,7 @@ export default function Home() {
               ['Ages 3–18', 'one app, six stages that look nothing alike', '/adaptivelearn'],
               ['Starts where your child is', 'a short check, not their school year', '/adaptivelearn'],
               ['0 frames uploaded', 'hand tracking runs on the device', '/data-and-safety'],
-              [`From ${usd(PRICING.monthly.first)}/month`, `first child; ${usd(PRICING.monthly.additional)} each additional`, '/pricing'],
+              [`From ${usd(PRICING.monthly.first)}/month`, `first child; ${usd(PRICING.monthly.additional)} each additional`, '/waitlist'],
             ].map(([term, detail, href], i) => (
               <li key={term} className="rl-reveal" style={{ '--i': i + 1 } as React.CSSProperties}>
                 <Link href={href} className="rl-hero-factlink">
