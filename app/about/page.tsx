@@ -5,7 +5,7 @@ import { APP_NAME, COMPANY, FOUNDED_YEAR, SUPPORT_EMAIL, VISION } from '@/site'
 
 export const metadata: Metadata = {
   title: 'About',
-  description: `${COMPANY} is a small software company building learning tools that adapt to the child using them. Our first product is ${APP_NAME}, adaptive math for ages 3 to 18.`,
+  description: `${COMPANY} is a small software company building learning tools that adapt to the child using them. Our first product is ${APP_NAME}, adaptive math for grades 3 to 8.`,
   alternates: { canonical: '/about' },
 }
 
@@ -42,7 +42,7 @@ export default function About() {
         <h2>What is {COMPANY}?</h2>
         <p>
           {COMPANY} is a software company building learning tools that adapt to the person using them —
-          starting with math. Our first product is {APP_NAME}: adaptive math for ages 3&ndash;18.
+          starting with math. Our first product is {APP_NAME}: adaptive math for grades 3 to 8.
         </p>
         <blockquote>{VISION}</blockquote>
 
@@ -58,7 +58,7 @@ export default function About() {
         <h2>How we work</h2>
         <p>
           We build closely with the families and educators using our products, and we would rather make one
-          chapter that genuinely helps a child than ten that look impressive. The question we keep coming
+          lesson that genuinely helps a child than ten that look impressive. The question we keep coming
           back to is: <strong>could a child get this right without actually understanding what we&rsquo;re
           trying to teach?</strong> If the answer is yes, we go back and fix it.
         </p>

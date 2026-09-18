@@ -139,7 +139,7 @@ export default function Privacy() {
               nobody can open is not a published policy. */}
           {APP_NAME} lives on a different address —{' '}
           <strong className="text-foreground font-medium">adaptivelearn.radlor.com</strong> — and is a
-          different piece of software with accounts, a database and a camera feature. Its policy is
+          different piece of software with accounts and a database. Its policy is
           published there, and the plain-English version is on{' '}
           <Link href="/data-and-safety" className="rl-link">data and safety</Link>.
         </p>

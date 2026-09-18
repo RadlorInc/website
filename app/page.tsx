@@ -88,7 +88,7 @@ export default function Home() {
           <p className="rl-rise mt-5 sm:mt-6 text-base sm:text-lg text-muted max-w-[30rem] leading-relaxed" style={{ '--d': '0.18s' } as React.CSSProperties}>
             Most educational apps give every child the same questions in the same order. We build the other kind:
             software that watches how a child answers and changes the next question because of it. Our first
-            product, <strong className="text-foreground font-medium">{APP_NAME}</strong>, teaches math to ages 3–18.
+            product, <strong className="text-foreground font-medium">{APP_NAME}</strong>, teaches math for grades 3 to 8.
           </p>
           <div className="rl-rise mt-7 sm:mt-9 flex flex-wrap gap-3" style={{ '--d': '0.27s' } as React.CSSProperties}>
             <Link
@@ -144,14 +144,19 @@ export default function Home() {
           right AT THE TIME. `rl-reveal` is scroll-driven, so it does nothing for an element
           already in view on load — which these were, inside the old hero. Below the fold they
           enter the viewport as you scroll, so the scroll timeline is exactly the right lever and
-          `--i` staggers them. Still no counters: "3–18" cannot count up from zero. */}
+          `--i` staggers them. Still no counters: "3–8" cannot count up from zero.
+
+          ⚠️ REWRITTEN 2026-09-19 FOR THE APP AS IT IS NOW. The three facts used to be "Ages 3–18",
+          "a short check" and "0 frames uploaded" — the age bands, the placement check and the camera
+          chapters are all hidden in the app since 2026-09-13. The three now answer: is it for my
+          child's grade, how does it get harder, and what does my child have to hand over. */}
       <section className="rl-hero-band">
         <div className="mx-auto w-full max-w-5xl px-6 py-16">
           <ul className="rl-hero-facts">
             {[
-              ['Ages 3–18', 'one app, six stages that look nothing alike', '/adaptivelearn'],
-              ['Starts where your child is', 'a short check, not their school year', '/adaptivelearn'],
-              ['0 frames uploaded', 'hand tracking runs on the device', '/data-and-safety'],
+              ['Grades 3–8', 'one idea per lesson, taught step by step', '/adaptivelearn'],
+              ['Harder means different', 'each level up is a new kind of question', '/adaptivelearn'],
+              ['No email for your child', 'you set their username and password', '/data-and-safety'],
             ].map(([term, detail, href], i) => (
               <li key={term} className="rl-reveal" style={{ '--i': i + 1 } as React.CSSProperties}>
                 <Link href={href} className="rl-hero-factlink">
@@ -181,7 +186,7 @@ export default function Home() {
               certain parts where the extra information is needed." The full answer is /about. */}
           <p className="rl-reveal mt-5 text-lg text-muted max-w-3xl leading-relaxed" style={{ '--i': 1 } as React.CSSProperties}>
             {COMPANY} is a software company building learning tools that adapt to the person using
-            them — starting with math. Our first product is {APP_NAME}: adaptive math for ages 3&ndash;18.
+            them — starting with math. Our first product is {APP_NAME}: adaptive math for grades 3 to 8.
           </p>
           <Link href="/about" className="rl-link rl-reveal mt-6 inline-block text-sm text-accent" style={{ '--i': 2 } as React.CSSProperties}>
             More about {COMPANY} →
@@ -197,15 +202,15 @@ export default function Home() {
             {[
               {
                 h: 'Difficulty is invisible',
-                p: 'A child should never be shown a level, a rank or a red cross. The software moves the difficulty; the child just keeps playing. Getting something wrong is answered warmly and then taught again.',
+                p: 'A child should never be shown a level, a rank or a red cross. The software moves the difficulty; the child just keeps going. Getting something wrong is answered warmly and then taught again.',
               },
               {
-                h: 'The math has to be done, not guessed',
-                p: 'A question with two options is a coin flip. Every answer surface is built so a child who does not have the skill cannot reach the right answer by elimination — they have to actually work it out.',
+                h: 'Harder should mean different',
+                p: 'The next level up is a different kind of question — a picture, then bare numbers, then a missing number, a story, a mistake to spot — not the same question with bigger numbers.',
               },
               {
                 h: 'Children’s data stays small',
-                p: 'We collect what teaching requires and nothing else. The camera work in AdaptiveLearn runs entirely on the device: no video frame and no hand position is ever uploaded.',
+                p: 'We collect what teaching requires and nothing else. A child never needs an email address: their parent or teacher sets a username for them, and the parent’s side of the app is behind a PIN.',
               },
             ].map((c, i) => (
               <div key={c.h} className="rl-reveal-focus" style={{ '--i': i + 1 } as React.CSSProperties}>
@@ -236,8 +241,9 @@ export default function Home() {
                   "Real math. Real thinking. No guessing."
 
               What the product actually does is set the difficulty of the next question from how
-              the child answered the last one — up after three right, and down after three wrong,
-              which is why the verb is "moves" and not "rises". Do not shorten it to "gets harder":
+              the child answered the last one — up after two right first time, and down when the
+              worked steps were needed (the app's `adaptive.ts`, re-read 2026-09-19), which is why the
+              verb is "moves" and not "rises". Do not shorten it to "gets harder":
               that is half the mechanism, and the half that would put off the parent of a child who
               is struggling — who is exactly the parent this is for.
 
@@ -259,8 +265,8 @@ export default function Home() {
               Math that changes as your child answers.
             </p>
             <p className="mt-3 text-muted max-w-2xl leading-relaxed">
-              {APP_NAME} finds where your child is, then adjusts each question as they learn. Real math. Real
-              thinking. No guessing.
+              {APP_NAME} teaches one idea at a time for grades 3 to 8, then adjusts each question as your child
+              practices. Real math. Real thinking. No guessing.
             </p>
             <p className="mt-5 text-sm text-accent">Read more →</p>
           </Link>

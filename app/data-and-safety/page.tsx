@@ -8,15 +8,24 @@ import { APP_NAME, APP_URL, SITE_URL, SUPPORT_EMAIL } from '@/site'
 export const metadata: Metadata = {
   title: 'Data and safety',
   description:
-    'What AdaptiveLearn stores about a child, what the camera does and does not do, who else can see anything, and how to delete it all. Hand tracking runs on the device and no video frame is ever uploaded.',
+    'What AdaptiveLearn stores about a child, who else can see it, and how to delete it all. A child never needs an email address, and nothing is sold or shared with an advertiser.',
   alternates: { canonical: '/data-and-safety' },
 }
 
 /**
  * ⚠️ EVERY CLAIM HERE IS ABOUT THE PRODUCT AND MUST STAY TRUE OF THE PRODUCT.
- * The camera paragraph in particular is the kind of sentence a regulator reads. It is currently
- * true — there is no upload path in the app's AR code and its Content-Security-Policy makes one
- * impossible — and if that stack ever changes, this page changes first.
+ *
+ * ⚠️ REWRITTEN 2026-09-19 FROM THE APP'S `release` BRANCH (sw v205). The camera section is GONE:
+ * since 2026-09-13 every chapter that used the camera is hidden (`LEGACY_CHAPTERS_HIDDEN` in the
+ * app's `src/core/chapters.ts`) and the lessons that replaced them have no camera at all. If the
+ * camera chapters come back, the camera section comes back first — it is in git (before this
+ * commit), and so is the reasoning for why its upload claim was true.
+ *
+ * Where the list below comes from: the app's Terms §6 (`src/app/legal/content.ts`, still a draft
+ * but updated with each feature), child logins and the parent PIN (RadlorInc/learn PRs #115–#118),
+ * points (docs/new-flow/points.md), class exercise results (PRs #125–#127), and account deletion +
+ * per-child export (`src/app/parent/account/page.tsx`). No analytics library is in the app's
+ * package.json, as read 2026-09-19.
  *
  * Note what is deliberately NOT claimed: nowhere does this say "COPPA compliant" or "GDPR
  * compliant". We describe what we do. A compliance badge is a legal conclusion and we have not
@@ -24,16 +33,19 @@ export const metadata: Metadata = {
  */
 
 const STORE = [
-  ['The child’s name', 'Whatever you type — a first name or a nickname is fine, and plenty of our families use one. It is there so the child sees themselves in the app.'],
-  ['An age band', 'Which of the six bands they are in. Not a date of birth: we used to have a field for one, never filled it in, and removed it.'],
-  ['What they have played', 'Which chapters were opened, which questions were answered, and whether each was right. This is the whole point — it is what lets the next question be the right one.'],
-  ['The parent’s email', 'Yours, for the account. Either the address you signed up with or the one attached to your Google account.'],
+  ['The child’s name', 'Whatever you type — a first name or a nickname is fine, and plenty of our families use one — and which of four animal pictures they picked. It is there so the child sees themselves in the app.'],
+  ['An age band', 'Which of six bands they are in. Not a date of birth: we used to have a field for one, never filled it in, and removed it.'],
+  ['A username, if you give them one', 'So your child can sign in as themselves. You choose it; they do not need an email address. The password is kept only in scrambled form by the sign-in system, where nobody at Radlor can read it.'],
+  ['Their lessons and progress', 'Which lessons you gave them and any due dates, which topics they have finished, and where practice stands on each — the level reached and whether it is mastered. This is the whole point: it is what lets the next question be the right one.'],
+  ['Points and game time', 'Each time points were earned or spent, and the game-time settings you choose: on or off, and the most minutes per day.'],
+  ['Class exercise results', 'Only if a teacher’s class sets exercises: how each question went and when, which that class’s teacher can see.'],
+  ['The parent’s email, and your PIN', 'Your email is for the account — the address you signed up with, or the one attached to your Google account. The four-digit PIN that guards your dashboard is kept only in scrambled form.'],
 ]
 
 const NEVER = [
-  'Video, photographs or audio. None of it is recorded and none of it is uploaded.',
-  'Hand positions from the camera. They are read and used and thrown away, on the device.',
+  'Video, photographs or audio of your child.',
   'A date of birth, a home address, a phone number, a school ID or a photograph of your child.',
+  'An email address for your child.',
   'Anything sold, rented or shared with an advertiser. We run no advertising and have no advertisers.',
   'Third-party analytics or tracking inside the product. There is no Google Analytics, no pixel, no session recorder.',
 ]
@@ -59,58 +71,16 @@ export default function DataAndSafety() {
 
       <div className="rl-prose prose mt-14">
         <div className="not-prose mb-10">
-          {/* ⚠️ This page's camera claim is the one a regulator reads. The panel restates the
-              page's OWN sentence — "Nothing from the camera is uploaded or stored" — and adds
-              nothing. If the app's AR stack ever changes, this line changes with the section
-              below it, not separately. */}
+          {/* The panel restates the page's OWN sentences — the "never" list and the sharing
+              paragraph below — and adds nothing. A decorative band must not be where a claim
+              first appears. */}
           <MiloPanel src="/milo-safety.webp" width={760} height={788}>
             <p className="text-lg">
-              Nothing from the camera is uploaded or stored. The tracking runs inside your own
-              browser, on your own device.
+              A child never needs an email address, and nothing we hold is sold or shared with an
+              advertiser.
             </p>
           </MiloPanel>
         </div>
-
-        <SectionIcon src="/ico-lens.webp" />
-        <h2>The camera</h2>
-        <p>
-          <strong>
-            Nothing from the camera is uploaded or stored. No video, no photograph, no hand position.
-          </strong>{' '}
-          Some chapters in the 9&ndash;11 band let a child answer by holding fingers up, tilting a hand or
-          holding two hands apart, and this is the part parents ask about first. That is the short answer.
-          The detail is below.
-        </p>
-        <p>
-          The tracking runs inside your own browser, on your own device. Each frame is looked at, turned
-          into a few coordinates, compared with the expected answer, and thrown away — all on your machine,
-          in a fraction of a second. Nothing is written to a file and nothing is sent anywhere.
-        </p>
-        <SectionFigure src="/fig-camera.webp" width={900} height={411}>
-          A frame becomes a few coordinates, is compared with the expected answer, and is thrown
-          away — inside the device, with no path out of it.
-        </SectionFigure>
-        <p>
-          Two things make that hard to break by accident. There is no code anywhere in the app that sends a
-          camera frame or a hand position &mdash; not one that is switched off, none at all. And the app
-          carries a list of the only places it is allowed to contact, enforced by the browser itself, which
-          does not include anywhere those images could go. Adding an upload would mean changing both, in
-          public, in this repository.
-        </p>
-        <p>
-          Two things we will not hide. First, the tracking software has to be downloaded the first time it
-          is used, and it comes from file servers run by Google and jsDelivr. Those two companies see that
-          a device asked them for a file &mdash; the same thing they see when any website loads any
-          library. <strong>They do not receive camera footage, hand data, or anything about your
-          child.</strong> Second, the browser asks your permission before the camera turns on, and that
-          permission is yours to refuse.
-        </p>
-        <p>
-          <strong>Refusing costs your child nothing.</strong> Every chapter that accepts a hand gesture
-          also accepts taps, with the same questions and the same scoring. A child who says no to the
-          camera lands straight on the tap version. The camera is a nicer way to answer, never the only
-          way.
-        </p>
 
         <SectionIcon src="/ico-store.webp" />
         <h2>What we store</h2>
@@ -127,11 +97,6 @@ export default function DataAndSafety() {
           you gave us and the age band you picked, from that request.
         </p>
 
-        <SectionFigure src="/fig-store.webp" width={900} height={592}>
-          Four things, and the tin is not full: the child&rsquo;s name, an age band, what they have
-          played, and the parent&rsquo;s email.
-        </SectionFigure>
-
         <SectionIcon src="/ico-empty.webp" />
         <h2>What we never store</h2>
         <ul>
@@ -141,8 +106,8 @@ export default function DataAndSafety() {
         </ul>
 
         <SectionFigure src="/fig-vault.webp" width={900} height={490}>
-          No video, no photographs, no audio, no hand positions, no date of birth, and nothing sold
-          or shared with an advertiser.
+          No video, no photographs, no audio, no date of birth, and nothing sold or shared with an
+          advertiser.
         </SectionFigure>
 
         <SectionIcon src="/ico-key.webp" />
@@ -158,9 +123,13 @@ export default function DataAndSafety() {
           return another family&rsquo;s rows, and we test that by trying it.
         </p>
         <p>
+          <strong>Your child, if you give them a login.</strong> Signed in as themselves they see their
+          own lessons. Your dashboard asks for your PIN every time it opens.
+        </p>
+        <p>
           <strong>Your child&rsquo;s teacher, if a school is using it.</strong> A teacher can see the
-          children in a class they created, and nothing outside it. If you are not using {APP_NAME}
-          through a school, no teacher can see anything.
+          students in a class they created — including their class exercise results — and nothing
+          outside it. If you are not using {APP_NAME} through a school, no teacher can see anything.
         </p>
         <p>
           <strong>Two companies that hold it for us,</strong> because we do not run our own servers.{' '}
@@ -178,9 +147,10 @@ export default function DataAndSafety() {
         <h2>Deleting it</h2>
         <p>
           Delete a child from your account and everything attached to them goes with it — every session,
-          every answer, every record. Not marked as hidden: removed. If you want the whole account and
-          everything in it gone, email <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a> and we
-          will do it and confirm when it is done.
+          every answer, every record. Not marked as hidden: removed. You can download a copy of each
+          child&rsquo;s data first, and close the whole account yourself from the account page in the
+          parent dashboard, which removes your children and their logins with it. If anything is left
+          you want gone, email <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
         </p>
 
         <SectionIcon src="/ico-unfinished.webp" />

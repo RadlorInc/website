@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { SectionFigure } from '@/components/SectionFigure'
 import { SectionIcon } from '@/components/SectionIcon'
 import { MiloPanel } from '@/components/MiloPanel'
 import Link from 'next/link'
@@ -8,30 +7,35 @@ import { APP_NAME, SITE_URL, SUPPORT_EMAIL } from '@/site'
 export const metadata: Metadata = {
   title: `${APP_NAME} for schools`,
   description:
-    'Run AdaptiveLearn with a class: create a group, choose which chapters it sees, add children, and watch where each one actually is. Runs in a browser, needs no install, and the camera is always optional.',
+    'Run AdaptiveLearn with a class: pick a grade and its modules, give each student a username, and set class exercises you unlock when you are ready. Runs in a browser and needs no install.',
   alternates: { canonical: '/for-schools' },
 }
 
+// ⚠️ REWRITTEN 2026-09-19 FROM THE APP'S `release` BRANCH (sw v205) — teacher classes shipped
+// 2026-09-18 in RadlorInc/learn PRs #123–#128 (`src/features/classes/`, `src/core/classRoster.ts`).
+// The old page described groups by age band, children added by name with no password, and a
+// placement check — none of which the app does now. It deliberately says nothing about which
+// teacher features are free and which are paid: every price is off this site (founder's call).
 const FAQ = [
   {
     q: 'What do we need to install?',
-    a: 'Nothing. It runs in any modern browser — Chrome, Safari or Edge — on a laptop, a Chromebook or a tablet. It can also be added to a tablet home screen, after which a chapter already opened will play without a connection.',
+    a: 'Nothing. It runs in any modern browser — Chrome, Safari or Edge — on a laptop, a Chromebook or a tablet.',
   },
   {
-    q: 'Do the children need email addresses?',
-    a: 'No. A teacher account holds the class, and each child is a learner inside it with a name. Children do not sign in with their own email and we do not ask them for one.',
-  },
-  {
-    q: 'Does every child have to use the camera?',
-    a: 'No. The camera chapters sit in the 9–11 band and every one of them can be answered by tapping instead. A child who declines the camera loses nothing — same chapter, same questions, same scoring. The hand tracking, when it is used, runs entirely on the device and nothing from the camera is uploaded.',
+    q: 'Do the students need email addresses?',
+    a: 'No. Each student signs in with a username and a password. Add them one at a time or upload a list of usernames; each gets a temporary password, shown once for you to print or hand out, and they choose their own the first time they sign in.',
   },
   {
     q: 'Can we choose what the class works on?',
-    a: 'Yes. When you create a group you pick the age band and the specific chapters it contains, so it can follow your scheme of work rather than ours.',
+    a: 'Yes. A class has a grade, from 3 to 8, and you choose which of that grade’s modules it contains, so it can follow your scheme of work rather than ours.',
   },
   {
-    q: 'How many children can we add?',
-    a: 'There is no cap on class size. We set the first class up with you personally.',
+    q: 'How do class exercises work?',
+    a: 'You set the level and the number of questions, and every student gets the same questions. An exercise stays locked until you open it for the class. Results show each student’s first attempt, and how each question went across the class.',
+  },
+  {
+    q: 'How do we get started?',
+    a: 'Write to us. We set the first class up with you personally.',
   },
 ]
 
@@ -77,8 +81,8 @@ export default function ForSchools() {
             the same questions". A decorative band must not be where a claim first appears. */}
         <MiloPanel src="/milo-schools.webp" width={760} height={522}>
           <p className="text-lg">
-            The class works through the same chapter, and each student gets the next question that
-            fits them.
+            The class works on the same modules, and each student&rsquo;s practice moves with how they
+            answer.
           </p>
         </MiloPanel>
       </section>
@@ -89,10 +93,10 @@ export default function ForSchools() {
         <h2 className="rl-reveal-focus font-display text-3xl">Setting up a class</h2>
         <ol className="mt-10 grid gap-8 sm:grid-cols-4">
           {[
-            ['Make a group', 'Pick the age band and tick the chapters it should contain — your sequence, not ours.'],
-            ['Add the children', 'By name. No email address, no password for them to lose.'],
-            ['They place themselves', 'A short check finds where each child actually is, rather than assuming the year group.'],
-            ['You watch it move', 'One list: who is on what, who has stalled, who has run ahead.'],
+            ['Make a class', 'Pick its grade, 3 to 8, and choose the modules it should contain — your sequence, not ours.'],
+            ['Add the students', 'One at a time, or upload a list of usernames. Each gets a temporary password; no email address.'],
+            ['Set an exercise', 'The same questions for everyone, locked until you open it in class.'],
+            ['See the results', 'Each student’s first attempt, and which questions the class found hard.'],
           ].map(([h, p], i) => (
             <li key={h} className="rl-reveal" style={{ '--i': i + 1 } as React.CSSProperties}>
               <span className="rl-num font-display text-3xl text-accent" style={{ '--i': i + 1 } as React.CSSProperties}>{i + 1}</span>
@@ -103,10 +107,6 @@ export default function ForSchools() {
           ))}
         </ol>
 
-        <SectionFigure src="/fig-roster.webp" width={900} height={510}>
-          One list: each child sits at their own point along their own line — who has stalled, and
-          who has run ahead.
-        </SectionFigure>
       </section>
 
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
@@ -118,7 +118,6 @@ export default function ForSchools() {
             <h3 className="font-medium text-lg">Good at</h3>
             <ul className="mt-4 space-y-3 text-muted leading-relaxed">
               <li>— Independent practice where every child is on the right question.</li>
-              <li>— Finding the child who is quietly two years behind and has learned to hide it.</li>
               <li>— The bit before the math: what a fraction, an angle or a decimal actually is.</li>
               <li>— Children who have decided they are bad at math. Nothing on screen ever tells them so.</li>
             </ul>
@@ -128,7 +127,7 @@ export default function ForSchools() {
             <ul className="mt-4 space-y-3 text-muted leading-relaxed">
               <li>— Replacing you. It is practice and teaching, not a curriculum you can hand over.</li>
               <li>— Exam drilling against a specific board&rsquo;s paper. It teaches the idea, not the format.</li>
-              <li>— Homework you need marked and returned. Progress is visible; it does not generate reports.</li>
+              <li>— Proctored tests. An exercise result is what the student&rsquo;s own device reports.</li>
               <li>— Whole-class projection. Every screen is written for one child, close up.</li>
             </ul>
           </div>

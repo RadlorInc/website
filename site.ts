@@ -133,6 +133,37 @@ export const AGE_BANDS = [
 
 export type AgeBandId = (typeof AGE_BANDS)[number]['id']
 
+/**
+ * What the app teaches NOW: grades 3–8, each split into modules. ⚠️ COPIED FROM THE APP, NOT DERIVED —
+ * `TITLES` in `../milo-story-mode/src/features/lessons/modules.ts`, read off `origin/release` on
+ * 2026-09-19 (sw v205). Grade 3 Module 1's title is `MODULE_1_TITLE` in `grade3Module1.ts`.
+ * If the app renames or adds a module, this list is stale until it is re-copied; there is no gate.
+ *
+ * ⚠️ NOT THE SAME THING AS `AGE_BANDS` ABOVE. Since 2026-09-13 the app teaches by GRADE; the age
+ * bands survive only because the waitlist form offers them and its database column has a CHECK
+ * constraint on those six ids. Changing the form means a migration on the shared Supabase project.
+ */
+export const APP_GRADES = [
+  { grade: 3, modules: ['Multiplication and Division with 2, 3, 4, 5 and 10', 'Place value through metric measurement',
+    'Multiplication and division with 0, 1, 6, 7, 8, 9', 'Multiplication and area', 'Fractions as numbers',
+    'Shapes, measuring and graphs'] },
+  { grade: 4, modules: ['Place value for addition and subtraction', 'Place value for multiplication and division',
+    'Multiplication and division of multi-digit numbers', 'Foundations for fraction operations',
+    'Angle measurements and plane figures', 'Place value for decimal fractions'] },
+  { grade: 5, modules: ['Place value concepts for multiplication and division with whole numbers',
+    'Addition and subtraction with fractions', 'Multiplication and division with fractions',
+    'Place value for decimal operations', 'Addition and multiplication with area and volume',
+    'Foundations to geometry in the coordinate plane'] },
+  { grade: 6, modules: ['Ratios, rates and proportions', 'Operations with fractions and mixed numbers',
+    'Operations with decimals', 'Percentages', 'Algebraic expressions and one-step equations',
+    'Area, surface area, volume, shapes and angles', 'Data analysis and probability'] },
+  { grade: 7, modules: ['Proportional relationships and percent applications', 'Operations with rational numbers',
+    'Equivalent expressions, equations and inequalities', 'Geometry', 'Statistics and probability'] },
+  { grade: 8, modules: ['Integer exponents, scientific notation and roots', 'Linear relationships, slope and systems',
+    'Functions', 'Congruence, similarity and the Pythagorean theorem', 'Volume of cylinders, cones and spheres',
+    'Bivariate data and scatter plots'] },
+] as const
+
 export const PRICING = {
   currency: 'USD',
   monthly: { first: 799, additional: 499 },

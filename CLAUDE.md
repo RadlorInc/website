@@ -13,7 +13,7 @@ This repo is **radlor.com**: the marketing and company site for Radlor. It is NO
 | **Every shared fact** | [`site.ts`](site.ts) — origin, support address, product URL, nav, company facts. **Put a string there before you put it in a page.** The product repo learned this the hard way: its support address lived as a literal in four files, so a brand change meant four edits and hoping none was missed. |
 | **Facts I could not derive** | [`docs/brand-facts.md`](docs/brand-facts.md) — the `TODO`s in `site.ts` and what they feed. |
 | **Every colour** | [`docs/brand-palette.md`](docs/brand-palette.md) — read off the LOGO, with the pixel each came from and its contrast. ⚠️ The amber palette that cited a brand-guide PDF not in this repo is superseded; do not restore it. |
-| **What the site claims** | `/privacy` and `/data-and-safety` make **checkable** claims (no third-party requests; the camera never uploads). Both files carry a header comment saying what was measured. Break one and fix the page in the same commit. |
+| **What the site claims** | `/privacy` and `/data-and-safety` make **checkable** claims (no third-party requests; what the app stores about a child). ⚠️ Since 2026-09-19 `/data-and-safety` makes no camera claim — the app's camera chapters are hidden. Every product fact on `/adaptivelearn`, `/for-schools` and `/data-and-safety` was re-read from the app's `release` branch that day; when the app changes, those pages are stale until re-read. Both files carry a header comment saying what was measured. Break one and fix the page in the same commit. |
 | **Session state** | [`handoff.md`](handoff.md) — read it first, update it when the session wraps. |
 
 ## The rules this site is built on

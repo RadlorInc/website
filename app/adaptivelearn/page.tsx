@@ -1,51 +1,48 @@
 import type { Metadata } from 'next'
-import { SectionFigure } from '@/components/SectionFigure'
 import { SectionIcon } from '@/components/SectionIcon'
 import Image from 'next/image'
 import Link from 'next/link'
-import { AGE_BANDS, APP_ID, APP_NAME, APP_URL, COMPANY, SITE_URL } from '@/site'
+import { APP_GRADES, APP_ID, APP_NAME, APP_URL, COMPANY, SITE_URL } from '@/site'
 
 export const metadata: Metadata = {
-  title: `${APP_NAME} — adaptive math for ages 3 to 18`,
+  title: `${APP_NAME} — adaptive math for grades 3 to 8`,
   description:
-    'AdaptiveLearn places a child with a short check, then teaches math through story chapters whose difficulty moves question by question. Younger bands answer by holding fingers up to the camera; hand tracking runs entirely on the device.',
+    'AdaptiveLearn teaches math for grades 3 to 8 one idea at a time, then adapts practice so each harder question is a different kind of question. Parents choose the lessons, children sign in with a username their parent sets, and a wrong answer is never marked wrong.',
   alternates: { canonical: '/adaptivelearn' },
 }
 
-// Ages come from AGE_BANDS in site.ts — the same list the waitlist form offers — so a band
-// cannot exist on one page and be missing from the other. Only the world and syllabus live here.
-const BANDS = AGE_BANDS.map((b, i) => ({
-  age: b.label,
-  ...[
-    { world: 'Story worlds', what: 'Counting, number recognition, number order, comparing quantities, early addition and subtraction, and measurement.' },
-    { world: 'Story worlds', what: 'Addition and subtraction to 100, place value, telling time, shapes, patterns, and fractions through sharing.' },
-    { world: 'Interactive math', what: 'Decimals, factors and multiples, fractions, unit conversion, angles, symmetry, area and perimeter, data, and graphs.' },
-    { world: 'Field lab', what: 'Ratios and proportions, negative numbers, linear equations, coordinate geometry, probability, and statistics.' },
-    { world: 'Design studio', what: 'Algebra, geometry, functions, quadratics, similarity, trigonometry, and proof.' },
-    { world: 'Math studio', what: 'Algebra II, pre-calculus, statistics, and an introduction to calculus.' },
-  ][i],
+// ⚠️ THE APP CHANGED SHAPE ON 2026-09-13 AND EVERY CLAIM BELOW WAS RE-READ FROM ITS `release` BRANCH
+// on 2026-09-19 (sw v205). The old page described story chapters for ages 3–18, a placement check and
+// camera answers — all three are hidden in the app now (`LEGACY_CHAPTERS_HIDDEN`), so none is claimed
+// here. Sources in the app repo, `../milo-story-mode`: the grades and module titles are `TITLES` in
+// `src/features/lessons/modules.ts`; the lesson steps are docs/new-flow/README.md; the practice rules
+// are the header of `src/features/lessons/adaptive.ts`; "never marked wrong" is LessonPlayer.tsx /
+// ModulePractice.tsx. When the app changes one of those, this page is wrong until it is changed too.
+const GRADE_MODULES = APP_GRADES.map(g => ({
+  grade: g.grade,
+  modules: g.modules.join(' · '),
 }))
 
 const FAQ: { q: string; a: string; href?: string; hrefLabel?: string }[] = [
   {
-    q: 'What age is AdaptiveLearn for?',
-    a: `${APP_NAME} is designed for children ages 3–18, with different learning experiences built around each age group.`,
+    q: 'What grades is AdaptiveLearn for?',
+    a: `Grades 3 to 8. Each grade is split into modules, and each module into short lessons that teach one idea each.`,
   },
   {
     q: 'How does AdaptiveLearn know what to teach my child?',
-    a: `${APP_NAME} starts with a short placement check to understand what your child already knows. From there, the learning experience adapts as they answer and learn.`,
+    a: `You choose. The parent dashboard has a library of every lesson, searchable and filtered by grade. Add a whole module or single topics to your child’s lessons, and give them a due date if you like. Inside each topic the practice adapts to how your child answers, and their weakest topics come back when they practice a whole module.`,
   },
   {
-    q: 'Does my child need to use the camera?',
-    a: 'No. Camera-based interactions are optional. Chapters that use hand gestures can also be completed using taps.',
+    q: 'Can my child sign in on their own?',
+    a: `Yes. You set a username and a password for them — they do not need an email address. Your parent dashboard asks for a four-digit PIN every time it opens.`,
   },
   {
-    q: 'Does the camera record my child?',
-    a: 'No. Hand tracking is designed to run directly on the child’s device. Camera images and hand-position data are not uploaded or stored.',
+    q: 'What happens when my child gets an answer wrong?',
+    a: `It is never marked wrong. The first miss brings back the lesson’s big idea; a second shows the worked steps. No score is shown during practice.`,
   },
   {
     q: 'How is AdaptiveLearn different from other math apps?',
-    a: `Instead of giving every child the same questions in the same order, ${APP_NAME} adjusts the learning experience based on what each child actually knows and how they respond.`,
+    a: `A harder question is a different kind of question — a picture, then bare numbers, then a missing number, a story, a mistake to spot — not the same question with bigger numbers. The practice moves up or down with how your child answers.`,
   },
   {
     q: 'When can I try AdaptiveLearn?',
@@ -57,13 +54,16 @@ const FAQ: { q: string; a: string; href?: string; hrefLabel?: string }[] = [
   // only place on the site that connects "Milo" to AdaptiveLearn, and families who used Milo still
   // search for it; the offline answer is a real question from a parent on a train. Delete them
   // only as a deliberate decision, not as tidying.
+  // ⚠️ The offline answer claims only what `src/infra/storage/lessonSync.ts` does — answers and
+  // progress are queued on the device and uploaded later. Whether a lesson itself PLAYS offline was
+  // not verified on 2026-09-19, so it is not claimed.
   {
     q: 'Does it work offline?',
-    a: 'Yes, once it has loaded. The app installs to the home screen and caches itself, so a chapter already opened will play without a connection. Progress syncs when the device is back online.',
+    a: 'Answers and progress are saved on the device first and sent to your account when there is a connection, so a dropped connection does not lose your child’s work.',
   },
   {
     q: 'Was AdaptiveLearn called something else before?',
-    a: `Yes — it was called Milo until August 2026. Milo is still there: he is the pony who walks through the story chapters and does the explaining. The app around him is ${APP_NAME}, made by ${COMPANY}.`,
+    a: `Yes — it was called Milo until August 2026. The app is ${APP_NAME}, made by ${COMPANY}.`,
   },
 ]
 
@@ -95,8 +95,8 @@ export default function AdaptiveLearn() {
           {APP_NAME}: math that <span className="rl-lit" style={{ '--lit': 0.62 } as React.CSSProperties}>changes</span> as your child answers.
         </h1>
         <p className="rl-rise mt-6 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.18s' } as React.CSSProperties}>
-          Every child starts somewhere different. {APP_NAME} finds where your child is, then adjusts each
-          question as they learn.
+          Math for grades 3 to 8, one idea at a time. A lesson teaches the idea step by step, then the
+          practice adjusts each question to how your child answers.
         </p>
         <p className="rl-rise mt-5 font-display text-2xl max-w-2xl" style={{ '--d': '0.22s' } as React.CSSProperties}>
           Real math. Real thinking. No guessing.
@@ -152,13 +152,15 @@ export default function AdaptiveLearn() {
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
       <section className="mx-auto max-w-5xl px-6 py-14">
         <SectionIcon src="/ico-steps.webp" />
-        <h2 className="rl-reveal-focus font-display text-3xl">How a chapter works</h2>
-        <ol className="mt-10 grid gap-8 sm:grid-cols-4">
+        <h2 className="rl-reveal-focus font-display text-3xl">How a lesson works</h2>
+        <ol className="mt-10 grid gap-8 sm:grid-cols-3">
           {[
-            ['Intro', 'Meet the characters, the world, and the problem to solve.'],
-            ['Demo', 'See the math worked out step by step, with each part brought to life.'],
-            ['Your turn', 'Try one yourself, with guidance still available.'],
-            ['Practice', 'Ten scored rounds. As your child improves, the questions adjust and the help gradually fades.'],
+            ['A real question', 'A picture from everyday life and a question about it. Nothing to answer yet.'],
+            ['The big idea', 'One sentence your child can reuse. It comes back whenever they get stuck.'],
+            ['Step by step', 'A teacher says each step out loud, then writes or draws it on the board.'],
+            ['One thing not to do', 'The most common mistake, shown once, beside the right way.'],
+            ['Now you try', 'Almost the same problem. A hint after a miss, another after a second, then the worked steps.'],
+            ['Practice that adapts', 'Each harder level is a different kind of question, not the same one with bigger numbers.'],
           ].map(([h, p], i) => (
             <li key={h} className="rl-reveal" style={{ '--i': i + 1 } as React.CSSProperties}>
               <span className="rl-num font-display text-3xl text-accent" style={{ '--i': i + 1 } as React.CSSProperties}>{i + 1}</span>
@@ -169,15 +171,10 @@ export default function AdaptiveLearn() {
           ))}
         </ol>
 
-        <SectionFigure src="/fig-stages.webp" width={900} height={299}>
-          The four stages of a chapter. The scaffolding is heaviest at the first and has gone by the
-          last — the same &ldquo;help gradually fades&rdquo; the list above describes.
-        </SectionFigure>
-
         {/*
           The claim this page is built on, drawn instead of asserted: difficulty
-          moving question by question, three right raising it and a wrong one
-          stepping it back. Decorative and `aria-hidden` — the sentence under it
+          moving question by question, two right first time raising it and the
+          worked steps stepping it back (the rules in the app's `adaptive.ts`). Decorative and `aria-hidden` — the sentence under it
           carries the same information in text, which is what a crawler and an
           answer engine read.
         */}
@@ -197,62 +194,27 @@ export default function AdaptiveLearn() {
             />
           </svg>
           <figcaption className="mt-3 text-sm text-muted max-w-2xl">
-            Difficulty across one set of practice rounds. Three correct in a row raises it; three
-            wrong stops the scoring and teaches the idea again. The child is never shown this line.
+            Where practice sits on one topic. Two right first time moves it up a level; needing the
+            worked steps moves it down. The child is never shown this line.
           </figcaption>
         </figure>
       </section>
 
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
       <section className="mx-auto max-w-5xl px-6 py-14">
-        <SectionIcon src="/ico-hands.webp" />
-        <h2 className="rl-reveal-focus font-display text-3xl">Math you can show, not just tap</h2>
-        <p className="rl-reveal mt-5 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--i': 1 } as React.CSSProperties}>
-          Sometimes the best way to answer a math question is to show it.
-        </p>
-        <p className="rl-reveal mt-4 text-muted max-w-2xl leading-relaxed" style={{ '--i': 2 } as React.CSSProperties}>
-          In some chapters, children can use their hands to answer instead of tapping a button — holding up
-          fingers to show a number, tilting a hand to show an angle, or using both hands to show distance. It
-          makes learning more interactive, and gives children another way to express what they know.
-        </p>
-        <p className="rl-reveal mt-8 font-display text-2xl max-w-2xl" style={{ '--i': 3 } as React.CSSProperties}>
-          Your child&rsquo;s camera stays private.
-        </p>
-        <p className="rl-reveal mt-4 text-muted max-w-2xl leading-relaxed" style={{ '--i': 4 } as React.CSSProperties}>
-          Hand tracking happens right on your child&rsquo;s device. Camera images and hand movements are
-          processed there and are never uploaded or stored.
-        </p>
-        <p className="rl-reveal mt-4 text-muted max-w-2xl leading-relaxed" style={{ '--i': 5 } as React.CSSProperties}>
-          And because the camera is optional, every chapter that uses hand tracking can also be completed by
-          tapping on the screen.
-        </p>
-
-        <SectionFigure src="/fig-gestures.webp" width={900} height={391}>
-          Three ways to answer without tapping: digits held up for a number, a hand tilted to show
-          an angle, two hands apart to show a distance.
-        </SectionFigure>
-      </section>
-
-      <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
-      <section className="mx-auto max-w-5xl px-6 py-14">
         <SectionIcon src="/ico-stairs.webp" />
-        <h2 className="rl-reveal-focus font-display text-3xl">What is covered, by age</h2>
+        <h2 className="rl-reveal-focus font-display text-3xl">What is covered, by grade</h2>
         <div className="mt-10 grid gap-px bg-line border border-line rounded-2xl overflow-hidden">
-          {BANDS.map((b, i) => (
-            <div key={b.age} className="rl-reveal-left bg-surface p-6 flex flex-wrap gap-x-8 gap-y-2" style={{ '--i': i + 1 } as React.CSSProperties}>
+          {GRADE_MODULES.map((g, i) => (
+            <div key={g.grade} className="rl-reveal-left bg-surface p-6 flex flex-wrap gap-x-8 gap-y-2" style={{ '--i': i + 1 } as React.CSSProperties}>
               <div className="w-28 shrink-0">
-                <p className="font-display text-2xl">{b.age}</p>
-                <p className="text-xs uppercase tracking-widest text-muted mt-1">{b.world}</p>
+                <p className="font-display text-2xl">Grade {g.grade}</p>
               </div>
-              <p className="flex-1 min-w-64 text-muted leading-relaxed">{b.what}</p>
+              <p className="flex-1 min-w-64 text-muted leading-relaxed">{g.modules}</p>
             </div>
           ))}
         </div>
-      
-        <SectionFigure src="/fig-ages.webp" width={900} height={502}>
-          Six age bands, each building on the one before it.
-        </SectionFigure>
-</section>
+      </section>
 
       <div className="mx-auto max-w-5xl px-6"><div className="rl-rule" /></div>
       <section className="mx-auto max-w-5xl px-6 py-14">

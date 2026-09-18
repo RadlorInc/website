@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: { default: `${COMPANY} — ${TAGLINE}`, template: `%s · ${COMPANY}` },
   description:
     `${COMPANY} builds learning software that adapts to the child using it. Our first product, AdaptiveLearn, ` +
-    'teaches math to ages 3–18 through story chapters that change difficulty question by question.',
+    'teaches math for grades 3 to 8, one idea at a time, with practice that changes question by question.',
   applicationName: COMPANY,
   alternates: { canonical: '/' },
   openGraph: { type: 'website', siteName: COMPANY, url: SITE_URL, locale: 'en_US' },

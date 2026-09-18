@@ -1,4 +1,4 @@
-import { APP_NAME, APP_URL, COMPANY, PAGES, SITE_URL, SOCIAL, SUPPORT_EMAIL, TAGLINE, VISION } from '@/site'
+import { APP_GRADES, APP_NAME, APP_URL, COMPANY, PAGES, SITE_URL, SOCIAL, SUPPORT_EMAIL, TAGLINE, VISION } from '@/site'
 import { posts } from '@/content/posts'
 
 /**
@@ -22,7 +22,7 @@ const BLURB: Record<(typeof PAGES)[number]['href'], string> = {
   '/writing': 'notes on building adaptive learning software',
   '/about': `why ${COMPANY} started and how we work`,
   '/contact': 'early access, schools, support, press',
-  '/data-and-safety': "what we store about a child, what the camera does, and what we do not collect",
+  '/data-and-safety': "what we store about a child, who can see it, how to delete it, and what we do not collect",
   '/terms': 'the terms of use for this website, in force since 6 September 2026 — what this site is, what it collects, and what its content does and does not promise; the AdaptiveLearn app has its own separate Terms of Service on its own origin',
   '/privacy': 'the privacy policy for this website: no cookies, no analytics, nothing loaded from a third party, and one form — the waitlist — which stores an email address and an optional age band, and nothing else',
 }
@@ -35,15 +35,21 @@ export function GET() {
 ${VISION}
 
 ${COMPANY} is a software company building learning tools that adapt to the person using them.
-Our first product is ${APP_NAME}: adaptive math for ages 3 to 18. It runs at ${APP_URL} and is
-being tested with a small group of families — it is NOT open for signup. The waitlist at
-${SITE_URL}/waitlist is the only way in, and the only URL to give somebody who wants to join.
+Our first product is ${APP_NAME}: adaptive math for grades 3 to 8. It runs at ${APP_URL} and is
+in early access with a small group of families. The waitlist at ${SITE_URL}/waitlist is where to ask
+for a place, and the URL to give somebody who wants to join.
 
-${APP_NAME} places a child with a short check rather than assuming their school year, then teaches
-through story chapters whose difficulty moves question by question and is never shown on screen.
-Chapters in the 9-11 band can be answered by holding fingers up to a webcam; that hand tracking runs
-entirely on the child's own device and no video frame or hand position is ever uploaded. Every camera
-chapter can also be answered by tapping.
+${APP_NAME} teaches one idea per lesson: a teacher says each step out loud and writes or draws it on
+the board, then the child tries one with hints and worked steps to fall back on. Practice adapts
+question by question — each harder level is a different kind of question, not the same question
+with bigger numbers — and the level is never shown on screen; a wrong answer is never marked wrong.
+Each grade is split into modules: ${APP_GRADES.map(g => `Grade ${g.grade}: ${g.modules.join('; ')}`).join('. ')}.
+
+Parents choose which lessons their child gets, from a library filtered by grade, and can set due
+dates. A child signs in with a username and password their parent or teacher sets, with no email
+address of their own; the parent dashboard asks for a PIN each time it opens. Teachers make classes
+by grade, give each student a login (a list can be uploaded, each with a temporary password), choose
+the class's modules, and set class exercises that stay locked until the teacher opens them.
 
 ## Pages
 ${PAGES.map(p => `- [${p.label} — ${BLURB[p.href]}](${SITE_URL}${p.href === '/' ? '' : p.href})`).join('\n')}

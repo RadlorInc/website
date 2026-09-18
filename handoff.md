@@ -10,6 +10,23 @@
 > this sentence** — `du -h handoff.md` is one word longer and cannot go stale. When it creeps back
 > up, split again by the same test: *does this section still change what anyone does next?*
 
+> 🔄 **2026-09-19 — THE SITE WAS RE-READ AGAINST THE APP.** The app pivoted on 2026-09-13 (RadlorInc/learn):
+> story chapters for ages 3–18, the placement check and the camera chapters are all HIDDEN; it now teaches
+> **grades 3–8** in modules of one-idea lessons, with adaptive practice, parent-chosen lessons, child
+> username logins, a parent PIN and teacher classes. Every product claim on `/`, `/adaptivelearn`,
+> `/for-schools`, `/data-and-safety`, `/about`, `/contact`, the root description and `llms.txt` was
+> rewritten from the app's `release` branch **as read 2026-09-19 (sw v205)** — each file's header comment
+> names its sources in the app. ⚠️ **Nothing gates this.** When the app ships a feature, these pages are
+> stale until somebody re-reads them; `curl -s https://adaptivelearn.radlor.com/sw.js | head -1` tells you
+> whether the app has moved past v205.
+> - **Kept on the founder's call (2026-09-19): the waitlist stays the CTA** — even though the app's own
+>   landing now says "Sign up free". `llms.txt` no longer claims the app is "NOT open for signup".
+> - ⚠️ **The waitlist form still offers the six AGE BANDS**, and its column has a CHECK on those ids. The
+>   product is by grade now; changing the form is a migration on the shared Supabase project — not done.
+> - Figures dropped as describing the old app: `fig-stages`, `fig-gestures`, `fig-ages`, `fig-roster`,
+>   `fig-camera`, `fig-store` (four cards = the old four stored items). Files left in `public/`.
+> - The two dated posts about the placement check and the camera were left as they are — dated writing.
+
 ## ⚠️ THIS REPOSITORY IS PUBLIC — 2026-08-31
 
 `RadlorInc/website` is **public**. That was established on 2026-08-31, by accident, after a commit
@@ -337,8 +354,9 @@ site.ts                    every shared fact + PAGES (the one page list) + compa
 app/layout.tsx             metadata + Organization/WebSite JSON-LD + header + footer
 app/page.tsx               home — looping hero video, three fact links, "What is Radlor?",
                            what we believe, the product card, latest writing
-app/adaptivelearn/         how a chapter works, math you can show, the six age bands,
-                           8 parent FAQs · SoftwareApplication (no offers) + FAQPage
+app/adaptivelearn/         how a lesson works (6 steps), the practice-ladder line, what is
+                           covered by grade (APP_GRADES in site.ts), 8 parent FAQs ·
+                           SoftwareApplication (no offers) + FAQPage
 app/_pricing/              HIDDEN 2026-09-10 (founder's call) — the underscore keeps Next from
                            routing it, so /pricing 404s and the row in PAGES is commented out,
                            which drops it from header, footer, sitemap and llms.txt too. The
@@ -353,8 +371,9 @@ app/_pricing/              HIDDEN 2026-09-10 (founder's call) — the underscore
                            PRICING in site.ts is kept for the hidden page and check:pricing.
 app/waitlist/              the form (+ /thanks, /problem — static outcome pages, noindex)
 app/api/waitlist/          Route Handler; the ONLY thing that talks to Supabase
-app/for-schools/           setting up a class, good-at / not-built-for, 5 FAQs · FAQPage
-app/data-and-safety/       the camera, what we store, what we never store, who can access it,
+app/for-schools/           classes by grade, student logins, locked class exercises + results,
+                           good-at / not-built-for, 5 FAQs · FAQPage
+app/data-and-safety/       what we store (7 rows), what we never store, who can access it,
                            deleting it, and what we have NOT finished
 app/privacy/               this website only: no cookies, no analytics, no third parties
 app/terms/                 the WEBSITE's Terms of Use — live and lawyer-reviewed since 2026-09-06.
