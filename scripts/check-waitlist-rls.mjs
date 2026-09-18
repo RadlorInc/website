@@ -129,7 +129,9 @@ try {
   const post = await classify(await fetch(T, {
     method: 'POST',
     headers: { ...anonH, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
-    body: JSON.stringify({ email: 'anon-probe@radlor-test.invalid', source: 'anon-probe' }),
+    // The same shape the form sends since 2026-09-19 — `grade` included, so a missing column or grant
+    // (migration 20260919000000 not applied) reads as a broken form, which is exactly what it is.
+    body: JSON.stringify({ email: 'anon-probe@radlor-test.invalid', grade: 3, source: 'anon-probe' }),
   }))
   ok((post.status === 201 || post.status === 200) && !post.authFailed,
     `POST as anon -> ${post.status} ${post.status === 201 || post.status === 200 ? '(accepted — the form works, and the key is real)' : '❌ THE SIGNUP FORM IS BROKEN'}`)
@@ -160,7 +162,7 @@ try {
 
   /**
    * 5. THE GRANT IS COLUMN-SCOPED, NOT TABLE-WIDE — and this is the assertion that has no
-   *    black-box equivalent anywhere else. `grant insert (email, age_band, source)` and
+   *    black-box equivalent anywhere else. `grant insert (email, grade, source)` and
    *    `grant insert on public.waitlist` behave IDENTICALLY for every probe above: the form
    *    works either way, and reads are refused either way. They differ only in whether the
    *    caller may dictate `id` and `created_at` — so somebody "fixing" the grant by widening
@@ -169,8 +171,11 @@ try {
    *    gate did not need an `exec_sql` RPC on production to read the catalog: a function that
    *    runs arbitrary SQL through PostgREST is a far worse thing to own than the drift it finds.
    */
-  for (const col of ['id', 'created_at']) {
-    const val = col === 'id' ? '00000000-0000-4000-8000-000000000000' : '2000-01-01T00:00:00Z'
+  // `age_band` joined this list on 2026-09-19: the form stopped writing it (it asks for a grade now)
+  // and migration 20260919000100 revoked anon's INSERT on it. Before that migration runs this
+  // probe is RED, correctly — the posture is not yet the one the migrations describe.
+  for (const col of ['id', 'created_at', 'age_band']) {
+    const val = { id: '00000000-0000-4000-8000-000000000000', created_at: '2000-01-01T00:00:00Z', age_band: '3-5' }[col]
     const bodyFor = who => JSON.stringify({
       email: `col-probe-${col}-${who}@radlor-test.invalid`, source: 'anon-probe', [col]: val,
     })
@@ -204,7 +209,7 @@ try {
     }
 
     ok(denied && !wide.authFailed && controlOk,
-      `INSERT naming \`${col}\` as anon -> ${wide.status} ${denied ? '(denied — the grant is column-scoped)' : '❌ ACCEPTED — the grant is TABLE-WIDE, not the three columns the migration states'}\n       · ${control}`)
+      `INSERT naming \`${col}\` as anon -> ${wide.status} ${denied ? '(denied — the grant is column-scoped)' : '❌ ACCEPTED — the grant is TABLE-WIDE, not the three columns the migrations state'}\n       · ${control}`)
   }
 
   // 6. No key at all.
@@ -220,6 +225,6 @@ try {
 }
 
 console.log(fail
-  ? '\n❌ THE WAITLIST GRANTS ARE NOT WHAT THE MIGRATIONS SAY, or the probe was void.\n   Expected: anon may INSERT (email, age_band, source) and NOTHING else — no SELECT, no\n   UPDATE, no DELETE, and no say over `id` or `created_at`. Check whether a policy or a\n   GRANT was widened, and reconcile supabase/migrations/ with production before deploying.'
-  : '\n✅ anon may INSERT exactly (email, age_band, source) and nothing else — it cannot read,\n   edit or delete the waitlist, and cannot dictate `id` or `created_at`')
+  ? '\n❌ THE WAITLIST GRANTS ARE NOT WHAT THE MIGRATIONS SAY, or the probe was void.\n   Expected: anon may INSERT (email, grade, source) and NOTHING else — no SELECT, no\n   UPDATE, no DELETE, and no say over `id`, `created_at` or `age_band`. Check whether a policy or a\n   GRANT was widened, and reconcile supabase/migrations/ with production before deploying.'
+  : '\n✅ anon may INSERT exactly (email, grade, source) and nothing else — it cannot read,\n   edit or delete the waitlist, and cannot dictate `id`, `created_at` or `age_band`')
 process.exit(fail)

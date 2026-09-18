@@ -1,4 +1,4 @@
-import { AGE_BANDS } from '@/site'
+import { APP_GRADES } from '@/site'
 
 /**
  * The waitlist endpoint. A plain `<form method="post">` on /waitlist posts here; this talks to
@@ -14,7 +14,7 @@ import { AGE_BANDS } from '@/site'
  *     compromised it read and wrote every table. It now carries the anon key against a
  *     column-level INSERT grant and one policy, so the worst a compromise here does is write a
  *     junk row. Verified by `npm run check:waitlist-rls`, which asserts the whole posture
- *     against the live database: anon INSERT succeeds on exactly (email, age_band, source),
+ *     against the live database: anon INSERT succeeds on exactly (email, grade, source),
  *     while SELECT / UPDATE / DELETE and any attempt to name `id` or `created_at` are refused.
  *   - it is still SERVER-side and still never serialised into HTML. Do NOT add a `NEXT_PUBLIC_`
  *     Supabase variable — that prefix is what puts a value in the browser bundle, and it is also
@@ -27,7 +27,7 @@ import { AGE_BANDS } from '@/site'
 const SUPABASE_URL = process.env.SUPABASE_URL
 const ANON_KEY = process.env.SUPABASE_ANON_KEY
 
-const BAND_IDS = new Set<string>(AGE_BANDS.map(b => b.id))
+const GRADES = new Set<number>(APP_GRADES.map(g => g.grade))
 
 /**
  * A per-IP backstop. In-process only.
@@ -90,8 +90,9 @@ export async function POST(request: Request) {
     return seeOther('/waitlist/problem')
   }
 
-  const rawBand = String(form.get('age_band') ?? '').trim()
-  const age_band = BAND_IDS.has(rawBand) ? rawBand : null
+  // Anything that is not one of the offered grades is stored as "did not say", never refused.
+  const rawGrade = Number(String(form.get('grade') ?? '').trim())
+  const grade = GRADES.has(rawGrade) ? rawGrade : null
 
   if (!SUPABASE_URL || !ANON_KEY) {
     /**
@@ -115,7 +116,7 @@ export async function POST(request: Request) {
         'Content-Type': 'application/json',
         Prefer: 'return=minimal',
       },
-      body: JSON.stringify({ email, age_band, source: 'website' }),
+      body: JSON.stringify({ email, grade, source: 'website' }),
     })
   } catch (err) {
     console.error('[waitlist] insert failed to reach Supabase', err)

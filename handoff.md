@@ -21,8 +21,11 @@
 > whether the app has moved past v205.
 > - **Kept on the founder's call (2026-09-19): the waitlist stays the CTA** — even though the app's own
 >   landing now says "Sign up free". `llms.txt` no longer claims the app is "NOT open for signup".
-> - ⚠️ **The waitlist form still offers the six AGE BANDS**, and its column has a CHECK on those ids. The
->   product is by grade now; changing the form is a migration on the shared Supabase project — not done.
+> - ⚠️ **The waitlist form asks for a GRADE (3–8) since commit "waitlist asks for a grade" — and it needs
+>   two hand-applied migrations IN ORDER:** `20260919000000_waitlist_grade.sql` (add `grade`, anon INSERT
+>   on it) → deploy → `20260919000100_waitlist_revoke_age_band.sql`. Whether they have run is NOT
+>   recorded here on purpose — run `npm run check:waitlist-rls`: the anon POST (with `grade`) is red
+>   until step 1, and "INSERT naming `age_band`" is red until step 2. `age_band` keeps the old answers.
 > - Figures dropped as describing the old app: `fig-stages`, `fig-gestures`, `fig-ages`, `fig-roster`,
 >   `fig-camera`, `fig-store` (four cards = the old four stored items). Files left in `public/`.
 > - The two dated posts about the placement check and the camera were left as they are — dated writing.

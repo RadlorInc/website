@@ -94,7 +94,7 @@ export default function DataAndSafety() {
         </div>
         <p className="mt-6">
           If you asked for early access before you had an account, we also still have the email address
-          you gave us and the age band you picked, from that request.
+          you gave us and the grade (or, before 19 September 2026, the age band) you picked, from that request.
         </p>
 
         <SectionIcon src="/ico-empty.webp" />

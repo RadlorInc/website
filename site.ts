@@ -116,32 +116,16 @@ export const APP_ID = `${APP_URL}/#app`
  * one that is real. `scripts/check-pricing.mjs` fails the moment that stops being true.
  */
 /**
- * The six age bands, and the ONE list of them. `/adaptivelearn` renders them with their worlds
- * and syllabus; the waitlist form offers them as options and stores `id`. Split into an ASCII
- * `id` and a typographic `label` on purpose: the label carries an en-dash for the page, and the
- * id is what goes in the database and in a CHECK constraint, where a stray en-dash is a bug
- * nobody sees until an insert fails.
- */
-export const AGE_BANDS = [
-  { id: '3-5', label: '3–5' },
-  { id: '6-8', label: '6–8' },
-  { id: '9-11', label: '9–11' },
-  { id: '12-14', label: '12–14' },
-  { id: '15-16', label: '15–16' },
-  { id: '17-18', label: '17–18' },
-] as const
-
-export type AgeBandId = (typeof AGE_BANDS)[number]['id']
-
-/**
  * What the app teaches NOW: grades 3–8, each split into modules. ⚠️ COPIED FROM THE APP, NOT DERIVED —
  * `TITLES` in `../milo-story-mode/src/features/lessons/modules.ts`, read off `origin/release` on
  * 2026-09-19 (sw v205). Grade 3 Module 1's title is `MODULE_1_TITLE` in `grade3Module1.ts`.
  * If the app renames or adds a module, this list is stale until it is re-copied; there is no gate.
  *
- * ⚠️ NOT THE SAME THING AS `AGE_BANDS` ABOVE. Since 2026-09-13 the app teaches by GRADE; the age
- * bands survive only because the waitlist form offers them and its database column has a CHECK
- * constraint on those six ids. Changing the form means a migration on the shared Supabase project.
+ * The waitlist form offers these grades too, and stores the number in `waitlist.grade` (CHECK 3–8,
+ * migration `20260919000000_waitlist_grade.sql`). Until 2026-09-19 it offered six AGE BANDS
+ * ('3-5' … '17-18') into `waitlist.age_band`; that column keeps the answers people gave then.
+ * ⚠️ A grade added here that is outside 3–8 fails the CHECK — the insert is refused and the
+ * visitor lands on /waitlist/problem. Widen the constraint first.
  */
 export const APP_GRADES = [
   { grade: 3, modules: ['Multiplication and Division with 2, 3, 4, 5 and 10', 'Place value through metric measurement',

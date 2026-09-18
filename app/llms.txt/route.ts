@@ -14,7 +14,7 @@ export const dynamic = 'force-static'
 const BLURB: Record<(typeof PAGES)[number]['href'], string> = {
   '/': `what ${COMPANY} builds and why`,
   '/adaptivelearn': `how ${APP_NAME} works, what is covered at each age, and parent FAQs`,
-  '/waitlist': `join the waitlist for a place in ${APP_NAME}: an email address, optionally an age band, and nothing else`,
+  '/waitlist': `join the waitlist for a place in ${APP_NAME}: an email address, optionally a child's grade, and nothing else`,
   // ⚠️ /pricing is hidden — see the commented row in `PAGES`. Kept here, commented, so restoring
   // the page is one uncomment in each file rather than rewriting this sentence from the table.
   // '/pricing': `what ${APP_NAME} costs: ${usd(PRICING.monthly.first)} a month for the first child, ${usd(PRICING.monthly.additional)} for each additional child up to ${PRICING.maxChildren}, annual billing saving over 20%`,
@@ -24,7 +24,7 @@ const BLURB: Record<(typeof PAGES)[number]['href'], string> = {
   '/contact': 'early access, schools, support, press',
   '/data-and-safety': "what we store about a child, who can see it, how to delete it, and what we do not collect",
   '/terms': 'the terms of use for this website, in force since 6 September 2026 — what this site is, what it collects, and what its content does and does not promise; the AdaptiveLearn app has its own separate Terms of Service on its own origin',
-  '/privacy': 'the privacy policy for this website: no cookies, no analytics, nothing loaded from a third party, and one form — the waitlist — which stores an email address and an optional age band, and nothing else',
+  '/privacy': 'the privacy policy for this website: no cookies, no analytics, nothing loaded from a third party, and one form — the waitlist — which stores an email address and an optional grade, and nothing else',
 }
 
 export function GET() {

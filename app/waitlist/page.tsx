@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import { MiloPanel } from '@/components/MiloPanel'
 import Link from 'next/link'
-import { AGE_BANDS, APP_NAME, SUPPORT_EMAIL } from '@/site'
+import { APP_GRADES, APP_NAME, SUPPORT_EMAIL } from '@/site'
 
 export const metadata: Metadata = {
   title: `Join the ${APP_NAME} waitlist`,
-  description: `${APP_NAME} is opening to new families a few at a time. Leave an email address and we will write when there is a place. We ask for an email and, if you want to tell us, an age band — nothing else.`,
+  description: `${APP_NAME} is opening to new families a few at a time. Leave an email address and we will write when there is a place. We ask for an email and, if you want to tell us, your child’s grade — nothing else.`,
   alternates: { canonical: '/waitlist' },
 }
 
@@ -71,23 +71,23 @@ export default function Waitlist() {
           </div>
 
           <div className="rl-reveal mt-8" style={{ '--i': 2 } as React.CSSProperties}>
-            <label htmlFor="age_band" className="block font-medium">
-              Age band <span className="font-normal text-muted">(optional)</span>
+            <label htmlFor="grade" className="block font-medium">
+              Grade <span className="font-normal text-muted">(optional)</span>
             </label>
             <p className="mt-1 text-sm text-muted">
-              Only so we know which bands families are waiting for. Not your child&rsquo;s birthday, and
+              Only so we know which grades families are waiting for. Not your child&rsquo;s birthday, and
               not their name — we do not need either.
             </p>
             <select
-              id="age_band"
-              name="age_band"
+              id="grade"
+              name="grade"
               defaultValue=""
               className="mt-3 w-full rounded-xl border border-line bg-surface px-4 py-3 text-foreground focus:border-accent focus:outline-none"
             >
               <option value="">Rather not say</option>
-              {AGE_BANDS.map(b => (
-                <option key={b.id} value={b.id}>
-                  {b.label}
+              {APP_GRADES.map(g => (
+                <option key={g.grade} value={g.grade}>
+                  Grade {g.grade}
                 </option>
               ))}
             </select>
@@ -115,7 +115,7 @@ export default function Waitlist() {
         </form>
 
         <p className="mt-10 text-sm text-muted max-w-xl leading-relaxed">
-          We store the address and the band, and nothing else — no name, no date of birth, no
+          We store the address and the grade, and nothing else — no name, no date of birth, no
           child&rsquo;s name. It is used to write to you about a place and for nothing else, and you can
           have it deleted by asking:{' '}
           <a href={`mailto:${SUPPORT_EMAIL}`} className="rl-link text-accent">{SUPPORT_EMAIL}</a>.{' '}

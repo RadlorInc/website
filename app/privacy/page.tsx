@@ -5,7 +5,7 @@ import { APP_NAME, COMPANY, SITE_URL, SUPPORT_EMAIL } from '@/site'
 export const metadata: Metadata = {
   title: 'Privacy on this website',
   description:
-    'radlor.com sets no cookies, runs no analytics and loads nothing from a third party. There is one form — the waitlist — and it stores an email address and, if you pick one, an age band. Nothing else. This page says exactly what does and does not happen when you read it.',
+    'radlor.com sets no cookies, runs no analytics and loads nothing from a third party. There is one form — the waitlist — and it stores an email address and, if you pick one, your child’s grade. Nothing else. This page says exactly what does and does not happen when you read it.',
   alternates: { canonical: '/privacy' },
 }
 
@@ -88,7 +88,7 @@ export default function Privacy() {
           <Link href="/waitlist" className="rl-link">the waitlist</Link>, and it is the only thing here
           that collects anything. It stores{' '}
           <strong className="text-foreground font-medium">an email address</strong>, and{' '}
-          <strong className="text-foreground font-medium">an age band if you pick one</strong> — that
+          <strong className="text-foreground font-medium">a grade if you pick one</strong> — that
           field is optional and &ldquo;rather not say&rdquo; is the default. There is no name field, no
           date of birth and nowhere to type a child&rsquo;s name, because a waitlist does not need any of
           it.

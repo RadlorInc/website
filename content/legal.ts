@@ -64,7 +64,7 @@ export interface LegalDoc { slug: string; title: string; updated: string; body: 
  *      Analytics is a dashboard toggle that injects a script with NO diff in this repo — this
  *      paragraph is the kind of true sentence that goes false while nobody is editing anything.
  *   2. §3 described "anything you write in a message field" and a form to "apply for a role".
- *      Neither exists. There is one form — email, optional age band, and a honeypot — so it now
+ *      Neither exists. There is one form — email, optional grade (an age band until 2026-09-19), and a honeypot — so it now
  *      says that. Same defect as the analytics sentence, one notch quieter.
  *   3. The "Note to Rafi, delete before publishing" blockquote is gone. It made the page read as
  *      something someone forgot to finish, which is a different thing from being marked unfinished
@@ -78,8 +78,8 @@ export interface LegalDoc { slug: string; title: string; updated: string; body: 
 export const WEBSITE_TERMS: LegalDoc = {
   slug: 'terms',
   title: 'Terms of Use',
-  updated: '6 September 2026',
-  body: `**Last updated: 6 September 2026**
+  updated: '19 September 2026',
+  body: `**Last updated: 19 September 2026**
 
 ---
 
@@ -110,7 +110,7 @@ ${SUPPORT_EMAIL} and we will delete it.
 **You can read this whole site without giving us anything.**
 
 There is one form on this site: the waitlist. It asks for your email address
-and, if you choose to give it, an age band. There is no name field, no date of
+and, if you choose to give it, your child's grade. There is no name field, no date of
 birth and nowhere to type a child's name. The form also carries one hidden field
 that a person never sees and never fills in; it catches automated submissions,
 and what lands in it is discarded rather than stored. We use what you give us
