@@ -3,7 +3,7 @@ import { SectionFigure } from '@/components/SectionFigure'
 import { SectionIcon } from '@/components/SectionIcon'
 import Image from 'next/image'
 import Link from 'next/link'
-import { AGE_BANDS, APP_ID, APP_NAME, APP_URL, COMPANY, PLANS, PRICING, SITE_URL, usd } from '@/site'
+import { AGE_BANDS, APP_ID, APP_NAME, APP_URL, COMPANY, SITE_URL } from '@/site'
 
 export const metadata: Metadata = {
   title: `${APP_NAME} — adaptive math for ages 3 to 18`,
@@ -46,12 +46,6 @@ const FAQ: { q: string; a: string; href?: string; hrefLabel?: string }[] = [
   {
     q: 'How is AdaptiveLearn different from other math apps?',
     a: `Instead of giving every child the same questions in the same order, ${APP_NAME} adjusts the learning experience based on what each child actually knows and how they respond.`,
-  },
-  {
-    // ⚠️ NOT ONE PRICE IS TYPED HERE. Every figure comes from PRICING in site.ts, so this answer,
-    // the /pricing table and the JSON-LD offers cannot disagree.
-    q: 'How much does AdaptiveLearn cost?',
-    a: `${APP_NAME} is ${usd(PRICING.monthly.first)}/month for the first child and ${usd(PRICING.monthly.additional)}/month for each additional child, with up to ${PRICING.maxChildren} children on one family plan.`,
   },
   {
     q: 'When can I try AdaptiveLearn?',
@@ -286,27 +280,8 @@ export default function AdaptiveLearn() {
                 description: metadata.description,
                 publisher: { '@id': `${SITE_URL}/#organization` },
                 audience: { '@type': 'EducationalAudience', educationalRole: 'student' },
-                // ⚠️ ONE NODE, ONE PRICE. This shares `@id` with /pricing, so the two Offer
-                // sets must agree — both are generated from PLANS in site.ts. Do not type a
-                // number here.
-                offers: PLANS.flatMap(p => [
-                  {
-                    '@type': 'Offer',
-                    name: `${p.children} ${p.children === 1 ? 'child' : 'children'}, billed monthly`,
-                    price: (p.monthly / 100).toFixed(2),
-                    priceCurrency: PRICING.currency,
-                    availability: 'https://schema.org/LimitedAvailability',
-                    url: `${SITE_URL}/waitlist`,
-                  },
-                  {
-                    '@type': 'Offer',
-                    name: `${p.children} ${p.children === 1 ? 'child' : 'children'}, billed annually`,
-                    price: (p.annual / 100).toFixed(2),
-                    priceCurrency: PRICING.currency,
-                    availability: 'https://schema.org/LimitedAvailability',
-                    url: `${SITE_URL}/waitlist`,
-                  },
-                ]),
+                // ⚠️ NO `offers` SINCE 2026-09-18 — every price was taken off the site (founder's
+                // call). Restore from git: they were generated from PLANS in site.ts.
               },
               {
                 '@type': 'FAQPage',

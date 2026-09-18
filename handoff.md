@@ -335,10 +335,10 @@ row in `PAGES` because it is not a URL anybody navigates to on purpose.
 ```
 site.ts                    every shared fact + PAGES (the one page list) + company TODOs
 app/layout.tsx             metadata + Organization/WebSite JSON-LD + header + footer
-app/page.tsx               home — looping hero video, four fact links, "What is Radlor?",
+app/page.tsx               home — looping hero video, three fact links, "What is Radlor?",
                            what we believe, the product card, latest writing
 app/adaptivelearn/         how a chapter works, math you can show, the six age bands,
-                           9 parent FAQs · SoftwareApplication + FAQPage
+                           8 parent FAQs · SoftwareApplication (no offers) + FAQPage
 app/_pricing/              HIDDEN 2026-09-10 (founder's call) — the underscore keeps Next from
                            routing it, so /pricing 404s and the row in PAGES is commented out,
                            which drops it from header, footer, sitemap and llms.txt too. The
@@ -347,7 +347,10 @@ app/_pricing/              HIDDEN 2026-09-10 (founder's call) — the underscore
                            Offers. Restore = rename the folder back, uncomment the PAGES row and
                            the BLURB line in app/llms.txt/route.ts, and re-add the links removed
                            from the home hero facts, /waitlist and the /adaptivelearn FAQ.
-                           PRICING itself stays live — those three still STATE the figures.
+                           Since 2026-09-18 no page STATES a price either — the home price
+                           fact, the /waitlist sentence, the /adaptivelearn cost FAQ + its
+                           JSON-LD offers, and the /for-schools price wording are all gone.
+                           PRICING in site.ts is kept for the hidden page and check:pricing.
 app/waitlist/              the form (+ /thanks, /problem — static outcome pages, noindex)
 app/api/waitlist/          Route Handler; the ONLY thing that talks to Supabase
 app/for-schools/           setting up a class, good-at / not-built-for, 5 FAQs · FAQPage

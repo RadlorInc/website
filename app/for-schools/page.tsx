@@ -31,7 +31,7 @@ const FAQ = [
   },
   {
     q: 'How many children can we add?',
-    a: 'There is no cap on class size. A class is not a family, so the per-child family price does not fit one and we have not published a school price — we set the first class up with you personally and work out the cost with you.',
+    a: 'There is no cap on class size. We set the first class up with you personally.',
   },
 ]
 
@@ -55,8 +55,8 @@ export default function ForSchools() {
         </p>
         <p className="rl-rise mt-5 text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.22s' } as React.CSSProperties}>
           We&rsquo;re currently working with schools to shape the best way to bring {APP_NAME} into the
-          classroom. Because every school and classroom is different, we haven&rsquo;t published a standard
-          school price yet. For our first schools, we&rsquo;ll work with you directly to set up your class,
+          classroom. Because every school and classroom is different, for our first schools we&rsquo;ll
+          work with you directly to set up your class,
           understand your needs, and make sure {APP_NAME} is working for your students.
         </p>
         <p className="rl-rise mt-6 text-lg max-w-2xl" style={{ '--d': '0.25s' } as React.CSSProperties}>

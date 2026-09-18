@@ -906,10 +906,19 @@ body {
   gap: 1.5rem 1.25rem;
 }
 
+/* Three facts on a two-column phone grid leave the last one beside an empty cell; let an odd
+   last fact take the whole row. */
+.rl-hero-facts > li:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
 @media (min-width: 768px) {
   .rl-hero-facts {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     column-gap: 2rem;
+  }
+  .rl-hero-facts > li:last-child:nth-child(odd) {
+    grid-column: auto;
   }
 }
 

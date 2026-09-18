@@ -187,8 +187,9 @@ export const PAGES = [
   // underscore keeps it out of routing, so /pricing 404s and it is absent from the header, the
   // footer, the sitemap and llms.txt because all four read this list. Restore by renaming the
   // folder back and putting this row back; the BLURB line in `app/llms.txt/route.ts` is kept
-  // beside its own note for the same reason. PRICING below stays live: /adaptivelearn, the home
-  // hero and /waitlist still state the figures, they just no longer link to a table.
+  // beside its own note for the same reason. Since 2026-09-18 NO page states a price either: the
+  // home hero fact, the /waitlist sentence, the /adaptivelearn FAQ and its JSON-LD offers are
+  // gone. PRICING stays as the source for the hidden page and check:pricing; nothing renders it.
   // { href: '/pricing', label: 'Pricing', where: 'both' },
   { href: '/for-schools', label: 'Schools', where: 'both' },
   { href: '/writing', label: 'Writing', where: 'both' },

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { APP_NAME, COMPANY, PRICING, SITE_URL, usd } from '@/site'
+import { APP_NAME, COMPANY, SITE_URL } from '@/site'
 import { posts } from '@/content/posts'
 
 /**
@@ -107,7 +107,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* The four facts on their own band below the hero, sharing its dark ground. They were
+      {/* ⚠️ THREE FACTS SINCE 2026-09-18: the price fact was removed with every other price on the
+          site (founder's call — /pricing is hidden, see PAGES in site.ts). Restore it from git.
+
+          The facts on their own band below the hero, sharing its dark ground. They were
           inside the hero once and did not fit a single screen alongside the headline, the subhead
           and two CTAs on a short laptop.
 
@@ -149,7 +152,6 @@ export default function Home() {
               ['Ages 3–18', 'one app, six stages that look nothing alike', '/adaptivelearn'],
               ['Starts where your child is', 'a short check, not their school year', '/adaptivelearn'],
               ['0 frames uploaded', 'hand tracking runs on the device', '/data-and-safety'],
-              [`From ${usd(PRICING.monthly.first)}/month`, `first child; ${usd(PRICING.monthly.additional)} each additional`, '/waitlist'],
             ].map(([term, detail, href], i) => (
               <li key={term} className="rl-reveal" style={{ '--i': i + 1 } as React.CSSProperties}>
                 <Link href={href} className="rl-hero-factlink">

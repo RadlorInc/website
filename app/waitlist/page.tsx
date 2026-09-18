@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { MiloPanel } from '@/components/MiloPanel'
 import Link from 'next/link'
-import { AGE_BANDS, APP_NAME, PRICING, SUPPORT_EMAIL, usd } from '@/site'
+import { AGE_BANDS, APP_NAME, SUPPORT_EMAIL } from '@/site'
 
 export const metadata: Metadata = {
   title: `Join the ${APP_NAME} waitlist`,
@@ -35,9 +35,7 @@ export default function Waitlist() {
           </h1>
           <p className="rl-rise mt-6 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.18s' } as React.CSSProperties}>
             {APP_NAME} is early software and we would rather add families slowly than badly. Leave an
-            email address and we will write when there is a place. Pricing starts at{' '}
-            {usd(PRICING.monthly.first)} a month for the first child, {usd(PRICING.monthly.additional)} a
-            month for each additional child, up to {PRICING.maxChildren}.
+            email address and we will write when there is a place.
           </p>
         </div>
       </section>
