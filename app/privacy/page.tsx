@@ -137,10 +137,11 @@ export default function Privacy() {
               is the only way in. The sentence loses nothing as text. The deep link to the legal
               policy on /data-and-safety is a different case and stays clickable — a policy
               nobody can open is not a published policy. */}
-          {APP_NAME} lives on a different address —{' '}
-          <strong className="text-foreground font-medium">adaptivelearn.radlor.com</strong> — and is a
-          different piece of software with accounts and a database. Its policy is
-          published there, and the plain-English version is on{' '}
+          {/* Founder-approved wording, 2026-09-25 (the rename, and the product page moving here). */}
+          {APP_NAME}, the app, lives at{' '}
+          <strong className="text-foreground font-medium">radlic.com</strong> and is a different piece of
+          software with accounts and a database. This page also covers radlor.com/radlic, which only
+          describes it. Its policy is published there, and the plain-English version is on{' '}
           <Link href="/data-and-safety" className="rl-link">data and safety</Link>.
         </p>
 

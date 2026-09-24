@@ -8,19 +8,13 @@
  * is the app's /help in short. The two chalkboards are real lesson screens: content/radlic-demo.json.
  */
 import type { Metadata } from 'next'
-import { COMPANY, SITE_URL } from '@/site'
+import { APP_ID, APP_NAME, APP_URL, COMPANY, SITE_URL } from '@/site'
 import demos from '@/content/radlic-demo.json'
 import LessonDemo, { type Demo } from './LessonDemo'
 import s from './radlic.module.css'
 
 /** The app. It keeps its own origin; nothing of it is served from radlor.com. */
-const RADLIC = 'https://radlic.com'
-/**
- * The app's entity id — the SAME string the app's own site.ts declares as APP_ID. ⚠️ `APP_ID` in this repo's site.ts
- * still names the pre-rename domain (RENAME-MANUAL §D, a founder step); until it is updated the two ids disagree and
- * /adaptivelearn and this page describe the product under two ids.
- */
-const RADLIC_APP_ID = `${RADLIC}/#app`
+const RADLIC = APP_URL
 
 export const metadata: Metadata = {
   title: { absolute: 'Radlic — math lessons that adapt to your child, grade KG to 8' },
@@ -34,9 +28,11 @@ function AppJsonLd() {
   const json = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    '@id': RADLIC_APP_ID,
-    name: 'Radlic',
-    alternateName: `Radlic by ${COMPANY}`,
+    '@id': APP_ID,
+    name: APP_NAME,
+    // Its earlier names, so an old link or an answer engine that learned "AdaptiveLearn" resolves to this product
+    // (the /adaptivelearn page said so in an FAQ until it became a redirect here, 2026-09-25).
+    alternateName: [`${APP_NAME} by ${COMPANY}`, 'AdaptiveLearn', 'Milo'],
     url: `${SITE_URL}/radlic`,
     applicationCategory: 'EducationalApplication',
     operatingSystem: 'Web browser',

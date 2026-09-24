@@ -8,7 +8,7 @@ import { DRAFT, WEBSITE_TERMS, unresolvedPlaceholders } from '@/content/legal'
  * /terms — the Terms of Use for THIS WEBSITE.
  *
  * ⚠️ NOT THE APP'S TERMS OF SERVICE, and the page says so in its own words above the fold. The two
- * are different agreements: this one covers reading radlor.com, the app's covers using AdaptiveLearn
+ * are different agreements: this one covers reading radlor.com, the app's covers using Radlic
  * with a child's data inside it. Never cross-link them as if they were the same document — a reader
  * who follows "Terms" from a marketing footer and lands on an agreement about their child's data has
  * been shown the wrong contract.
@@ -21,7 +21,7 @@ import { DRAFT, WEBSITE_TERMS, unresolvedPlaceholders } from '@/content/legal'
 export const metadata: Metadata = {
   title: 'Terms of Use',
   description:
-    'The Terms of Use for radlor.com, the website — what this site is, what it collects, and what its content does and does not promise. It is a separate and much shorter agreement than the one covering the AdaptiveLearn app.',
+    'The Terms of Use for radlor.com, the website — what this site is, what it collects, and what its content does and does not promise. It is a separate and much shorter agreement than the one covering the Radlic app.',
   alternates: { canonical: '/terms' },
 }
 

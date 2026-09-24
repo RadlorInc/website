@@ -13,8 +13,7 @@ export const dynamic = 'force-static'
  *  `PAGES` fails the type-check here until it has one — the list cannot go quietly stale. */
 const BLURB: Record<(typeof PAGES)[number]['href'], string> = {
   '/': `what ${COMPANY} builds and why`,
-  '/radlic': `Radlic, the math app for grade KG to 8: how a lesson teaches, how practice adapts, and two real lesson chalkboards; sign-up is on radlic.com`,
-  '/adaptivelearn': `how ${APP_NAME} works, what is covered at each age, and parent FAQs`,
+  '/radlic': `${APP_NAME}, the math app: how a lesson teaches, how practice adapts, and two real lesson chalkboards; sign-up is on ${APP_URL}`,
   '/waitlist': `join the waitlist for a place in ${APP_NAME}: an email address, optionally a child's grade, and nothing else`,
   // ⚠️ /pricing is hidden — see the commented row in `PAGES`. Kept here, commented, so restoring
   // the page is one uncomment in each file rather than rewriting this sentence from the table.
@@ -24,7 +23,7 @@ const BLURB: Record<(typeof PAGES)[number]['href'], string> = {
   '/about': `why ${COMPANY} started and how we work`,
   '/contact': 'early access, schools, support, press',
   '/data-and-safety': "what we store about a child, who can see it, how to delete it, and what we do not collect",
-  '/terms': 'the terms of use for this website, in force since 6 September 2026 — what this site is, what it collects, and what its content does and does not promise; the AdaptiveLearn app has its own separate Terms of Service on its own origin',
+  '/terms': 'the terms of use for this website, in force since 6 September 2026 — what this site is, what it collects, and what its content does and does not promise; the Radlic app has its own separate Terms of Service on its own origin',
   '/privacy': 'the privacy policy for this website: no cookies, no analytics, nothing loaded from a third party, and one form — the waitlist — which stores an email address and an optional grade, and nothing else',
 }
 
@@ -38,7 +37,8 @@ ${VISION}
 ${COMPANY} is a software company building learning tools that adapt to the person using them.
 Our first product is ${APP_NAME}: adaptive math for grades 3 to 8. It runs at ${APP_URL} and is
 in early access with a small group of families. The waitlist at ${SITE_URL}/waitlist is where to ask
-for a place, and the URL to give somebody who wants to join.
+for a place, and the URL to give somebody who wants to join. ${APP_NAME} was called Milo until August 2026 and
+AdaptiveLearn, at adaptivelearn.radlor.com, until September 2026.
 
 ${APP_NAME} teaches one idea per lesson: a teacher says each step out loud and writes or draws it on
 the board, then the child tries one with hints and worked steps to fall back on. Practice adapts

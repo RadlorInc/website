@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: `${COMPANY} — ${TAGLINE}`, template: `%s · ${COMPANY}` },
   description:
-    `${COMPANY} builds learning software that adapts to the child using it. Our first product, AdaptiveLearn, ` +
+    `${COMPANY} builds learning software that adapts to the child using it. Our first product, Radlic, ` +
     'teaches math for grades 3 to 8, one idea at a time, with practice that changes question by question.',
   applicationName: COMPANY,
   alternates: { canonical: '/' },
@@ -116,7 +116,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
                   and then "Sign in"; both offered entry to a product that is in testing. Everyone
                   currently inside is a tester. Do not point this at APP_URL again: if a visitor
                   arriving through radlor.com can reach the app from here, the waitlist is not the
-                  only door and the copy on /adaptivelearn stops being true. */}
+                  only door. ⚠️ Since 2026-09-25 it is NOT the only door, by the founder's decision: /radlic
+                  (the product page) links "Sign up free" and "Log in" to the app on radlic.com. This button
+                  still goes to the waitlist; whether it should change is the founder's call. */}
               <Link
                 href="/waitlist"
                 className="rl-cta rl-cta-quiet rounded-full bg-accent px-4 py-2 text-on-accent text-sm font-medium whitespace-nowrap hover:opacity-90 transition-opacity"

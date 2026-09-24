@@ -11,6 +11,10 @@ Sections A–B are code. C–F need a person with a login or a keyboard.
 
 ## ✅ 0. SETTLED — THE PRODUCT IS `AdaptiveLearn`
 
+> ⚠️ **SUPERSEDED 2026-09-24/25.** The product is now **Radlic** at **radlic.com**; its page on this site is
+> **`/radlic`** (`/adaptivelearn` 308s there), and both sites use the `@id` `https://radlic.com/#app`
+> (`APP_ID` in `site.ts`). Everything below in this section is the 2026-08-19 decision, kept as history.
+
 | Where | Calls it |
 |---|---|
 | This website (every page) | **AdaptiveLearn** |

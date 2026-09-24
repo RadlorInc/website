@@ -98,7 +98,7 @@ export default function Home() {
               Join the waitlist
             </Link>
             <Link
-              href="/adaptivelearn"
+              href="/radlic"
               className="rl-cta rl-cta-quiet rounded-full border border-line px-6 py-3 font-medium hover:border-foreground transition-colors"
             >
               How it works
@@ -132,7 +132,7 @@ export default function Home() {
           Add a fifth only if it answers a fifth question.
 
           "six stages that look nothing alike" keeps the idea that "6 age bands" was reaching
-          for — the idea was never the problem, the label was. It is `/adaptivelearn`'s own
+          for — the idea was never the problem, the label was. It was the old `/adaptivelearn` page's own
           claim: a five-year-old gets a narrated story world, a sixteen-year-old a design studio
           with a working chalkboard.
 
@@ -154,8 +154,8 @@ export default function Home() {
         <div className="mx-auto w-full max-w-5xl px-6 py-16">
           <ul className="rl-hero-facts">
             {[
-              ['Grades 3–8', 'one idea per lesson, taught step by step', '/adaptivelearn'],
-              ['Harder means different', 'each level up is a new kind of question', '/adaptivelearn'],
+              ['Grades 3–8', 'one idea per lesson, taught step by step', '/radlic'],
+              ['Harder means different', 'each level up is a new kind of question', '/radlic'],
               ['No email for your child', 'you set their username and password', '/data-and-safety'],
             ].map(([term, detail, href], i) => (
               <li key={term} className="rl-reveal" style={{ '--i': i + 1 } as React.CSSProperties}>
@@ -253,7 +253,7 @@ export default function Home() {
             Question difficulty moves with your child.
           </h2>
           <Link
-            href="/adaptivelearn"
+            href="/radlic"
             className="rl-reveal rl-card mt-8 block rounded-2xl border border-line bg-surface p-8 hover:border-accent"
             style={{ '--i': 1 } as React.CSSProperties}
           >

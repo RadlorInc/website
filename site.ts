@@ -77,9 +77,10 @@ export const VISION =
   'Education technology. We build learning products for children; the treasure is already inside the child, we just light it up.'
 export const SUPPORT_EMAIL = 'support@radlor.com'
 
-/** The live product. Its own origin — a separate Vercel project, deployed from the app repo. */
-export const APP_URL = 'https://adaptivelearn.radlor.com'
-export const APP_NAME = 'AdaptiveLearn'
+/** The live product. Its own origin — a separate Vercel project, deployed from the app repo. Called AdaptiveLearn at
+ *  adaptivelearn.radlor.com until 2026-09-24 (RENAME-MANUAL §D in the app repo); its landing page is `/radlic` here. */
+export const APP_URL = 'https://radlic.com'
+export const APP_NAME = 'Radlic'
 
 /**
  * The app's entity id, declared HERE and referenced by the app itself at the same string.
@@ -90,8 +91,8 @@ export const APP_NAME = 'AdaptiveLearn'
  * Change this string and you silently split the product in half. The app's copy lives in
  * `../milo-story-mode/src/app/site.ts` as `APP_ID`.
  *
- * ⚠️ AND THIS MATTERS MORE THAN IT LOOKS, BECAUSE "AdaptiveLearn" IS A GENERIC PHRASE.
- * Measured 2026-08-19: searching it returns "adaptive learning" the concept plus AdaptedMind,
+ * ⚠️ AND THIS MATTERS MORE THAN IT LOOKS. The product's name until 2026-09-24, "AdaptiveLearn", was a GENERIC
+ * phrase — measured 2026-08-19: searching it returned "adaptive learning" the concept plus AdaptedMind,
  * bettermarks, DreamBox and Prodigy — the category, not us. "Radlor" is distinctive and
  * effectively unclaimed. So the brand is what makes the product resolvable, and every schema
  * block, title and page must keep the two attached.
@@ -197,10 +198,8 @@ export const PLANS = Array.from({ length: PRICING.maxChildren }, (_, i) => price
  */
 export const PAGES = [
   { href: '/', label: 'Home', where: 'footer' },
-  { href: '/adaptivelearn', label: 'AdaptiveLearn', where: 'both' },
-  // The Radlic landing page (2026-09-25). 'footer' only: the header row is full, and /adaptivelearn is still the
-  // product page there until the founder decides what becomes of it.
-  { href: '/radlic', label: 'Radlic', where: 'footer' },
+  // The product page. /adaptivelearn was it until 2026-09-25 and now 308s here (next.config.ts).
+  { href: '/radlic', label: 'Radlic', where: 'both' },
   // ⚠️ HIDDEN 2026-09-10, founder's call. The page still exists at `app/_pricing/` — the
   // underscore keeps it out of routing, so /pricing 404s and it is absent from the header, the
   // footer, the sitemap and llms.txt because all four read this list. Restore by renaming the
