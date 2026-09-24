@@ -13,6 +13,7 @@ export const dynamic = 'force-static'
  *  `PAGES` fails the type-check here until it has one — the list cannot go quietly stale. */
 const BLURB: Record<(typeof PAGES)[number]['href'], string> = {
   '/': `what ${COMPANY} builds and why`,
+  '/radlic': `Radlic, the math app for grade KG to 8: how a lesson teaches, how practice adapts, and two real lesson chalkboards; sign-up is on radlic.com`,
   '/adaptivelearn': `how ${APP_NAME} works, what is covered at each age, and parent FAQs`,
   '/waitlist': `join the waitlist for a place in ${APP_NAME}: an email address, optionally a child's grade, and nothing else`,
   // ⚠️ /pricing is hidden — see the commented row in `PAGES`. Kept here, commented, so restoring

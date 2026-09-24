@@ -1,0 +1,317 @@
+[
+ {
+  "id": "g3m5-t1",
+  "tag": "Grade 3 · Fractions",
+  "title": "More friends, more cuts",
+  "label": "What if 4 friends share the sandwich? Then we cut 4 pieces, and every piece is the same size. Each friend gets 1 of the 4 equal pieces.",
+  "marks": [
+   {
+    "beat": 0,
+    "at": "friends",
+    "c": "d",
+    "d": "M150 55 a10.4 10.4 0 1 0 0.1 0 M150 75.8 L150 101.4 L133.2 135 M150 101.4 L166.8 135 M132.4 85.4 L150 82.2 L167.6 85.4",
+    "quick": true
+   },
+   {
+    "beat": 0,
+    "at": "friends",
+    "c": "d",
+    "d": "M250 55 a10.4 10.4 0 1 0 0.1 0 M250 75.8 L250 101.4 L233.2 135 M250 101.4 L266.8 135 M232.4 85.4 L250 82.2 L267.6 85.4",
+    "quick": true
+   },
+   {
+    "beat": 0,
+    "at": "friends",
+    "c": "d",
+    "d": "M350 55 a10.4 10.4 0 1 0 0.1 0 M350 75.8 L350 101.4 L333.2 135 M350 101.4 L366.8 135 M332.4 85.4 L350 82.2 L367.6 85.4",
+    "quick": true
+   },
+   {
+    "beat": 0,
+    "at": "friends",
+    "c": "d",
+    "d": "M450 55 a10.4 10.4 0 1 0 0.1 0 M450 75.8 L450 101.4 L433.2 135 M450 101.4 L466.8 135 M432.4 85.4 L450 82.2 L467.6 85.4",
+    "quick": true
+   },
+   {
+    "beat": 1,
+    "at": "cut",
+    "c": "w",
+    "d": "M100 170 h400 v70 h-400 Z M200 170 v70 M300 170 v70 M400 170 v70"
+   },
+   {
+    "beat": 1,
+    "at": "same",
+    "c": "y",
+    "d": "M106 255 v20 M194 255 v20 M106 265 H194 M118 257 L106 265 L118 273 M182 257 L194 265 L182 273",
+    "quick": true
+   },
+   {
+    "beat": 1,
+    "at": "same",
+    "c": "y",
+    "d": "M206 255 v20 M294 255 v20 M206 265 H294 M218 257 L206 265 L218 273 M282 257 L294 265 L282 273",
+    "quick": true
+   },
+   {
+    "beat": 1,
+    "at": "same",
+    "c": "y",
+    "d": "M306 255 v20 M394 255 v20 M306 265 H394 M318 257 L306 265 L318 273 M382 257 L394 265 L382 273",
+    "quick": true
+   },
+   {
+    "beat": 1,
+    "at": "same",
+    "c": "y",
+    "d": "M406 255 v20 M494 255 v20 M406 265 H494 M418 257 L406 265 L418 273 M482 257 L494 265 L482 273",
+    "quick": true
+   },
+   {
+    "beat": 2,
+    "at": "gets",
+    "d": "M100 170 h100 v70 h-100 Z",
+    "c": "b",
+    "wash": true
+   },
+   {
+    "beat": 2,
+    "at": "1",
+    "t": "1 of 4 equal pieces",
+    "x": 300,
+    "y": 330,
+    "s": 30,
+    "c": "b"
+   }
+  ],
+  "says": [
+   "What if 4 friends share the sandwich?",
+   "Then we cut 4 pieces, and every piece is the same size.",
+   "Each friend gets 1 of the 4 equal pieces."
+  ]
+ },
+ {
+  "id": "g8m4-t1",
+  "tag": "Grade 8 · Geometry",
+  "title": "Follow one corner",
+  "label": "Take corner A. It starts at (1, 1). Move it 4 to the right, and x goes from 1 up to 5. Move it 2 up, and y goes from 1 up to 3. So A lands on (5, 3). We call that new point A prime.",
+  "marks": [
+   {
+    "beat": 0,
+    "at": "corner",
+    "c": "d",
+    "w": 1.2,
+    "d": "M40 360 V72 M40 360 H328 M76 360 V72 M40 324 H328 M112 360 V72 M40 288 H328 M148 360 V72 M40 252 H328 M184 360 V72 M40 216 H328 M220 360 V72 M40 180 H328 M256 360 V72 M40 144 H328 M292 360 V72 M40 108 H328 M328 360 V72 M40 72 H328",
+    "quick": true
+   },
+   {
+    "beat": 0,
+    "at": "corner",
+    "d": "M40 360 L328 360",
+    "c": "w",
+    "w": 2.6,
+    "quick": true
+   },
+   {
+    "beat": 0,
+    "at": "corner",
+    "d": "M40 360 L40 72",
+    "c": "w",
+    "w": 2.6,
+    "quick": true
+   },
+   {
+    "beat": 0,
+    "at": "corner",
+    "t": "2",
+    "x": 112,
+    "y": 376,
+    "s": 18,
+    "c": "d",
+    "quick": true
+   },
+   {
+    "beat": 0,
+    "at": "corner",
+    "t": "2",
+    "x": 24,
+    "y": 288,
+    "s": 18,
+    "c": "d",
+    "quick": true
+   },
+   {
+    "beat": 0,
+    "at": "corner",
+    "t": "4",
+    "x": 184,
+    "y": 376,
+    "s": 18,
+    "c": "d",
+    "quick": true
+   },
+   {
+    "beat": 0,
+    "at": "corner",
+    "t": "4",
+    "x": 24,
+    "y": 216,
+    "s": 18,
+    "c": "d",
+    "quick": true
+   },
+   {
+    "beat": 0,
+    "at": "corner",
+    "t": "6",
+    "x": 256,
+    "y": 376,
+    "s": 18,
+    "c": "d",
+    "quick": true
+   },
+   {
+    "beat": 0,
+    "at": "corner",
+    "t": "6",
+    "x": 24,
+    "y": 144,
+    "s": 18,
+    "c": "d",
+    "quick": true
+   },
+   {
+    "beat": 0,
+    "at": "corner",
+    "t": "8",
+    "x": 328,
+    "y": 376,
+    "s": 18,
+    "c": "d",
+    "quick": true
+   },
+   {
+    "beat": 0,
+    "at": "corner",
+    "t": "8",
+    "x": 24,
+    "y": 72,
+    "s": 18,
+    "c": "d",
+    "quick": true
+   },
+   {
+    "beat": 0,
+    "at": "corner",
+    "d": "M76 324 L148 324 L76 252 L76 324",
+    "c": "w"
+   },
+   {
+    "beat": 0,
+    "at": "corner",
+    "t": "A",
+    "x": 62,
+    "y": 340,
+    "s": 20,
+    "c": "d",
+    "quick": true
+   },
+   {
+    "beat": 0,
+    "at": "corner",
+    "t": "B",
+    "x": 160,
+    "y": 340,
+    "s": 20,
+    "c": "d",
+    "quick": true
+   },
+   {
+    "beat": 0,
+    "at": "corner",
+    "t": "C",
+    "x": 62,
+    "y": 240,
+    "s": 20,
+    "c": "d",
+    "quick": true
+   },
+   {
+    "beat": 0,
+    "at": "A",
+    "c": "y",
+    "d": "M65 324 a11 11 0 1 0 22 0 a11 11 0 1 0 -22 0"
+   },
+   {
+    "beat": 0,
+    "at": "(1,",
+    "t": "A (1, 1)",
+    "x": 470,
+    "y": 80,
+    "s": 30,
+    "c": "w"
+   },
+   {
+    "beat": 1,
+    "at": "right",
+    "c": "b",
+    "d": "M76 324 L220 324 M207.7138441335348 317.28804245954115 L220 324 L207.7138441335348 330.71195754045885"
+   },
+   {
+    "beat": 1,
+    "at": "5",
+    "t": "x: 1 → 5",
+    "x": 470,
+    "y": 150,
+    "s": 30,
+    "c": "b"
+   },
+   {
+    "beat": 2,
+    "at": "up",
+    "c": "b",
+    "d": "M220 324 L220 252 M213.28804245954115 264.2861558664652 L220 252 L226.71195754045885 264.2861558664652"
+   },
+   {
+    "beat": 2,
+    "at": "3",
+    "t": "y: 1 → 3",
+    "x": 470,
+    "y": 210,
+    "s": 30,
+    "c": "b"
+   },
+   {
+    "beat": 3,
+    "at": "lands",
+    "c": "y",
+    "d": "M209 252 a11 11 0 1 0 22 0 a11 11 0 1 0 -22 0"
+   },
+   {
+    "beat": 3,
+    "at": "prime",
+    "t": "A′",
+    "x": 236,
+    "y": 238,
+    "s": 20,
+    "c": "y",
+    "quick": true
+   },
+   {
+    "beat": 3,
+    "at": "prime",
+    "t": "A′ (5, 3)",
+    "x": 470,
+    "y": 290,
+    "s": 36,
+    "c": "y"
+   }
+  ],
+  "says": [
+   "Take corner A. It starts at (1, 1).",
+   "Move it 4 to the right, and x goes from 1 up to 5.",
+   "Move it 2 up, and y goes from 1 up to 3.",
+   "So A lands on (5, 3). We call that new point A prime."
+  ]
+ }
+]

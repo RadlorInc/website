@@ -198,6 +198,9 @@ export const PLANS = Array.from({ length: PRICING.maxChildren }, (_, i) => price
 export const PAGES = [
   { href: '/', label: 'Home', where: 'footer' },
   { href: '/adaptivelearn', label: 'AdaptiveLearn', where: 'both' },
+  // The Radlic landing page (2026-09-25). 'footer' only: the header row is full, and /adaptivelearn is still the
+  // product page there until the founder decides what becomes of it.
+  { href: '/radlic', label: 'Radlic', where: 'footer' },
   // ⚠️ HIDDEN 2026-09-10, founder's call. The page still exists at `app/_pricing/` — the
   // underscore keeps it out of routing, so /pricing 404s and it is absent from the header, the
   // footer, the sitemap and llms.txt because all four read this list. Restore by renaming the
