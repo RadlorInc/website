@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { APP_NAME, HEADER, SUPPORT_EMAIL } from '@/site'
+import { APP_NAME, APP_URL, HEADER, SUPPORT_EMAIL } from '@/site'
 import { SiteChrome } from '@/components/SiteChrome'
 
 /**
@@ -69,9 +69,9 @@ export default function NotFound() {
       </nav>
 
       <div className="mt-9 flex flex-wrap gap-3">
-        <Link href="/waitlist" className="rl-cta rounded-full bg-accent px-6 py-3 text-on-accent font-medium hover:opacity-90">
-          Join the waitlist
-        </Link>
+        <a href={`${APP_URL}/auth`} className="rl-cta rounded-full bg-accent px-6 py-3 text-on-accent font-medium hover:opacity-90">
+          Try Radlic
+        </a>
         <Link href="/" className="rl-cta rl-cta-quiet rounded-full border border-line px-6 py-3 font-medium hover:border-foreground transition-colors">
           Back to the start
         </Link>

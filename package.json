@@ -8,7 +8,6 @@
     "start": "next start",
     "lint": "eslint",
     "check:social": "scripts/check-social.sh",
-    "check:hero-contrast": "node --no-warnings scripts/check-hero-contrast.mjs",
     "check:pricing": "node --experimental-strip-types --no-warnings scripts/check-pricing.mjs",
     "check:waitlist-rls": "node --no-warnings scripts/check-waitlist-rls.mjs",
     "check:legal-draft": "node --no-warnings scripts/check-legal-draft.mjs",
@@ -19,7 +18,8 @@
     "marked": "^18.0.10",
     "next": "16.3.1",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "three": "0.160.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

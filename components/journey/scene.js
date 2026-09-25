@@ -1,0 +1,427 @@
+/**
+ * The Radlor Journey: a low-poly world of floating islands the robot guide flies past, one island per stop
+ * on the home page. Founder's pick, 2026-09-25, ported from the "Radlor Journey" prototype of that day.
+ *
+ * Plain JS on purpose: it is a port of that prototype, and three's scene code gains nothing from
+ * annotations here. The page owns every word, the scroll and the stops; this file only draws.
+ * `getX()` returns where the reader is: 0 = the opening island, 1…5 = the five stops, fractional between.
+ *
+ * ⚠️ Everything is bundled from npm (`three`) — nothing is fetched from a CDN. radlor.com promises in
+ * /privacy that it loads nothing off-origin, and `check:site-claims` fails if a page does.
+ */
+import * as THREE from 'three'
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js'
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
+import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
+import { HorizontalTiltShiftShader } from 'three/examples/jsm/shaders/HorizontalTiltShiftShader.js'
+import { VerticalTiltShiftShader } from 'three/examples/jsm/shaders/VerticalTiltShiftShader.js'
+
+export function mountJourney({ canvas, getX, reduce, small, onReady }) {
+const STOPS = [0, 1, 2, 3, 4, 5]
+// sized to its own box (one screen tall on the page), not the window: on a phone 100svh and innerHeight differ
+const cw = () => canvas.clientWidth || innerWidth, ch = () => canvas.clientHeight || innerHeight
+// ── renderer: matte, soft shadows, no bloom ──
+let renderer
+try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' }) }
+catch { return null }  // no WebGL: the page is all real text anyway, so it simply reads without the world behind it
+renderer.setPixelRatio(Math.min(devicePixelRatio, small ? 1.5 : 2))
+renderer.setSize(cw(), ch(), false)
+renderer.toneMapping = THREE.ACESFilmicToneMapping
+renderer.toneMappingExposure = 1.05
+renderer.shadowMap.enabled = true
+renderer.shadowMap.type = THREE.PCFShadowMap  // PCF honours shadow.radius; PCFSoft ignores it
+const scene = new THREE.Scene()
+scene.fog = new THREE.Fog(0x0c1636, 60, 140)
+const camera = new THREE.PerspectiveCamera(small ? 40 : 30, cw() / ch(), 0.1, 600)
+// on a wide screen the caption owns the left third, so frame each island to the right of it
+const frameOffset = () => cw() >= 760 ? camera.setViewOffset(cw(), ch(), -cw() * .14, 0, cw(), ch()) : camera.clearViewOffset()
+frameOffset()
+
+// the sky: a deep navy dome that lifts to a soft violet at the horizon
+{
+  // written in linear light: the OutputPass converts to sRGB, and a raw sRGB colour here washes the navy out to lavender
+  const sky = new THREE.Mesh(new THREE.SphereGeometry(400, 32, 16), new THREE.ShaderMaterial({ side: THREE.BackSide, depthWrite: false,
+    vertexShader: 'varying float h; void main(){ h = normalize(position).y; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }',
+    fragmentShader: 'varying float h; void main(){ vec3 top = vec3(.02,.04,.10); vec3 mid = vec3(.05,.09,.22); vec3 hor = vec3(.30,.24,.52); vec3 c = h > 0. ? mix(mid, top, smoothstep(0.,.6,h)) : mix(mid, vec3(.04,.06,.16), smoothstep(0.,-.5,h)); c = mix(c, hor, exp(-abs(h)*6.)*.7); c += (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898,78.233)))*43758.5453) - .5) / 128.; gl_FragColor = vec4(pow(max(c, 0.), vec3(2.2)),1.); }' }))
+  scene.add(sky)
+  const N = small ? 900 : 1600, pos = new Float32Array(N * 3)
+  for (let i = 0; i < N; i++) { const v = new THREE.Vector3().randomDirection().multiplyScalar(300 + Math.random() * 60); if (v.y < -40) v.y *= -1; pos.set([v.x + 110, v.y, v.z], i * 3) }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3))
+  scene.add(new THREE.Points(g, new THREE.PointsMaterial({ color: 0xdfe8ff, size: 1.3, sizeAttenuation: true, transparent: true, opacity: .8, fog: false })))
+}
+
+scene.add(new THREE.HemisphereLight(0xc4dcff, 0x2a2350, 1.1))
+const sun = new THREE.DirectionalLight(0xfff1dc, 2.6)
+sun.castShadow = true; sun.shadow.mapSize.set(small ? 1024 : 2048, small ? 1024 : 2048)
+Object.assign(sun.shadow.camera, { left: -18, right: 18, top: 18, bottom: -18, near: 1, far: 80 }); sun.shadow.bias = -0.0005; sun.shadow.normalBias = .02
+sun.shadow.radius = 4
+scene.add(sun, sun.target)
+const fill = new THREE.DirectionalLight(0x7fa8ff, .9); fill.position.set(30, 10, -30); scene.add(fill)
+// bounce from below so the islands' undersides read as warm rock, not a black hole
+const under = new THREE.DirectionalLight(0xb08cff, 1.1); under.position.set(0, -30, 10); scene.add(under, under.target)
+
+// ── palette & kit ──
+const C = {
+  grass: 0x5bbf9e, grass2: 0x86d3a4, sand: 0xf1d3a8, clay: 0xe0916f, earth: 0x9a6470, deep: 0x3d4a7c, stone: 0xc9d3e0, stone2: 0x9aa9c6,
+  cream: 0xf6eee3, roof: 0x2f63e8, roof2: 0xe36f5f, wood: 0x9c6b4e, leaf: 0x3fa27e, leaf2: 0x6cc592, trunk: 0x7a5540,
+  gold: 0xf2c14e, win: 0xffd27a, white: 0xf3f6fb, ink: 0x0b0f1a, cyan: 0x00e5ff, blue: 0x2ba8ff, lilac: 0xa895fa, peach: 0xf7b98a, pink: 0xe583f0,
+}
+const mats = new Map()
+const mat = (c, o = {}) => { const k = c + JSON.stringify(o); if (!mats.has(k)) mats.set(k, new THREE.MeshStandardMaterial({ color: c, flatShading: true, roughness: .95, metalness: 0, ...o })); return mats.get(k) }
+const lit = (c, i = .9) => mat(c, { emissive: c, emissiveIntensity: i, roughness: .6 })
+const mesh = (g, m, x = 0, y = 0, z = 0) => { const o = new THREE.Mesh(g, m); o.position.set(x, y, z); o.castShadow = true; o.receiveShadow = true; return o }
+const hash = (x, y, z) => { const s = Math.sin(x * 127.1 + y * 311.7 + z * 74.7) * 43758.5453; return s - Math.floor(s) }
+function jitter(g, a) { const p = g.attributes.position, v = new THREE.Vector3(); for (let i = 0; i < p.count; i++) { v.fromBufferAttribute(p, i); const n = hash(Math.round(v.x * 3), Math.round(v.y * 3), Math.round(v.z * 3)) - .5; p.setXYZ(i, v.x + n * a, v.y + n * a * .6, v.z - n * a) } g.computeVertexNormals(); return g }
+const ease = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2
+const clamp01 = x => Math.max(0, Math.min(1, x))
+
+// a floating island: grass on top, layered earth, a rocky point underneath
+function island(r = 5, sides = 7, seed = 0) {
+  const g = new THREE.Group()
+  g.add(mesh(jitter(new THREE.CylinderGeometry(r, r * .97, .5, sides, 1), .1), mat(C.grass), 0, -.25, 0))
+  g.add(mesh(jitter(new THREE.CylinderGeometry(r * 1.03, r * .99, .22, sides, 1), .08), mat(C.leaf), 0, -.6, 0))  // the turf lip hanging over the edge
+  g.add(mesh(jitter(new THREE.CylinderGeometry(r * .97, r * .86, 1.1, sides * 2, 2), .22), mat(C.sand), 0, -1.25, 0))
+  g.add(mesh(jitter(new THREE.CylinderGeometry(r * .86, r * .7, 1.2, sides * 2, 2), .3), mat(C.clay), 0, -2.4, 0))
+  const cone = jitter(new THREE.ConeGeometry(r * .7, r * 1.1, sides * 2, 3), .45); cone.rotateX(Math.PI); g.add(mesh(cone, mat(C.earth), 0, -3 - r * .55, 0))
+  for (let k = 0; k < 3; k++) { const a = seed + k * 2.1; const rock = mesh(new THREE.DodecahedronGeometry(.25 + hash(seed, k, 1) * .3, 0), mat(C.stone2), Math.cos(a) * r * .8, .1, Math.sin(a) * r * .8); g.add(rock) }
+  // grass tufts and little flowers scattered over the top
+  const n = Math.round(r * r * 1.4), tuft = new THREE.InstancedMesh(new THREE.ConeGeometry(.07, .28, 3), mat(C.grass2), n), bloom = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(.08, 0), mat(C.white), n), m4 = new THREE.Matrix4(), col = new THREE.Color()
+  const blooms = [C.pink, C.peach, C.gold, C.white, C.lilac]
+  for (let k = 0; k < n; k++) { const a = hash(seed, k, 3) * Math.PI * 2, d = Math.sqrt(hash(k, seed, 5)) * r * .88, x = Math.cos(a) * d, z = Math.sin(a) * d
+    m4.makeRotationY(a).setPosition(x, .14, z); tuft.setMatrixAt(k, m4)
+    m4.setPosition(x + .12, .1, z + .08); bloom.setMatrixAt(k, hash(k, 7, seed) < .35 ? m4 : m4.clone().scale(new THREE.Vector3(0, 0, 0))); bloom.setColorAt(k, col.set(blooms[k % blooms.length])) }
+  tuft.receiveShadow = bloom.receiveShadow = true; g.add(tuft, bloom)
+  return g
+}
+function tree(h = 1, alt = false) {
+  const g = new THREE.Group()
+  g.add(mesh(new THREE.CylinderGeometry(.09 * h, .14 * h, .8 * h, 5), mat(C.trunk), 0, .4 * h, 0))
+  if (alt) { g.add(mesh(new THREE.IcosahedronGeometry(.75 * h, 0), mat(C.leaf2), 0, 1.3 * h, 0)); g.add(mesh(new THREE.IcosahedronGeometry(.5 * h, 0), mat(C.leaf), .3 * h, 1.8 * h, .1)) }
+  else for (let k = 0; k < 3; k++) g.add(mesh(new THREE.ConeGeometry((.8 - k * .2) * h, (.9 - k * .1) * h, 6), mat(k % 2 ? C.leaf2 : C.leaf), 0, (1 + k * .5) * h, 0))
+  return g
+}
+const folks = [], SKIN = [0xf2c9a5, 0xd9a57b, 0xb07a52, 0x7a4b2e, 0xe8b894], HAIR = [0x3a2a22, 0x1d1a1f, 0x8a5a36, 0xd9a85b, 0x4a3428]
+function person(shirt, h = 1, wave = false) {
+  const g = new THREE.Group(), n = folks.length, skin = mat(SKIN[n % SKIN.length]), cloth = mat(shirt)
+  for (const x of [-.07, .07]) g.add(mesh(new THREE.CapsuleGeometry(.06 * h, .2 * h, 2, 6), mat(C.deep), x * h, .16 * h, 0))
+  g.add(mesh(new THREE.CylinderGeometry(.13 * h, .17 * h, .36 * h, 8), cloth, 0, .48 * h, 0))
+  const arms = [-1, 1].map(side => { const a = new THREE.Group(); a.position.set(side * .17 * h, .63 * h, 0)
+    a.add(mesh(new THREE.CapsuleGeometry(.045 * h, .2 * h, 2, 6), cloth, 0, -.14 * h, 0), mesh(new THREE.IcosahedronGeometry(.05 * h, 0), skin, 0, -.29 * h, 0)); a.rotation.z = side * .12; g.add(a); return a })
+  g.add(mesh(new THREE.IcosahedronGeometry(.17 * h, 1), skin, 0, .85 * h, 0))
+  g.add(mesh(new THREE.SphereGeometry(.18 * h, 10, 6, 0, Math.PI * 2, 0, Math.PI * .55), mat(HAIR[(n * 3) % HAIR.length]), 0, .87 * h, -.015 * h))
+  for (const x of [-.06, .06]) g.add(mesh(new THREE.SphereGeometry(.022 * h, 6, 4), mat(C.ink), x * h, .86 * h, .155 * h))
+  g.userData = { arms, wave, ph: n * 1.7 }; folks.push(g)
+  return g
+}
+function bush(s = 1) { const g = new THREE.Group(); [[0, .3, 0, .4], [.35, .22, .1, .3], [-.3, .2, .05, .28]].forEach(([x, y, z, r], k) => g.add(mesh(new THREE.IcosahedronGeometry(r * s, 0), mat(k ? C.leaf2 : C.leaf), x * s, y * s, z * s))); return g }
+const clouds = []
+function cloud(s = 1) {
+  // soft puffs, flat-bottomed like a cartoon cloud, lit a little from inside so they never go grey
+  const g = new THREE.Group(), m = mat(0xf4f1ff, { emissive: 0x6a70b8, emissiveIntensity: .35, roughness: 1 })
+  ;[[0, 0, 0, 1], [.95, -.15, .1, .72], [-.95, -.2, 0, .68], [.45, .3, -.15, .7], [-.4, .25, .2, .6], [1.6, -.3, 0, .45], [-1.6, -.35, .1, .42]].forEach(([x, y, z, r]) => { const o = new THREE.Mesh(new THREE.IcosahedronGeometry(r * s, 1), m); o.position.set(x * s, y * s, z * s); o.scale.y = .78; g.add(o) })
+  clouds.push(g); return g
+}
+function prism(w, h, d, m) { const s = new THREE.Shape(); s.moveTo(-w / 2, 0); s.lineTo(0, h); s.lineTo(w / 2, 0); s.closePath(); const g = new THREE.ExtrudeGeometry(s, { depth: d, bevelEnabled: false }); g.translate(0, 0, -d / 2); return mesh(g, m) }
+function gear(r, teeth, d, m) {
+  const s = new THREE.Shape()
+  for (let k = 0; k < teeth; k++) { const a = k / teeth * Math.PI * 2, st = Math.PI * 2 / teeth; [[r * .8, a], [r, a + st * .15], [r, a + st * .45], [r * .8, a + st * .6]].forEach(([rr, aa], j) => (k === 0 && j === 0 ? s.moveTo : s.lineTo).call(s, Math.cos(aa) * rr, Math.sin(aa) * rr)) }
+  s.closePath(); const hole = new THREE.Path(); hole.absarc(0, 0, r * .3, 0, Math.PI * 2, true); s.holes.push(hole)
+  const g = new THREE.ExtrudeGeometry(s, { depth: d, bevelEnabled: false, curveSegments: 6 }); g.center(); return mesh(g, m)
+}
+function house(wall, roofC) {
+  const g = new THREE.Group()
+  g.add(mesh(new THREE.BoxGeometry(1.8, 1.3, 1.5), mat(wall), 0, .65, 0))
+  const r = prism(2.1, 1, 1.7, mat(roofC)); r.position.y = 1.3; g.add(r)
+  g.add(mesh(new THREE.BoxGeometry(.28, .6, .28), mat(C.stone2), .5, 2, -.3))
+  g.add(mesh(new THREE.BoxGeometry(.4, .7, .06), mat(C.wood), -.4, .35, .76))
+  g.add(mesh(new THREE.BoxGeometry(.42, .42, .06), lit(C.win, .8), .42, .8, .76))
+  return g
+}
+
+const worlds = [] // one per stop
+function world(x, y, z) { const g = new THREE.Group(); g.position.set(x, y, z); scene.add(g); worlds.push(g); return g }
+
+// 0 · the opening: Radlor's home island, with the ring as an arch and a telescope pointed at the stars
+const W0 = world(0, 0, 0)
+{ W0.add(island(5.2, 8, 1))
+  const arch = mesh(new THREE.TorusGeometry(2.6, .28, 5, 18, Math.PI), mat(C.stone)); arch.position.set(-.8, 0, -1); W0.add(arch)
+  const band = mesh(new THREE.TorusGeometry(2.6, .1, 4, 18, Math.PI), lit(C.blue, .7)); band.position.set(-.8, 0, -.72); W0.add(band)
+  const tele = new THREE.Group(); tele.add(mesh(new THREE.CylinderGeometry(.18, .26, 1.6, 6), mat(C.cream), 0, 0, 0)); tele.children[0].rotation.z = -.9
+  tele.add(mesh(new THREE.CylinderGeometry(.04, .04, 1, 4), mat(C.stone2), -.2, -.6, 0)); tele.position.set(2.4, 1.1, .8); W0.add(tele)
+  const t1 = tree(1.1); t1.position.set(-3.6, 0, 1.4); W0.add(t1); const t2 = tree(.8, true); t2.position.set(3.4, 0, -1.8); W0.add(t2)
+  const c1 = cloud(1.2); c1.position.set(-6, 3.5, -4); W0.add(c1)
+  const mill = new THREE.Group(); mill.position.set(-4, 0, -1.3); mill.rotation.y = .5; W0.add(mill)
+  mill.add(mesh(new THREE.CylinderGeometry(.34, .55, 2.2, 6), mat(C.cream), 0, 1.1, 0))
+  const mr = mesh(new THREE.ConeGeometry(.5, .6, 6), mat(C.roof2), 0, 2.5, 0); mill.add(mr)
+  mill.add(mesh(new THREE.BoxGeometry(.24, .4, .04), mat(C.wood), 0, .2, .5))
+  const blades = new THREE.Group(); blades.position.set(0, 2.05, .52); mill.add(blades)
+  for (let k = 0; k < 4; k++) { const b = mesh(new THREE.BoxGeometry(.2, 1.3, .04), mat(k % 2 ? C.cream : C.stone), 0, .72, 0); const arm = new THREE.Group(); arm.rotation.z = k * Math.PI / 2; arm.add(b); blades.add(arm) }
+  blades.add(mesh(new THREE.CylinderGeometry(.08, .08, .12, 6), mat(C.wood), 0, 0, 0))
+  for (let k = 0; k < 5; k++) { const st = mesh(new THREE.CylinderGeometry(.26, .28, .07, 6), mat(C.stone), -.8 + k * .1 + Math.sin(k * 1.7) * .25, .04, .2 + k * .72); st.rotation.y = k; W0.add(st) }
+  for (const [x, z] of [[-2.6, 3.4], [3.8, 1.8], [-1.6, -3.6]]) { const b = bush(1); b.position.set(x, 0, z); W0.add(b) }
+  // a stream from a little pond, over the edge, and down the side as a waterfall
+  const water = new THREE.ShaderMaterial({ uniforms: { t: { value: 0 } }, transparent: true, side: THREE.DoubleSide, depthWrite: false,
+    vertexShader: 'varying vec2 u; void main(){ u = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }',
+    fragmentShader: 'uniform float t; varying vec2 u; void main(){ float s = step(.72, fract(u.y*9. + t*1.6 + sin(u.x*14.)*.08)); vec3 c = mix(vec3(.36,.72,.98), vec3(.9,.97,1.), s*.8); float a = .92 * smoothstep(0.,.25,u.y); gl_FragColor = vec4(pow(c, vec3(2.2)), a); }' })
+  const pond = mesh(new THREE.CylinderGeometry(1.1, 1.1, .06, 9), mat(0x5fb6f2, { roughness: .2, emissive: 0x2a6fb8, emissiveIntensity: .35 }), 1.2, .02, 2.2); pond.receiveShadow = true; pond.castShadow = false; W0.add(pond)
+  const stream = mesh(new THREE.BoxGeometry(.55, .06, 2.4), pond.material, 1.9, .02, 3.7); stream.rotation.y = -.35; stream.castShadow = false; W0.add(stream)
+  const fall = new THREE.Mesh(new THREE.PlaneGeometry(.55, 6, 1, 1), water); fall.position.set(2.45, -3, 5.15); fall.rotation.y = -.35; W0.add(fall)
+  for (let k = 0; k < 6; k++) { const f = mesh(new THREE.IcosahedronGeometry(.16 + hash(k, 1, 1) * .1, 0), mat(C.white), 2.1 + (hash(k, 2, 1) - .5) * .6, -.05, 4.8 + hash(k, 3, 1) * .2); W0.add(f) }  // foam where it tips over
+  W0.userData = { water, blades } }
+
+// 1 · mission: a child sits at the island's edge; the treasure chest beside them opens and lights up
+const W1 = world(42, 4, -18)
+{ W1.add(island(4.6, 7, 2))
+  const kid = person(0x2f63e8, 1.3, true); kid.position.set(1.6, 0, 2.2); kid.rotation.y = -.6; W1.add(kid)
+  const chest = new THREE.Group(); chest.position.set(-.6, 0, 1.2); chest.rotation.y = .5; W1.add(chest)
+  chest.add(mesh(new THREE.BoxGeometry(1.4, .8, .9), mat(C.wood), 0, .4, 0))
+  chest.add(mesh(new THREE.BoxGeometry(1.46, .12, .96), mat(C.gold), 0, .8, 0))
+  const lidPivot = new THREE.Group(); lidPivot.position.set(0, .82, -.45); chest.add(lidPivot)
+  const lidG = new THREE.CylinderGeometry(.45, .45, 1.4, 6, 1, false, 0, Math.PI); lidG.rotateZ(Math.PI / 2)
+  const lid = mesh(lidG, mat(C.wood), 0, 0, .45); lidPivot.add(lid)
+  const heap = new THREE.Group(); heap.position.y = .86; chest.add(heap)  // the treasure: coins heaped in the open chest, glowing warm
+  for (let k = 0; k < 14; k++) { const c = mesh(new THREE.CylinderGeometry(.11, .11, .04, 8), lit(C.gold, .5), (hash(k, 1, 9) - .5) * 1.1, hash(k, 2, 9) * .12, (hash(k, 3, 9) - .5) * .6); c.rotation.set(hash(k, 4, 9) * .8, 0, hash(k, 5, 9) * .8); heap.add(c) }
+  const gem = mesh(new THREE.OctahedronGeometry(.36, 0), lit(C.cyan, 0), 0, 1.1, 0); chest.add(gem)
+  const glowL = new THREE.PointLight(0x7fe9ff, 0, 7, 2); glowL.position.y = 1.3; chest.add(glowL)
+  const tr = tree(1.3, true); tr.position.set(-2.8, 0, -1.2); W1.add(tr); const tr2 = tree(1); tr2.position.set(2.6, 0, -1.8); W1.add(tr2)
+  for (let k = 0; k < 5; k++) { const f = mesh(new THREE.IcosahedronGeometry(.12, 0), mat([C.pink, C.peach, C.gold][k % 3]), -2 + k * .45, .1, 2.8 - k * .2); W1.add(f) }
+  const c1 = cloud(1); c1.position.set(5.5, 2.5, -3); W1.add(c1)
+  const sparks = []; for (let k = 0; k < 12; k++) { const sp = mesh(new THREE.OctahedronGeometry(.06, 0), lit(C.gold, 1.2)); sp.castShadow = false; chest.add(sp); sparks.push(sp) }
+  for (const [x, z] of [[-3.2, 1.6], [3.1, .6]]) { const b = bush(.9); b.position.set(x, 0, z); W1.add(b) }
+  W1.userData = { lidPivot, gem, glowL, sparks } }
+
+// 2 · how we build: four small islands joined by bridges, one rule on each
+const W2 = world(84, -2, -8)
+{ const spots = [[-4.2, 0, -2.4], [4.2, .6, -2.6], [-4, .3, 3], [4, -.2, 3.2]]
+  const parts = spots.map(([x, y, z], i) => { const g = new THREE.Group(); g.position.set(x, y, z); g.add(island(2.4, 6, 10 + i)); W2.add(g); return g })
+  for (const [a, b] of [[0, 1], [0, 2], [1, 3], [2, 3]]) { const A = new THREE.Vector3(...spots[a]), B = new THREE.Vector3(...spots[b]), mid = A.clone().lerp(B, .5), len = A.distanceTo(B) - 4.4
+    const br = new THREE.Group(); br.position.set(mid.x, mid.y - .05, mid.z); br.rotation.y = -Math.atan2(B.z - A.z, B.x - A.x); W2.add(br)
+    for (let k = 0; k < Math.floor(len / .32); k++) br.add(mesh(new THREE.BoxGeometry(.26, .1, .76), mat(k % 2 ? C.wood : C.trunk), -len / 2 + .16 + k * .32, 0, 0))
+    for (const z of [-.36, .36]) { br.add(mesh(new THREE.BoxGeometry(len, .04, .04), mat(C.cream), 0, .45, z)); for (const x of [-len / 2, 0, len / 2]) br.add(mesh(new THREE.CylinderGeometry(.04, .05, .5, 5), mat(C.trunk), x, .22, z)) } }
+  // a · one idea at a time: a single lamp post that lights up
+  const lamp = new THREE.Group(); parts[0].add(lamp)
+  lamp.add(mesh(new THREE.CylinderGeometry(.08, .12, 2.4, 6), mat(0x5b4a78), 0, 1.2, 0), mesh(new THREE.CylinderGeometry(.22, .28, .2, 6), mat(0x5b4a78), 0, .1, 0))
+  lamp.add(mesh(new THREE.ConeGeometry(.45, .4, 6), mat(0x5b4a78), 0, 2.65, 0))
+  const bulb = mesh(new THREE.IcosahedronGeometry(.28, 1), lit(C.win, 0), 0, 2.3, 0); lamp.add(bulb)
+  const lampL = new THREE.PointLight(0xffd27a, 0, 8, 2); lampL.position.y = 2.2; lamp.add(lampL)
+  // b · no levels: a smooth curving slide down a hill, with a ball rolling
+  const hill = mesh(jitter(new THREE.ConeGeometry(1.6, 2, 7), .05), mat(C.grass2), 0, 1, 0); parts[1].add(hill)
+  const curve = new THREE.CatmullRomCurve3(Array.from({ length: 24 }, (_, k) => { const a = k * .38; return new THREE.Vector3(Math.cos(a) * (1.8 - k * .05), 2.1 - k * .085, Math.sin(a) * (1.8 - k * .05)) }))
+  parts[1].add(mesh(new THREE.TubeGeometry(curve, 60, .12, 5), mat(C.roof)))
+  const ball = mesh(new THREE.IcosahedronGeometry(.2, 1), mat(C.gold)); parts[1].add(ball)
+  // c · harder means different: a workbench where one shape becomes another
+  parts[2].add(mesh(new THREE.BoxGeometry(1.8, .12, 1), mat(C.wood), 0, .9, 0))
+  for (const [x, z] of [[-.75, -.35], [.75, -.35], [-.75, .35], [.75, .35]]) parts[2].add(mesh(new THREE.BoxGeometry(.1, .9, .1), mat(C.wood), x, .45, z))
+  const forms = [new THREE.BoxGeometry(.6, .6, .6), new THREE.IcosahedronGeometry(.4, 0), new THREE.ConeGeometry(.4, .7, 5)]
+  const shape = mesh(forms[0], mat(C.lilac), 0, 1.35, 0); parts[2].add(shape)
+  // d · data stays small: a tiny vault with a padlock on its door, and only three little cards inside
+  const vault = new THREE.Group(); parts[3].add(vault)
+  vault.add(mesh(new THREE.BoxGeometry(1.6, 1.3, 1.4), mat(C.stone), 0, .65, 0))
+  const vr = prism(1.9, .6, 1.6, mat(C.roof)); vr.position.y = 1.3; vault.add(vr)
+  vault.add(mesh(new THREE.BoxGeometry(.5, .45, .12), mat(C.gold), 0, .55, .76))
+  const shackle = mesh(new THREE.TorusGeometry(.15, .05, 4, 8, Math.PI), mat(C.stone2), 0, .82, .76); vault.add(shackle)
+  for (let k = 0; k < 3; k++) vault.add(mesh(new THREE.BoxGeometry(.3, .2, .03), lit(C.cyan, .5), -.5 + k * .5, 1.9 + (k % 2) * .15, 0))
+  const t = tree(.8); t.position.set(1.4, 0, -.9); parts[3].add(t)
+  const c1 = cloud(1.3); c1.position.set(0, 4, -6); W2.add(c1)
+  W2.userData = { bulb, lampL, curve, ball, shape, forms } }
+
+// 3 · Radlic: a faceted planet in the app's colours, with a ring of stepping stones that light up as you answer
+const W3 = world(128, 6, -26)
+{ const pg = new THREE.IcosahedronGeometry(4.2, 3), cols = [], v = new THREE.Vector3()
+  const bands = [0x2f63e8, C.blue, 0x7fdcfb, C.lilac, C.pink, C.peach, 0xffd9b8].map(c => new THREE.Color(c))  // bottom → top: the warm Radlic colours sit on the lit side
+  const nonIdx = pg.toNonIndexed(); const np = nonIdx.attributes.position
+  for (let i = 0; i < np.count; i += 3) { v.fromBufferAttribute(np, i); const y = (v.y / 4.2 + 1) / 2, b = Math.max(0, Math.min(bands.length - 1, Math.floor((y + (hash(i, 1, 2) - .5) * .06) * bands.length))); const c = bands[b]; for (let k = 0; k < 3; k++) cols.push(c.r, c.g, c.b) }
+  nonIdx.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3)); nonIdx.computeVertexNormals()
+  const planet = mesh(nonIdx, new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: .9 })); planet.rotation.z = .3; W3.add(planet)
+  const ring = mesh(new THREE.RingGeometry(5.6, 6.6, 24, 1), mat(0xdfe6ff, { side: THREE.DoubleSide, transparent: true, opacity: .8 })); ring.rotation.x = Math.PI / 2.3; ring.visible = false; W3.add(ring)
+  const belt = new THREE.InstancedMesh(new THREE.DodecahedronGeometry(.16, 0), mat(0xdfe6ff), 90), bm = new THREE.Matrix4(), bq = new THREE.Quaternion(), be = new THREE.Euler(), bs = new THREE.Vector3(), bp = new THREE.Vector3()
+  for (let k = 0; k < 90; k++) { const a = k / 90 * Math.PI * 2 + hash(k, 1, 7) * .05, rr = 5.6 + hash(k, 2, 7) * 1.1, sc = .5 + hash(k, 3, 7) * 1.1
+    bp.set(Math.cos(a) * rr, (hash(k, 4, 7) - .5) * .25, Math.sin(a) * rr); bs.setScalar(sc); be.set(hash(k, 5, 7) * 3, hash(k, 6, 7) * 3, 0); bm.compose(bp, bq.setFromEuler(be), bs); belt.setMatrixAt(k, bm) }
+  belt.castShadow = true; const beltG = new THREE.Group(); beltG.rotation.x = -.75; beltG.rotation.z = .3; beltG.add(belt); W3.add(beltG)
+  const moon = mesh(new THREE.IcosahedronGeometry(.7, 0), mat(C.stone)); W3.add(moon)
+  W3.add(new THREE.Mesh(new THREE.SphereGeometry(4.55, 48, 32), new THREE.ShaderMaterial({ transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    vertexShader: 'varying float f; void main(){ vec3 n = normalize(normalMatrix*normal); vec4 mv = modelViewMatrix*vec4(position,1.); f = 1. - abs(dot(n, normalize(-mv.xyz))); gl_Position = projectionMatrix*mv; }',
+    fragmentShader: 'varying float f; void main(){ float a = pow(f, 3.5) * .55; gl_FragColor = vec4(pow(vec3(.55,.8,1.), vec3(2.2)) * a, a); }' })))
+  const stones = []
+  for (let k = 0; k < 7; k++) { const a = -2.2 + k * .55, r = 8.5, y = -1.2 + k * .55
+    const st = new THREE.Group(); st.position.set(Math.cos(a) * r, y, Math.sin(a) * r); W3.add(st)
+    const slab = mesh(new THREE.CylinderGeometry(.75, .6, .35, 6), k === 6 ? mat(C.gold) : mat(C.stone)); st.add(slab)
+    const tick = k === 6 ? mesh(new THREE.OctahedronGeometry(.35, 0), lit(C.gold, .4), 0, .6, 0) : mesh(new THREE.BoxGeometry(.5, .06, .12), lit(0x34d399, 0).clone(), 0, .2, 0)
+    if (k < 6) { const t2 = mesh(new THREE.BoxGeometry(.25, .06, .12), tick.material, -.2, .2, .12); t2.rotation.y = -1.1; st.add(t2); tick.rotation.y = .5 }
+    st.add(tick); stones.push({ st, tick }) }
+  const c1 = cloud(1.4); c1.position.set(-7, -3, 2); W3.add(c1)
+  W3.userData = { planet, ring, moon, stones, beltG } }
+
+// 4 · who it's for: a little village island — a home, a school with a clock tower, and a gear workshop
+const W4 = world(172, 0, -12)
+{ W4.add(island(7.2, 9, 4))
+  const h = house(C.cream, C.roof2); h.position.set(-4.3, 0, .6); h.rotation.y = .35; W4.add(h)
+  const p1 = person(C.roof, 1.1, true); p1.position.set(-3.6, 0, 2.3); W4.add(p1); const p2 = person(C.gold, .75); p2.position.set(-3.1, 0, 2.5); W4.add(p2)
+  const sch = new THREE.Group(); sch.position.set(.4, 0, -1.4); W4.add(sch)
+  sch.add(mesh(new THREE.BoxGeometry(3.4, 1.6, 1.8), mat(C.cream), 0, .8, 0))
+  const sr = prism(3.8, .8, 2, mat(C.roof)); sr.position.y = 1.6; sch.add(sr)
+  for (const x of [-1.1, -.37, .37, 1.1]) sch.add(mesh(new THREE.CylinderGeometry(.1, .1, 1.3, 6), mat(C.white), x, .65, 1.05))
+  for (let k = 0; k < 3; k++) sch.add(mesh(new THREE.BoxGeometry(2.8 - k * .3, .12, .3), mat(C.stone), 0, .06 + k * .12, 1.35 - k * .15))
+  sch.add(mesh(new THREE.BoxGeometry(.8, 1.2, .8), mat(C.cream), 0, 2.6, -.2))
+  const tr = mesh(new THREE.ConeGeometry(.7, .8, 4), mat(C.roof)); tr.position.set(0, 3.6, -.2); tr.rotation.y = Math.PI / 4; sch.add(tr)
+  const face = mesh(new THREE.CylinderGeometry(.28, .28, .06, 10), mat(C.white), 0, 2.75, .22); face.rotation.x = Math.PI / 2; sch.add(face)
+  const hand = mesh(new THREE.BoxGeometry(.04, .22, .03), mat(C.ink)); hand.geometry.translate(0, .1, 0); hand.position.set(0, 2.75, .27); sch.add(hand)
+  sch.add(mesh(new THREE.CylinderGeometry(.03, .03, 1, 4), mat(C.stone2), 1.5, 2.1, -.5))
+  const flag = mesh(new THREE.PlaneGeometry(.6, .36, 6, 1), mat(C.blue, { side: THREE.DoubleSide })); flag.geometry.translate(.3, 0, 0); flag.position.set(1.52, 2.45, -.5); sch.add(flag)
+  for (const [x, z, c, wv] of [[-1, 2.6, C.roof2, true], [-.4, 2.8, C.leaf, false], [.3, 2.7, C.lilac, true], [1.2, 2.5, C.gold, false]]) { const k = person(c, .7, wv); k.position.set(x, 0, z); W4.add(k) }
+  const t3 = person(C.deep, 1.1); t3.position.set(1.9, 0, 2.2); W4.add(t3)
+  const ws = new THREE.Group(); ws.position.set(4.6, 0, .4); ws.rotation.y = -.4; W4.add(ws)
+  ws.add(mesh(new THREE.BoxGeometry(1.8, 1.2, 1.4), mat(C.wood), 0, .6, 0))
+  const wr = prism(2, .7, 1.6, mat(C.roof2)); wr.position.y = 1.2; ws.add(wr)
+  const g1 = gear(.8, 10, .2, mat(C.gold)); g1.position.set(-.3, 2.5, .2); ws.add(g1)
+  const g2 = gear(.55, 7, .2, mat(C.stone)); g2.position.set(.75, 2.2, .25); ws.add(g2)
+  for (const [x, z, s, a] of [[-6, -2, 1.1, 0], [-1.8, -4.3, .9, 1], [5.4, -3.2, 1.2, 0], [6.3, 2.8, .8, 1], [-6.2, 2.8, .9, 1]]) { const tt = tree(s, !!a); tt.position.set(x, 0, z); W4.add(tt) }
+  const c1 = cloud(1.3); c1.position.set(-8, 3, -5); W4.add(c1); const c2 = cloud(1); c2.position.set(8, 4, -2); W4.add(c2)
+  for (let k = 0; k < 7; k++) { const st = mesh(new THREE.CylinderGeometry(.3, .32, .06, 6), mat(C.sand), -2.8 + k * .6, .03, 1.6 + Math.sin(k) * .3); W4.add(st) }
+  for (const [x, z] of [[-5.4, .8], [-2.6, -1.2], [3, 2.9], [6, -.6]]) { const b = bush(1); b.position.set(x, 0, z); W4.add(b) }
+  W4.userData = { g1, g2, flag, hand, people: [p1, p2] } }
+
+// 5 · what comes next: a stone archway at the top of a winding stair, with a door of soft light
+const W5 = world(216, 5, -24)
+{ W5.add(island(4.8, 8, 5))
+  const steps = []
+  for (let k = 0; k < 9; k++) { const a = k * .55, s = mesh(new THREE.BoxGeometry(1.1, .3, .8), mat(k % 2 ? C.stone : C.cream), Math.cos(a) * 2.6, .15 + k * .32, Math.sin(a) * 2.6); s.rotation.y = -a; W5.add(s); steps.push(s) }
+  W5.add(mesh(jitter(new THREE.CylinderGeometry(1.5, 1.9, 3, 7), .1), mat(C.stone2), 0, 1.5, 0))  // the rock the arch stands on
+  const archG = new THREE.Group(); archG.position.set(0, 3.05, 0); W5.add(archG)
+  archG.add(mesh(new THREE.BoxGeometry(.5, 2.8, .5), mat(C.stone), -1.4, 1.4, 0), mesh(new THREE.BoxGeometry(.5, 2.8, .5), mat(C.stone), 1.4, 1.4, 0))
+  const top = mesh(new THREE.TorusGeometry(1.4, .28, 4, 10, Math.PI), mat(C.stone)); top.position.y = 2.8; archG.add(top)
+  archG.add(mesh(new THREE.BoxGeometry(3.4, .3, .7), mat(C.cream), 0, 0, 0))
+  const door = new THREE.Mesh(new THREE.PlaneGeometry(2.3, 3.6), new THREE.ShaderMaterial({ uniforms: { t: { value: 0 } }, transparent: true, side: THREE.DoubleSide, depthWrite: false,
+    vertexShader: 'varying vec2 u; void main(){ u = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }',
+    fragmentShader: 'uniform float t; varying vec2 u; void main(){ vec2 p = u - vec2(.5,.45); float r = length(p*vec2(1.,.7)); float s = sin(atan(p.y,p.x)*4. + r*18. - t*1.5)*.5+.5; vec3 c = mix(vec3(.55,.75,1.), vec3(.95,.85,1.), s); float a = smoothstep(.55,.1,r)*.85; gl_FragColor = vec4(pow(c, vec3(2.2)), a); }' }))
+  door.position.set(0, 1.7, 0); archG.add(door)
+  for (const [x, y, z, s] of [[18, 6, -16, 3], [-14, 10, -22, 2.4], [8, -6, -30, 2]]) { const far = island(s, 6, x); far.position.set(x, y, z); far.scale.setScalar(.6); W5.add(far) }
+  const c1 = cloud(1.2); c1.position.set(6, 6.5, -7); W5.add(c1)  // up behind the arch, clear of the caption and the stairs
+  for (const [x, z] of [[3, 2.5], [-3.2, 1.8]]) { const b = bush(.9); b.position.set(x, 0, z); W5.add(b) }
+  W5.userData = { door, steps } }
+
+// ── the guide, faceted to match ──
+const robot = new THREE.Group()
+{ robot.add(mesh(new THREE.IcosahedronGeometry(1, 2), mat(C.white, { roughness: .5 })))
+  const vis = mesh(new THREE.SphereGeometry(1.02, 32, 16, Math.PI / 2 - 1.05, 2.1, .95, 1.15), mat(C.ink, { roughness: .25, flatShading: false })  /* glossy glass, not facets */); robot.add(vis)
+  for (const x of [-.3, .3]) robot.add(mesh(new THREE.CapsuleGeometry(.1, .12, 2, 6), lit(C.cyan, 1.4), x, .08, .99))
+  for (const x of [-1, 1]) { const e = mesh(new THREE.CylinderGeometry(.26, .26, .22, 8), mat(C.roof), x * .98, 0, 0); e.rotation.z = Math.PI / 2; robot.add(e) }
+  robot.add(mesh(new THREE.CylinderGeometry(.03, .03, .45, 5), mat(C.stone2), 0, 1.2, 0), mesh(new THREE.IcosahedronGeometry(.13, 0), mat(C.white), 0, 1.45, 0), mesh(new THREE.CylinderGeometry(.14, .2, .08, 8), mat(C.roof), 0, .99, 0))
+  const ring = mesh(new THREE.TorusGeometry(1.75, .06, 3, 28), lit(C.blue, .9)); ring.rotation.x = Math.PI / 2.3; ring.rotation.y = .35; robot.add(ring); robot.userData.ring = ring
+  robot.scale.setScalar(.75)
+  // it flies well above the islands: its ring's shadow landed as a stray black arc on every one, and self-shadowing blocked out the visor
+  robot.traverse(o => { o.castShadow = false; o.receiveShadow = false }) }
+scene.add(robot)
+
+const birds = Array.from({ length: 7 }, (_, i) => { const b = new THREE.Group(), m = mat(C.white, { side: THREE.DoubleSide })
+  const body = new THREE.Mesh(new THREE.ConeGeometry(.08, .45, 5), m); body.rotation.x = Math.PI / 2; b.add(body)
+  const wing = side => { const w = new THREE.Group(), sh = new THREE.Shape(); sh.moveTo(0, 0); sh.lineTo(side * .6, .05); sh.lineTo(side * .15, -.18); sh.closePath(); const g = new THREE.ShapeGeometry(sh); g.rotateX(-Math.PI / 2); w.add(new THREE.Mesh(g, m)); b.add(w); return w }
+  b.userData = { l: wing(-1), r: wing(1) }; b.scale.setScalar(.75 + (i % 3) * .12); scene.add(b); return b })
+const flies = Array.from({ length: 5 }, (_, i) => { const b = new THREE.Group(), m = mat([C.pink, C.peach, C.gold, C.lilac, C.white][i], { side: THREE.DoubleSide, emissive: 0x332244, emissiveIntensity: .3 })
+  const w = side => { const o = new THREE.Group()  // two rounded lobes per wing, like a real butterfly
+    for (const [y, r] of [[.05, .1], [-.07, .07]]) { const g = new THREE.CircleGeometry(r, 10); g.scale(1.2, 1, 1); g.rotateX(-Math.PI / 2); g.translate(side * r * 1.1, 0, y); o.add(new THREE.Mesh(g, m)) }
+    b.add(o); return o }
+  b.add(new THREE.Mesh(new THREE.CapsuleGeometry(.015, .14, 2, 4).rotateX(Math.PI / 2), mat(C.ink)))
+  b.userData = { l: w(-1), r: w(1) }; scene.add(b); return b })
+const motes = (() => { const N = 34, base = new Float32Array(N * 3); for (let i = 0; i < N; i++) base.set([(hash(i, 1, 4) - .5) * 18, hash(i, 2, 4) * 6 - 1, (hash(i, 3, 4) - .5) * 12], i * 3)
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(base.slice(), 3))
+  const p = new THREE.Points(g, new THREE.PointsMaterial({ color: 0xffe7a3, size: .09, transparent: true, opacity: .75, depthWrite: false })); p.userData.base = base; scene.add(p); return p })()
+
+// ── camera path: a framed shot of each island, and a flight between them ──
+const shot = [
+  [new THREE.Vector3(10, 7, 22), new THREE.Vector3(0, .5, 0)],
+  [new THREE.Vector3(50, 11, 2), new THREE.Vector3(42, 4.6, -18)],
+  [new THREE.Vector3(84, 14, 20), new THREE.Vector3(84, -1.5, -8)],
+  [new THREE.Vector3(144, 12, 2), new THREE.Vector3(128, 5.5, -26)],
+  [new THREE.Vector3(176, 10, 16), new THREE.Vector3(172, 1, -12)],
+  [new THREE.Vector3(224, 12, -6), new THREE.Vector3(216, 7, -24)],
+]
+if (small) shot.forEach(([p, t]) => p.lerp(t, -.35))  // pull back on phones so each island fits
+const guideAt = [[5.5, 4.5, 2],  /* opening: right of the island, clear of the headline */ [-4.5, 3, 5], [0, 4.5, 3], [-6.5, 2.5, 5], [-7.5, 4, 4], [-4, 4, 4]].map((o, i) => worlds[i].position.clone().add(new THREE.Vector3(...o)))
+const camCurve = new THREE.CatmullRomCurve3(shot.map(s => s[0]), false, 'centripetal')
+const tgtCurve = new THREE.CatmullRomCurve3(shot.map(s => s[1]), false, 'centripetal')
+const botCurve = new THREE.CatmullRomCurve3(guideAt.flatMap((p, i) => i < guideAt.length - 1 ? [p, p.clone().lerp(guideAt[i + 1], .5).add(new THREE.Vector3(0, 5, 6))] : [p]), false, 'centripetal')
+// ── frame loop ──
+const clock = new THREE.Clock(), look = new THREE.Vector3(), tmp = new THREE.Vector3()
+let camInit = false, bank = 0
+const prevCam = new THREE.Vector3()
+// scroll position (x = which stop, fractional in between) -> curve parameter, holding still for a moment at each stop
+function param(x, lead = 0) {
+  const i = Math.min(STOPS.length - 2, Math.floor(x)), s = clamp01(x - i)
+  return (i + ease(clamp01((s - .2 + lead) / .6))) / (STOPS.length - 1)
+}
+let raf = 0, alive = true
+function frame() {
+  if (!alive) return
+  const dt = Math.min(clock.getDelta(), .05), now = clock.elapsedTime
+  const u = Math.max(0, Math.min(STOPS.length - 1, getX()))
+  const k = param(u), sway = reduce ? 0 : Math.sin(now * .25) * .6
+  camCurve.getPoint(k, tmp); tmp.x += sway; tmp.y += Math.sin(now * .3) * .25
+  if (!camInit) { camera.position.copy(tmp); prevCam.copy(tmp); camInit = true }
+  camera.position.lerp(tmp, reduce ? 1 : Math.min(1, dt * 4))
+  tgtCurve.getPoint(k, look); camera.lookAt(look)
+  // the sun follows the shot so every island gets crisp shadows
+  sun.position.copy(look).add(new THREE.Vector3(-14, 22, 12)); sun.target.position.copy(look)
+  // the guide flies a little ahead of the camera, bobbing, and turns to face you
+  botCurve.getPoint(param(u, .12), robot.position); robot.position.y += Math.sin(now * 1.8) * .15
+  robot.lookAt(camera.position); robot.userData.ring.rotation.z += dt * 1.1
+  // bank gently into the turn while flying between islands
+  const vx = (tmp.x - prevCam.x) / Math.max(dt, 1e-3); prevCam.copy(tmp)
+  bank += (Math.max(-.06, Math.min(.06, -vx * .003)) - bank) * Math.min(1, dt * 2); if (!reduce) camera.rotateZ(bank)
+  if (!reduce) {
+    birds.forEach((b, i) => { const a = now * .22 + i * .32, r = 10 + (i % 3) * 1.2
+      b.position.set(look.x + Math.cos(a) * r, look.y + 4.5 + Math.sin(now * .8 + i) * .4 + (i % 2) * .7, look.z - 9 + Math.sin(a) * r * .35)  // circling behind the island, never between it and the camera
+      b.rotation.y = -a + Math.PI; const f = Math.sin(now * 9 + i * 1.3) * .55; b.userData.l.rotation.z = f; b.userData.r.rotation.z = -f })
+    flies.forEach((b, i) => { const a = now * (.5 + i * .07) + i * 2
+      b.position.set(look.x + Math.cos(a) * (2.5 + i * .4), look.y + 1.2 + Math.sin(now * 1.3 + i) * .5, look.z + Math.sin(a * 1.3) * 1.5)
+      b.rotation.y = -a; const f = Math.sin(now * 16 + i) * 1.1; b.userData.l.rotation.z = f; b.userData.r.rotation.z = -f })
+    const mp = motes.geometry.attributes.position, mb = motes.userData.base
+    for (let i = 0; i < mp.count; i++) mp.setXYZ(i, look.x + mb[i * 3] + Math.sin(now * .4 + i) * .5, look.y + mb[i * 3 + 1] + Math.sin(now * .6 + i * 2) * .3, look.z + mb[i * 3 + 2] + Math.cos(now * .35 + i) * .5)
+    mp.needsUpdate = true; motes.material.opacity = .45 + Math.sin(now * 2) * .2
+    clouds.forEach((c, i) => { c.position.x += Math.sin(now * .12 + i) * .004 })
+    folks.forEach(f => { const { arms, wave, ph } = f.userData
+      arms[0].rotation.z = -.12 + Math.sin(now * 1.4 + ph) * .06; arms[1].rotation.z = .12 - Math.sin(now * 1.4 + ph) * .06
+      if (wave) arms[0].rotation.z = -2.5 + Math.sin(now * 7 + ph) * .35
+      f.rotation.z = Math.sin(now * 1.1 + ph) * .03 })
+    W0.userData.blades.rotation.z += dt * .9
+  }
+
+  const w = i => ease(clamp01(1 - Math.abs(u - STOPS[i]) / .5))
+  worlds.forEach((g, i) => { g.position.y += Math.sin(now * .6 + i) * .002; g.rotation.y = Math.sin(now * .15 + i) * .04 })
+  W0.userData.water.uniforms.t.value = now
+  { const d = W1.userData, k1 = w(1); d.lidPivot.rotation.x = -k1 * 1.6; d.gem.material.emissiveIntensity = k1 * 1.6; d.gem.position.y = 1.1 + k1 * .5 + Math.sin(now * 2) * .05 * k1; d.gem.rotation.y += dt; d.glowL.intensity = k1 * 12
+    d.sparks.forEach((sp, i) => { const c = (now * .35 + i / 12) % 1; sp.position.set(Math.sin(i * 2.4 + now) * .35, .9 + c * 1.8, Math.cos(i * 1.7) * .25); sp.scale.setScalar(k1 * (1 - c) * 1.2); sp.rotation.y += dt * 2 }) }
+  { const d = W2.userData, k2 = w(2); d.bulb.material.emissiveIntensity = k2 * 1.8; d.lampL.intensity = k2 * 10
+    d.ball.position.copy(d.curve.getPointAt((now * .18) % 1)).y += .2
+    const f = Math.floor(now / 2.2) % 3; if (d.shape.geometry !== d.forms[f]) d.shape.geometry = d.forms[f]; d.shape.rotation.y += dt * .8 }
+  { const d = W3.userData, k3 = w(3); d.planet.rotation.y += dt * .08; d.beltG.rotation.y += dt * .05; const a = now * .3; d.moon.position.set(Math.cos(a) * 7.5, 2.5, Math.sin(a) * 7.5)
+    d.stones.forEach(({ st, tick }, i) => { const on = clamp01(k3 * 1.4 - i * .13); if (i < 6) tick.material.emissiveIntensity = on * 1.2; st.position.y += Math.sin(now * 1.2 + i) * .003; if (i === 6) tick.rotation.y += dt }) }
+  { const d = W4.userData; d.g1.rotation.z += dt * .8; d.g2.rotation.z -= dt * .8 * 10 / 7; d.hand.rotation.z = -now * .5
+    const fp = d.flag.geometry.attributes.position; for (let i = 0; i < fp.count; i++) { const x = fp.getX(i); fp.setZ(i, Math.sin(x * 6 - now * 4) * .07 * x) } fp.needsUpdate = true; d.flag.geometry.computeVertexNormals()
+    d.people.forEach((p, i) => p.position.y = Math.abs(Math.sin(now * 3 + i)) * .08 * w(4)) }
+  { const d = W5.userData, k5 = w(5); d.door.material.uniforms.t.value = now; d.door.material.opacity = k5; d.steps.forEach((s, i) => s.scale.setScalar(.4 + .6 * ease(clamp01(k5 * 1.6 - i * .07)))) }
+
+  composer.render(); raf = requestAnimationFrame(frame)
+}
+// ── the miniature look: ambient occlusion where things meet, and a soft tilt-shift blur at the frame's top and bottom ──
+const composer = new EffectComposer(renderer)
+composer.renderTarget1.samples = composer.renderTarget2.samples = 4  // MSAA survives post-processing
+composer.addPass(new RenderPass(scene, camera))
+const ao = new GTAOPass(scene, camera, cw(), ch())
+ao.updateGtaoMaterial({ radius: .5, distanceFallOff: .6, thickness: 1, scale: 1.1 }); ao.blendIntensity = .9
+if (!small) composer.addPass(ao)  // phones skip AO: it is the heaviest pass
+const tiltH = new ShaderPass(HorizontalTiltShiftShader), tiltV = new ShaderPass(VerticalTiltShiftShader)
+const setTilt = () => { tiltH.uniforms.h.value = 1.8 / cw(); tiltV.uniforms.v.value = 1.8 / ch(); tiltH.uniforms.r.value = tiltV.uniforms.r.value = .5 }
+setTilt(); if (!reduce) { composer.addPass(tiltH); composer.addPass(tiltV) }
+composer.addPass(new OutputPass())
+const onResize = () => { camera.aspect = cw() / ch(); frameOffset(); camera.updateProjectionMatrix(); renderer.setSize(cw(), ch(), false); composer.setSize(cw(), ch()); setTilt() }
+addEventListener('resize', onResize)
+raf = requestAnimationFrame(frame); onReady?.()
+return {
+  pause() { cancelAnimationFrame(raf); raf = 0; clock.stop() },
+  resume() { if (!raf && alive) { clock.start(); raf = requestAnimationFrame(frame) } },
+  dispose() { alive = false; cancelAnimationFrame(raf); removeEventListener('resize', onResize); composer.dispose?.(); renderer.dispose() },
+}
+}
