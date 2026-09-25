@@ -18,7 +18,8 @@ const BASE = (process.argv[2] ?? 'https://radlor.com').replace(/\/$/, '')
 
 // The pages that make the claim, plus the form page — historically the most likely place for a
 // third party to arrive (a CAPTCHA, an embed, a browser-side database client).
-const PAGES = ['/', '/privacy', '/terms', '/waitlist']
+// /radlic since 2026-09-25: the Radlic landing page, the one page here with a script of its own (the demo player).
+const PAGES = ['/', '/privacy', '/terms', '/waitlist', '/radlic']
 
 /**
  * ⚠️ THREE STATES, THREE EXIT CODES: 2 "could not look", 1 "looked and found a defect", 0 "looked

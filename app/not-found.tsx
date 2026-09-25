@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { APP_NAME, HEADER, SUPPORT_EMAIL } from '@/site'
+import { SiteChrome } from '@/components/SiteChrome'
 
 /**
  * The 404. Until 2026-09-07 this file did not exist and Next served its own default — an unstyled
@@ -20,6 +21,7 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
+    <SiteChrome>
     <section className="mx-auto max-w-5xl px-6 pt-20 pb-24">
       {/* ⚠️ `rl-dark` PINS THIS PANEL DARK IN BOTH THEMES, and that is not decoration — the mascot
           render has a pure black ground, so on the light theme an unpinned panel would frame it as
@@ -80,5 +82,6 @@ export default function NotFound() {
         <a href={`mailto:${SUPPORT_EMAIL}`} className="rl-link text-accent">{SUPPORT_EMAIL}</a>.
       </p>
     </section>
+    </SiteChrome>
   )
 }

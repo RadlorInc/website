@@ -14,7 +14,7 @@
 #
 # ⚠️ The key is PUBLIC by design — IndexNow verifies ownership by fetching it from the host itself.
 # It lives at public/<key>.txt in BOTH repos, because verification is per-host: radlor.com's file
-# does not vouch for adaptivelearn.radlor.com.
+# does not vouch for radlic.com.
 set -euo pipefail
 
 KEY=0368a934f2ef49baadff2a85a949d937

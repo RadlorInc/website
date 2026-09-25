@@ -8,8 +8,8 @@ This repo is **radlor.com**: the marketing and company site for Radlor. It is NO
 
 | | |
 |---|---|
-| **This site** | `radlor.com` — this repo. Next 16 App Router, Tailwind 4, no database, no auth, no client JS beyond Next's own. |
-| **The product** | `adaptivelearn.radlor.com` — a **separate repo and a separate Vercel project**, at `../milo-story-mode` on this machine (GitHub `RadlorMain/learn`). Deliberately separate: that repo carries ~1,100 tests, an AR/camera stack and a deploy pipeline that has broken silently more than once. A marketing edit must never be able to take the app down, and vice versa. |
+| **This site** | `radlor.com` — this repo. Next 16 App Router, Tailwind 4, no database, no auth. The only client JS beyond Next's own is `/radlic`'s demo player (first-party, since 2026-09-25). |
+| **The product** | **Radlic** at `radlic.com` (AdaptiveLearn at `adaptivelearn.radlor.com` until 2026-09-24); its product page here is `/radlic` (`/adaptivelearn` 308s to it) — a **separate repo and a separate Vercel project**, at `../milo-story-mode` on this machine (GitHub `RadlorMain/learn`). Deliberately separate: that repo carries ~1,100 tests, an AR/camera stack and a deploy pipeline that has broken silently more than once. A marketing edit must never be able to take the app down, and vice versa. |
 | **Every shared fact** | [`site.ts`](site.ts) — origin, support address, product URL, nav, company facts. **Put a string there before you put it in a page.** The product repo learned this the hard way: its support address lived as a literal in four files, so a brand change meant four edits and hoping none was missed. |
 | **Facts I could not derive** | [`docs/brand-facts.md`](docs/brand-facts.md) — the `TODO`s in `site.ts` and what they feed. |
 | **Every colour** | [`docs/brand-palette.md`](docs/brand-palette.md) — read off the LOGO, with the pixel each came from and its contrast. ⚠️ The amber palette that cited a brand-guide PDF not in this repo is superseded; do not restore it. |
@@ -50,7 +50,7 @@ tense — "as measured 2026-09-05" is honest; the same words in the present tens
 tomorrow that nobody can keep.
 
 **Structured data on every page that has a shape.** `Organization` + `WebSite` sit in the root
-layout; `SoftwareApplication` + `FAQPage` on `/adaptivelearn`; `Article` on each post. This is the
+layout; `SoftwareApplication` on `/radlic` (the `/adaptivelearn` page and its `FAQPage` went on 2026-09-25); `Article` on each post. This is the
 half of SEO that also does the **GEO** work — an answer engine that cannot resolve who Radlor *is*
 will not name it.
 

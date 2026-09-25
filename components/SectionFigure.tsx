@@ -11,7 +11,7 @@ import Image from 'next/image'
  * the page, it does not belong in this component; it is decoration, and it should be an icon.
  *
  * ⚠️ THE CAPTION CARRIES THE INFORMATION, THE IMAGE IS DECORATIVE, AND THAT IS DELIBERATE — it is
- * the pattern this repo already uses for the difficulty-line figure on /adaptivelearn, whose SVG
+ * the pattern this repo used for the difficulty-line figure on /adaptivelearn (deleted 2026-09-25), whose SVG
  * is `aria-hidden` with a `<figcaption>` beside it. A crawler, an answer engine and a screen
  * reader all read the caption; none of them can read a render. So the caption must state the point
  * in full rather than gesture at the picture ("A frame becomes a few coordinates", never "see the

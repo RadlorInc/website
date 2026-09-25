@@ -7,7 +7,7 @@ import { APP_NAME, SITE_URL, SUPPORT_EMAIL } from '@/site'
 export const metadata: Metadata = {
   title: `${APP_NAME} for schools`,
   description:
-    'Run AdaptiveLearn with a class: pick a grade and its modules, give each student a username, and set class exercises you unlock when you are ready. Runs in a browser and needs no install.',
+    'Run Radlic with a class: pick a grade and its modules, give each student a username, and set class exercises you unlock when you are ready. Runs in a browser and needs no install.',
   alternates: { canonical: '/for-schools' },
 }
 
@@ -67,7 +67,7 @@ export default function ForSchools() {
           Interested in bringing {APP_NAME} to your school?
         </p>
         <a
-          href={`mailto:${SUPPORT_EMAIL}?subject=AdaptiveLearn%20for%20our%20school`}
+          href={`mailto:${SUPPORT_EMAIL}?subject=Radlic%20for%20our%20school`}
           className="rl-rise rl-cta mt-9 inline-block rounded-full bg-accent px-6 py-3 text-on-accent font-medium hover:opacity-90"
           style={{ '--d': '0.27s' } as React.CSSProperties}
         >

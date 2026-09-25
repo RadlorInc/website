@@ -49,7 +49,7 @@ export default function Thanks() {
         is deleted, not flagged.
       </p>
       <div className="rl-rise mt-9 flex flex-wrap gap-3" style={{ '--d': '0.24s' } as React.CSSProperties}>
-        <Link href="/adaptivelearn" className="rl-cta rounded-full bg-accent px-6 py-3 text-on-accent font-medium hover:opacity-90">
+        <Link href="/radlic" className="rl-cta rounded-full bg-accent px-6 py-3 text-on-accent font-medium hover:opacity-90">
           How it works
         </Link>
         <Link href="/" className="rl-cta rl-cta-quiet rounded-full border border-line px-6 py-3 font-medium hover:border-foreground transition-colors">

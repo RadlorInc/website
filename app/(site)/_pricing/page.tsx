@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 /**
  * ⚠️ NOT ONE PRICE IS TYPED ON THIS PAGE. Every figure comes from `PRICING` / `PLANS` in
- * `site.ts`, so the table, the JSON-LD offers, the FAQ answers on `/adaptivelearn` and the fact
+ * `site.ts`, so the table, the JSON-LD offers, the FAQ answers once on `/adaptivelearn` (now a redirect to /radlic) and the fact
  * row on the home page cannot disagree with each other. Add a child count and the row appears.
  *
  * ⚠️ `npm run check:pricing` is the gate. It pins the three figures that were published to
@@ -163,7 +163,7 @@ export default function Pricing() {
         more a shippable good than a free one was.
 
         So the type is the fix. `SoftwareApplication` at the SAME `@id` the app and
-        `/adaptivelearn` declare merges this page into that one node instead of standing up a
+        `/radlic` declare merges this page into that one node instead of standing up a
         competing retail product — and it carries the price perfectly well, which is the only
         reason the block exists.
 
