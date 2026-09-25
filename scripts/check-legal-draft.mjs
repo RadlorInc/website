@@ -23,7 +23,7 @@ import { marked } from 'marked'
 import { readFileSync } from 'node:fs'
 
 const src = readFileSync('content/legal.ts', 'utf8')
-const page = readFileSync('app/terms/page.tsx', 'utf8')
+const page = readFileSync('app/(site)/terms/page.tsx', 'utf8')
 
 const body = /body: `([\s\S]*?)`,\n}/.exec(src)?.[1]
 const html = body && (await marked.parse(body))

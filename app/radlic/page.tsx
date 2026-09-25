@@ -8,6 +8,7 @@
  * is the app's /help in short. The two chalkboards are real lesson screens: content/radlic-demo.json.
  */
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { APP_ID, APP_NAME, APP_URL, COMPANY, SITE_URL } from '@/site'
 import demos from '@/content/radlic-demo.json'
 import LessonDemo, { type Demo } from './LessonDemo'
@@ -152,6 +153,8 @@ export default function RadlicPage() {
         <a href={`${RADLIC}/legal/privacy`}>Radlic Privacy Policy</a>
         <a href={`${RADLIC}/legal/terms`}>Radlic Terms</a>
         <a href={`${RADLIC}/legal/parent-rights`}>Parent rights</a>
+        {/* The only way back to the company site from here: this page wears none of radlor.com's chrome. */}
+        <Link href="/" className={s.maker}>{APP_NAME} is made by {COMPANY}</Link>
       </footer>
       <AppJsonLd />
     </main>

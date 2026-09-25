@@ -200,7 +200,7 @@ export const PAGES = [
   { href: '/', label: 'Home', where: 'footer' },
   // The product page. /adaptivelearn was it until 2026-09-25 and now 308s here (next.config.ts).
   { href: '/radlic', label: 'Radlic', where: 'both' },
-  // ⚠️ HIDDEN 2026-09-10, founder's call. The page still exists at `app/_pricing/` — the
+  // ⚠️ HIDDEN 2026-09-10, founder's call. The page still exists at `app/(site)/_pricing/` — the
   // underscore keeps it out of routing, so /pricing 404s and it is absent from the header, the
   // footer, the sitemap and llms.txt because all four read this list. Restore by renaming the
   // folder back and putting this row back; the BLURB line in `app/llms.txt/route.ts` is kept
