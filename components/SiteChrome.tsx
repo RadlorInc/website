@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { COMPANY, FOOTER, FOUNDED_YEAR, HEADER, SOCIAL, SUPPORT_EMAIL, TAGLINE } from '@/site'
+import { APP_URL, COMPANY, FOOTER, FOUNDED_YEAR, HEADER, SOCIAL, SUPPORT_EMAIL, TAGLINE } from '@/site'
 
 /**
  * The Radlor header and footer around a company page. Worn by `app/(site)/layout.tsx` (every company page) and by
@@ -45,20 +45,17 @@ export function SiteChrome({ children }: { children: ReactNode }) {
               </Link>
             ))}
           </div>
-          {/* ⚠️ THE WAITLIST IS THE ONLY DOOR — founder's call 2026-08-31, and this button is
-              the one that matters because it is on every page. It has been "Open AdaptiveLearn"
-              and then "Sign in"; both offered entry to a product that is in testing. Everyone
-              currently inside is a tester. Do not point this at APP_URL again: if a visitor
-              arriving through radlor.com can reach the app from here, the waitlist is not the
-              only door. ⚠️ Since 2026-09-25 it is NOT the only door, by the founder's decision: /radlic
-              (the product page) links "Sign up free" and "Log in" to the app on radlic.com. This button
-              still goes to the waitlist; whether it should change is the founder's call. */}
-          <Link
-            href="/waitlist"
+          {/* The button on every page. Founder, 2026-09-25: "hide the Join the waitlist button at the top and
+              from everywhere, and put Try Radlic". It goes where /radlic's "Sign up free" goes — the app's sign-in
+              / sign-up page. The /waitlist page and its form still exist (unlinked), so an old shared link keeps
+              working and /privacy's description of that form stays true. (2026-08-31 to 2026-09-25 this was the
+              waitlist, "the only door"; history in git.) */}
+          <a
+            href={`${APP_URL}/auth`}
             className="rl-cta rl-cta-quiet rounded-full bg-accent px-4 py-2 text-on-accent text-sm font-medium whitespace-nowrap hover:opacity-90 transition-opacity"
           >
-            Join the waitlist
-          </Link>
+            Try Radlic
+          </a>
         </nav>
       </div>
     </header>

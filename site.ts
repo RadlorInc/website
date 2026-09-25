@@ -211,10 +211,9 @@ export const PAGES = [
   { href: '/for-schools', label: 'Schools', where: 'both' },
   { href: '/writing', label: 'Writing', where: 'both' },
   { href: '/about', label: 'About', where: 'both' },
-  // 'footer', not 'both': the header already carries a hard-coded "Join the waitlist" CTA, so a
-  // nav link beside it is the same destination twice in one row. Still in the sitemap and in
-  // llms.txt via this row — it is the only way in, so it is the page an answer engine most needs.
-  { href: '/waitlist', label: 'Waitlist', where: 'footer' },
+  // Hidden 2026-09-25 (founder: "hide the waitlist from everywhere"; the CTA is now "Try Radlic").
+  // The page still answers at /waitlist for old links; restore this row to list it again.
+  // { href: '/waitlist', label: 'Waitlist', where: 'footer' },
   { href: '/contact', label: 'Contact', where: 'footer' },
   { href: '/data-and-safety', label: 'Data & safety', where: 'footer' },
   { href: '/privacy', label: 'Privacy', where: 'footer' },

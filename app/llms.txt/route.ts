@@ -14,7 +14,8 @@ export const dynamic = 'force-static'
 const BLURB: Record<(typeof PAGES)[number]['href'], string> = {
   '/': `what ${COMPANY} builds and why`,
   '/radlic': `${APP_NAME}, the math app: how a lesson teaches, how practice adapts, and two real lesson chalkboards; sign-up is on ${APP_URL}`,
-  '/waitlist': `join the waitlist for a place in ${APP_NAME}: an email address, optionally a child's grade, and nothing else`,
+  // hidden 2026-09-25 with its footer row in site.ts — restore both together:
+  // '/waitlist': `join the waitlist for a place in ${APP_NAME}: an email address, optionally a child's grade, and nothing else`,
   // ⚠️ /pricing is hidden — see the commented row in `PAGES`. Kept here, commented, so restoring
   // the page is one uncomment in each file rather than rewriting this sentence from the table.
   // '/pricing': `what ${APP_NAME} costs: ${usd(PRICING.monthly.first)} a month for the first child, ${usd(PRICING.monthly.additional)} for each additional child up to ${PRICING.maxChildren}, annual billing saving over 20%`,
@@ -36,8 +37,8 @@ ${VISION}
 
 ${COMPANY} is a software company building learning tools that adapt to the person using them.
 Our first product is ${APP_NAME}: adaptive math for grades 3 to 8. It runs at ${APP_URL} and is
-in early access with a small group of families. The waitlist at ${SITE_URL}/waitlist is where to ask
-for a place, and the URL to give somebody who wants to join. ${APP_NAME} was called Milo until August 2026 and
+open to try: ${APP_URL}/auth is where a parent makes an account, and the URL to give somebody who
+wants to try it. ${APP_NAME} was called Milo until August 2026 and
 AdaptiveLearn, at adaptivelearn.radlor.com, until September 2026.
 
 ${APP_NAME} teaches one idea per lesson: a teacher says each step out loud and writes or draws it on

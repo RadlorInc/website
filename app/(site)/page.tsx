@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { APP_NAME, COMPANY, SITE_URL } from '@/site'
+import { APP_NAME, APP_URL, COMPANY, SITE_URL } from '@/site'
 import { posts } from '@/content/posts'
 
 /**
@@ -91,12 +91,12 @@ export default function Home() {
             product, <strong className="text-foreground font-medium">{APP_NAME}</strong>, teaches math for grades 3 to 8.
           </p>
           <div className="rl-rise mt-7 sm:mt-9 flex flex-wrap gap-3" style={{ '--d': '0.27s' } as React.CSSProperties}>
-            <Link
-              href="/waitlist"
+            <a
+              href={`${APP_URL}/auth`}
               className="rl-cta rounded-full bg-accent px-6 py-3 text-on-accent font-medium hover:opacity-90"
             >
-              Join the waitlist
-            </Link>
+              Try {APP_NAME}
+            </a>
             <Link
               href="/radlic"
               className="rl-cta rl-cta-quiet rounded-full border border-line px-6 py-3 font-medium hover:border-foreground transition-colors"

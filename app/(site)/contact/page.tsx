@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { MiloPanel } from '@/components/MiloPanel'
-import Link from 'next/link'
-import { APP_NAME, COMPANY, SUPPORT_EMAIL } from '@/site'
+import { APP_NAME, APP_URL, COMPANY, SUPPORT_EMAIL } from '@/site'
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -10,7 +9,7 @@ export const metadata: Metadata = {
 }
 
 const REASONS: { h: string; p: string; href?: string; cta?: string }[] = [
-  { h: 'Early access', p: `${APP_NAME} is being tested with a small group of families, and the waitlist is how you get in when we open it up — it is one field and it is the fastest route. Write here instead if you have a question the form cannot answer.`, href: '/waitlist', cta: 'Join the waitlist →' },
+  { h: 'Try it', p: `${APP_NAME} is open to try: make a parent account on ${APP_URL.replace('https://', '')} and add your child. Write here instead if you have a question first.`, href: `${APP_URL}/auth`, cta: `Try ${APP_NAME} →` },
   { h: 'Schools', p: 'We can set up a class with you: its grade, the modules it works on, and a login for each student. Say roughly how many students and which grade.' },
   { h: 'Support', p: 'Something broken, a question about your account, or a request to delete your data. We answer every one of these ourselves.' },
   { h: 'Press and partnerships', p: 'Happy to talk about what we are building and what we have learned doing it.' },
@@ -51,9 +50,9 @@ export default function Contact() {
             <h2 className="font-medium text-lg">{r.h}</h2>
             <p className="mt-2 text-muted leading-relaxed">{r.p}</p>
             {r.href && (
-              <Link href={r.href} className="rl-link text-accent mt-2 inline-block">
+              <a href={r.href} className="rl-link text-accent mt-2 inline-block">
                 {r.cta}
-              </Link>
+              </a>
             )}
           </div>
         ))}
