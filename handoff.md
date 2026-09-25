@@ -391,8 +391,8 @@ components/                MiloPanel · SectionIcon · SectionFigure — the onl
                            answers a different question. See "The image system" above.
 content/posts.ts + content/posts/*.md    three posts
 content/legal.ts           the Terms of Use body + DRAFT, PLACEHOLDERS and the module-scope guard
-public/hero.{webm,mp4}     the looping hero, 1600x900 · hero-portrait.* is the 720x1280 crop
-public/hero-poster*.jpg    one poster per orientation, chosen by media query in CSS
+components/journey/        the home page's first screen (2026-09-25): Journey.tsx (the words, the stops, the scroll)
+                           + scene.js (the 3D world, three.js from npm). Replaced the looping video hero.
 public/milo-*.webp   (10)  the mascot, one pose per page
 public/ico-*.webp    (17)  section chips, 256x256, shown at 40px
 public/fig-*.webp     (8)  content figures, 900px wide
@@ -400,16 +400,15 @@ public/fig-*.webp     (8)  content figures, 900px wide
                            `du -ch public/*.webp` rather than believing this number.
 supabase/migrations/       20260830000000_waitlist (the table) + 20260901071510_waitlist_anon_
                            narrow_insert (recovered from production — read its header)
-scripts/                   check-hero-contrast · check-pricing · check-social · check-waitlist-rls ·
+scripts/                   check-pricing · check-social · check-waitlist-rls ·
                            check-legal-draft · check-site-claims · check-migration-provenance ·
                            indexnow
 ```
 
-**Seven gates, all wired to `npm run check:*`.** Run them before pushing:
+**Six gates, all wired to `npm run check:*`.** Run them before pushing:
 
 | | what it proves |
 |---|---|
-| `check:hero-contrast` | the hero copy clears AA over every frame of both videos **and** the mark stays bright — two opposing gates |
 | `check:pricing` | every published pricing claim holds across all 4 plans |
 | `check:social` | all 6 `sameAs` links land on a real Radlor profile |
 | `check:waitlist-rls` | anon may INSERT exactly `(email, age_band, source)` and nothing else — no SELECT, no UPDATE, no DELETE, and it cannot dictate `id` or `created_at`. The last two probes are the only way to tell a column-scoped grant from a table-wide one |

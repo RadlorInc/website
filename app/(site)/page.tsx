@@ -1,111 +1,25 @@
 import Link from 'next/link'
-import { APP_NAME, APP_URL, COMPANY, SITE_URL } from '@/site'
+import { APP_NAME, COMPANY, SITE_URL } from '@/site'
 import { posts } from '@/content/posts'
+import { Journey } from '@/components/journey/Journey'
 
 /**
  * The home page states, in the first screen, what an answer engine has to be able to repeat:
  * who we are, what we make, and who it is for. Everything below it is evidence for that sentence.
  *
- * The motion is the company belief made literal — "the treasure is already inside the child, we
- * just light it up" — so the light arrives on the word `child` and radiates from behind it. All of
- * it is CSS (see the MOTION block in `globals.css`): this file stays a SERVER component, the route
- * stays statically prerendered, and the copy below is in the HTML a crawler gets on the first byte.
- *
- * ⚠️ Do not make this `'use client'` to add an animation. If the CSS layer cannot do it, that is a
- * reason to want it less, not a reason to ship 50 KB of JS onto the page an answer engine reads.
+ * ⚠️ THIS FILE STAYS A SERVER COMPONENT. The first screen is `<Journey />`, a client component — but its
+ * words are server-rendered like everything else here, and the 3D it draws is imported after mount in its
+ * own chunk. Until 2026-09-25 this comment said "no canvas, no scroll listener"; the founder chose the
+ * journey that day, and the two reasons behind the old rule (a flip-book hero that stepped, and copy
+ * that could not be kept legible over it on a phone) are what Journey.tsx is built against.
  */
 export default function Home() {
   return (
     <>
-      {/* THE HERO GROUND IS A LOOPING VIDEO, AND IT LOOPS BY CONSTRUCTION.
-
-          The generated clip pushes in and drifts left over 8 seconds, so its last frame is
-          nowhere near its first — frame 1 vs frame 193 measured a mean absolute difference of
-          29.5/255 against 1.8 for an ordinary frame step, which is a snap you would see every
-          loop, forever. `public/hero.*` is therefore the first 4 seconds PING-PONGED: forward,
-          then the same frames reversed, with the duplicate frame dropped at both the turn and
-          the seam. The end now equals the start by construction. Measured on the shipped files
-          the loop seam is 1.07 mean / 1.59% of pixels, BELOW a normal frame step — the push-in
-          reads as a slow breath in and out rather than as a clip restarting.
-
-          ⚠️ NO 'use client', NO CANVAS, NO SCROLL LISTENER. This is a plain <video>: the page is
-          a server component, the route prerenders, and every word is in the HTML on the first
-          byte. The last hero tied frames to scroll and had to be deleted; do not tie this one. */}
-      <section className="rl-hero">
-        {/* ⚠️ `media` ON <source> IS LOAD-BEARING AND IS THE ONLY REASON THERE IS NO JS HERE.
-            The resource-selection algorithm picks the first <source> whose media matches; when
-            NOTHING matches — which is what `prefers-reduced-motion: reduce` produces — the
-            element loads no resource at all. Not hidden, not paused: never requested. That is
-            the difference between honouring the preference and pretending to. Verified by
-            counting requests, not by reading CSS.
-
-            It also picks the orientation, because a 16:9 clip in a 375x715 box crops to its
-            middle 30% and the mark lands off-screen entirely. The portrait file is the same
-            ping-pong letterboxed onto its own black with the mark in the top third.
-
-            ⚠️ Media here is evaluated ONCE, at resource selection — it does not re-run when the
-            viewport changes. Fine for orientation; it does mean a desktop window dragged below
-            768px keeps the landscape file, which is the right file anyway.
-
-            The poster is a CSS background rather than the `poster` attribute, so that the
-            portrait poster can be chosen by media query too. The attribute takes one URL, and
-            on a phone that URL would be the landscape still — 63 KB fetched to show a frame
-            whose subject is cropped out of the box. */}
-        <video
-          className="rl-hero-video"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          aria-hidden="true"
-        >
-          <source
-            src="/hero-portrait.webm"
-            type="video/webm"
-            media="(prefers-reduced-motion: no-preference) and (max-width: 768px)"
-          />
-          <source
-            src="/hero-portrait.mp4"
-            type="video/mp4"
-            media="(prefers-reduced-motion: no-preference) and (max-width: 768px)"
-          />
-          <source src="/hero.webm" type="video/webm" media="(prefers-reduced-motion: no-preference)" />
-          <source src="/hero.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)" />
-        </video>
-        <div className="rl-hero-scrim" aria-hidden="true" />
-
-        <div className="relative z-10 mx-auto w-full max-w-5xl px-6 py-20 sm:py-24">
-          <p className="rl-rise text-sm uppercase tracking-[0.18em] text-accent font-medium">Radlor</p>
-          {/* ⚠️ 30rem, AND THE NUMBER COMES FROM THE MARK'S EYES. The subhead needs scrim 0.72
-              wherever it crosses the mark's white chrome, and an eye needs 0.13 or less to stay
-              #00E5FF. At the old 38rem the copy ended at x=758 and the left eye reached x=752 —
-              six pixels, no gradient fits in that. At 30rem the copy ends at x=608, leaving 144px
-              for the falloff. Widen this and the mark goes grey. */}
-          <h1 className="rl-focus font-display text-[2.6rem] sm:text-6xl leading-[1.05] mt-4 max-w-[30rem]" style={{ '--d': '0.09s' } as React.CSSProperties}>
-            Learning software that adapts to the <span className="rl-lit">child</span> in front of it.
-          </h1>
-          <p className="rl-rise mt-5 sm:mt-6 text-base sm:text-lg text-muted max-w-[30rem] leading-relaxed" style={{ '--d': '0.18s' } as React.CSSProperties}>
-            Most educational apps give every child the same questions in the same order. We build the other kind:
-            software that watches how a child answers and changes the next question because of it. Our first
-            product, <strong className="text-foreground font-medium">{APP_NAME}</strong>, teaches math for grades 3 to 8.
-          </p>
-          <div className="rl-rise mt-7 sm:mt-9 flex flex-wrap gap-3" style={{ '--d': '0.27s' } as React.CSSProperties}>
-            <a
-              href={`${APP_URL}/auth`}
-              className="rl-cta rounded-full bg-accent px-6 py-3 text-on-accent font-medium hover:opacity-90"
-            >
-              Try {APP_NAME}
-            </a>
-            <Link
-              href="/radlic"
-              className="rl-cta rl-cta-quiet rounded-full border border-line px-6 py-3 font-medium hover:border-foreground transition-colors"
-            >
-              How it works
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* THE FIRST SCREEN IS THE JOURNEY (founder's call, 2026-09-25) — see components/journey/Journey.tsx.
+          It carries the <h1> and the same headline, subhead and "Try Radlic" the video hero had, as real HTML;
+          the 3D world behind it loads afterwards and is decoration. Everything below is unchanged. */}
+      <Journey />
 
       {/* ⚠️ THREE FACTS SINCE 2026-09-18: the price fact was removed with every other price on the
           site (founder's call — /pricing is hidden, see PAGES in site.ts). Restore it from git.
