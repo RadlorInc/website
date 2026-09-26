@@ -4,8 +4,10 @@
  * and it is this site's own. Every button leads to the app on radlic.com.
  *
  * ⚠️ PORTED FROM THE APP'S LANDING REDESIGN (RadlorInc/learn #223) — keep the claims TRUE to the app: the grades line
- * is the founder's wording ("Grade KG to 8"; lessons exist for 3 to 8 as of 2026-09-25, KG to 2 to follow), the rest
- * is the app's /help in short. The two chalkboards are real lesson screens: content/radlic-demo.json.
+ * says "grades 3 to 8" (founder, N21, 2026-09-26: only 3 to 8 is live; KG to 2 is Draft learn#233 — flip both sites
+ * in one change when it ships), the rest is the app's /help in short. No game-time claim (the app's /play is "coming
+ * soon") and no teacher-class claim (adding students is paused until a school-consent route exists) until they are
+ * live; `npm run check:site-claims` fails if either comes back. The two chalkboards are real lesson screens: content/radlic-demo.json.
  */
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -18,9 +20,9 @@ import s from './radlic.module.css'
 const RADLIC = APP_URL
 
 export const metadata: Metadata = {
-  title: { absolute: 'Radlic — math lessons that adapt to your child, grade KG to 8' },
+  title: { absolute: 'Radlic — math lessons that adapt to your child, grades 3 to 8' },
   description:
-    'Math for grade KG to 8. Each lesson explains one idea step by step, the way a teacher would at the board, then practice adapts to what your child gets right and wrong. For parents and teachers.',
+    'Math for grades 3 to 8. Each lesson explains one idea step by step, the way a teacher would at the board, then practice adapts to what your child gets right and wrong. For parents.',
   alternates: { canonical: '/radlic' },
   openGraph: { url: `${SITE_URL}/radlic`, title: 'Radlic — math lessons that adapt to your child' },
 }
@@ -54,18 +56,9 @@ const AUDIENCE: { h: string; items: string[] }[] = [
   {
     h: 'For parents',
     items: [
-      'Pick whole modules or single topics, from any grade from KG to 8',
+      'Pick whole modules or single topics, from any grade from 3 to 8',
       'Add a due date if you like',
       'See which lessons they finished and what they find hard',
-      'Children earn points by practicing and spend them on game time, up to a daily limit you set',
-    ],
-  },
-  {
-    h: 'For teachers',
-    items: [
-      'Set up a class with usernames and temporary passwords',
-      'Choose the modules for the whole class',
-      'Give class exercises, and see results per student and per question',
     ],
   },
 ]
@@ -87,11 +80,11 @@ export default function RadlicPage() {
 
       <section className={s.hero}>
         <div className={s.heroText}>
-          <p className={s.eyebrow}>Math · Grade KG to 8</p>
+          <p className={s.eyebrow}>Math · Grades 3 to 8</p>
           <h1 className={s.h1}>Math lessons that adapt to your child</h1>
           <p className={s.lead}>
             A teacher at the board, one idea at a time. Then practice that follows what your child gets right
-            and wrong, and brings back what they found hard. For parents and teachers.
+            and wrong, and brings back what they found hard. For parents.
           </p>
           <div className={s.ctaRow}>
             <a href={`${RADLIC}/auth`} className={s.cta}>Sign up free</a>
