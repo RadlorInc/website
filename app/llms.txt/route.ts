@@ -19,7 +19,7 @@ const BLURB: Record<(typeof PAGES)[number]['href'], string> = {
   // ⚠️ /pricing is hidden — see the commented row in `PAGES`. Kept here, commented, so restoring
   // the page is one uncomment in each file rather than rewriting this sentence from the table.
   // '/pricing': `what ${APP_NAME} costs: ${usd(PRICING.monthly.first)} a month for the first child, ${usd(PRICING.monthly.additional)} for each additional child up to ${PRICING.maxChildren}, annual billing saving over 20%`,
-  '/for-schools': 'using it with a class: how a teacher sets one up and what they see',
+  '/for-schools': 'schools: classroom accounts are paused for now; how to get in touch',
   '/writing': 'notes on building adaptive learning software',
   '/about': `why ${COMPANY} started and how we work`,
   '/contact': 'early access, schools, support, press',
@@ -48,10 +48,9 @@ with bigger numbers — and the level is never shown on screen; a wrong answer i
 Each grade is split into modules: ${APP_GRADES.map(g => `Grade ${g.grade}: ${g.modules.join('; ')}`).join('. ')}.
 
 Parents choose which lessons their child gets, from a library filtered by grade, and can set due
-dates. A child signs in with a username and password their parent or teacher sets, with no email
-address of their own; the parent dashboard asks for a PIN each time it opens. Teachers make classes
-by grade, give each student a login (a list can be uploaded, each with a temporary password), choose
-the class's modules, and set class exercises that stay locked until the teacher opens them.
+dates. A child signs in with a username and password their parent sets, with no email address of
+their own; the parent dashboard asks for a PIN each time it opens. Classroom accounts for schools
+are paused until there is a way for a school to give consent for its students.
 
 ## Pages
 ${PAGES.map(p => `- [${p.label} — ${BLURB[p.href]}](${SITE_URL}${p.href === '/' ? '' : p.href})`).join('\n')}

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 const REASONS: { h: string; p: string; href?: string; cta?: string }[] = [
   { h: 'Try it', p: `${APP_NAME} is open to try: make a parent account on ${APP_URL.replace('https://', '')} and add your child. Write here instead if you have a question first.`, href: `${APP_URL}/auth`, cta: `Try ${APP_NAME} →` },
-  { h: 'Schools', p: 'We can set up a class with you: its grade, the modules it works on, and a login for each student. Say roughly how many students and which grade.' },
+  { h: 'Schools', p: 'Classroom accounts are paused while we build a way for a school to give consent for its students. Write to us and we will tell you when they open.' },
   { h: 'Support', p: 'Something broken, a question about your account, or a request to delete your data. We answer every one of these ourselves.' },
   { h: 'Press and partnerships', p: 'Happy to talk about what we are building and what we have learned doing it.' },
 ]

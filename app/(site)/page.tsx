@@ -124,7 +124,7 @@ export default function Home() {
               },
               {
                 h: 'Children’s data stays small',
-                p: 'We collect what teaching requires and nothing else. A child never needs an email address: their parent or teacher sets a username for them, and the parent’s side of the app is behind a PIN.',
+                p: 'We collect what teaching requires and nothing else. A child never needs an email address: their parent sets a username for them, and the parent’s side of the app is behind a PIN.',
               },
             ].map((c, i) => (
               <div key={c.h} className="rl-reveal-focus" style={{ '--i': i + 1 } as React.CSSProperties}>
