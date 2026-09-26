@@ -1,0 +1,739 @@
+<meta charset="utf-8">
+<title>Radlor Road</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Radlor as a walk down one road (founder's direction, 2026-09-25): a low-poly world, and we follow a small robot from behind.
+   Scrolling walks it past five stops (mission, rules, Radlic, who it's for, what's next); at each it stops and looks.
+   Press Play to watch it like a film. One dark page, the logo's blues, no chalkboard. */
+:root{--space:#050A16;--cyan:#00E5FF;--sky:#7ADFFF;--blue:#0061F3;--silver:#C9D3E0;--mist:#9FB0C6;--white:#F4F7FB;
+  --display:'Lexend',system-ui,sans-serif;--body:'Figtree',system-ui,sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--space);color:var(--white);margin:0;font:400 17px/1.55 var(--body)}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+.spacer{height:100vh}
+body.lock{overflow:hidden;overscroll-behavior:none}
+/* where you are on the road: one dot per stop, and each one walks you there */
+.rail{position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:4;display:flex;flex-direction:column;gap:14px;margin:0;padding:0;list-style:none;transition:opacity .4s}
+.rail button{position:relative;width:14px;height:14px;padding:0;border-radius:50%;border:2px solid rgba(201,211,224,.6);background:transparent;cursor:pointer;transition:background .3s,border-color .3s,transform .3s}
+.rail button::after{content:'';position:absolute;inset:-10px}
+.rail button[aria-current="step"]{background:var(--sky);border-color:var(--sky);transform:scale(1.25)}
+.rail button span{position:absolute;right:26px;top:50%;transform:translateY(-50%);white-space:nowrap;font:600 13px var(--body);color:var(--white);background:rgba(5,10,22,.7);padding:4px 10px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .2s}
+.rail button:hover span,.rail button:focus-visible span{opacity:1}
+body:not(.lock) .rail{opacity:0;pointer-events:none}
+a{color:inherit}
+h1,h2{font-family:var(--display);font-weight:500;letter-spacing:-.015em;margin:0;text-wrap:balance}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 20px;border-radius:999px;font:600 15px var(--body);text-decoration:none;border:0;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+.btn:focus-visible,a:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.glow{background:var(--blue);color:#fff;box-shadow:0 0 0 1px rgba(0,229,255,.35),0 8px 28px -8px rgba(0,97,243,.9)}
+.glow:hover{background:#1a72ff}
+.ghost{background:rgba(5,10,22,.35);border:1px solid rgba(201,211,224,.35);color:var(--white);backdrop-filter:blur(6px)}
+.ghost:hover{border-color:var(--sky);color:var(--sky)}
+
+.top{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;gap:16px;padding:calc(14px + env(safe-area-inset-top,0px)) 20px 14px;
+  background:linear-gradient(180deg,rgba(5,10,22,.75),transparent)}
+.top img{height:30px;width:auto}
+.top .sp{flex:1}
+.top a.skip{color:var(--mist);font-size:14px;font-weight:600;text-decoration:none}
+.top a.skip:hover{color:var(--sky)}
+.top .btn{min-height:40px;padding:0 16px;font-size:14px}
+.chip{min-height:36px;padding:0 14px;border-radius:999px;border:1px solid rgba(122,223,255,.3);background:rgba(10,21,48,.55);color:var(--silver);font:600 13px var(--body);cursor:pointer;backdrop-filter:blur(6px)}
+.chip:hover{border-color:var(--cyan);color:#fff}
+.chip[aria-pressed="true"]{color:var(--sky);border-color:var(--sky)}
+
+/* the title card at the start */
+.intro{position:fixed;inset:0;z-index:3;display:flex;flex-direction:column;justify-content:center;padding:0 max(20px,6vw);pointer-events:none;transition:opacity .4s}
+.intro > *{pointer-events:auto}
+.intro .eyebrow{font:600 12px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--sky)}
+.intro h1{font-size:clamp(40px,6.4vw,84px);line-height:1.02;margin:18px 0 0;max-width:13ch}
+.intro h1 em{font-style:normal;background:linear-gradient(90deg,var(--sky),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.intro p{color:var(--silver);font-size:19px;margin:18px 0 0;max-width:32rem}
+.intro .row{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.hint{position:fixed;left:50%;bottom:32px;transform:translateX(-50%);z-index:3;color:var(--mist);font-size:13px;letter-spacing:.14em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:8px;transition:opacity .4s}
+.hint i{width:1px;height:34px;background:linear-gradient(var(--sky),transparent);animation:drip 1.8s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* chapter caption: a film's lower third */
+.cap{position:fixed;left:max(20px,6vw);bottom:72px;z-index:3;max-width:34rem;opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s cubic-bezier(.2,.7,.2,1);pointer-events:none}
+.cap.on{opacity:1;transform:none;pointer-events:auto}
+.cap .eyebrow{font:600 12px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--sky)}
+.cap h2{font-size:clamp(30px,4.2vw,54px);line-height:1.06;margin-top:12px;text-shadow:0 2px 30px rgba(5,10,22,.9)}
+.cap p{margin:12px 0 0;color:var(--silver);font-size:18px;text-shadow:0 1px 16px rgba(5,10,22,.9)}
+.cap .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding:0;list-style:none}
+.cap .chips li{border:1px solid rgba(122,223,255,.3);background:rgba(10,21,48,.6);backdrop-filter:blur(6px);color:var(--sky);border-radius:999px;padding:6px 14px;font-weight:600;font-size:14px}
+.cap .row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.cap .links{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap}.cap .links a{color:var(--sky);font-weight:600;text-decoration:none}
+/* the guide's line, like a subtitle */
+.say{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:3;max-width:min(90vw,620px);text-align:center;color:#fff;font:500 16px/1.4 var(--body);
+  background:rgba(5,10,22,.55);backdrop-filter:blur(6px);border:1px solid rgba(122,223,255,.18);border-radius:12px;padding:8px 14px;opacity:0;transition:opacity .35s}
+.say.on{opacity:1}
+.say b{color:var(--sky);font-weight:600}
+
+.after{position:relative;z-index:6;background:var(--space);border-top:1px solid rgba(122,223,255,.16)}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:24px}
+.after .posts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;padding-block:64px 40px}
+.after .posts a{border-top:2px solid rgba(122,223,255,.35);padding-top:16px;text-decoration:none}
+.after .posts time{font-size:14px;color:var(--mist)}.after .posts h3{font:500 19px/1.3 var(--display);margin:6px 0 0}
+.after .posts a:hover h3{color:var(--sky)}
+.after .eyebrow{font:600 12px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--sky);display:block;padding-top:64px}
+footer{display:flex;flex-wrap:wrap;gap:16px 28px;justify-content:space-between;padding-block:28px 40px;color:var(--mist);font-size:14px;border-top:1px solid rgba(122,223,255,.12)}
+footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}footer a:hover{color:var(--sky)}
+
+.shade{position:fixed;inset:0;z-index:2;pointer-events:none;background:linear-gradient(90deg,rgba(5,10,22,.72) 0%,rgba(5,10,22,.38) 34%,transparent 58%),linear-gradient(0deg,rgba(5,10,22,.55) 0%,transparent 34%),linear-gradient(180deg,rgba(5,10,22,.5) 0%,transparent 16%)}
+.fallback{display:none}
+.nogl .fallback{display:block;position:relative;z-index:6;padding:120px 24px}
+.nogl #c,.nogl .shade,.nogl .player,.nogl .cap,.nogl .say,.nogl .hint{display:none}
+
+@media (max-width:760px){
+  .shade{background:linear-gradient(0deg,rgba(5,10,22,.85) 0%,rgba(5,10,22,.5) 40%,transparent 62%),linear-gradient(180deg,rgba(5,10,22,.6) 0%,transparent 22%)}
+  .top .skip{display:none}
+  .cap{left:20px;right:20px;bottom:40px}
+  .cap h2{font-size:30px}.cap p{font-size:16px}
+  .say{bottom:auto;top:calc(70px + env(safe-area-inset-top,0px));font-size:14px}
+  .hint{display:none}
+  .rail{right:10px;gap:12px}.rail button span{display:none}
+  .intro{justify-content:flex-end;padding-bottom:110px;background:linear-gradient(180deg,transparent 38%,rgba(5,10,22,.88) 72%)}  /* the island sits behind the headline on a phone */
+  .top .chip#sound{display:none}
+}
+@media (prefers-reduced-motion:reduce){.hint i{animation:none}}
+</style>
+
+<canvas id="c" aria-hidden="true"></canvas>
+<div class="shade" aria-hidden="true"></div>
+
+<header class="top">
+  <img src="wordmark.png" alt="Radlor">
+  <span class="sp"></span>
+  <button class="chip" type="button" id="play" hidden>Pause</button>
+  <button class="chip" type="button" id="sound" aria-pressed="false">Voice off</button>
+  <a class="skip" href="#after">Skip the journey</a>
+  <a class="btn glow" href="#">Try Radlic</a>
+</header>
+
+<div class="intro" id="intro">
+  <span class="eyebrow">Education technology</span>
+  <h1>Learning that meets every child <em>where they are.</em></h1>
+  <p>Come along. Our guide will walk you through what we build.</p>
+  <div class="row">
+    <button class="btn glow" type="button" id="start"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg>Play the journey</button>
+    <a class="btn ghost" href="#after">Skip to the end</a>
+  </div>
+</div>
+<div class="hint" id="hint"><span>Scroll to walk</span><i></i></div>
+<ul class="rail" id="rail" aria-label="Stops on the road"></ul>
+
+<div class="cap" id="cap" aria-live="polite"></div>
+<p class="say" id="say"></p>
+
+
+
+<div class="spacer" aria-hidden="true"></div>
+
+<section class="after" id="after">
+  <div class="fallback wrap" id="fallback"></div>
+  <div class="wrap">
+    <span class="eyebrow">Writing · what we're learning</span>
+    <div class="posts">
+      <a href="#"><time>29 Aug 2026</time><h3>A sixteen-year-old's math gap is often in grade four</h3></a>
+      <a href="#"><time>29 Aug 2026</time><h3>A camera claim you can check</h3></a>
+      <a href="#"><time>19 Aug 2026</time><h3>A child should never see their level</h3></a>
+    </div>
+    <footer>
+      <span>© 2026 Radlor Inc. · support@radlor.com</span>
+      <nav><a href="#">Radlic</a><a href="#">About</a><a href="#">Schools</a><a href="#">Contact</a><a href="#">Data &amp; safety</a><a href="#">Privacy</a><a href="#">Terms</a></nav>
+    </footer>
+  </div>
+</section>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+               "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+</script>
+<script type="module">
+import * as THREE from 'three'
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
+import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js'
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js'
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
+import { HorizontalTiltShiftShader } from 'three/addons/shaders/HorizontalTiltShiftShader.js'
+import { VerticalTiltShiftShader } from 'three/addons/shaders/VerticalTiltShiftShader.js'
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js'
+
+// ── the story ── (t = where on the journey each stop sits; 0 is the opening island)
+const CH = [
+  { t: .2, eyebrow: '01 · Mission', h: 'Every child already has the treasure.', p: 'We build learning that finds it, and lights it up.',
+    say: "Hi! I'm Radlor's guide. Every child already has something bright inside." },
+  { t: .4, eyebrow: '02 · How we build', h: 'Four rules in everything we make.', chips: ['One idea at a time', 'No levels, no red crosses', 'Harder means different', "Children's data stays small"],
+    say: 'Every product we build follows four rules. Here they are, one at each little plot.' },
+  { t: .6, eyebrow: '03 · Our first product', h: 'Radlic: math that adapts.', p: 'Grades 3–8. Every answer shapes the next question.', cta: [['Try Radlic', 'glow']],
+    say: 'This is Radlic, our first product. Each answer lights the next stepping stone.' },
+  { t: .8, eyebrow: "04 · Who it's for", h: 'Families, schools and partners.', links: ['Parents →', 'Schools →', 'Partners →'],
+    say: 'Parents, teachers and partners all start from here.' },
+  { t: .97, eyebrow: '05 · What comes next', h: 'More is coming.', p: 'New learning products are in research.', cta: [['Try Radlic', 'glow'], ['Talk to us', 'ghost']],
+    say: "That's the journey so far. More worlds are on the way. Want to try Radlic?" },
+]
+const STOPS = [0, ...CH.map(c => c.t)]           // six camera stops: the opening island + five chapters
+const DURATION = 60
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+const small = innerWidth < 760
+const $ = id => document.getElementById(id)
+
+// ── renderer: matte, soft shadows, no bloom ──
+let renderer
+try { renderer = new THREE.WebGLRenderer({ canvas: $('c'), antialias: true, powerPreference: 'high-performance' }) }
+catch (e) {
+  document.documentElement.classList.add('nogl')
+  $('fallback').innerHTML = CH.map(c => `<h2 style="margin:28px 0 8px">${c.h}</h2><p style="color:#C9D3E0;margin:0">${c.p || (c.chips || []).join(' · ')}</p>`).join('')
+  throw e
+}
+renderer.setPixelRatio(Math.min(devicePixelRatio, small ? 1.5 : 2))
+renderer.setSize(innerWidth, innerHeight)
+renderer.toneMapping = THREE.ACESFilmicToneMapping
+renderer.toneMappingExposure = .9
+renderer.shadowMap.enabled = true
+renderer.shadowMap.type = THREE.PCFShadowMap  // PCF honours shadow.radius; PCFSoft ignores it
+const scene = new THREE.Scene()
+scene.fog = new THREE.Fog(0x2a285c, 34, 105)  // the far road fades into the violet horizon
+const camera = new THREE.PerspectiveCamera(small ? 52 : 30, innerWidth / innerHeight, 0.1, 600)
+// on a wide screen the caption owns the lower left, so nudge the shot right of it
+const frameOffset = () => innerWidth >= 760 ? camera.setViewOffset(innerWidth, innerHeight, -innerWidth * .08, 0, innerWidth, innerHeight) : camera.clearViewOffset()
+frameOffset()
+
+// the sky: a deep navy dome that lifts to a soft violet at the horizon
+{
+  // written in linear light: the OutputPass converts to sRGB, and a raw sRGB colour here washes the navy out to lavender
+  const sky = new THREE.Mesh(new THREE.SphereGeometry(400, 32, 16), new THREE.ShaderMaterial({ side: THREE.BackSide, depthWrite: false,
+    vertexShader: 'varying float h; void main(){ h = normalize(position).y; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }',
+    fragmentShader: 'varying float h; void main(){ vec3 top = vec3(.02,.04,.10); vec3 mid = vec3(.05,.09,.22); vec3 hor = vec3(.30,.24,.52); vec3 c = h > 0. ? mix(mid, top, smoothstep(0.,.6,h)) : mix(mid, vec3(.04,.06,.16), smoothstep(0.,-.5,h)); c = mix(c, hor, exp(-abs(h)*6.)*.7); c += (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898,78.233)))*43758.5453) - .5) / 128.; gl_FragColor = vec4(pow(max(c, 0.), vec3(2.2)),1.); }' }))
+  scene.add(sky)
+  const N = small ? 900 : 1600, pos = new Float32Array(N * 3)
+  for (let i = 0; i < N; i++) { const v = new THREE.Vector3().randomDirection().multiplyScalar(300 + Math.random() * 60); if (v.y < -40) v.y *= -1; pos.set([v.x + 110, v.y, v.z], i * 3) }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3))
+  scene.add(new THREE.Points(g, new THREE.PointsMaterial({ color: 0xdfe8ff, size: 1.3, sizeAttenuation: true, transparent: true, opacity: .8, fog: false })))
+}
+
+scene.add(new THREE.HemisphereLight(0xc4dcff, 0x2a2350, 1.1))
+const sun = new THREE.DirectionalLight(0xfff1dc, 2.6)
+sun.castShadow = true; sun.shadow.mapSize.set(small ? 1024 : 2048, small ? 1024 : 2048)
+Object.assign(sun.shadow.camera, { left: -18, right: 18, top: 18, bottom: -18, near: 1, far: 80 }); sun.shadow.bias = -0.0005; sun.shadow.normalBias = .02
+sun.shadow.radius = 4
+scene.add(sun, sun.target)
+const fill = new THREE.DirectionalLight(0x7fa8ff, .9); fill.position.set(30, 10, -30); scene.add(fill)
+
+// ── palette & kit ──
+const C = {
+  grass: 0x5bbf9e, grass2: 0x86d3a4, sand: 0xf1d3a8, clay: 0xe0916f, earth: 0x9a6470, deep: 0x3d4a7c, stone: 0xc9d3e0, stone2: 0x9aa9c6,
+  cream: 0xf6eee3, roof: 0x2f63e8, roof2: 0xe36f5f, wood: 0x9c6b4e, leaf: 0x3fa27e, leaf2: 0x6cc592, trunk: 0x7a5540,
+  gold: 0xf2c14e, win: 0xffd27a, white: 0xf3f6fb, ink: 0x0b0f1a, cyan: 0x00e5ff, blue: 0x2ba8ff, lilac: 0xa895fa, peach: 0xf7b98a, pink: 0xe583f0,
+}
+const mats = new Map()
+const mat = (c, o = {}) => { const k = c + JSON.stringify(o); if (!mats.has(k)) mats.set(k, new THREE.MeshStandardMaterial({ color: c, flatShading: true, roughness: .95, metalness: 0, ...o })); return mats.get(k) }
+const lit = (c, i = .9) => mat(c, { emissive: c, emissiveIntensity: i, roughness: .6 })
+const mesh = (g, m, x = 0, y = 0, z = 0) => { const o = new THREE.Mesh(g, m); o.position.set(x, y, z); o.castShadow = true; o.receiveShadow = true; return o }
+const hash = (x, y, z) => { const s = Math.sin(x * 127.1 + y * 311.7 + z * 74.7) * 43758.5453; return s - Math.floor(s) }
+function jitter(g, a) { const p = g.attributes.position, v = new THREE.Vector3(); for (let i = 0; i < p.count; i++) { v.fromBufferAttribute(p, i); const n = hash(Math.round(v.x * 3), Math.round(v.y * 3), Math.round(v.z * 3)) - .5; p.setXYZ(i, v.x + n * a, v.y + n * a * .6, v.z - n * a) } g.computeVertexNormals(); return g }
+const ease = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2
+const clamp01 = x => Math.max(0, Math.min(1, x))
+
+function tree(h = 1, alt = false) {
+  const g = new THREE.Group()
+  g.add(mesh(new THREE.CylinderGeometry(.09 * h, .14 * h, .8 * h, 5), mat(C.trunk), 0, .4 * h, 0))
+  if (alt) { g.add(mesh(new THREE.IcosahedronGeometry(.75 * h, 0), mat(C.leaf2), 0, 1.3 * h, 0)); g.add(mesh(new THREE.IcosahedronGeometry(.5 * h, 0), mat(C.leaf), .3 * h, 1.8 * h, .1)) }
+  else for (let k = 0; k < 3; k++) g.add(mesh(new THREE.ConeGeometry((.8 - k * .2) * h, (.9 - k * .1) * h, 6), mat(k % 2 ? C.leaf2 : C.leaf), 0, (1 + k * .5) * h, 0))
+  return g
+}
+const folks = [], SKIN = [0xf2c9a5, 0xd9a57b, 0xb07a52, 0x7a4b2e, 0xe8b894], HAIR = [0x3a2a22, 0x1d1a1f, 0x8a5a36, 0xd9a85b, 0x4a3428]
+function person(shirt, h = 1, wave = false) {
+  const g = new THREE.Group(), n = folks.length, skin = mat(SKIN[n % SKIN.length]), cloth = mat(shirt)
+  for (const x of [-.07, .07]) g.add(mesh(new THREE.CapsuleGeometry(.06 * h, .2 * h, 2, 6), mat(C.deep), x * h, .16 * h, 0))
+  g.add(mesh(new THREE.CylinderGeometry(.13 * h, .17 * h, .36 * h, 8), cloth, 0, .48 * h, 0))
+  const arms = [-1, 1].map(side => { const a = new THREE.Group(); a.position.set(side * .17 * h, .63 * h, 0)
+    a.add(mesh(new THREE.CapsuleGeometry(.045 * h, .2 * h, 2, 6), cloth, 0, -.14 * h, 0), mesh(new THREE.IcosahedronGeometry(.05 * h, 0), skin, 0, -.29 * h, 0)); a.rotation.z = side * .12; g.add(a); return a })
+  g.add(mesh(new THREE.IcosahedronGeometry(.17 * h, 1), skin, 0, .85 * h, 0))
+  g.add(mesh(new THREE.SphereGeometry(.18 * h, 10, 6, 0, Math.PI * 2, 0, Math.PI * .55), mat(HAIR[(n * 3) % HAIR.length]), 0, .87 * h, -.015 * h))
+  for (const x of [-.06, .06]) g.add(mesh(new THREE.SphereGeometry(.022 * h, 6, 4), mat(C.ink), x * h, .86 * h, .155 * h))
+  g.userData = { arms, wave, ph: n * 1.7 }; folks.push(g)
+  return g
+}
+function bush(s = 1) { const g = new THREE.Group(); [[0, .3, 0, .4], [.35, .22, .1, .3], [-.3, .2, .05, .28]].forEach(([x, y, z, r], k) => g.add(mesh(new THREE.IcosahedronGeometry(r * s, 0), mat(k ? C.leaf2 : C.leaf), x * s, y * s, z * s))); return g }
+const clouds = []
+function cloud(s = 1) {
+  // soft puffs, flat-bottomed like a cartoon cloud, lit a little from inside so they never go grey
+  const g = new THREE.Group(), m = mat(0xf4f1ff, { emissive: 0x6a70b8, emissiveIntensity: .35, roughness: 1 })
+  ;[[0, 0, 0, 1], [.95, -.15, .1, .72], [-.95, -.2, 0, .68], [.45, .3, -.15, .7], [-.4, .25, .2, .6], [1.6, -.3, 0, .45], [-1.6, -.35, .1, .42]].forEach(([x, y, z, r]) => { const o = new THREE.Mesh(new THREE.IcosahedronGeometry(r * s, 1), m); o.position.set(x * s, y * s, z * s); o.scale.y = .78; g.add(o) })
+  clouds.push(g); return g
+}
+function prism(w, h, d, m) { const s = new THREE.Shape(); s.moveTo(-w / 2, 0); s.lineTo(0, h); s.lineTo(w / 2, 0); s.closePath(); const g = new THREE.ExtrudeGeometry(s, { depth: d, bevelEnabled: false }); g.translate(0, 0, -d / 2); return mesh(g, m) }
+function gear(r, teeth, d, m) {
+  const s = new THREE.Shape()
+  for (let k = 0; k < teeth; k++) { const a = k / teeth * Math.PI * 2, st = Math.PI * 2 / teeth; [[r * .8, a], [r, a + st * .15], [r, a + st * .45], [r * .8, a + st * .6]].forEach(([rr, aa], j) => (k === 0 && j === 0 ? s.moveTo : s.lineTo).call(s, Math.cos(aa) * rr, Math.sin(aa) * rr)) }
+  s.closePath(); const hole = new THREE.Path(); hole.absarc(0, 0, r * .3, 0, Math.PI * 2, true); s.holes.push(hole)
+  const g = new THREE.ExtrudeGeometry(s, { depth: d, bevelEnabled: false, curveSegments: 6 }); g.center(); return mesh(g, m)
+}
+function house(wall, roofC) {
+  const g = new THREE.Group()
+  g.add(mesh(new THREE.BoxGeometry(1.8, 1.3, 1.5), mat(wall), 0, .65, 0))
+  const r = prism(2.1, 1, 1.7, mat(roofC)); r.position.y = 1.3; g.add(r)
+  g.add(mesh(new THREE.BoxGeometry(.28, .6, .28), mat(C.stone2), .5, 2, -.3))
+  g.add(mesh(new THREE.BoxGeometry(.4, .7, .06), mat(C.wood), -.4, .35, .76))
+  g.add(mesh(new THREE.BoxGeometry(.42, .42, .06), lit(C.win, .8), .42, .8, .76))
+  return g
+}
+
+// ── the road: one winding path through the whole world; scroll walks the robot along it ──
+const road = new THREE.CatmullRomCurve3([[0, 0, 12], [0, 0, -8], [-7, 0, -30], [3, 0, -54], [10, 0, -78], [0, 0, -100], [-8, 0, -122], [0, 0, -146], [0, 0, -164]].map(p => new THREE.Vector3(...p)), false, 'centripetal')
+const RL = road.getLength(), RW = 1.7  // RW = half the path's width
+const RS = road.getSpacedPoints(400)
+const sm = (a, b, x) => THREE.MathUtils.smoothstep(x, a, b)
+const distRoad = (x, z) => { let d = 1e9; for (const p of RS) { const dx = p.x - x, dz = p.z - z, q = dx * dx + dz * dz; if (q < d) d = q } return Math.sqrt(d) }
+const sideOf = t => new THREE.Vector3(-t.z, 0, t.x)  // the walker's right-hand side
+const yawOf = t => Math.atan2(t.x, t.z)
+const streamZ = x => -66 + Math.sin(x * .08) * 4
+const distStream = (x, z) => Math.abs(z - streamZ(x))
+
+// where each stop sits along the road (fraction of its length), which side, and how far off it
+const SPAN = .955, SS = STOPS.map((_, i) => .012 + i / (STOPS.length - 1) * SPAN)
+// every stop on the RIGHT: on a wide screen the caption owns the left, so the scene must never land under it
+const SIDE = [0, 1, 1, 1, 1, 0], OFF = [0, 7, 7, 11, 10, 0], FOCUS_Y = [1, 1.2, 1.2, 4.5, 1.8, 2.8]
+const stationPos = SS.map((s, i) => road.getPointAt(s).addScaledVector(sideOf(road.getTangentAt(s)), SIDE[i] * OFF[i]))
+const flatSpots = [{ x: stationPos[1].x, z: stationPos[1].z, r: 5 }, { x: stationPos[2].x, z: stationPos[2].z, r: 8 }, { x: stationPos[3].x, z: stationPos[3].z, r: 5 },
+  { x: stationPos[4].x, z: stationPos[4].z, r: 8 }, { x: stationPos[5].x, z: stationPos[5].z, r: 7 },
+  { x: (stationPos[3].x + road.getPointAt(SS[3]).x) / 2, z: (stationPos[3].z + road.getPointAt(SS[3]).z) / 2, r: 6 }]  // the meadow the stepping stones cross
+// face a station's front (+z) at the road and back toward the approaching camera
+function faceRoad(g, s) { const t = road.getTangentAt(s), dir = road.getPointAt(s).sub(g.position).setY(0).normalize().addScaledVector(t, -1).normalize(); g.rotation.y = Math.atan2(dir.x, dir.z) }
+
+// ── the ground: low-poly rolling hills, flattened for the path, the stream and each stop ──
+const hills = (x, z) => Math.max(0, Math.sin(x * .07) * Math.cos(z * .06) * 2.4 + Math.sin(x * .19 + z * .13) * .9 + Math.cos(z * .11 - x * .05) * 1.1 + .6)
+function groundH(x, z) {
+  let h = hills(x, z) * sm(2.5, 13, distRoad(x, z) - RW)
+  for (const c of flatSpots) h *= sm(c.r, c.r + 6, Math.hypot(x - c.x, z - c.z))
+  const ds = distStream(x, z); if (ds < 3) h = h * sm(1.4, 3, ds) - .45 * (1 - sm(1.2, 2.4, ds))
+  return h
+}
+{ const g = new THREE.PlaneGeometry(280, 300, small ? 70 : 110, small ? 80 : 120); g.rotateX(-Math.PI / 2); g.translate(0, 0, -75)
+  const p = g.attributes.position
+  for (let i = 0; i < p.count; i++) { const x = p.getX(i) + (hash(i, 1, 1) - .5) * .9, z = p.getZ(i) + (hash(i, 2, 1) - .5) * .9; p.setXYZ(i, x, groundH(x, z), z) }
+  const ng = g.toNonIndexed(), np = ng.attributes.position, cols = [], shades = [C.grass, C.grass, C.grass2, 0x4fb393, C.leaf2].map(c => new THREE.Color(c)), wet = new THREE.Color(0x7fbfae)
+  for (let i = 0; i < np.count; i += 3) { const y = (np.getY(i) + np.getY(i + 1) + np.getY(i + 2)) / 3, c = y < -.15 ? wet : shades[Math.floor(hash(i, 3, 3) * shades.length)].clone().offsetHSL(0, 0, Math.min(.06, y * .015)); for (let k = 0; k < 3; k++) cols.push(c.r, c.g, c.b) }
+  ng.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3)); ng.computeVertexNormals()
+  const ground = new THREE.Mesh(ng, new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: 1 })); ground.receiveShadow = true; scene.add(ground) }
+
+// ── the path: warm paving with a stone kerb on both edges ──
+{ const N = 700, pos = [], col = [], idx = [], c1 = new THREE.Color(0xe9cf9f), c2 = new THREE.Color(0xdcbd8a)
+  for (let i = 0; i <= N; i++) { const s = i / N, p = road.getPointAt(s), sd = sideOf(road.getTangentAt(s))
+    for (const k of [-1, 1]) { const q = p.clone().addScaledVector(sd, k * RW); pos.push(q.x, .06, q.z) }
+    const c = Math.floor(i / 5) % 2 ? c1 : c2; col.push(c.r, c.g, c.b, c.r, c.g, c.b)
+    if (i < N) { const a = i * 2; idx.push(a, a + 2, a + 1, a + 1, a + 2, a + 3) } }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3)); g.setIndex(idx); g.computeVertexNormals()
+  const path = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: .95, side: THREE.DoubleSide })); path.receiveShadow = true; scene.add(path)
+  const n = Math.floor(RL / .9), kerb = new THREE.InstancedMesh(new THREE.BoxGeometry(.3, .16, .78), mat(C.stone), n * 2), m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), up = new THREE.Vector3(0, 1, 0), one = new THREE.Vector3(1, 1, 1)
+  for (let k = 0; k < n; k++) { const s = k / n, p = road.getPointAt(s), t = road.getTangentAt(s), sd = sideOf(t); q.setFromAxisAngle(up, yawOf(t))
+    for (const j of [0, 1]) { const e = p.clone().addScaledVector(sd, (j ? 1 : -1) * (RW + .12)); e.y = .08; m4.compose(e, q, one.clone().setScalar(.9 + hash(k, j, 5) * .2)); kerb.setMatrixAt(k * 2 + j, m4) } }
+  kerb.receiveShadow = kerb.castShadow = true; scene.add(kerb) }
+
+// ── the stream, and a little bridge where the path crosses it ──
+const water = new THREE.ShaderMaterial({ uniforms: { t: { value: 0 } }, transparent: true, depthWrite: false,
+  vertexShader: 'varying vec2 u; void main(){ u = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }',
+  fragmentShader: 'uniform float t; varying vec2 u; void main(){ float s = step(.86, fract(u.y*.35 - t*.25 + sin(u.x*9. + u.y)*.12)); vec3 c = mix(vec3(.30,.66,.95), vec3(.88,.96,1.), s*.7); float a = .9 * smoothstep(0.,.25,u.x) * (1. - smoothstep(.75,1.,u.x)); gl_FragColor = vec4(pow(c, vec3(2.2)), a); }' })
+{ const pos = [], uv = [], idx = []; let v = 0
+  for (let x = -90; x <= 90; x += 1) { const z = streamZ(x); pos.push(x, -.14, z - 1.3, x, -.14, z + 1.3); uv.push(0, v, 1, v); v += 1 }
+  for (let i = 0; i < pos.length / 6 - 1; i++) { const a = i * 2; idx.push(a, a + 2, a + 1, a + 1, a + 2, a + 3) }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2)); g.setIndex(idx)
+  const w = new THREE.Mesh(g, water); w.material.side = THREE.DoubleSide; scene.add(w)
+  let bi = 0, bd = 1e9; RS.forEach((p, i) => { const d = distStream(p.x, p.z); if (d < bd) { bd = d; bi = i } })
+  const bs = bi / (RS.length - 1)
+  for (let k = -4; k <= 4; k++) { const s = bs + k * .8 / RL, p = road.getPointAt(s), t = road.getTangentAt(s), sd = sideOf(t)
+    const plank = mesh(new THREE.BoxGeometry(RW * 2 + .5, .12, .66), mat(k % 2 ? C.wood : C.trunk), p.x, .12, p.z); plank.rotation.y = yawOf(t); scene.add(plank)  // planks run across the path
+    for (const j of [-1, 1]) { const e = p.clone().addScaledVector(sd, j * (RW + .3)); if (k % 2 === 0) scene.add(mesh(new THREE.CylinderGeometry(.06, .07, .9, 5), mat(C.trunk), e.x, .5, e.z))
+      const r = mesh(new THREE.BoxGeometry(.06, .06, .82), mat(C.cream), e.x, .85, e.z); r.rotation.y = yawOf(t); scene.add(r) } } }
+
+// ── signboards: real words on the world, drawn to a canvas once the webfont is in ──
+function label(text, w = 3, h = 1, sub = '') {
+  const cv = document.createElement('canvas'); cv.width = 768; cv.height = Math.round(768 * h / w)
+  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8
+  const draw = () => { const g = cv.getContext('2d'), W = cv.width, H = cv.height
+    g.fillStyle = '#f6eee3'; g.beginPath(); g.roundRect(6, 6, W - 12, H - 12, 28); g.fill()
+    g.textAlign = 'center'; g.textBaseline = 'middle'
+    if (sub) { g.fillStyle = '#6b7aa0'; g.font = '600 38px Figtree, sans-serif'; g.fillText(sub.toUpperCase(), W / 2, H * .3) }
+    let fs = 96; do { g.font = `600 ${fs}px Lexend, sans-serif`; fs -= 4 } while (g.measureText(text).width > W - 70 && fs > 20)
+    g.fillStyle = '#0B4FA8'; g.fillText(text, W / 2, sub ? H * .64 : H / 2); tex.needsUpdate = true }
+  draw(); document.fonts.ready.then(draw)
+  return new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshStandardMaterial({ map: tex, roughness: .9 }))
+}
+function signpost(text, sub) {
+  const g = new THREE.Group()
+  g.add(mesh(new THREE.CylinderGeometry(.08, .1, 2.4, 6), mat(C.trunk), 0, 1.2, 0))
+  g.add(mesh(new THREE.BoxGeometry(2.75, 1.05, .1), mat(C.wood), 0, 2.05, -.04))
+  const l = label(text, 2.6, .92, sub); l.position.set(0, 2.05, .02); g.add(l)
+  g.add(mesh(new THREE.BoxGeometry(2.9, .1, .3), mat(C.roof), 0, 2.62, 0))
+  return g
+}
+function placeBeside(obj, s, side, off) { const p = road.getPointAt(s), t = road.getTangentAt(s); obj.position.copy(p.addScaledVector(sideOf(t), side * off)); obj.rotation.y = yawOf(t) + Math.PI - side * .45; scene.add(obj); return obj }
+
+// ── roadside life: lamps, trees, bushes, rocks, grass and flowers ──
+const lampBulbs = []
+for (let k = 1; k < 15; k++) { const s = k / 15, side = k % 2 ? 1 : -1, lp = new THREE.Group()
+  lp.add(mesh(new THREE.CylinderGeometry(.06, .09, 2.6, 6), mat(0x5b4a78), 0, 1.3, 0), mesh(new THREE.CylinderGeometry(.18, .22, .18, 6), mat(0x5b4a78), 0, .09, 0))
+  lp.add(mesh(new THREE.BoxGeometry(.5, .06, .06), mat(0x5b4a78), -.22 * side, 2.55, 0))
+  const b = mesh(new THREE.BoxGeometry(.22, .3, .22), lit(C.win, 1.1), -.42 * side, 2.38, 0); b.castShadow = false; lp.add(b); lampBulbs.push(b)
+  lp.add(mesh(new THREE.ConeGeometry(.2, .16, 4), mat(0x5b4a78), -.42 * side, 2.6, 0))
+  const p = road.getPointAt(s), t = road.getTangentAt(s); lp.position.copy(p.addScaledVector(sideOf(t), side * (RW + .7))); lp.rotation.y = yawOf(t); scene.add(lp) }
+{ const clear = (x, z, r) => distRoad(x, z) > RW + r && distStream(x, z) > 3 && stationPos.every((sp, i) => Math.hypot(sp.x - x, sp.z - z) > (i === 4 || i === 2 ? 11 : 8))
+  let placed = 0
+  for (let k = 0; placed < (small ? 70 : 140) && k < 3000; k++) { const x = (hash(k, 1, 8) - .5) * 130, z = 20 - hash(k, 2, 8) * 200; if (!clear(x, z, 3.2)) continue
+    const tr = tree(.9 + hash(k, 3, 8) * .8, hash(k, 4, 8) > .55); tr.position.set(x, groundH(x, z) - .05, z); tr.rotation.y = hash(k, 5, 8) * 6; scene.add(tr); placed++ }
+  placed = 0
+  for (let k = 0; placed < (small ? 40 : 80) && k < 3000; k++) { const x = (hash(k, 1, 9) - .5) * 90, z = 20 - hash(k, 2, 9) * 195; if (!clear(x, z, 1.4)) continue
+    const o = hash(k, 3, 9) > .35 ? bush(.7 + hash(k, 4, 9) * .6) : mesh(new THREE.DodecahedronGeometry(.3 + hash(k, 5, 9) * .5, 0), mat(C.stone2)); o.position.set(x, groundH(x, z), z); o.rotation.y = hash(k, 6, 9) * 6; scene.add(o); placed++ }
+  const n = small ? 700 : 1600, tuft = new THREE.InstancedMesh(new THREE.ConeGeometry(.08, .34, 3), mat(C.grass2), n), bloom = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(.09, 0), mat(C.white), n), m4 = new THREE.Matrix4(), col = new THREE.Color(), zero = new THREE.Matrix4().makeScale(0, 0, 0)
+  const blooms = [C.pink, C.peach, C.gold, C.white, C.lilac]
+  for (let k = 0; k < n; k++) { const s = hash(k, 1, 10), p = road.getPointAt(s), sd = sideOf(road.getTangentAt(s)), off = (hash(k, 2, 10) > .5 ? 1 : -1) * (RW + .5 + Math.pow(hash(k, 3, 10), 2) * 16)
+    const x = p.x + sd.x * off + (hash(k, 4, 10) - .5), z = p.z + sd.z * off + (hash(k, 5, 10) - .5), y = groundH(x, z)
+    if (y < -.1) { tuft.setMatrixAt(k, zero); bloom.setMatrixAt(k, zero); continue }
+    m4.makeRotationY(hash(k, 6, 10) * 6).setPosition(x, y + .15, z); tuft.setMatrixAt(k, m4)
+    m4.setPosition(x + .15, y + .12, z + .1); bloom.setMatrixAt(k, hash(k, 7, 10) < .3 ? m4 : zero); bloom.setColorAt(k, col.set(blooms[k % 5])) }
+  tuft.receiveShadow = bloom.receiveShadow = true; scene.add(tuft, bloom)
+  for (let k = 0; k < 16; k++) { const c = cloud(1.2 + hash(k, 1, 11) * 1.2); c.position.set((hash(k, 2, 11) - .5) * 90, 13 + hash(k, 3, 11) * 10, 10 - k * 12 - hash(k, 4, 11) * 8); scene.add(c) } }
+
+// ── 0 · the start: a gate in the shape of the Radlor ring, the robot's cottage and a windmill ──
+let W0 = {}
+{ const s = SS[0] + .03, p = road.getPointAt(s), t = road.getTangentAt(s)
+  const gate = new THREE.Group(); gate.position.copy(p); gate.rotation.y = yawOf(t); scene.add(gate)
+  // tall enough that the chase camera (≈3.4 up) passes UNDER the plaque; at 2.7 it flew straight through the sign
+  gate.add(mesh(new THREE.TorusGeometry(3.9, .3, 6, 26, Math.PI), mat(C.stone)))
+  const band = mesh(new THREE.TorusGeometry(3.9, .1, 5, 26, Math.PI), lit(C.blue, .7), 0, 0, -.3); gate.add(band)
+  const plaque = label('Welcome to Radlor', 3.4, .75); plaque.position.set(0, 4.6, -.36); plaque.rotation.y = Math.PI; gate.add(plaque)
+  gate.add(mesh(new THREE.BoxGeometry(3.6, .86, .1), mat(C.wood), 0, 4.6, -.3))
+  const home = house(C.cream, C.roof); placeBeside(home, SS[0] + .01, 1, 6.5); home.rotation.y += Math.PI * .1
+  const pad = mesh(new THREE.CylinderGeometry(.9, .9, .08, 12), lit(C.blue, .35)); placeBeside(pad, SS[0] + .003, 1, 3.4)
+  const mill = new THREE.Group(); placeBeside(mill, SS[0] + .025, -1, 9)
+  mill.add(mesh(new THREE.CylinderGeometry(.5, .8, 3.2, 6), mat(C.cream), 0, 1.6, 0), mesh(new THREE.ConeGeometry(.75, .9, 6), mat(C.roof2), 0, 3.65, 0), mesh(new THREE.BoxGeometry(.34, .6, .05), mat(C.wood), 0, .3, .72))
+  const blades = new THREE.Group(); blades.position.set(0, 3, .75); mill.add(blades)
+  for (let k = 0; k < 4; k++) { const arm = new THREE.Group(); arm.rotation.z = k * Math.PI / 2; arm.add(mesh(new THREE.BoxGeometry(.3, 1.9, .05), mat(k % 2 ? C.cream : C.stone), 0, 1.05, 0)); blades.add(arm) }
+  W0 = { blades } }
+
+// ── 1 · mission: a child beside a treasure chest that opens as the robot arrives ──
+let W1 = {}
+{ const g = new THREE.Group(); g.position.copy(stationPos[1]); faceRoad(g, SS[1]); scene.add(g)
+  const kid = person(0x2f63e8, 1.3, true); kid.position.set(1.4, 0, .6); kid.rotation.y = -.7; g.add(kid)
+  const chest = new THREE.Group(); chest.position.set(-.4, 0, 0); chest.rotation.y = .4; g.add(chest)
+  chest.add(mesh(new THREE.BoxGeometry(1.4, .8, .9), mat(C.wood), 0, .4, 0), mesh(new THREE.BoxGeometry(1.46, .12, .96), mat(C.gold), 0, .8, 0))
+  const lidPivot = new THREE.Group(); lidPivot.position.set(0, .82, -.45); chest.add(lidPivot)
+  const lidG = new THREE.CylinderGeometry(.45, .45, 1.4, 6, 1, false, 0, Math.PI); lidG.rotateZ(Math.PI / 2); lidPivot.add(mesh(lidG, mat(C.wood), 0, 0, .45))
+  for (let k = 0; k < 14; k++) { const c = mesh(new THREE.CylinderGeometry(.11, .11, .04, 8), lit(C.gold, .5), (hash(k, 1, 9) - .5) * 1.1, .86 + hash(k, 2, 9) * .12, (hash(k, 3, 9) - .5) * .6); c.rotation.set(hash(k, 4, 9) * .8, 0, hash(k, 5, 9) * .8); chest.add(c) }
+  const gem = mesh(new THREE.OctahedronGeometry(.36, 0), lit(C.cyan, 0), 0, 1.1, 0); chest.add(gem)
+  const glowL = new THREE.PointLight(0x7fe9ff, 0, 7, 2); glowL.position.y = 1.3; chest.add(glowL)
+  const sparks = []; for (let k = 0; k < 12; k++) { const sp = mesh(new THREE.OctahedronGeometry(.06, 0), lit(C.gold, 1.2)); sp.castShadow = false; chest.add(sp); sparks.push(sp) }
+  for (const [x, z, sc, a] of [[-3, -2, 1.3, 1], [2.6, -2.4, 1.1, 0], [-3.4, 1.2, .8, 0]]) { const tr = tree(sc, !!a); tr.position.set(x, 0, z); g.add(tr) }
+  for (const [x, z] of [[-2, 1.8], [3, .2]]) { const b = bush(.9); b.position.set(x, 0, z); g.add(b) }
+  placeBeside(signpost('Every child has the treasure', '01 · Mission'), SS[1] + .022, -SIDE[1] || -1, RW + 1.2)  /* across the road from the scene, a little ahead: never between it and the camera */
+  W1 = { lidPivot, gem, glowL, sparks } }
+
+// ── 2 · how we build: four little plots in a row, one rule on each, each with its own sign ──
+let W2 = {}
+{ const g = new THREE.Group(); g.position.copy(stationPos[2]); faceRoad(g, SS[2]); scene.add(g)
+  const plots = [[-1.9, -2], [1.9, -2], [-1.9, 2], [1.9, 2]].map(([x, z], i) => { const pl = new THREE.Group(); pl.position.set(x, 0, z); g.add(pl)  // 2×2, so all four fit one shot
+    pl.add(mesh(new THREE.CylinderGeometry(1.6, 1.7, .25, 8), mat(i % 2 ? C.stone : C.cream), 0, .12, 0))
+    const l = label(CH[1].chips[i], 3, .62); l.position.set(0, .45, 1.75); l.rotation.x = -.35; pl.add(l); return pl })
+  const lamp = plots[0]
+  lamp.add(mesh(new THREE.CylinderGeometry(.08, .12, 2.4, 6), mat(0x5b4a78), 0, 1.4, 0), mesh(new THREE.ConeGeometry(.45, .4, 6), mat(0x5b4a78), 0, 2.85, 0))
+  const bulb = mesh(new THREE.IcosahedronGeometry(.28, 1), lit(C.win, 0), 0, 2.5, 0); bulb.castShadow = false; lamp.add(bulb)
+  const lampL = new THREE.PointLight(0xffd27a, 0, 8, 2); lampL.position.y = 2.4; lamp.add(lampL)
+  plots[1].add(mesh(jitter(new THREE.ConeGeometry(1.2, 1.6, 7), .05), mat(C.grass2), 0, 1.05, 0))
+  const curve = new THREE.CatmullRomCurve3(Array.from({ length: 24 }, (_, k) => { const a = k * .38; return new THREE.Vector3(Math.cos(a) * (1.4 - k * .04), 1.95 - k * .07, Math.sin(a) * (1.4 - k * .04)) }))
+  plots[1].add(mesh(new THREE.TubeGeometry(curve, 60, .1, 5), mat(C.roof)))
+  const ball = mesh(new THREE.IcosahedronGeometry(.17, 1), mat(C.gold)); plots[1].add(ball)
+  plots[2].add(mesh(new THREE.BoxGeometry(1.6, .12, .9), mat(C.wood), 0, 1, 0))
+  for (const [x, z] of [[-.7, -.35], [.7, -.35], [-.7, .35], [.7, .35]]) plots[2].add(mesh(new THREE.BoxGeometry(.1, .9, .1), mat(C.wood), x, .55, z))
+  const forms = [new THREE.BoxGeometry(.55, .55, .55), new THREE.IcosahedronGeometry(.38, 0), new THREE.ConeGeometry(.38, .65, 5)]
+  const shape = mesh(forms[0], mat(C.lilac), 0, 1.45, 0); plots[2].add(shape)
+  const vault = new THREE.Group(); vault.position.y = .25; plots[3].add(vault)
+  vault.add(mesh(new THREE.BoxGeometry(1.5, 1.2, 1.3), mat(C.stone), 0, .6, 0))
+  const vr = prism(1.8, .6, 1.5, mat(C.roof)); vr.position.y = 1.2; vault.add(vr)
+  vault.add(mesh(new THREE.BoxGeometry(.46, .42, .12), mat(C.gold), 0, .5, .7), mesh(new THREE.TorusGeometry(.14, .05, 4, 8, Math.PI), mat(C.stone2), 0, .75, .7))
+  placeBeside(signpost('Four rules we build by', '02 · How we build'), SS[2] + .022, -SIDE[2] || -1, RW + 1.2)
+  W2 = { bulb, lampL, curve, ball, shape, forms } }
+
+// ── 3 · Radlic: the planet floats over a meadow, and stepping stones climb to it from the path ──
+let W3 = {}
+{ const g = new THREE.Group(); g.position.copy(stationPos[3]).setY(6.8); scene.add(g)
+  const pg = new THREE.IcosahedronGeometry(3.4, 3).toNonIndexed(), np = pg.attributes.position, cols = [], v = new THREE.Vector3()
+  const bands = [0x2f63e8, C.blue, 0x7fdcfb, C.lilac, C.pink, C.peach, 0xffd9b8].map(c => new THREE.Color(c))
+  for (let i = 0; i < np.count; i += 3) { v.fromBufferAttribute(np, i); const y = (v.y / 3.4 + 1) / 2, b = Math.max(0, Math.min(6, Math.floor((y + (hash(i, 1, 2) - .5) * .06) * 7))); const c = bands[b]; for (let k = 0; k < 3; k++) cols.push(c.r, c.g, c.b) }
+  pg.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3)); pg.computeVertexNormals()
+  const planet = mesh(pg, new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: .9 })); planet.rotation.z = .3; planet.castShadow = false; g.add(planet)  // its shadow would blot out the stepping stones
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(3.7, 48, 32), new THREE.ShaderMaterial({ transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    vertexShader: 'varying float f; void main(){ vec3 n = normalize(normalMatrix*normal); vec4 mv = modelViewMatrix*vec4(position,1.); f = 1. - abs(dot(n, normalize(-mv.xyz))); gl_Position = projectionMatrix*mv; }',
+    fragmentShader: 'varying float f; void main(){ float a = pow(f, 3.5) * .55; gl_FragColor = vec4(pow(vec3(.55,.8,1.), vec3(2.2)) * a, a); }' })))
+  const belt = new THREE.InstancedMesh(new THREE.DodecahedronGeometry(.14, 0), mat(0xdfe6ff), 80), bm = new THREE.Matrix4(), bq = new THREE.Quaternion(), be = new THREE.Euler(), bs = new THREE.Vector3(), bp = new THREE.Vector3()
+  for (let k = 0; k < 80; k++) { const a = k / 80 * Math.PI * 2, rr = 4.6 + hash(k, 2, 7) * .9; bp.set(Math.cos(a) * rr, (hash(k, 4, 7) - .5) * .2, Math.sin(a) * rr); bs.setScalar(.5 + hash(k, 3, 7)); be.set(hash(k, 5, 7) * 3, hash(k, 6, 7) * 3, 0); bm.compose(bp, bq.setFromEuler(be), bs); belt.setMatrixAt(k, bm) }
+  belt.castShadow = false
+  const beltG = new THREE.Group(); beltG.rotation.set(-.7, 0, .3); beltG.add(belt); g.add(beltG)
+  const moon = mesh(new THREE.IcosahedronGeometry(.55, 0), mat(C.stone)); g.add(moon)
+  // stepping stones from the path edge, curving up to the planet
+  const t = road.getTangentAt(SS[3]), from = road.getPointAt(SS[3]).addScaledVector(sideOf(t), SIDE[3] * (RW + 1)), to = stationPos[3].clone().setY(3)
+  const stones = []
+  for (let k = 0; k < 10; k++) { const f = k / 9, st = new THREE.Group(); st.position.lerpVectors(from, to, f).addScaledVector(t, Math.sin(f * Math.PI) * 2.2); st.position.y = .25 + f * 3; scene.add(st)
+    st.add(mesh(new THREE.CylinderGeometry(.62, .48, .3, 6), k === 9 ? mat(C.gold) : mat(C.stone)))
+    const tick = mesh(new THREE.BoxGeometry(.4, .05, .1), lit(0x34d399, 0).clone(), .05, .18, 0), t2 = mesh(new THREE.BoxGeometry(.2, .05, .1), tick.material, -.15, .18, .08); tick.rotation.y = .5; t2.rotation.y = -1.1
+    if (k < 9) st.add(tick, t2); stones.push({ st, tick, y: st.position.y }) }
+  placeBeside(signpost('Radlic · math that adapts', '03 · Our first product'), SS[3] + .022, -SIDE[3] || -1, RW + 1.2)
+  W3 = { planet, beltG, moon, stones, g } }
+
+// ── 4 · who it's for: a village — a family's home, a school with a clock tower, a partners' workshop ──
+let W4 = {}
+{ const g = new THREE.Group(); g.position.copy(stationPos[4]); faceRoad(g, SS[4]); scene.add(g)
+  const h = house(C.cream, C.roof2); h.position.set(-4.3, 0, .6); h.rotation.y = .35; g.add(h)
+  const p1 = person(C.roof, 1.1, true); p1.position.set(-3.6, 0, 2.3); g.add(p1); const p2 = person(C.gold, .75); p2.position.set(-3.1, 0, 2.5); g.add(p2)
+  const sch = new THREE.Group(); sch.position.set(.4, 0, -1.4); g.add(sch)
+  sch.add(mesh(new THREE.BoxGeometry(3.4, 1.6, 1.8), mat(C.cream), 0, .8, 0))
+  const sr = prism(3.8, .8, 2, mat(C.roof)); sr.position.y = 1.6; sch.add(sr)
+  for (const x of [-1.1, -.37, .37, 1.1]) sch.add(mesh(new THREE.CylinderGeometry(.1, .1, 1.3, 6), mat(C.white), x, .65, 1.05))
+  for (let k = 0; k < 3; k++) sch.add(mesh(new THREE.BoxGeometry(2.8 - k * .3, .12, .3), mat(C.stone), 0, .06 + k * .12, 1.35 - k * .15))
+  sch.add(mesh(new THREE.BoxGeometry(.8, 1.2, .8), mat(C.cream), 0, 2.6, -.2))
+  const tr = mesh(new THREE.ConeGeometry(.7, .8, 4), mat(C.roof)); tr.position.set(0, 3.6, -.2); tr.rotation.y = Math.PI / 4; sch.add(tr)
+  const face = mesh(new THREE.CylinderGeometry(.28, .28, .06, 10), mat(C.white), 0, 2.75, .22); face.rotation.x = Math.PI / 2; sch.add(face)
+  const hand = mesh(new THREE.BoxGeometry(.04, .22, .03), mat(C.ink)); hand.geometry.translate(0, .1, 0); hand.position.set(0, 2.75, .27); sch.add(hand)
+  sch.add(mesh(new THREE.CylinderGeometry(.03, .03, 1, 4), mat(C.stone2), 1.5, 2.1, -.5))
+  const flag = mesh(new THREE.PlaneGeometry(.6, .36, 6, 1), mat(C.blue, { side: THREE.DoubleSide })); flag.geometry.translate(.3, 0, 0); flag.position.set(1.52, 2.45, -.5); sch.add(flag)
+  for (const [x, z, c, wv] of [[-1, 2.6, C.roof2, true], [-.4, 2.8, C.leaf, false], [.3, 2.7, C.lilac, true], [1.2, 2.5, C.gold, false]]) { const k = person(c, .7, wv); k.position.set(x, 0, z); g.add(k) }
+  const t3 = person(C.deep, 1.1); t3.position.set(1.9, 0, 2.2); g.add(t3)
+  const ws = new THREE.Group(); ws.position.set(4.6, 0, .4); ws.rotation.y = -.4; g.add(ws)
+  ws.add(mesh(new THREE.BoxGeometry(1.8, 1.2, 1.4), mat(C.wood), 0, .6, 0))
+  const wr = prism(2, .7, 1.6, mat(C.roof2)); wr.position.y = 1.2; ws.add(wr)
+  const g1 = gear(.8, 10, .2, mat(C.gold)); g1.position.set(-.3, 2.5, .2); ws.add(g1)
+  const g2 = gear(.55, 7, .2, mat(C.stone)); g2.position.set(.75, 2.2, .25); ws.add(g2)
+  for (let k = 0; k < 7; k++) g.add(mesh(new THREE.CylinderGeometry(.3, .32, .06, 6), mat(C.sand), -2.8 + k * .6, .03, 1.6 + Math.sin(k) * .3))
+  for (const [x, z] of [[-5.4, .8], [-2.6, -1.2], [3, 2.9], [6, -.6]]) { const b = bush(1); b.position.set(x, 0, z); g.add(b) }
+  const lbl = [['Parents', -4.3, 2.6], ['Schools', .4, 3.6], ['Partners', 4.6, 2.2]].map(([t, x, z]) => { const l = label(t, 1.6, .5); l.position.set(x, .35, z); l.rotation.x = -.5; g.add(l) })
+  placeBeside(signpost('Families, schools, partners', "04 · Who it's for"), SS[4] + .022, -SIDE[4] || -1, RW + 1.2)
+  W4 = { g1, g2, flag, hand, people: [p1, p2] } }
+
+// ── 5 · the road ends at an archway with a door of soft light: what comes next ──
+let W5 = {}
+{ const s = SS[5] + .012, p = road.getPointAt(Math.min(1, s)), t = road.getTangentAt(Math.min(1, s))
+  const plaza = mesh(new THREE.CylinderGeometry(5.5, 5.8, .14, 14), mat(C.stone), p.x, .04, p.z); plaza.receiveShadow = true; scene.add(plaza)
+  const archG = new THREE.Group(); archG.position.set(p.x, .1, p.z).addScaledVector(t, 2.2); archG.rotation.y = yawOf(t) + Math.PI; scene.add(archG)
+  archG.add(mesh(new THREE.BoxGeometry(.6, 3.6, .6), mat(C.stone), -1.8, 1.8, 0), mesh(new THREE.BoxGeometry(.6, 3.6, .6), mat(C.stone), 1.8, 1.8, 0))
+  const top = mesh(new THREE.TorusGeometry(1.8, .32, 4, 12, Math.PI), mat(C.stone)); top.position.y = 3.6; archG.add(top)
+  archG.add(mesh(new THREE.BoxGeometry(4.4, .3, .9), mat(C.cream), 0, .15, 0))
+  const door = new THREE.Mesh(new THREE.PlaneGeometry(3, 4.8), new THREE.ShaderMaterial({ uniforms: { t: { value: 0 }, o: { value: 0 } }, transparent: true, side: THREE.DoubleSide, depthWrite: false,
+    vertexShader: 'varying vec2 u; void main(){ u = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }',
+    fragmentShader: 'uniform float t, o; varying vec2 u; void main(){ vec2 p = u - vec2(.5,.45); float r = length(p*vec2(1.,.7)); float s = sin(atan(p.y,p.x)*4. + r*18. - t*1.5)*.5+.5; vec3 c = mix(vec3(.55,.75,1.), vec3(.95,.85,1.), s); float a = smoothstep(.55,.1,r)*.85*o; gl_FragColor = vec4(pow(c, vec3(2.2)), a); }' }))
+  door.position.set(0, 2.5, 0); archG.add(door)
+  for (const k of [-1, 1]) { const tt = tree(1.3, k > 0); tt.position.set(p.x, 0, p.z).addScaledVector(sideOf(t), k * 6).addScaledVector(t, 1); scene.add(tt) }
+  placeBeside(signpost('More is coming', '05 · What comes next'), SS[5] + .022, -SIDE[5] || -1, RW + 1.2)
+  W5 = { door } }
+
+// ── the guide: a small walking robot, seen from behind — the visor, the cyan eyes and the orbit ring carry over from the mascot ──
+const bot = new THREE.Group(), rig = new THREE.Group(); bot.add(rig); scene.add(bot)
+const shell = mat(C.white, { flatShading: false, roughness: .32 }), trim = mat(0x2f63e8, { flatShading: false, roughness: .4 }), glass = mat(C.ink, { flatShading: false, roughness: .12 })
+const legs = [-1, 1].map(sd => { const hip = new THREE.Group(); hip.position.set(sd * .26, 1.02, 0); rig.add(hip)
+  hip.add(mesh(new THREE.SphereGeometry(.2, 16, 12), trim), mesh(new THREE.CapsuleGeometry(.15, .5, 4, 12), shell, 0, -.45, 0))
+  const foot = mesh(new THREE.CapsuleGeometry(.15, .28, 4, 12), trim, 0, -.9, .08); foot.rotation.x = Math.PI / 2; foot.scale.set(1.15, 1, .75); hip.add(foot); return hip })
+rig.add(mesh(new THREE.CapsuleGeometry(.54, .42, 8, 20), shell, 0, 1.6, 0))
+{ const belt = mesh(new THREE.TorusGeometry(.52, .06, 8, 32), trim, 0, 1.2, 0); belt.rotation.x = Math.PI / 2; rig.add(belt) }
+rig.add(mesh(new THREE.TorusGeometry(.14, .035, 8, 24), lit(C.cyan, 1.2), 0, 1.7, .55))
+const pack = mesh(new RoundedBoxGeometry(.78, .82, .36, 4, .12), trim, 0, 1.68, -.58); rig.add(pack)
+{ const em = new THREE.Group(); em.position.set(0, 1.7, -.78); em.rotation.y = Math.PI; rig.add(em)   // the Radlor ring, worn on its back
+  em.add(mesh(new THREE.SphereGeometry(.15, 16, 12), shell)); const r = mesh(new THREE.TorusGeometry(.26, .03, 8, 32), lit(C.cyan, 1.1)); r.rotation.set(1.1, .3, 0); em.add(r) }
+const armsB = [-1, 1].map(sd => { const sh = new THREE.Group(); sh.position.set(sd * .68, 1.95, 0); rig.add(sh)
+  sh.add(mesh(new THREE.SphereGeometry(.16, 14, 10), trim), mesh(new THREE.CapsuleGeometry(.11, .42, 4, 10), shell, 0, -.36, 0), mesh(new THREE.SphereGeometry(.14, 14, 10), trim, 0, -.72, 0)); sh.rotation.z = sd * .12; return sh })
+const head = new THREE.Group(); head.position.y = 2.62; rig.add(head)
+rig.add(mesh(new THREE.CylinderGeometry(.14, .18, .2, 12), trim, 0, 2.18, 0))
+head.add(mesh(new THREE.SphereGeometry(.56, 32, 24), shell))
+head.add(mesh(new THREE.SphereGeometry(.575, 32, 16, Math.PI / 2 - 1.05, 2.1, .95, 1.15), glass))
+for (const x of [-.17, .17]) head.add(mesh(new THREE.CapsuleGeometry(.055, .09, 4, 8), lit(C.cyan, 1.4), x, .03, .55))
+for (const x of [-1, 1]) { const e = mesh(new THREE.CylinderGeometry(.16, .16, .14, 16), trim, x * .56, 0, 0); e.rotation.z = Math.PI / 2; head.add(e) }
+const antenna = new THREE.Group(); antenna.position.y = .52; head.add(antenna)
+antenna.add(mesh(new THREE.CylinderGeometry(.025, .025, .38, 6), mat(C.stone2), 0, .19, 0), mesh(new THREE.SphereGeometry(.08, 12, 8), lit(C.cyan, 1.3), 0, .42, 0))
+const halo = mesh(new THREE.TorusGeometry(.9, .03, 6, 48), lit(C.blue, 1)); halo.rotation.x = Math.PI / 2.4; head.add(halo)
+bot.scale.setScalar(.72)
+
+const birds = Array.from({ length: 7 }, (_, i) => { const b = new THREE.Group(), m = mat(C.white, { side: THREE.DoubleSide })
+  const body = new THREE.Mesh(new THREE.ConeGeometry(.08, .45, 5), m); body.rotation.x = Math.PI / 2; b.add(body)
+  const wing = side => { const w = new THREE.Group(), sh = new THREE.Shape(); sh.moveTo(0, 0); sh.lineTo(side * .6, .05); sh.lineTo(side * .15, -.18); sh.closePath(); const g = new THREE.ShapeGeometry(sh); g.rotateX(-Math.PI / 2); w.add(new THREE.Mesh(g, m)); b.add(w); return w }
+  b.userData = { l: wing(-1), r: wing(1) }; b.scale.setScalar(.75 + (i % 3) * .12); scene.add(b); return b })
+const flies = Array.from({ length: 5 }, (_, i) => { const b = new THREE.Group(), m = mat([C.pink, C.peach, C.gold, C.lilac, C.white][i], { side: THREE.DoubleSide, emissive: 0x332244, emissiveIntensity: .3 })
+  const w = side => { const o = new THREE.Group()  // two rounded lobes per wing, like a real butterfly
+    for (const [y, r] of [[.05, .1], [-.07, .07]]) { const g = new THREE.CircleGeometry(r, 10); g.scale(1.2, 1, 1); g.rotateX(-Math.PI / 2); g.translate(side * r * 1.1, 0, y); o.add(new THREE.Mesh(g, m)) }
+    b.add(o); return o }
+  b.add(new THREE.Mesh(new THREE.CapsuleGeometry(.015, .14, 2, 4).rotateX(Math.PI / 2), mat(C.ink)))
+  b.userData = { l: w(-1), r: w(1) }; scene.add(b); return b })
+const motes = (() => { const N = 34, base = new Float32Array(N * 3); for (let i = 0; i < N; i++) base.set([(hash(i, 1, 4) - .5) * 18, hash(i, 2, 4) * 6 - 1, (hash(i, 3, 4) - .5) * 12], i * 3)
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(base.slice(), 3))
+  const p = new THREE.Points(g, new THREE.PointsMaterial({ color: 0xffe7a3, size: .09, transparent: true, opacity: .75, depthWrite: false })); p.userData.base = base; scene.add(p); return p })()
+
+// ── HUD ──
+const cap = $('cap'), say = $('say')
+let shown = -2, voiceOn = false, audio = null
+function showChapter(i) {
+  if (i === shown) return; shown = i
+  if (i < 0) { cap.classList.remove('on'); say.classList.remove('on'); return }
+  const c = CH[i]; cap.classList.remove('on')
+  setTimeout(() => {
+    cap.innerHTML = `<span class="eyebrow">${c.eyebrow}</span><h2>${c.h}</h2>` + (c.p ? `<p>${c.p}</p>` : '') +
+      (c.chips ? `<ul class="chips">${c.chips.map(x => `<li>${x}</li>`).join('')}</ul>` : '') +
+      (c.links ? `<div class="links">${c.links.map(x => `<a href="#">${x}</a>`).join('')}</div>` : '') +
+      (c.cta ? `<div class="row">${c.cta.map(([l, k]) => `<a class="btn ${k}" href="#">${l}</a>`).join('')}</div>` : '')
+    cap.classList.add('on'); say.innerHTML = `<b>Guide:</b> ${c.say}`; say.classList.add('on')
+    if (voiceOn) { if (audio) audio.pause(); audio = new Audio(`audio/tour-${i}.mp3`); audio.play().catch(() => {}) }
+  }, 220)
+}
+const clock = new THREE.Clock()
+// ── stop to stop: any scroll, swipe or key walks the robot to the NEXT stop and it stops there by itself ──
+// Nobody has to scroll a precise distance. A trackpad keeps firing wheel events for a second after the finger lifts;
+// a new gesture only counts after a pause in the stream, so that tail can never carry you past a stop.
+const LAST = STOPS.length - 1
+let x = 0, cur = 0, from = 0, to = 0, t0 = 0, dur = 1, moving = false, pending = 0, playing = false, dwell = 0, lastWheel = 0, frameMs = 16
+const setPlaying = v => { playing = v; dwell = 0; $('play').hidden = !v }
+const easeIO = k => -(Math.cos(Math.PI * k) - 1) / 2
+function go(target) {
+  target = Math.max(0, Math.min(LAST, target))
+  if (moving) { pending = Math.sign(target - to); return }
+  if (target === cur) return
+  from = x; to = target; t0 = clock.elapsedTime; moving = true; pending = 0
+  dur = reduce ? .001 : 2.6 + 1.2 * (Math.abs(to - from) - 1)  // a longer jump from the dots walks a little faster per stop
+}
+function step(dir) {
+  if (!locked) return
+  if (dir > 0 && cur === LAST && !moving) { leave(); return }
+  go((moving ? to : cur) + dir)
+}
+// The lock lives in THIS variable, never only in a class: the preview host rewrites <html>'s class list, which silently
+// switched the road off and let the page scroll straight to the articles. The class on <body> is styling only.
+let locked = true
+const setLock = v => { locked = v; document.body.classList.toggle('lock', v) }
+// past the last stop, the page scrolls normally to what is below; scrolling back to the top re-enters the road
+function leave() { setPlaying(false); setLock(false); $('after').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }) }
+function enter() { setLock(true); scrollTo(0, 0) }
+history.scrollRestoration = 'manual'; setLock(true); scrollTo(0, 0)
+addEventListener('scroll', () => { if (locked && scrollY !== 0) scrollTo(0, 0) }, { passive: true })  // nothing may drift the page while on the road
+addEventListener('wheel', e => {
+  // a slow device delivers one swipe's events a frame apart, so "a pause" must be longer than a frame: measured, not assumed
+  const now = performance.now(), fresh = now - lastWheel > Math.max(180, frameMs * 2.5); lastWheel = now
+  if (!locked) { if (scrollY <= 2 && e.deltaY < 0 && fresh) { e.preventDefault(); enter() } return }
+  e.preventDefault()  // the wheel belongs to the road: don't let it scroll this page or the page around it
+  if (playing) setPlaying(false)
+  // while it walks, the wheel is ignored outright: a swipe's inertia always ends inside the walk, so it can never chain into a second stop
+  if (fresh && !moving && Math.abs(e.deltaY) > 2) step(Math.sign(e.deltaY))
+}, { passive: false })
+let ty = null
+addEventListener('touchstart', e => { ty = e.touches[0].clientY }, { passive: true })
+addEventListener('touchmove', e => { if (locked) e.preventDefault() }, { passive: false })
+addEventListener('touchend', e => { if (ty === null) return; const dy = ty - e.changedTouches[0].clientY; ty = null
+  if (!locked) { if (scrollY <= 2 && dy < -40) enter(); return }
+  if (Math.abs(dy) > 40 && !moving) { if (playing) setPlaying(false); step(Math.sign(dy)) } }, { passive: true })
+addEventListener('keydown', e => {
+  if (!locked) return
+  if (['ArrowDown', 'PageDown', ' ', 'ArrowRight'].includes(e.key)) { e.preventDefault(); setPlaying(false); step(1) }
+  if (['ArrowUp', 'PageUp', 'ArrowLeft'].includes(e.key)) { e.preventDefault(); setPlaying(false); step(-1) }
+  if (e.key === 'Home') { e.preventDefault(); go(0) } if (e.key === 'End') { e.preventDefault(); go(LAST) } })
+for (const a of document.querySelectorAll('a[href="#after"]')) a.onclick = e => { e.preventDefault(); leave() }
+$('start').onclick = () => { if (cur === LAST) go(0); setPlaying(!reduce); if (!reduce && cur === 0 && !moving) go(1) }
+$('play').onclick = () => setPlaying(false)
+const railNames = ['Start', ...CH.map(c => c.eyebrow.replace(/^\d+ · /, ''))]
+$('rail').innerHTML = railNames.map((n, i) => `<li><button type="button" data-i="${i}" aria-label="Walk to: ${n}"><span>${n}</span></button></li>`).join('')
+$('rail').onclick = e => { const b = e.target.closest('button'); if (b) { setPlaying(false); go(+b.dataset.i) } }
+const railBtns = [...$('rail').querySelectorAll('button')]
+$('sound').onclick = () => { voiceOn = !voiceOn; $('sound').setAttribute('aria-pressed', voiceOn); $('sound').textContent = voiceOn ? 'Voice on' : 'Voice off'; if (!voiceOn && audio) audio.pause() }
+
+// ── frame loop: scroll → distance along the road → the robot walks it, and a chase camera follows ──
+const look = new THREE.Vector3(), camGoal = new THREE.Vector3(), lookGoal = new THREE.Vector3(), UP = new THREE.Vector3(0, 1, 0)
+let camInit = false, prevS = -1, phase = 0, amp = 0, yaw = 0
+const near = x => { let b = 0, d = 1; STOPS.forEach((s, i) => { const dd = Math.abs(x - s); if (dd < d) { d = dd; b = i } }); return [b, d] }
+const wrap = a => Math.atan2(Math.sin(a), Math.cos(a))
+function frame() {
+  const raw = clock.getDelta(), dt = Math.min(raw, .05), now = clock.elapsedTime
+  frameMs += (raw * 1000 - frameMs) * .2
+  if (moving) { const k = clamp01((now - t0) / dur); x = from + (to - from) * easeIO(k)
+    if (k >= 1) { x = cur = to; moving = false; dwell = 0; if (pending) { const d = pending; pending = 0; go(cur + d) } } }
+  if (playing && !moving) { dwell += dt; if (dwell > 4.5) { if (cur < LAST) go(cur + 1); else setPlaying(false) } }
+  const here = moving ? to : cur; railBtns.forEach((b, i) => i === here ? b.setAttribute('aria-current', 'step') : b.removeAttribute('aria-current'))
+  // how "arrived" each stop is: the camera starts turning to it on the approach, and is fully on it at the stop
+  const w = i => ease(clamp01(1 - Math.abs(x - i) / .6))
+
+  // the robot: position on the road, facing along it; its stride is paid for by distance, so it only walks while you scroll
+  const s = .012 + x / LAST * SPAN, p = road.getPointAt(s), tg = road.getTangentAt(s)
+  if (prevS < 0) { prevS = s; yaw = yawOf(tg) }
+  const walked = Math.abs(s - prevS) * RL; prevS = s
+  bot.position.set(p.x, .06, p.z)
+  yaw += wrap(yawOf(tg) - yaw) * Math.min(1, dt * 6); bot.rotation.y = yaw
+  phase += walked * 4.2
+  amp += (Math.min(1, walked / Math.max(dt, 1e-3) / 2.2) - amp) * Math.min(1, dt * 5)
+  const sw = Math.sin(phase) * amp
+  legs[0].rotation.x = sw * .65; legs[1].rotation.x = -sw * .65
+  armsB[0].rotation.x = -sw * .55; armsB[1].rotation.x = sw * .55
+  rig.position.y = Math.abs(Math.cos(phase)) * .09 * amp + (reduce ? 0 : Math.sin(now * 2) * .015 * (1 - amp))
+  rig.rotation.z = Math.sin(phase) * .035 * amp; rig.rotation.x = .06 * amp
+  antenna.rotation.z = Math.sin(now * 2.2) * .12 + sw * .15; halo.rotation.z += dt * .9
+  // at a stop, it turns its head to look at what is beside the road
+  let hy = 0; for (let i = 1; i < STOPS.length; i++) { const k = w(i); if (k > 0) { const d = stationPos[i].clone().sub(bot.position); hy += Math.max(-1.1, Math.min(1.1, wrap(Math.atan2(d.x, d.z) - yaw))) * k } }
+  head.rotation.y += (hy - head.rotation.y) * Math.min(1, dt * 4)
+
+  // chase camera: behind and above the robot; near a stop it swings out to frame both the robot and the stop
+  const back = tg.clone().negate(), sd = sideOf(tg)
+  // on a phone the words fill the lower half, so aim lower: the robot then rides in the upper half of the screen
+  camGoal.copy(bot.position).addScaledVector(back, small ? 8 : 6.8).addScaledVector(UP, small ? 5.2 : 3.4)
+  lookGoal.copy(bot.position).addScaledVector(tg, small ? 2 : 4.5); lookGoal.y += small ? -1.2 : 1.4
+  for (let i = 1; i < STOPS.length; i++) { const k = w(i); if (k <= 0) continue
+    const sp = stationPos[i].clone(); sp.y = FOCUS_Y[i]
+    lookGoal.lerp(sp.lerp(bot.position.clone().setY(small ? -1 : 1.4), .35), k * (small ? .6 : .7))
+    camGoal.addScaledVector(sd, -SIDE[i] * k * (small ? 0 : 3.2))  /* a portrait screen has no room to swing sideways */.addScaledVector(back, k * (i === 3 ? 9 : 5)).addScaledVector(UP, k * (i === 3 ? 3.2 : 2)) }  // a wider shot at each stop
+  if (!camInit) { camera.position.copy(camGoal); look.copy(lookGoal); camInit = true }
+  const f = reduce ? 1 : Math.min(1, dt * 2.6)
+  camera.position.lerp(camGoal, f); look.lerp(lookGoal, f); camera.lookAt(look)
+  if (!reduce) camera.position.y += Math.sin(now * .5) * .004
+  sun.position.copy(bot.position).lerp(look, .5).add(new THREE.Vector3(-14, 22, 12)); sun.target.position.copy(bot.position).lerp(look, .5)
+
+  if (!reduce) {
+    birds.forEach((b, i) => { const a = now * .22 + i * .32, r = 10 + (i % 3) * 1.2, c = look.clone().addScaledVector(tg, 14)
+      b.position.set(c.x + Math.cos(a) * r, c.y + 6 + Math.sin(now * .8 + i) * .4 + (i % 2) * .7, c.z + Math.sin(a) * r * .5)
+      b.rotation.y = -a + Math.PI; const fl = Math.sin(now * 9 + i * 1.3) * .55; b.userData.l.rotation.z = fl; b.userData.r.rotation.z = -fl })
+    flies.forEach((b, i) => { const a = now * (.5 + i * .07) + i * 2, c = bot.position.clone().addScaledVector(tg, 3)
+      b.position.set(c.x + Math.cos(a) * (2 + i * .5), 1 + Math.sin(now * 1.3 + i) * .4, c.z + Math.sin(a * 1.3) * 2)
+      b.rotation.y = -a; const fl = Math.sin(now * 16 + i) * 1.1; b.userData.l.rotation.z = fl; b.userData.r.rotation.z = -fl })
+    const mp = motes.geometry.attributes.position, mb = motes.userData.base
+    for (let i = 0; i < mp.count; i++) mp.setXYZ(i, look.x + mb[i * 3] + Math.sin(now * .4 + i) * .5, 1.2 + mb[i * 3 + 1] + Math.sin(now * .6 + i * 2) * .3, look.z + mb[i * 3 + 2] + Math.cos(now * .35 + i) * .5)
+    mp.needsUpdate = true; motes.material.opacity = .45 + Math.sin(now * 2) * .2
+    clouds.forEach((c, i) => { c.position.x += Math.sin(now * .12 + i) * .004 })
+    folks.forEach(fk => { const { arms, wave, ph } = fk.userData
+      arms[0].rotation.z = -.12 + Math.sin(now * 1.4 + ph) * .06; arms[1].rotation.z = .12 - Math.sin(now * 1.4 + ph) * .06
+      if (wave) arms[0].rotation.z = -2.5 + Math.sin(now * 7 + ph) * .35
+      fk.rotation.z = Math.sin(now * 1.1 + ph) * .03 })
+    W0.blades.rotation.z += dt * .9
+  }
+  water.uniforms.t.value = now
+  { const d = W1, k1 = w(1); d.lidPivot.rotation.x = -k1 * 1.6; d.gem.material.emissiveIntensity = k1 * 1.6; d.gem.position.y = 1.1 + k1 * .5 + Math.sin(now * 2) * .05 * k1; d.gem.rotation.y += dt; d.glowL.intensity = k1 * 12
+    d.sparks.forEach((sp, i) => { const c = (now * .35 + i / 12) % 1; sp.position.set(Math.sin(i * 2.4 + now) * .35, .9 + c * 1.8, Math.cos(i * 1.7) * .25); sp.scale.setScalar(k1 * (1 - c) * 1.2); sp.rotation.y += dt * 2 }) }
+  { const d = W2, k2 = w(2); d.bulb.material.emissiveIntensity = k2 * 1.8; d.lampL.intensity = k2 * 10
+    d.ball.position.copy(d.curve.getPointAt((now * .18) % 1)).y += .17
+    const fm = Math.floor(now / 2.2) % 3; if (d.shape.geometry !== d.forms[fm]) d.shape.geometry = d.forms[fm]; d.shape.rotation.y += dt * .8 }
+  { const d = W3, k3 = w(3); d.planet.rotation.y += dt * .08; d.beltG.rotation.y += dt * .05; const a = now * .3; d.moon.position.set(Math.cos(a) * 6, 1.8, Math.sin(a) * 6); d.g.position.y = 6.8 + Math.sin(now * .6) * .15
+    d.stones.forEach(({ st, tick, y }, i) => { const on = clamp01(k3 * 1.6 - i * .1); if (i < 9) tick.material.emissiveIntensity = on * 1.3; st.position.y = y + Math.sin(now * 1.2 + i) * .04 }) }
+  { const d = W4; d.g1.rotation.z += dt * .8; d.g2.rotation.z -= dt * .8 * 10 / 7; d.hand.rotation.z = -now * .5
+    const fp = d.flag.geometry.attributes.position; for (let i = 0; i < fp.count; i++) { const x = fp.getX(i); fp.setZ(i, Math.sin(x * 6 - now * 4) * .07 * x) } fp.needsUpdate = true; d.flag.geometry.computeVertexNormals()
+    d.people.forEach((pp, i) => pp.position.y = Math.abs(Math.sin(now * 3 + i)) * .08 * w(4)) }
+  W5.door.material.uniforms.t.value = now; W5.door.material.uniforms.o.value = .25 + .75 * w(5)
+  lampBulbs.forEach((b, i) => { b.material.emissiveIntensity = 1 + Math.sin(now * 3 + i) * .05 })
+
+  $('intro').style.opacity = String(1 - clamp01(x / .2)); $('intro').style.visibility = x > .25 ? 'hidden' : 'visible'
+  $('hint').style.opacity = String(1 - clamp01(x / .1))
+  showChapter(!moving && cur > 0 ? cur - 1 : -1)  // the words arrive with the robot, and leave as it sets off
+  composer.render(); requestAnimationFrame(frame)
+}
+// ── the miniature look: ambient occlusion where things meet, and a soft tilt-shift blur at the frame's top and bottom ──
+const composer = new EffectComposer(renderer)
+composer.renderTarget1.samples = composer.renderTarget2.samples = 4  // MSAA survives post-processing
+composer.addPass(new RenderPass(scene, camera))
+const ao = new GTAOPass(scene, camera, innerWidth, innerHeight)
+ao.updateGtaoMaterial({ radius: .5, distanceFallOff: .6, thickness: 1, scale: 1.1 }); ao.blendIntensity = .9
+if (!small) composer.addPass(ao)  // phones skip AO: it is the heaviest pass
+const tiltH = new ShaderPass(HorizontalTiltShiftShader), tiltV = new ShaderPass(VerticalTiltShiftShader)
+const setTilt = () => { tiltH.uniforms.h.value = 1.8 / innerWidth; tiltV.uniforms.v.value = 1.8 / innerHeight; tiltH.uniforms.r.value = tiltV.uniforms.r.value = .5 }
+setTilt(); if (!reduce) composer.addPass(tiltH), composer.addPass(tiltV)
+composer.addPass(new OutputPass())
+requestAnimationFrame(frame)
+addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; frameOffset(); camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); composer.setSize(innerWidth, innerHeight); setTilt() })
+</script>

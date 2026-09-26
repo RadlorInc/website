@@ -392,7 +392,8 @@ components/                MiloPanel · SectionIcon · SectionFigure — the onl
 content/posts.ts + content/posts/*.md    three posts
 content/legal.ts           the Terms of Use body + DRAFT, PLACEHOLDERS and the module-scope guard
 components/journey/        the home page's first screen (2026-09-25): Journey.tsx (the words, the stops, the scroll)
-                           + scene.js (the 3D world, three.js from npm). Replaced the looping video hero.
+                           + ChalkScenes.tsx (a hand-placed SVG chalk drawing per stop, traced on arrival; replaced
+                           the low-poly 3D the same day). Replaced the looping video hero.
 public/milo-*.webp   (10)  the mascot, one pose per page
 public/ico-*.webp    (17)  section chips, 256x256, shown at 40px
 public/fig-*.webp     (8)  content figures, 900px wide

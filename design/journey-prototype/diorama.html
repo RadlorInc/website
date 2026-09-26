@@ -1,42 +1,188 @@
-/**
- * The Radlor Journey: a low-poly world of floating islands the robot guide flies past, one island per stop
- * on the home page. Founder's pick, 2026-09-25, ported from the "Radlor Journey" prototype of that day.
- *
- * Plain JS on purpose: it is a port of that prototype, and three's scene code gains nothing from
- * annotations here. The page owns every word, the scroll and the stops; this file only draws.
- * `getX()` returns where the reader is: 0 = the opening island, 1…5 = the five stops, fractional between.
- *
- * ⚠️ Everything is bundled from npm (`three`) — nothing is fetched from a CDN. radlor.com promises in
- * /privacy that it loads nothing off-origin, and `check:site-claims` fails if a page does.
- */
-import * as THREE from 'three'
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
-import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js'
-import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
-import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
-import { HorizontalTiltShiftShader } from 'three/examples/jsm/shaders/HorizontalTiltShiftShader.js'
-import { VerticalTiltShiftShader } from 'three/examples/jsm/shaders/VerticalTiltShiftShader.js'
+<meta charset="utf-8">
+<title>Radlor Journey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Radlor as a journey through low-poly dioramas (founder's pick, 2026-09-25): faceted islands, matte pastels, soft shadows, no neon. The robot guide flies a
+   path past five stations (mission, rules, Radlic, who it's for, what's next). Scroll to fly, or
+   press Play to watch it like a film. One dark page, the logo's blues, no chalkboard. */
+:root{--space:#050A16;--cyan:#00E5FF;--sky:#7ADFFF;--blue:#0061F3;--silver:#C9D3E0;--mist:#9FB0C6;--white:#F4F7FB;
+  --display:'Lexend',system-ui,sans-serif;--body:'Figtree',system-ui,sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--space);color:var(--white);margin:0;font:400 17px/1.55 var(--body)}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+.spacer{height:1000vh}
+a{color:inherit}
+h1,h2{font-family:var(--display);font-weight:500;letter-spacing:-.015em;margin:0;text-wrap:balance}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 20px;border-radius:999px;font:600 15px var(--body);text-decoration:none;border:0;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+.btn:focus-visible,a:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.glow{background:var(--blue);color:#fff;box-shadow:0 0 0 1px rgba(0,229,255,.35),0 8px 28px -8px rgba(0,97,243,.9)}
+.glow:hover{background:#1a72ff}
+.ghost{background:rgba(5,10,22,.35);border:1px solid rgba(201,211,224,.35);color:var(--white);backdrop-filter:blur(6px)}
+.ghost:hover{border-color:var(--sky);color:var(--sky)}
 
-export function mountJourney({ canvas, getX, reduce, small, onReady }) {
-const STOPS = [0, 1, 2, 3, 4, 5]
-// sized to its own box (one screen tall on the page), not the window: on a phone 100svh and innerHeight differ
-const cw = () => canvas.clientWidth || innerWidth, ch = () => canvas.clientHeight || innerHeight
+.top{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;gap:16px;padding:calc(14px + env(safe-area-inset-top,0px)) 20px 14px;
+  background:linear-gradient(180deg,rgba(5,10,22,.75),transparent)}
+.top img{height:30px;width:auto}
+.top .sp{flex:1}
+.top a.skip{color:var(--mist);font-size:14px;font-weight:600;text-decoration:none}
+.top a.skip:hover{color:var(--sky)}
+.top .btn{min-height:40px;padding:0 16px;font-size:14px}
+.chip{min-height:36px;padding:0 14px;border-radius:999px;border:1px solid rgba(122,223,255,.3);background:rgba(10,21,48,.55);color:var(--silver);font:600 13px var(--body);cursor:pointer;backdrop-filter:blur(6px)}
+.chip:hover{border-color:var(--cyan);color:#fff}
+.chip[aria-pressed="true"]{color:var(--sky);border-color:var(--sky)}
+
+/* the title card at the start */
+.intro{position:fixed;inset:0;z-index:3;display:flex;flex-direction:column;justify-content:center;padding:0 max(20px,6vw);pointer-events:none;transition:opacity .4s}
+.intro > *{pointer-events:auto}
+.intro .eyebrow{font:600 12px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--sky)}
+.intro h1{font-size:clamp(40px,6.4vw,84px);line-height:1.02;margin:18px 0 0;max-width:13ch}
+.intro h1 em{font-style:normal;background:linear-gradient(90deg,var(--sky),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.intro p{color:var(--silver);font-size:19px;margin:18px 0 0;max-width:32rem}
+.intro .row{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.hint{position:fixed;left:50%;bottom:32px;transform:translateX(-50%);z-index:3;color:var(--mist);font-size:13px;letter-spacing:.14em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:8px;transition:opacity .4s}
+.hint i{width:1px;height:34px;background:linear-gradient(var(--sky),transparent);animation:drip 1.8s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* chapter caption: a film's lower third */
+.cap{position:fixed;left:max(20px,6vw);bottom:72px;z-index:3;max-width:34rem;opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s cubic-bezier(.2,.7,.2,1);pointer-events:none}
+.cap.on{opacity:1;transform:none;pointer-events:auto}
+.cap .eyebrow{font:600 12px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--sky)}
+.cap h2{font-size:clamp(30px,4.2vw,54px);line-height:1.06;margin-top:12px;text-shadow:0 2px 30px rgba(5,10,22,.9)}
+.cap p{margin:12px 0 0;color:var(--silver);font-size:18px;text-shadow:0 1px 16px rgba(5,10,22,.9)}
+.cap .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding:0;list-style:none}
+.cap .chips li{border:1px solid rgba(122,223,255,.3);background:rgba(10,21,48,.6);backdrop-filter:blur(6px);color:var(--sky);border-radius:999px;padding:6px 14px;font-weight:600;font-size:14px}
+.cap .row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.cap .links{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap}.cap .links a{color:var(--sky);font-weight:600;text-decoration:none}
+/* the guide's line, like a subtitle */
+.say{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:3;max-width:min(90vw,620px);text-align:center;color:#fff;font:500 16px/1.4 var(--body);
+  background:rgba(5,10,22,.55);backdrop-filter:blur(6px);border:1px solid rgba(122,223,255,.18);border-radius:12px;padding:8px 14px;opacity:0;transition:opacity .35s}
+.say.on{opacity:1}
+.say b{color:var(--sky);font-weight:600}
+
+.after{position:relative;z-index:6;background:var(--space);border-top:1px solid rgba(122,223,255,.16)}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:24px}
+.after .posts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;padding-block:64px 40px}
+.after .posts a{border-top:2px solid rgba(122,223,255,.35);padding-top:16px;text-decoration:none}
+.after .posts time{font-size:14px;color:var(--mist)}.after .posts h3{font:500 19px/1.3 var(--display);margin:6px 0 0}
+.after .posts a:hover h3{color:var(--sky)}
+.after .eyebrow{font:600 12px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--sky);display:block;padding-top:64px}
+footer{display:flex;flex-wrap:wrap;gap:16px 28px;justify-content:space-between;padding-block:28px 40px;color:var(--mist);font-size:14px;border-top:1px solid rgba(122,223,255,.12)}
+footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}footer a:hover{color:var(--sky)}
+
+.fallback{display:none}
+.nogl .fallback{display:block;position:relative;z-index:6;padding:120px 24px}
+.nogl #c,.nogl .player,.nogl .cap,.nogl .say,.nogl .hint{display:none}
+
+@media (max-width:760px){
+  .top .skip{display:none}
+  .cap{left:20px;right:20px;bottom:40px}
+  .cap h2{font-size:30px}.cap p{font-size:16px}
+  .say{bottom:auto;top:calc(70px + env(safe-area-inset-top,0px));font-size:14px}
+  .hint{display:none}
+  .intro{justify-content:flex-end;padding-bottom:110px;background:linear-gradient(180deg,transparent 38%,rgba(5,10,22,.88) 72%)}  /* the island sits behind the headline on a phone */
+  .top .chip#sound{display:none}
+}
+@media (prefers-reduced-motion:reduce){.hint i{animation:none}}
+</style>
+
+<canvas id="c" aria-hidden="true"></canvas>
+
+<header class="top">
+  <img src="wordmark.png" alt="Radlor">
+  <span class="sp"></span>
+  <button class="chip" type="button" id="play" hidden>Pause</button>
+  <button class="chip" type="button" id="sound" aria-pressed="false">Voice off</button>
+  <a class="skip" href="#after">Skip the journey</a>
+  <a class="btn glow" href="#">Try Radlic</a>
+</header>
+
+<div class="intro" id="intro">
+  <span class="eyebrow">Education technology</span>
+  <h1>Learning that meets every child <em>where they are.</em></h1>
+  <p>Come along. Our guide will show you what we build.</p>
+  <div class="row">
+    <button class="btn glow" type="button" id="start"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg>Play the journey</button>
+    <a class="btn ghost" href="#after">Skip to the end</a>
+  </div>
+</div>
+<div class="hint" id="hint"><span>Scroll to fly</span><i></i></div>
+
+<div class="cap" id="cap" aria-live="polite"></div>
+<p class="say" id="say"></p>
+
+
+
+<div class="spacer" aria-hidden="true"></div>
+
+<section class="after" id="after">
+  <div class="fallback wrap" id="fallback"></div>
+  <div class="wrap">
+    <span class="eyebrow">Writing · what we're learning</span>
+    <div class="posts">
+      <a href="#"><time>29 Aug 2026</time><h3>A sixteen-year-old's math gap is often in grade four</h3></a>
+      <a href="#"><time>29 Aug 2026</time><h3>A camera claim you can check</h3></a>
+      <a href="#"><time>19 Aug 2026</time><h3>A child should never see their level</h3></a>
+    </div>
+    <footer>
+      <span>© 2026 Radlor Inc. · support@radlor.com</span>
+      <nav><a href="#">Radlic</a><a href="#">About</a><a href="#">Schools</a><a href="#">Contact</a><a href="#">Data &amp; safety</a><a href="#">Privacy</a><a href="#">Terms</a></nav>
+    </footer>
+  </div>
+</section>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+               "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+</script>
+<script type="module">
+import * as THREE from 'three'
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
+import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js'
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js'
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
+import { HorizontalTiltShiftShader } from 'three/addons/shaders/HorizontalTiltShiftShader.js'
+import { VerticalTiltShiftShader } from 'three/addons/shaders/VerticalTiltShiftShader.js'
+
+// ── the story ── (t = where on the journey each stop sits; 0 is the opening island)
+const CH = [
+  { t: .2, eyebrow: '01 · Mission', h: 'Every child already has the treasure.', p: 'We build learning that finds it, and lights it up.',
+    say: "Hi! I'm Radlor's guide. Every child already has something bright inside." },
+  { t: .4, eyebrow: '02 · How we build', h: 'Four rules in everything we make.', chips: ['One idea at a time', 'No levels, no red crosses', 'Harder means different', "Children's data stays small"],
+    say: 'Every product we build follows four rules. Here they are, one on each little island.' },
+  { t: .6, eyebrow: '03 · Our first product', h: 'Radlic: math that adapts.', p: 'Grades 3–8. Every answer shapes the next question.', cta: [['Try Radlic', 'glow']],
+    say: 'This is Radlic, our first world. Each answer lights the next stepping stone.' },
+  { t: .8, eyebrow: "04 · Who it's for", h: 'Families, schools and partners.', links: ['Parents →', 'Schools →', 'Partners →'],
+    say: 'Parents, teachers and partners all start from here.' },
+  { t: .97, eyebrow: '05 · What comes next', h: 'More is coming.', p: 'New learning products are in research.', cta: [['Try Radlic', 'glow'], ['Talk to us', 'ghost']],
+    say: "That's the journey so far. More worlds are on the way. Want to try Radlic?" },
+]
+const STOPS = [0, ...CH.map(c => c.t)]           // six camera stops: the opening island + five chapters
+const DURATION = 60
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+const small = innerWidth < 760
+const $ = id => document.getElementById(id)
+
 // ── renderer: matte, soft shadows, no bloom ──
 let renderer
-try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' }) }
-catch { return null }  // no WebGL: the page is all real text anyway, so it simply reads without the world behind it
+try { renderer = new THREE.WebGLRenderer({ canvas: $('c'), antialias: true, powerPreference: 'high-performance' }) }
+catch (e) {
+  document.documentElement.classList.add('nogl')
+  $('fallback').innerHTML = CH.map(c => `<h2 style="margin:28px 0 8px">${c.h}</h2><p style="color:#C9D3E0;margin:0">${c.p || (c.chips || []).join(' · ')}</p>`).join('')
+  throw e
+}
 renderer.setPixelRatio(Math.min(devicePixelRatio, small ? 1.5 : 2))
-renderer.setSize(cw(), ch(), false)
+renderer.setSize(innerWidth, innerHeight)
 renderer.toneMapping = THREE.ACESFilmicToneMapping
 renderer.toneMappingExposure = 1.05
 renderer.shadowMap.enabled = true
 renderer.shadowMap.type = THREE.PCFShadowMap  // PCF honours shadow.radius; PCFSoft ignores it
 const scene = new THREE.Scene()
 scene.fog = new THREE.Fog(0x0c1636, 60, 140)
-const camera = new THREE.PerspectiveCamera(small ? 40 : 30, cw() / ch(), 0.1, 600)
+const camera = new THREE.PerspectiveCamera(small ? 40 : 30, innerWidth / innerHeight, 0.1, 600)
 // on a wide screen the caption owns the left third, so frame each island to the right of it
-const frameOffset = () => cw() >= 760 ? camera.setViewOffset(cw(), ch(), -cw() * .14, 0, cw(), ch()) : camera.clearViewOffset()
+const frameOffset = () => innerWidth >= 760 ? camera.setViewOffset(innerWidth, innerHeight, -innerWidth * .14, 0, innerWidth, innerHeight) : camera.clearViewOffset()
 frameOffset()
 
 // the sky: a deep navy dome that lifts to a soft violet at the horizon
@@ -229,7 +375,7 @@ const W2 = world(84, -2, -8)
 
 // 3 · Radlic: a faceted planet in the app's colours, with a ring of stepping stones that light up as you answer
 const W3 = world(128, 6, -26)
-{ const pg = new THREE.IcosahedronGeometry(4.2, 3), cols = [], v = new THREE.Vector3()
+{ const pg = new THREE.IcosahedronGeometry(4.2, 3), p = pg.attributes.position, cols = [], v = new THREE.Vector3()
   const bands = [0x2f63e8, C.blue, 0x7fdcfb, C.lilac, C.pink, C.peach, 0xffd9b8].map(c => new THREE.Color(c))  // bottom → top: the warm Radlic colours sit on the lit side
   const nonIdx = pg.toNonIndexed(); const np = nonIdx.attributes.position
   for (let i = 0; i < np.count; i += 3) { v.fromBufferAttribute(np, i); const y = (v.y / 4.2 + 1) / 2, b = Math.max(0, Math.min(bands.length - 1, Math.floor((y + (hash(i, 1, 2) - .5) * .06) * bands.length))); const c = bands[b]; for (let k = 0; k < 3; k++) cols.push(c.r, c.g, c.b) }
@@ -343,20 +489,51 @@ const guideAt = [[5.5, 4.5, 2],  /* opening: right of the island, clear of the h
 const camCurve = new THREE.CatmullRomCurve3(shot.map(s => s[0]), false, 'centripetal')
 const tgtCurve = new THREE.CatmullRomCurve3(shot.map(s => s[1]), false, 'centripetal')
 const botCurve = new THREE.CatmullRomCurve3(guideAt.flatMap((p, i) => i < guideAt.length - 1 ? [p, p.clone().lerp(guideAt[i + 1], .5).add(new THREE.Vector3(0, 5, 6))] : [p]), false, 'centripetal')
+// scroll position -> curve parameter, holding still for a moment at each stop
+function param(u, lead = 0) {
+  let i = 0; while (i < STOPS.length - 2 && u > STOPS[i + 1]) i++
+  const s = clamp01((u - STOPS[i]) / (STOPS[i + 1] - STOPS[i]))
+  const moved = ease(clamp01((s - .2 + lead) / .6))
+  return (i + moved) / (STOPS.length - 1)
+}
+
+// ── HUD ──
+const cap = $('cap'), say = $('say')
+let shown = -2, voiceOn = false, audio = null
+function showChapter(i) {
+  if (i === shown) return; shown = i
+  if (i < 0) { cap.classList.remove('on'); say.classList.remove('on'); return }
+  const c = CH[i]; cap.classList.remove('on')
+  setTimeout(() => {
+    cap.innerHTML = `<span class="eyebrow">${c.eyebrow}</span><h2>${c.h}</h2>` + (c.p ? `<p>${c.p}</p>` : '') +
+      (c.chips ? `<ul class="chips">${c.chips.map(x => `<li>${x}</li>`).join('')}</ul>` : '') +
+      (c.links ? `<div class="links">${c.links.map(x => `<a href="#">${x}</a>`).join('')}</div>` : '') +
+      (c.cta ? `<div class="row">${c.cta.map(([l, k]) => `<a class="btn ${k}" href="#">${l}</a>`).join('')}</div>` : '')
+    cap.classList.add('on'); say.innerHTML = `<b>Guide:</b> ${c.say}`; say.classList.add('on')
+    if (voiceOn) { if (audio) audio.pause(); audio = new Audio(`audio/tour-${i}.mp3`); audio.play().catch(() => {}) }
+  }, 220)
+}
+const spacer = document.querySelector('.spacer')
+const maxScroll = () => Math.max(1, spacer.offsetTop + spacer.offsetHeight - innerHeight)
+let target = 0, t = 0, playing = false
+const setPlaying = v => { playing = v; $('play').hidden = !v }
+addEventListener('scroll', () => { target = clamp01(scrollY / maxScroll()) }, { passive: true })
+for (const ev of ['wheel', 'touchstart']) addEventListener(ev, () => { if (playing) setPlaying(false) }, { passive: true })
+addEventListener('keydown', e => { if (playing && ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', ' '].includes(e.key)) setPlaying(false) })
+$('start').onclick = () => { if (target > .98) scrollTo(0, 0); setPlaying(!reduce) }
+$('play').onclick = () => setPlaying(false)
+$('sound').onclick = () => { voiceOn = !voiceOn; $('sound').setAttribute('aria-pressed', voiceOn); $('sound').textContent = voiceOn ? 'Voice on' : 'Voice off'; if (!voiceOn && audio) audio.pause() }
+target = clamp01(scrollY / maxScroll())
+
 // ── frame loop ──
 const clock = new THREE.Clock(), look = new THREE.Vector3(), tmp = new THREE.Vector3()
 let camInit = false, bank = 0
 const prevCam = new THREE.Vector3()
-// scroll position (x = which stop, fractional in between) -> curve parameter, holding still for a moment at each stop
-function param(x, lead = 0) {
-  const i = Math.min(STOPS.length - 2, Math.floor(x)), s = clamp01(x - i)
-  return (i + ease(clamp01((s - .2 + lead) / .6))) / (STOPS.length - 1)
-}
-let raf = 0, alive = true
+const near = x => { let b = 0, d = 1; STOPS.forEach((s, i) => { const dd = Math.abs(x - s); if (dd < d) { d = dd; b = i } }); return [b, d] }
 function frame() {
-  if (!alive) return
   const dt = Math.min(clock.getDelta(), .05), now = clock.elapsedTime
-  const u = Math.max(0, Math.min(STOPS.length - 1, getX()))
+  if (playing) { const [, d] = near(target); const next = Math.min(1, target + dt / DURATION * (d < .04 ? .3 : 1.5)); scrollTo(0, next * maxScroll()); target = next; if (next >= 1) setPlaying(false) }
+  t += (target - t) * (reduce ? 1 : Math.min(1, dt * 3)); const u = clamp01(t)
   const k = param(u), sway = reduce ? 0 : Math.sin(now * .25) * .6
   camCurve.getPoint(k, tmp); tmp.x += sway; tmp.y += Math.sin(now * .3) * .25
   if (!camInit) { camera.position.copy(tmp); prevCam.copy(tmp); camInit = true }
@@ -388,7 +565,7 @@ function frame() {
     W0.userData.blades.rotation.z += dt * .9
   }
 
-  const w = i => ease(clamp01(1 - Math.abs(u - STOPS[i]) / .5))
+  const [ni, nd] = near(u), w = i => ease(clamp01(1 - Math.abs(u - STOPS[i]) / .1))
   worlds.forEach((g, i) => { g.position.y += Math.sin(now * .6 + i) * .002; g.rotation.y = Math.sin(now * .15 + i) * .04 })
   W0.userData.water.uniforms.t.value = now
   { const d = W1.userData, k1 = w(1); d.lidPivot.rotation.x = -k1 * 1.6; d.gem.material.emissiveIntensity = k1 * 1.6; d.gem.position.y = 1.1 + k1 * .5 + Math.sin(now * 2) * .05 * k1; d.gem.rotation.y += dt; d.glowL.intensity = k1 * 12
@@ -403,25 +580,22 @@ function frame() {
     d.people.forEach((p, i) => p.position.y = Math.abs(Math.sin(now * 3 + i)) * .08 * w(4)) }
   { const d = W5.userData, k5 = w(5); d.door.material.uniforms.t.value = now; d.door.material.opacity = k5; d.steps.forEach((s, i) => s.scale.setScalar(.4 + .6 * ease(clamp01(k5 * 1.6 - i * .07)))) }
 
-  composer.render(); raf = requestAnimationFrame(frame)
+  $('intro').style.opacity = String(1 - clamp01(u / .05)); $('intro').style.visibility = u > .06 ? 'hidden' : 'visible'
+  $('hint').style.opacity = String(1 - clamp01(u / .03))
+  showChapter(ni > 0 && nd < .06 ? ni - 1 : -1)
+  composer.render(); requestAnimationFrame(frame)
 }
 // ── the miniature look: ambient occlusion where things meet, and a soft tilt-shift blur at the frame's top and bottom ──
 const composer = new EffectComposer(renderer)
 composer.renderTarget1.samples = composer.renderTarget2.samples = 4  // MSAA survives post-processing
 composer.addPass(new RenderPass(scene, camera))
-const ao = new GTAOPass(scene, camera, cw(), ch())
+const ao = new GTAOPass(scene, camera, innerWidth, innerHeight)
 ao.updateGtaoMaterial({ radius: .5, distanceFallOff: .6, thickness: 1, scale: 1.1 }); ao.blendIntensity = .9
 if (!small) composer.addPass(ao)  // phones skip AO: it is the heaviest pass
 const tiltH = new ShaderPass(HorizontalTiltShiftShader), tiltV = new ShaderPass(VerticalTiltShiftShader)
-const setTilt = () => { tiltH.uniforms.h.value = 1.8 / cw(); tiltV.uniforms.v.value = 1.8 / ch(); tiltH.uniforms.r.value = tiltV.uniforms.r.value = .5 }
-setTilt(); if (!reduce) { composer.addPass(tiltH); composer.addPass(tiltV) }
+const setTilt = () => { tiltH.uniforms.h.value = 1.8 / innerWidth; tiltV.uniforms.v.value = 1.8 / innerHeight; tiltH.uniforms.r.value = tiltV.uniforms.r.value = .5 }
+setTilt(); if (!reduce) composer.addPass(tiltH), composer.addPass(tiltV)
 composer.addPass(new OutputPass())
-const onResize = () => { camera.aspect = cw() / ch(); frameOffset(); camera.updateProjectionMatrix(); renderer.setSize(cw(), ch(), false); composer.setSize(cw(), ch()); setTilt() }
-addEventListener('resize', onResize)
-raf = requestAnimationFrame(frame); onReady?.()
-return {
-  pause() { cancelAnimationFrame(raf); raf = 0; clock.stop() },
-  resume() { if (!raf && alive) { clock.start(); raf = requestAnimationFrame(frame) } },
-  dispose() { alive = false; cancelAnimationFrame(raf); removeEventListener('resize', onResize); composer.dispose?.(); renderer.dispose() },
-}
-}
+requestAnimationFrame(frame)
+addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; frameOffset(); camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); composer.setSize(innerWidth, innerHeight); setTilt() })
+</script>

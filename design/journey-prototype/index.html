@@ -1,0 +1,556 @@
+<meta charset="utf-8">
+<title>Radlor Home Redesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* One deliberate look, taken from the Radlor logo: deep space where the mark lives, the ring's
+   electric blue and cyan as light, chrome silver for text. One dark page, no white sections. */
+:root{
+  --space:#050A16; --space-2:#0A1530; --space-3:#101E42; --deep:#062A6B;
+  --blue:#0061F3; --cyan:#00E5FF; --sky:#7ADFFF; --silver:#C9D3E0; --mist:#9FB0C6; --white:#F4F7FB;
+  --paper:#F5F8FC; --card:#FFFFFF; --ink:#0B1B3F; --slate:#4E6076; --blue-ink:#0B57C7; --line:#DCE4EF;
+  --display:'Lexend',system-ui,sans-serif; --body:'Figtree',system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--space);color:var(--white);font:400 17px/1.6 var(--body)}
+/* ONE dark page (founder, 2026-09-25): every section sits on the logo's deep-space navy. Panels are a
+   lifted navy with a hairline of the ring's blue; text is white / silver / mist, never black. */
+:root{--panel:#0C1732;--panel-2:#101E42;--edge:rgba(122,223,255,.16)}
+a{color:inherit}
+h1,h2,h3{font-family:var(--display);font-weight:500;letter-spacing:-.015em;text-wrap:balance;margin:0}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:24px}
+.eyebrow{font:600 12px/1 var(--body);letter-spacing:.16em;text-transform:uppercase}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 22px;border-radius:999px;font:600 16px var(--body);text-decoration:none;transition:background .2s,border-color .2s,color .2s;cursor:pointer}
+.btn:focus-visible,a:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.btn-glow{background:var(--blue);color:#fff;box-shadow:0 0 0 1px rgba(0,229,255,.35),0 8px 28px -8px rgba(0,97,243,.8)}
+.btn-glow:hover{background:#1a72ff}
+.btn-ghost{border:1px solid rgba(201,211,224,.35);color:var(--white)}
+.btn-ghost:hover{border-color:var(--sky);color:var(--sky)}
+.btn-ink{background:var(--ink);color:#fff}
+.btn-ink:hover{background:var(--deep)}
+.btn-line{border:1px solid var(--line);color:var(--ink);background:#fff}
+.btn-line:hover{border-color:var(--blue-ink);color:var(--blue-ink)}
+
+/* header + hero — the logo's world */
+.space{background:radial-gradient(900px 480px at 78% 30%,rgba(0,97,243,.28),transparent 60%),radial-gradient(600px 400px at 10% 90%,rgba(0,229,255,.10),transparent 60%),var(--space);color:var(--white);position:relative;overflow:hidden}
+.stars{position:absolute;inset:0;background-image:radial-gradient(1.5px 1.5px at 12% 18%,#7ADFFF 50%,transparent 51%),radial-gradient(1px 1px at 34% 70%,#C9D3E0 50%,transparent 51%),radial-gradient(1.5px 1.5px at 58% 12%,#00E5FF 50%,transparent 51%),radial-gradient(1px 1px at 88% 64%,#C9D3E0 50%,transparent 51%),radial-gradient(1px 1px at 70% 88%,#7ADFFF 50%,transparent 51%),radial-gradient(1.5px 1.5px at 22% 44%,#C9D3E0 50%,transparent 51%);opacity:.7;pointer-events:none}
+header{position:relative;z-index:2}
+.nav{display:flex;align-items:center;gap:28px;padding-block:18px}
+.nav img{height:34px;width:auto;display:block}
+.nav ul{display:flex;gap:26px;list-style:none;margin:0 0 0 auto;padding:0}
+.nav ul a{color:var(--silver);text-decoration:none;font-weight:500;font-size:15px}
+.nav ul a:hover{color:var(--sky)}
+.nav .btn{min-height:42px;padding:0 18px;font-size:15px}
+@media (max-width:860px){.nav ul{display:none}.nav .btn{margin-left:auto}}
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:32px;align-items:center;padding-block:48px 88px;position:relative;z-index:1}
+.hero .eyebrow{color:var(--sky)}
+.hero h1{font-size:clamp(38px,5.4vw,64px);line-height:1.05;margin-top:18px;color:#fff}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--sky),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--silver);font-size:19px;max-width:34rem;margin:22px 0 0}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.stage{position:relative}
+/* The robot animation: the site's own hero clip (a ping-pong loop on black). Screen blending drops its
+   black onto the navy, so only the robot, its ring and the stars show. Portrait file on phones. */
+.stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:70% 50%;mix-blend-mode:screen;pointer-events:none;
+  background:url(hero-poster.jpg) 70% 50%/cover no-repeat}
+@media (max-width:768px){.stage video{height:88vw;bottom:auto;object-position:50% 0;background-image:url(hero-poster-portrait.jpg);background-position:50% 0}}
+.hero{grid-template-columns:minmax(0,34rem);min-height:min(78vh,640px)}
+@media (max-width:768px){.hero{min-height:0;padding-top:56vw;padding-bottom:56px}}
+
+.promise{border-top:1px solid rgba(201,211,224,.14);position:relative;z-index:1}
+.promise p{margin:0;padding-block:26px;font:400 clamp(18px,2.2vw,22px)/1.45 var(--display);color:var(--silver)}
+.promise b{color:#fff;font-weight:500}
+
+/* reading sections */
+section.read{padding-block:88px}
+.head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:16px;margin-bottom:40px}
+.head .eyebrow{color:var(--sky)}
+.head h2{font-size:clamp(28px,3.4vw,40px);line-height:1.15;margin-top:12px;max-width:30rem}
+.head p{margin:0;color:var(--mist);max-width:28rem}
+
+.principles{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--edge);border:1px solid var(--edge);border-radius:20px;overflow:hidden}
+.principle{background:var(--panel);padding:28px 26px 30px}
+.principle svg{width:40px;height:40px;display:block;margin-bottom:20px}
+.principle h3{font-size:19px;line-height:1.3}
+.principle p{margin:10px 0 0;color:var(--mist);font-size:16px}
+
+.products{background:linear-gradient(180deg,var(--space),var(--space-2) 40%,var(--space));color:var(--white)}
+.products .head .eyebrow{color:var(--sky)}
+.products .head p{color:var(--mist)}
+.plist{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px}
+@media (max-width:860px){.plist{grid-template-columns:1fr}}
+.pcard{border-radius:24px;padding:32px;position:relative;overflow:hidden}
+.pcard.live{background:radial-gradient(420px 260px at 85% 0%,rgba(0,97,243,.35),transparent 70%),var(--panel-2);border:1px solid rgba(122,223,255,.28);color:var(--white)}
+.pcard.live img{height:54px;width:auto;display:block}
+.tag{display:inline-flex;align-items:center;gap:8px;font:700 12px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;border-radius:999px;padding:7px 12px}
+.tag.on{background:rgba(52,211,153,.14);color:#6EE7B7}
+.tag.on i{width:7px;height:7px;border-radius:50%;background:#34D399;box-shadow:0 0 8px #34D399}
+.pcard.live h3{font-size:26px;margin-top:22px;color:#fff}
+.pcard.live p{color:var(--silver);margin:10px 0 0;max-width:30rem}
+.facts{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 28px;padding:0;list-style:none}
+.facts li{background:rgba(122,223,255,.08);border:1px solid var(--edge);border-radius:999px;padding:6px 14px;font-size:14px;font-weight:600;color:var(--sky)}
+.pcard.live .more{color:var(--sky);font-weight:600;margin-left:14px}
+.pcard.next{border:1px dashed rgba(122,223,255,.3);background:var(--panel)}
+.pcard.next .tag{background:rgba(122,223,255,.12);color:var(--sky)}
+.pcard.next h3{font-size:22px;margin-top:22px}
+.pcard.next p{color:var(--mist);margin:10px 0 0}
+.ring{position:absolute;right:-60px;bottom:-70px;width:240px;height:120px;border:3px solid var(--cyan);border-radius:50%;transform:rotate(-18deg);opacity:.35;box-shadow:0 0 22px rgba(0,229,255,.5)}
+
+.paths{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.path{background:var(--panel);border:1px solid var(--edge);color:var(--white);border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:10px;text-decoration:none;transition:border-color .2s,box-shadow .2s}
+.path:hover{border-color:rgba(122,223,255,.5);box-shadow:0 0 0 1px rgba(0,229,255,.15),0 16px 40px -20px rgba(0,97,243,.7)}
+.path .eyebrow{color:var(--sky)}
+.path h3{font-size:21px}
+.path p{margin:0;color:var(--mist);font-size:16px;flex:1}
+.path span.go{font-weight:600;color:var(--sky)}
+
+.posts{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.post{border-top:2px solid rgba(122,223,255,.35);color:var(--white);padding-top:18px;text-decoration:none}
+.post time{font-size:14px;color:var(--mist);font-variant-numeric:tabular-nums}
+.post h3{font-size:20px;line-height:1.3;margin-top:8px}
+.post:hover h3{color:var(--sky)}
+
+footer{background:var(--space);border-top:1px solid var(--edge);color:var(--mist);padding-block:56px 40px;font-size:15px}
+.fgrid{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr));gap:32px}
+@media (max-width:760px){.fgrid{grid-template-columns:1fr 1fr}}
+footer img{height:30px;width:auto}
+footer h4{font:600 12px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--silver);margin:0 0 14px}
+footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+footer a{text-decoration:none}
+footer a:hover{color:var(--sky)}
+.fine{border-top:1px solid rgba(201,211,224,.12);margin-top:40px;padding-top:22px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:14px}
+
+.note{background:#FFF8E6;border:1px solid #F2D58A;color:#6B4A00;border-radius:12px;padding:12px 16px;font-size:14px;margin:0 auto;max-width:1120px}
+/* ── visuals: line drawings in the ring's colours, drawn once as they scroll in ── */
+svg .draw,svg .ghost,svg .track,svg .orbit,svg .o1,svg .o2,svg .bubble,svg .lines,.alt path,.rays{fill:none;stroke:var(--sky);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+svg .cyan{stroke:var(--cyan)}
+.js .reveal .draw{stroke-dasharray:1;stroke-dashoffset:1}
+.js .reveal.in .draw{stroke-dashoffset:0;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1)}
+.js .reveal.in .d2{transition-delay:.35s}.js .reveal.in .d3{transition-delay:.7s}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.rule{margin:0;background:var(--panel);border:1px solid var(--edge);border-radius:20px;padding:24px 20px 22px;text-align:center}
+.rule svg{width:100%;max-width:280px;height:auto;display:block;margin:0 auto 14px;overflow:visible}
+.rule figcaption{font:500 18px/1.3 var(--display);color:#fff}
+.halo{fill:rgba(0,229,255,.0);transition:fill 1s .9s}
+.reveal.in .halo,.no-js-lit .halo{fill:rgba(0,229,255,.14)}
+.rays{stroke:var(--cyan);opacity:0;transition:opacity .6s 1.3s}
+.reveal.in .rays{opacity:1}
+.ghost{stroke:rgba(201,211,224,.18);stroke-dasharray:4 7}
+.glider{fill:var(--cyan);filter:drop-shadow(0 0 6px var(--cyan))}
+.dots circle{fill:var(--sky)}
+.bubble{stroke:var(--sky)}.lines{stroke:var(--mist)}
+.pips circle{fill:rgba(201,211,224,.25)}
+.reveal.in .pips circle:nth-child(1){animation:pip 4.5s forwards}.reveal.in .pips circle:nth-child(2){animation:pip 4.5s forwards;animation-delay:1.5s}.reveal.in .pips circle:nth-child(3){animation:pip 3s forwards;animation-delay:3s}
+@keyframes pip{0%{fill:var(--cyan)}100%{fill:var(--cyan)}}
+.orbit{stroke:var(--cyan);stroke-width:2.5;opacity:.7;filter:drop-shadow(0 0 5px rgba(0,229,255,.6))}
+.keyhole{fill:var(--cyan)}
+.ptop{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ptop img{height:46px;width:auto}
+.adapt{width:100%;height:auto;margin:22px 0 8px;overflow:visible}
+.track{stroke:rgba(201,211,224,.14);stroke-width:6}
+.live-path{stroke:var(--cyan);stroke-width:4;filter:drop-shadow(0 0 6px rgba(0,229,255,.55))}
+.adapt .q circle{fill:var(--panel-2);stroke:var(--sky);stroke-width:3}
+.js .reveal .adapt .q circle{opacity:.25;transition:opacity .4s,fill .4s}
+.js .reveal.in .adapt .q circle{opacity:1;fill:var(--blue)}
+.reveal.in .adapt .q circle:nth-child(2){transition-delay:.35s}.reveal.in .adapt .q circle:nth-child(3){transition-delay:.7s}.reveal.in .adapt .q circle:nth-child(4){transition-delay:1.05s}.reveal.in .adapt .q circle:nth-child(5){transition-delay:1.4s}
+.alt path{stroke:rgba(201,211,224,.22);stroke-dasharray:3 8;stroke-width:2}
+.pcard.live .one{color:var(--silver);margin:0 0 22px;font-size:18px}
+.acts{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.soon{width:100%;max-width:260px;display:block;margin:18px auto 10px;overflow:visible}
+.o1,.o2{stroke:rgba(122,223,255,.35);stroke-width:2;stroke-dasharray:6 8}
+.core{fill:none;stroke:var(--sky);stroke-width:3}
+.spin{transform-origin:120px 90px;transform-box:view-box}
+.spin circle{fill:var(--cyan);filter:drop-shadow(0 0 6px var(--cyan))}
+.reveal.in .spin{animation:orbit 6s cubic-bezier(.4,0,.2,1) forwards}.reveal.in .spin.s2{animation-duration:4.5s}
+@keyframes orbit{to{transform:rotate(-360deg)}}
+.pcard.next{text-align:center}
+.path svg{width:96px;height:72px;overflow:visible;margin-bottom:6px}
+.path h3{font-size:20px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.js .reveal .draw{stroke-dashoffset:0}}
+/* ── detailed scenes (v2) ── */
+svg .faint{fill:none;stroke:rgba(159,176,198,.35);stroke-width:2;stroke-linecap:round}
+svg .fillsoft{fill:rgba(122,223,255,.07)}
+.spark path,.spark{fill:var(--cyan);stroke:none;opacity:0;transform-box:fill-box;transform-origin:center}
+.reveal.in .spark,.reveal.in .spark path{animation:twinkle 1.6s 1.2s ease-out forwards}
+@keyframes twinkle{0%{opacity:0;transform:scale(.2)}60%{opacity:1;transform:scale(1.2)}100%{opacity:.85;transform:scale(1)}}
+.moon{fill:rgba(122,223,255,.12);stroke:var(--sky);stroke-width:2}
+.stars2 circle{fill:var(--silver);opacity:.6}
+.hill{stroke:none}.h1{fill:#0F2150}.h2{fill:#132A63}
+.trail circle{fill:var(--sky);opacity:0}
+.reveal.in .trail circle{animation:pop .3s forwards}
+.reveal.in .trail circle:nth-child(1){animation-delay:.5s}.reveal.in .trail circle:nth-child(2){animation-delay:.9s}.reveal.in .trail circle:nth-child(3){animation-delay:1.3s}.reveal.in .trail circle:nth-child(4){animation-delay:1.7s}.reveal.in .trail circle:nth-child(5){animation-delay:2.1s}
+@keyframes pop{to{opacity:.8}}
+.plane path{fill:var(--cyan);filter:drop-shadow(0 0 6px var(--cyan))}
+.panel rect{fill:rgba(122,223,255,.05);stroke:rgba(122,223,255,.25);stroke-width:2;transition:stroke .4s,fill .4s}
+.apples circle{fill:none;stroke:var(--sky);stroke-width:2.5}.apples path{fill:none;stroke:#6EE7B7;stroke-width:2;stroke-linecap:round}
+.sum{font:600 26px var(--display);fill:#fff}.sum.q{fill:var(--cyan)}
+.bub{fill:none;stroke:var(--sky);stroke-width:2.5}
+.kid{fill:none;stroke:var(--cyan);stroke-width:2.5;stroke-linecap:round}
+.arrow{fill:none;stroke:var(--mist);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.reveal.in .p1 rect{animation:lit 1s .2s forwards}.reveal.in .p2 rect{animation:lit 1s 1.2s forwards}.reveal.in .p3 rect{animation:lit 1s 2.2s forwards}
+@keyframes lit{to{stroke:var(--cyan);fill:rgba(0,229,255,.08)}}
+.reveal.in .pips circle:nth-child(1){animation:pipon .3s .2s forwards}.reveal.in .pips circle:nth-child(2){animation:pipon .3s 1.2s forwards}.reveal.in .pips circle:nth-child(3){animation:pipon .3s 2.2s forwards}
+@keyframes pipon{to{fill:var(--cyan)}}
+.orbit.back{opacity:.35}
+.orbit.front{fill:none}
+.keyline{stroke:var(--cyan);stroke-width:3;stroke-linecap:round}
+.chips rect,.nope rect{fill:rgba(122,223,255,.08);stroke:var(--sky);stroke-width:2}.chips path{stroke:var(--sky);stroke-width:2;stroke-linecap:round}
+.nope rect{stroke:rgba(159,176,198,.4);fill:none}.nope path{stroke:#F59E9E;stroke-width:2;stroke-linecap:round;opacity:.8}
+.js .reveal .chips{opacity:0}
+.reveal.in .chips.in1{animation:inL 1.2s .8s cubic-bezier(.4,0,.2,1) forwards}.reveal.in .chips.in2{animation:inR 1.2s 1.1s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes inL{from{opacity:0;transform:translate(-20px,-10px)}to{opacity:1;transform:translate(52px,34px)}}
+@keyframes inR{from{opacity:0;transform:translate(20px,10px)}to{opacity:1;transform:translate(-56px,-30px)}}
+.js .reveal .nope{opacity:0}
+.reveal.in .nope{animation:bounce 1.4s 1.2s ease-out forwards}.reveal.in .nope.n2{animation-delay:1.5s}
+@keyframes bounce{0%{opacity:0;transform:translateX(0)}50%{opacity:1}100%{opacity:.55;transform:translateX(0)}}
+.altcard rect{fill:none;stroke:rgba(159,176,198,.25);stroke-width:2;stroke-dasharray:3 5}
+.kidstart circle,.kidstart path{fill:none;stroke:var(--cyan);stroke-width:3;stroke-linecap:round}
+.adapt .q rect{fill:var(--panel-2);stroke:var(--sky);stroke-width:2.5}
+.adapt .tick,.adapt .star{fill:none;stroke:#6EE7B7;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.adapt .star{stroke:#FFD479;fill:rgba(255,212,121,.2)}
+.js .reveal .adapt .q g{opacity:.3;transition:opacity .4s}
+.js .reveal.in .adapt .q g{opacity:1}
+.reveal.in .adapt .q g:nth-child(1){transition-delay:.3s}.reveal.in .adapt .q g:nth-child(2){transition-delay:.7s}.reveal.in .adapt .q g:nth-child(3){transition-delay:1.05s}.reveal.in .adapt .q g:nth-child(4){transition-delay:1.4s}
+.reveal.in .adapt .q g .tick,.reveal.in .adapt .q g .star{opacity:1;transition:opacity .4s}
+.reveal.in .adapt .q g:nth-child(1) .tick{transition-delay:.5s}.reveal.in .adapt .q g:nth-child(2) .tick{transition-delay:.9s}.reveal.in .adapt .q g:nth-child(3) .tick{transition-delay:1.25s}.reveal.in .adapt .q g:nth-child(4) .star{transition-delay:1.7s}
+.glowcore{fill:rgba(0,229,255,.12);filter:blur(4px)}
+.spin .pr{fill:none;stroke:var(--sky);stroke-width:1.5}
+.spin rect{fill:var(--sky)}
+.reveal.in .spin.s3{animation-duration:7s}
+.path svg{width:100%;max-width:220px;height:auto;display:block;margin:0 0 12px}
+.gear{transform-box:fill-box;transform-origin:center}
+.reveal.in .g1{animation:turn 3s .8s cubic-bezier(.4,0,.2,1) forwards}.reveal.in .g2{animation:turnback 3s .8s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes turn{to{transform:rotate(90deg)}}@keyframes turnback{to{transform:rotate(-120deg)}}
+@media (prefers-reduced-motion:reduce){.js .reveal .chips,.js .reveal .nope{opacity:1}.spark,.spark path,.trail circle{opacity:.8}.adapt .tick,.adapt .star{opacity:1}}
+/* ── the tour: a sticky stage (robot guide + scene) with chapters scrolling past it ── */
+.tour{position:relative;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}
+.stagebox{grid-column:1;grid-row:1}
+.tourstage{--gx:62%;--gy:10%;position:sticky;top:0;height:100vh;height:100dvh;overflow:hidden;
+  background:radial-gradient(600px 420px at 55% 50%,rgba(0,97,243,.18),transparent 70%)}
+.chapters{grid-column:2;grid-row:1;position:relative;z-index:2}
+.chapter{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;justify-content:center;gap:14px;padding:0 32px 0 12px;opacity:.28;transition:opacity .5s}
+.chapter.on{opacity:1}
+.chapter .eyebrow{color:var(--sky)}
+.chapter h2{font-size:clamp(30px,3.6vw,46px);line-height:1.1;color:#fff}
+.chapter p{margin:0;color:var(--silver);font-size:19px;max-width:26rem}
+.chapter .btn{align-self:flex-start;margin-top:6px}
+.chips4{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.chips4 li{border:1px solid var(--edge);background:rgba(122,223,255,.06);color:var(--sky);border-radius:999px;padding:6px 14px;font-weight:600;font-size:15px}
+.links{display:flex;gap:18px;flex-wrap:wrap}.links a{color:var(--sky);font-weight:600;text-decoration:none}
+.rail{position:absolute;left:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:14px;z-index:3}
+.rail a{display:flex;align-items:center;gap:10px;color:var(--mist);text-decoration:none;font-size:13px;font-weight:600;min-height:28px}
+.rail i{width:10px;height:10px;border-radius:50%;border:2px solid var(--mist);transition:all .3s}
+.rail span{opacity:0;transform:translateX(-4px);transition:opacity .3s,transform .3s}
+.rail a:hover span,.rail a[aria-current] span{opacity:1;transform:none}
+.rail a[aria-current]{color:#fff}.rail a[aria-current] i{background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+.scenes{position:absolute;inset:8% 6% 20% 16%}
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;opacity:0;transform:translateY(24px) scale(.97);transition:opacity .6s,transform .6s cubic-bezier(.4,0,.2,1);pointer-events:none}
+.scene.active{opacity:1;transform:none}
+.scene svg.big{width:min(100%,380px);height:auto;overflow:visible}
+.grid4{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:min(100%,520px)}
+.grid4 .cell{background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:10px}
+.grid4 svg{width:100%;height:auto;display:block;overflow:visible}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:min(100%,560px)}
+.grid3 svg{width:100%;height:auto;overflow:visible}
+.rlogo{height:52px;width:auto}
+.scene .adapt{width:min(100%,560px);margin:0}
+.scene .soon{width:min(100%,380px);max-width:none}
+.beams path{stroke:rgba(0,229,255,.0);stroke-width:2;fill:none;transition:stroke 1s 1s}
+.scene.in .beams path{stroke:rgba(0,229,255,.22)}
+.gem path{fill:rgba(0,229,255,.15);stroke:var(--cyan);stroke-width:2;stroke-linejoin:round}
+.gem{opacity:0;transform-box:fill-box;transform-origin:center;transition:opacity .6s .9s,transform .6s .9s;transform:scale(.6)}
+.scene.in .gem{opacity:1;transform:none;filter:drop-shadow(0 0 10px var(--cyan))}
+/* the guide: the robot moves to a new spot for each chapter */
+.guide{position:absolute;left:var(--gx);top:var(--gy);width:130px;transition:left 1s cubic-bezier(.45,0,.2,1),top 1s cubic-bezier(.45,0,.2,1)}
+.guide img{width:130px;height:130px;display:block;animation:bob 4s ease-in-out infinite}
+@keyframes bob{50%{translate:0 -6px}}
+.tourstage[data-step="0"]{--gx:62%;--gy:10%}
+@media (max-width:860px){.tour .tourstage[data-step]{--gx:4%;--gy:3%}}
+.tourstage[data-step="1"]{--gx:70%;--gy:66%}
+.tourstage[data-step="2"]{--gx:12%;--gy:6%}
+.tourstage[data-step="3"]{--gx:66%;--gy:8%}
+.tourstage[data-step="4"]{--gx:40%;--gy:64%}
+.bubble2{position:absolute;z-index:4;left:112px;top:8px;width:max-content;max-width:230px;margin:0;background:#fff;color:#0B1B3F;font:600 14px/1.4 var(--body);padding:10px 14px;border-radius:16px 16px 16px 4px;box-shadow:0 10px 30px -12px rgba(0,0,0,.6);transition:opacity .25s}
+.bubble2.swap{opacity:0}
+.sound{position:absolute;right:20px;bottom:20px;z-index:5;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--edge);background:rgba(12,23,50,.8);color:var(--white);font:600 14px var(--body);cursor:pointer}
+.sound svg{width:20px;height:20px;fill:none;stroke:var(--sky);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sound[aria-pressed="false"] .w{opacity:.3}
+@media (max-width:860px){
+  /* Phones: the stage is pinned to the top half and the chapters scroll up underneath it. */
+  .tour{grid-template-columns:1fr}
+  .stagebox{grid-column:1;grid-row:1;position:sticky;top:0;height:54vh;height:54dvh;z-index:3}
+  .tourstage{height:54vh;height:54dvh;background:radial-gradient(420px 300px at 50% 55%,rgba(0,97,243,.2),transparent 70%),var(--space);border-bottom:1px solid var(--edge)}
+  .chapters{grid-column:1;grid-row:2}
+  .chapter{min-height:62vh;padding:32px 20px}
+  .rail{left:auto;right:12px;top:12px;transform:none;flex-direction:row;gap:4px}.rail span{display:none}.rail a{min-height:24px;min-width:24px;justify-content:center}
+  .scenes{inset:16% 4% 4% 4%}
+  .guide,.guide img{width:78px}.guide img{height:78px}
+  .bubble2{left:70px;top:0;max-width:180px;font-size:13px;padding:8px 12px}
+  .grid3{gap:6px}
+}
+}
+@media (prefers-reduced-motion:reduce){.guide img{animation:none}.guide,.scene{transition:none}}
+</style>
+
+<div class="space">
+  <div class="stars" aria-hidden="true"></div>
+  <header class="wrap">
+    <nav class="nav" aria-label="Main">
+      <img src="wordmark.png" alt="Radlor">
+      <ul>
+        <li><a href="#ch-0">Mission</a></li>
+        <li><a href="#ch-1">How we build</a></li>
+        <li><a href="#ch-2">Products</a></li>
+        <li><a href="#writing">Writing</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+      <a class="btn btn-glow" href="#products">Try Radlic</a>
+    </nav>
+  </header>
+
+  <div class="stage">
+  <video autoplay muted loop playsinline preload="metadata" aria-hidden="true">
+    <source src="hero-portrait.webm" type="video/webm" media="(max-width: 768px)">
+    <source src="hero-portrait.mp4" type="video/mp4" media="(max-width: 768px)">
+    <source src="hero.webm" type="video/webm">
+    <source src="hero.mp4" type="video/mp4">
+  </video>
+  <div class="wrap hero">
+    <div>
+      <span class="eyebrow">Education technology</span>
+      <h1>Learning that meets every child <em>where they are.</em></h1>
+      <p>Learning products for children, parents and teachers.</p>
+      <div class="ctas">
+        <a class="btn btn-glow" href="#tour">Start the tour ↓</a>
+        <a class="btn btn-ghost" href="#ch-2">Try Radlic</a>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="promise"><div class="wrap"><p><b>The treasure is already inside the child.</b> We just light it up.</p></div></div>
+</div>
+
+<section class="tour" id="tour" aria-label="A tour of Radlor">
+  <div class="stagebox">
+    <div class="tourstage" id="stage" data-step="0">
+      <nav class="rail" aria-label="Tour chapters">
+        <a href="#ch-0" aria-current="step"><i></i><span>Mission</span></a>
+        <a href="#ch-1"><i></i><span>How we build</span></a>
+        <a href="#ch-2"><i></i><span>Radlic</span></a>
+        <a href="#ch-3"><i></i><span>Who it's for</span></a>
+        <a href="#ch-4"><i></i><span>Start</span></a>
+      </nav>
+      <div class="scenes" aria-hidden="true">
+        <div class="scene reveal s0 active">
+          <svg viewBox="0 0 320 260" class="big">
+            <circle class="glowcore" cx="160" cy="150" r="70"/>
+            <g class="beams"><path d="M160 150L60 40M160 150L260 40M160 150L20 130M160 150L300 130M160 150L90 250M160 150L230 250"/></g>
+            <circle class="draw" pathLength="1" cx="160" cy="62" r="26"/>
+            <path class="draw" pathLength="1" d="M104 240v-62c0-40 26-66 56-66s56 26 56 66v62"/>
+            <path class="draw d2" pathLength="1" d="M104 180c-16 6-26 20-30 38M216 180c16 6 26 20 30 38"/>
+            <g class="gem"><path d="M160 128l18 14-18 26-18-26z"/><path d="M142 142h36M160 128l-6 14 6 26 6-26z"/></g>
+            <g class="spark"><path d="M88 70l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/><path d="M238 86l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/><path d="M250 190l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></g>
+          </svg>
+        </div>
+        <div class="scene reveal s1"><div class="grid4"><div class="cell"><svg viewBox="0 0 260 180" role="img" aria-label="An open book on a desk with a lightbulb switching on above it">
+          <circle class="halo" cx="130" cy="58" r="44"/>
+          <g class="rays"><path d="M130 6v-2M92 20l-4-4M168 20l4-4M78 56h-6M182 56h6M96 92l-4 4M164 92l4 4"/></g>
+          <path class="draw" pathLength="1" d="M130 24a28 28 0 0 0-17 50c4 3 6 7 6 11v4h22v-4c0-4 2-8 6-11a28 28 0 0 0-17-50z"/>
+          <path class="draw d2" pathLength="1" d="M121 94h18M122 100h16M125 106h10"/>
+          <path class="draw d3 cyan" pathLength="1" d="M123 84V72l7-9 7 9v12M126 68h8"/>
+          <path class="faint" d="M20 168h220"/>
+          <path class="fillsoft draw d2" pathLength="1" d="M130 128c-18-8-40-10-62-6v38c22-4 44-2 62 6 18-8 40-10 62-6v-38c-22-4-44-2-62 6z"/>
+          <path class="draw d2" pathLength="1" d="M130 128v38"/>
+          <path class="faint d3" d="M80 134c14-2 28-1 40 3M80 142c14-2 28-1 40 3M80 150c14-2 28-1 40 3M140 137c12-4 26-5 40-3M140 145c12-4 26-5 40-3M140 153c12-4 26-5 40-3"/>
+          <g class="spark"><path d="M214 118l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/><path d="M46 104l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></g>
+          <path class="draw d3" pathLength="1" d="M206 164l24-30 6 5-24 30-8 2z"/>
+        </svg></div><div class="cell"><svg viewBox="0 0 260 180" role="img" aria-label="A paper plane gliding up a smooth path over hills, past faint steps it never has to climb">
+          <circle class="moon" cx="214" cy="34" r="12"/>
+          <g class="stars2"><circle cx="40" cy="28" r="1.6"/><circle cx="90" cy="16" r="1.2"/><circle cx="160" cy="22" r="1.6"/><circle cx="186" cy="60" r="1.2"/><circle cx="24" cy="70" r="1.2"/></g>
+          <path class="hill h1" d="M0 180V142c40-18 80-22 120-12s90 4 140-18v68z"/>
+          <path class="hill h2" d="M0 180v-22c50-14 110-16 160-6s70 2 100-8v36z"/>
+          <path class="ghost" d="M26 150h34v-22h34v-22h34v-22h34v-22h34v-22h30"/>
+          <path id="glide" class="draw" pathLength="1" d="M20 152C70 152 86 128 118 104S176 56 226 40"/>
+          <g class="trail"><circle cx="60" cy="150" r="2"/><circle cx="92" cy="134" r="2"/><circle cx="124" cy="100" r="2"/><circle cx="160" cy="74" r="2"/><circle cx="196" cy="52" r="2"/></g>
+          <g class="plane">
+            <path d="M-12 -6L12 0-12 6-7 0z"/>
+            <animateMotion class="go" dur="2.8s" begin="indefinite" fill="freeze" rotate="auto" calcMode="spline" keyTimes="0;1" keySplines=".4 0 .2 1"><mpath href="#glide"/></animateMotion>
+          </g>
+        </svg></div><div class="cell"><svg viewBox="0 0 260 180" role="img" aria-label="The same idea three ways: a picture of eight apples, then the sum four times two, then a story in a speech bubble">
+          <g class="panel p1"><rect x="8" y="34" width="74" height="96" rx="12"/>
+            <g class="apples"><g transform="translate(24 56)"><circle r="7"/><path d="M0-7v-4M0-9l4-3"/></g><g transform="translate(45 56)"><circle r="7"/><path d="M0-7v-4M0-9l4-3"/></g><g transform="translate(66 56)"><circle r="7"/><path d="M0-7v-4M0-9l4-3"/></g><g transform="translate(24 80)"><circle r="7"/><path d="M0-7v-4M0-9l4-3"/></g><g transform="translate(45 80)"><circle r="7"/><path d="M0-7v-4M0-9l4-3"/></g><g transform="translate(66 80)"><circle r="7"/><path d="M0-7v-4M0-9l4-3"/></g><g transform="translate(34 104)"><circle r="7"/><path d="M0-7v-4M0-9l4-3"/></g><g transform="translate(56 104)"><circle r="7"/><path d="M0-7v-4M0-9l4-3"/></g></g></g>
+          <path class="arrow a1" d="M88 82h10m-4-4 4 4-4 4"/>
+          <g class="panel p2"><rect x="104" y="34" width="60" height="96" rx="12"/><text x="134" y="78" text-anchor="middle" class="sum">4×2</text><path class="faint" d="M118 92h32"/><text x="134" y="116" text-anchor="middle" class="sum q">?</text></g>
+          <path class="arrow a2" d="M170 82h10m-4-4 4 4-4 4"/>
+          <g class="panel p3"><rect x="186" y="34" width="66" height="96" rx="12"/>
+            <path class="bub" d="M196 48h46a6 6 0 0 1 6 6v22a6 6 0 0 1-6 6h-24l-9 8v-8h-13a6 6 0 0 1-6-6V54a6 6 0 0 1 6-6z"/>
+            <path class="faint" d="M202 60h34M202 70h22"/>
+            <circle class="kid" cx="206" cy="104" r="7"/><path class="kid" d="M194 126c0-9 5-14 12-14s12 5 12 14"/></g>
+          <g class="pips"><circle cx="45" cy="152" r="4"/><circle cx="134" cy="152" r="4"/><circle cx="219" cy="152" r="4"/></g>
+        </svg></div><div class="cell"><svg viewBox="0 0 260 180" role="img" aria-label="A shield with a padlock inside the Radlor ring; only a few small pieces of data are allowed in, the rest are turned away">
+          <ellipse class="orbit back" cx="130" cy="96" rx="110" ry="30" transform="rotate(-12 130 96)"/>
+          <path class="fillsoft draw" pathLength="1" d="M130 28l52 18v40c0 34-24 58-52 70-28-12-52-36-52-70V46z"/>
+          <path class="faint" d="M130 40l40 14v32c0 26-18 45-40 56-22-11-40-30-40-56V54z"/>
+          <path class="draw d2" pathLength="1" d="M116 92V80a14 14 0 0 1 28 0v12"/>
+          <rect class="draw d2" pathLength="1" x="108" y="92" width="44" height="34" rx="8"/>
+          <path class="keyline" d="M130 104v10"/><circle class="keyhole" cx="130" cy="104" r="4"/>
+          <g class="chips in1"><rect x="12" y="40" width="26" height="16" rx="4"/><path d="M17 48h16"/></g>
+          <g class="chips in2"><rect x="220" y="128" width="26" height="16" rx="4"/><path d="M225 136h16"/></g>
+          <g class="nope"><rect x="214" y="30" width="30" height="18" rx="4"/><path d="M222 34l14 10M236 34l-14 10"/></g>
+          <g class="nope n2"><rect x="16" y="130" width="30" height="18" rx="4"/><path d="M24 134l14 10M38 134l-14 10"/></g>
+          <path class="orbit front" d="M24 118c20 16 76 20 130 10 34-6 64-18 80-32" />
+        </svg></div></div></div>
+        <div class="scene reveal s2"><img class="rlogo" src="radlic.png" alt=""><svg class="adapt" viewBox="0 0 560 220" role="img" aria-label="A child's learning path: each answered question lights up and the path bends toward the next right question, past other routes it did not need">
+          <g class="alt"><path d="M150 70C190 70 200 22 250 24"/><path d="M290 140C330 150 340 196 390 196"/><path d="M420 60C450 40 480 30 520 26"/></g>
+          <g class="altcard"><rect x="236" y="10" width="36" height="26" rx="6"/><rect x="376" y="182" width="36" height="26" rx="6"/></g>
+          <path class="track" d="M40 150C90 150 100 70 160 70S230 150 290 140 360 56 420 60 480 120 520 110"/>
+          <path class="draw live-path" pathLength="1" d="M40 150C90 150 100 70 160 70S230 150 290 140 360 56 420 60 480 120 520 110"/>
+          <g class="kidstart"><circle cx="40" cy="120" r="9"/><path d="M26 146c0-9 6-15 14-15s14 6 14 15"/></g>
+          <g class="q">
+            <g transform="translate(160 70)"><rect x="-20" y="-16" width="40" height="32" rx="8"/><path class="tick" d="M-8 0l5 5 11-11"/></g>
+            <g transform="translate(290 140)"><rect x="-20" y="-16" width="40" height="32" rx="8"/><path class="tick" d="M-8 0l5 5 11-11"/></g>
+            <g transform="translate(420 60)"><rect x="-20" y="-16" width="40" height="32" rx="8"/><path class="tick" d="M-8 0l5 5 11-11"/></g>
+            <g transform="translate(520 110)"><rect x="-20" y="-16" width="40" height="32" rx="8"/><path class="star" d="M0-10l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></g>
+          </g>
+        </svg></div>
+        <div class="scene reveal s3"><div class="grid3"><svg viewBox="0 0 200 130" aria-hidden="true">
+          <path class="faint" d="M10 124h180"/>
+          <path class="draw" pathLength="1" d="M130 124V70l30-22 30 22v54M150 124v-22h20v22M140 80h10v10h-10zM170 80h10v10h-10z"/>
+          <circle class="draw" pathLength="1" cx="54" cy="36" r="12"/>
+          <path class="draw" pathLength="1" d="M34 124V78c0-14 9-22 20-22s20 8 20 22v46"/>
+          <circle class="draw d2 cyan" pathLength="1" cx="96" cy="64" r="9"/>
+          <path class="draw d2 cyan" pathLength="1" d="M82 124V96c0-10 6-16 14-16s14 6 14 16v28"/>
+          <path class="draw d3" pathLength="1" d="M72 84c4 4 8 4 12 2"/>
+          <path class="spark" d="M112 34l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/>
+        </svg><svg viewBox="0 0 200 130" aria-hidden="true">
+          <path class="faint" d="M10 124h180"/>
+          <path class="draw" pathLength="1" d="M30 124V60l70-36 70 36v64z"/>
+          <path class="draw d2" pathLength="1" d="M20 64l80-44 80 44"/>
+          <circle class="draw d2" pathLength="1" cx="100" cy="58" r="10"/>
+          <path class="draw d2" pathLength="1" d="M100 52v6l4 3"/>
+          <path class="draw d3" pathLength="1" d="M86 124V92h28v32M44 80h20v16H44zM136 80h20v16h-20zM44 104h20v12H44zM136 104h20v12h-20z"/>
+          <path class="draw d3 cyan" pathLength="1" d="M100 20V4l16 6-16 6"/>
+        </svg><svg viewBox="0 0 200 130" aria-hidden="true">
+          <g class="gear g1"><path class="draw" pathLength="1" d="M78 36l6 1 2-8h10l2 8 6 3 7-5 7 7-5 7 3 6 8 2v10l-8 2-3 6 5 7-7 7-7-5-6 3-2 8H86l-2-8-6-3-7 5-7-7 5-7-3-6-8-2V63l8-2 3-6-5-7 7-7z"/><circle class="draw d2" pathLength="1" cx="91" cy="66" r="12"/></g>
+          <g class="gear g2"><path class="draw d2 cyan" pathLength="1" d="M138 72l5 2 3-6 8 2v7l5 3 6-4 5 6-4 6 2 5 7 1v8l-7 2-2 5 4 6-6 5-6-4-5 3-1 7h-8l-2-7-5-2-6 4-5-6 4-6-2-5-7-2v-8l7-1 2-5-4-6 6-5 6 4z"/><circle class="draw d3 cyan" pathLength="1" cx="146" cy="94" r="9"/></g>
+        </svg></div></div>
+        <div class="scene reveal s4"><svg class="soon" viewBox="0 0 260 190" role="img" aria-label="New products forming: small planets orbiting a glowing centre">
+          <g class="stars2"><circle cx="20" cy="20" r="1.4"/><circle cx="236" cy="30" r="1.6"/><circle cx="210" cy="170" r="1.2"/><circle cx="40" cy="160" r="1.4"/><circle cx="130" cy="12" r="1.2"/></g>
+          <ellipse class="o1" cx="130" cy="100" rx="112" ry="38" transform="rotate(-12 130 100)"/>
+          <ellipse class="o2" cx="130" cy="100" rx="74" ry="24" transform="rotate(-12 130 100)"/>
+          <circle class="glowcore" cx="130" cy="100" r="26"/>
+          <circle class="core" cx="130" cy="100" r="18"/>
+          <path class="core" d="M112 104c10 6 26 6 36 0"/>
+          <g class="spin"><circle cx="240" cy="78" r="8"/><ellipse class="pr" cx="240" cy="78" rx="14" ry="4"/></g>
+          <g class="spin s2"><circle cx="202" cy="88" r="5"/></g>
+          <g class="spin s3"><rect x="20" y="118" width="10" height="10" rx="2"/></g>
+          <path class="spark" d="M200 36l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/>
+        </svg></div>
+      </div>
+      <div class="guide" aria-hidden="true">
+        <img src="guide.png" alt="">
+        <p class="bubble2" id="bubble">Hi! I'm Radlor's guide. Let me show you what we do.</p>
+      </div>
+      <button class="sound" type="button" id="sound" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="w" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg><span>Tour with sound</span></button>
+    </div>
+  </div>
+
+  <div class="chapters">
+    <article class="chapter" id="ch-0" data-say="Hi! I'm Radlor's guide. Let me show you what we do.">
+      <span class="eyebrow">01 · Mission</span>
+      <h2>Every child already has the treasure.</h2>
+      <p>We build learning that finds it and lights it up, one child at a time.</p>
+    </article>
+    <article class="chapter" id="ch-1" data-say="Every product we build follows four rules.">
+      <span class="eyebrow">02 · How we build</span>
+      <h2>Four rules in everything we make.</h2>
+      <ul class="chips4"><li>One idea at a time</li><li>No levels, no red crosses</li><li>Harder means different</li><li>Children's data stays small</li></ul>
+    </article>
+    <article class="chapter" id="ch-2" data-say="This is Radlic, our first product. Every answer shapes the next question.">
+      <span class="eyebrow">03 · Our first product</span>
+      <h2>Radlic: math that adapts.</h2>
+      <p>Grades 3–8. Every answer shapes the next question.</p>
+      <a class="btn btn-glow" href="#">Try Radlic</a>
+    </article>
+    <article class="chapter" id="ch-3" data-say="Parents, teachers and partners all start here.">
+      <span class="eyebrow">04 · Who it's for</span>
+      <h2>Families, schools and partners.</h2>
+      <p class="links"><a href="#">Parents →</a><a href="#">Schools →</a><a href="#">Partners →</a></p>
+    </article>
+    <article class="chapter" id="ch-4" data-say="That's the tour! More is coming. Want to try Radlic?">
+      <span class="eyebrow">05 · Start</span>
+      <h2>More is coming.</h2>
+      <p>New learning products are in research.</p>
+      <div class="ctas"><a class="btn btn-glow" href="#">Try Radlic</a><a class="btn btn-ghost" href="#">Talk to us</a></div>
+    </article>
+  </div>
+</section>
+
+<section class="read" id="writing" style="padding-top:0">
+  <div class="wrap">
+    <div class="head">
+      <div><span class="eyebrow">Writing</span><h2>What we're learning</h2></div>
+      <a class="btn btn-ghost" href="#">All posts</a>
+    </div>
+    <div class="posts">
+      <a class="post" href="#"><time datetime="2026-08-29">29 Aug 2026</time><h3>A sixteen-year-old's math gap is often in grade four</h3></a>
+      <a class="post" href="#"><time datetime="2026-08-29">29 Aug 2026</time><h3>A camera claim you can check</h3></a>
+      <a class="post" href="#"><time datetime="2026-08-19">19 Aug 2026</time><h3>A child should never see their level</h3></a>
+    </div>
+  </div>
+</section>
+
+<footer id="about">
+  <div class="wrap">
+    <div class="fgrid">
+      <div><img src="wordmark.png" alt="Radlor"><p style="margin:16px 0 0;max-width:22rem">Education technology. Learning products for children, parents and teachers.</p></div>
+      <div><h4>Products</h4><ul><li><a href="#">Radlic</a></li><li><a href="#">Try Radlic</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Writing</a></li><li><a href="#">Schools</a></li><li><a href="#">Contact</a></li></ul></div>
+      <div><h4>Trust</h4><ul><li><a href="#">Data &amp; safety</a></li><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li></ul></div>
+    </div>
+    <div class="fine"><span>© 2026 Radlor Inc.</span><span>support@radlor.com</span></div>
+  </div>
+</footer>
+
+<script>
+document.documentElement.classList.add('js');
+try {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+  const v = document.querySelector('.stage video')
+  if (reduce) { v.removeAttribute('autoplay'); v.pause() } else v.play().catch(() => {})
+  // Each drawing plays ONCE as it scrolls into view (continuous decorative motion is distracting).
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return
+    e.target.classList.add('in'); io.unobserve(e.target)
+    if (!reduce) e.target.querySelectorAll('.go').forEach(m => { try { m.beginElement() } catch (_) {} })
+  }), { threshold: .35 })
+  document.querySelectorAll('.reveal:not(.scene)').forEach(el => io.observe(el))
+} catch (e) { document.querySelectorAll('.reveal').forEach(el => el.classList.add('in')) }
+
+// ── the tour: whichever chapter is in the middle of the screen drives the stage ──
+try {
+  const stage = document.getElementById('stage'), bubble = document.getElementById('bubble')
+  const chapters = [...document.querySelectorAll('.chapter')], scenes = [...document.querySelectorAll('.scene')]
+  const rail = [...document.querySelectorAll('.rail a')], sound = document.getElementById('sound')
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+  let current = -1, voiceOn = false, audio = null
+  function go(i) {
+    if (i === current) return; current = i
+    stage.dataset.step = i
+    chapters.forEach((c, k) => c.classList.toggle('on', k === i))
+    scenes.forEach((s, k) => s.classList.toggle('active', k === i))
+    rail.forEach((a, k) => k === i ? a.setAttribute('aria-current', 'step') : a.removeAttribute('aria-current'))
+    const sc = scenes[i]; sc.classList.add('in')
+    if (!reduce) sc.querySelectorAll('.go').forEach(m => { try { m.beginElement() } catch (_) {} })
+    bubble.classList.add('swap'); setTimeout(() => { bubble.textContent = chapters[i].dataset.say; bubble.classList.remove('swap') }, 250)
+    // Voice: the Chatterbox clip for this chapter, once it exists (audio/tour-<i>.mp3). Only after the visitor pressed the button.
+    if (voiceOn) { if (audio) audio.pause(); audio = new Audio(`audio/tour-${i}.mp3`); audio.play().catch(() => {}) }
+  }
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) go(chapters.indexOf(e.target)) }), { rootMargin: innerWidth <= 860 ? '-62% 0px -30% 0px' : '-45% 0px -45% 0px' })
+  chapters.forEach(c => io.observe(c))
+  sound.addEventListener('click', () => { voiceOn = !voiceOn; sound.setAttribute('aria-pressed', voiceOn); sound.querySelector('span').textContent = voiceOn ? 'Sound on' : 'Tour with sound'; if (!voiceOn && audio) audio.pause() })
+  go(0)
+} catch (e) {}
+</script>

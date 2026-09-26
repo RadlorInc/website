@@ -2,28 +2,32 @@
 
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+import { Gaegu } from 'next/font/google'
 import { APP_NAME, APP_URL } from '@/site'
+import { ChalkScenes } from './ChalkScenes'
+
+// the chalk writing on the drawings, self-hosted by next/font (radlor.com loads nothing off-origin)
+const gaegu = Gaegu({ subsets: ['latin'], weight: ['700'], variable: '--rl-gaegu' })
 
 /**
- * THE HOME PAGE'S FIRST SCREEN IS A JOURNEY (founder's call, 2026-09-25): the robot guide flies past six floating
- * islands, and each flick of the scroll carries the reader to the next one and stops there.
+ * THE HOME PAGE'S FIRST SCREEN IS A JOURNEY (founder's call, 2026-09-25): six stops, each with a chalk drawing that
+ * draws itself when the reader arrives, and each flick of the scroll carries the reader to the next stop.
+ * (It was a low-poly 3D world the same morning; the founder: "looking like AI generated", so ChalkScenes replaced it.)
  *
- * ⚠️ THE WORDS ARE THE PAGE, THE WORLD IS DECORATION. Every stop below is ordinary HTML that this client component
- * still server-renders, so a crawler, an answer engine, a screen reader and a browser without WebGL all get the full
- * copy on the first byte. The 3D (`scene.js`, three from npm) is imported only after mount, in its own chunk.
+ * ⚠️ THE WORDS ARE THE PAGE, THE DRAWINGS ARE DECORATION. Every stop below is ordinary HTML that this client component
+ * still server-renders, so a crawler, an answer engine and a screen reader all get the full copy on the first byte.
  *
- * ⚠️ THE SCROLL POSITION IS THE ONE SOURCE OF TRUTH. Each stop is one screen tall; the scene reads where the page is.
- * A gesture does not move the scene, it animates the PAGE to the next stop — so the scrollbar, keys, Back and
+ * ⚠️ THE SCROLL POSITION IS THE ONE SOURCE OF TRUTH. Each stop is one screen tall; the drawing follows the stop the page is on.
+ * A gesture does not move the drawing, it animates the PAGE to the next stop — so the scrollbar, keys, Back and
  * "find in page" all keep working, and nothing can disagree with what the reader sees.
  *
  * Why one flick = one stop: on a free scroll the reader had to land precisely on each topic (founder, 2026-09-25:
  * "they scroll, they reach the next thing"). A trackpad keeps firing wheel events for a second after the finger
- * lifts; a gesture only counts after a pause in that stream, and the pause is scaled to the device's frame time,
- * because a slow device delivers one swipe's events a frame apart.
+ * lifts; a gesture only counts after a 180 ms pause in that stream. (The pause used to scale with frame time,
+ * because the 3D world slowed a weak device to ~5 fps; the drawings cost nothing per frame, so the constant is back.)
  *
  * The previous scroll-linked hero (a 180-frame flip-book, deleted in 1d4cfae) failed on smoothness and on phone
- * contrast. This one draws every frame live, and the copy sits on its own shade, never over the artwork's brightest
- * part.
+ * contrast. The copy sits on its own shade, and the drawing keeps to the other side of the screen.
  */
 
 const STOPS = [
@@ -58,19 +62,15 @@ const STOPS = [
 const LAST = STOPS.length  // stop 0 is the opening screen, then one per entry above
 const RAIL = ['Start', 'Mission', 'How we build', APP_NAME, 'Who it’s for', 'What comes next']
 
-type Scene = { pause(): void; resume(): void; dispose(): void } | null
-
 export function Journey() {
   const root = useRef<HTMLElement>(null)
-  const canvas = useRef<HTMLCanvasElement>(null)
   const [here, setHere] = useState(0)
   const [playing, setPlaying] = useState(false)
   const api = useRef<{ go(i: number): void; play(on: boolean): void } | null>(null)
 
   useEffect(() => {
-    const section = root.current!, cv = canvas.current!
+    const section = root.current!
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
-    const small = innerWidth < 760
     let top = 0, vh = 1
     const measure = () => { top = section.getBoundingClientRect().top + scrollY; vh = section.querySelector<HTMLElement>('.rl-stop')!.offsetHeight }
     measure()
@@ -80,7 +80,7 @@ export function Journey() {
     const inJourney = () => scrollY <= top + LAST * vh + 2
 
     // ── moving the page between stops: eased, time-based, never the browser's own smooth-scroll ──
-    let anim = 0, animating = false, frameMs = 16, lastWheel = 0, playTimer = 0, isPlaying = false
+    let anim = 0, animating = false, lastWheel = 0, playTimer = 0, isPlaying = false
     const easeIO = (k: number) => -(Math.cos(Math.PI * k) - 1) / 2
     function go(i: number) {
       i = Math.max(0, Math.min(LAST, i))
@@ -111,7 +111,7 @@ export function Journey() {
     const passes = (dir: number) => { const x = getX(); return (dir > 0 && x >= LAST - .02) || (dir < 0 && x <= .02) }
 
     const onWheel = (e: WheelEvent) => {
-      const now = performance.now(), fresh = now - lastWheel > Math.max(180, frameMs * 2.5); lastWheel = now
+      const now = performance.now(), fresh = now - lastWheel > 180; lastWheel = now
       if (!inJourney() || e.ctrlKey) return  // ctrl+wheel is a pinch-zoom
       const dir = Math.sign(e.deltaY); if (!dir || (!animating && passes(dir))) return
       e.preventDefault(); stopPlaying()
@@ -148,30 +148,18 @@ export function Journey() {
     addEventListener('scroll', onScroll, { passive: true })
     const onResize = () => measure(); addEventListener('resize', onResize)
 
-    // ── the world, loaded after the words, and only drawn while the journey is on screen ──
-    let scene: Scene = null, disposed = false, visible = true
-    let last = performance.now()
-    const getXTimed = () => { const now = performance.now(); frameMs += (now - last - frameMs) * .2; last = now; return getX() }
-    import('./scene.js').then(({ mountJourney }) => {
-      if (disposed) return
-      scene = mountJourney({ canvas: cv, getX: getXTimed, reduce, small, onReady: () => section.classList.add('is-live') })
-      if (scene && !visible) scene.pause()
-    })
-    const io = new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible) scene?.resume(); else scene?.pause() })
-    io.observe(section)
-
     return () => {
-      disposed = true; io.disconnect(); scene?.dispose(); cancelAnimationFrame(anim); clearTimeout(playTimer)
+      cancelAnimationFrame(anim); clearTimeout(playTimer)
       removeEventListener('wheel', onWheel); removeEventListener('touchstart', onTouchStart); removeEventListener('touchmove', onTouchMove)
       removeEventListener('touchend', onTouchEnd); removeEventListener('keydown', onKey); removeEventListener('scroll', onScroll); removeEventListener('resize', onResize)
     }
   }, [])
 
   return (
-    <section ref={root} className="rl-journey rl-dark" aria-label="The Radlor journey">
+    <section ref={root} className={`rl-journey rl-dark ${gaegu.variable}`} aria-label="The Radlor journey">
       <div className="rl-journey-track" aria-hidden="true">
         <div className="rl-journey-stage">
-          <canvas ref={canvas} className="rl-journey-canvas" />
+          <ChalkScenes here={here} />
           <div className="rl-journey-shade" />
         </div>
       </div>

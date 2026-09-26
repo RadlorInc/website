@@ -1,0 +1,558 @@
+<meta charset="utf-8">
+<title>Radlor Journey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Radlor as a journey: a real-time 3D flight through the logo's universe. The robot guide flies a
+   path past five stations (mission, rules, Radlic, who it's for, what's next). Scroll to fly, or
+   press Play to watch it like a film. One dark page, the logo's blues, no chalkboard. */
+:root{--space:#050A16;--cyan:#00E5FF;--sky:#7ADFFF;--blue:#0061F3;--silver:#C9D3E0;--mist:#9FB0C6;--white:#F4F7FB;
+  --display:'Lexend',system-ui,sans-serif;--body:'Figtree',system-ui,sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--space);color:var(--white);margin:0;font:400 17px/1.55 var(--body)}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+.spacer{height:1000vh}
+a{color:inherit}
+h1,h2{font-family:var(--display);font-weight:500;letter-spacing:-.015em;margin:0;text-wrap:balance}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 20px;border-radius:999px;font:600 15px var(--body);text-decoration:none;border:0;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+.btn:focus-visible,a:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.glow{background:var(--blue);color:#fff;box-shadow:0 0 0 1px rgba(0,229,255,.35),0 8px 28px -8px rgba(0,97,243,.9)}
+.glow:hover{background:#1a72ff}
+.ghost{background:rgba(5,10,22,.35);border:1px solid rgba(201,211,224,.35);color:var(--white);backdrop-filter:blur(6px)}
+.ghost:hover{border-color:var(--sky);color:var(--sky)}
+
+.top{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;gap:16px;padding:calc(14px + env(safe-area-inset-top,0px)) 20px 14px;
+  background:linear-gradient(180deg,rgba(5,10,22,.75),transparent)}
+.top img{height:30px;width:auto}
+.top .sp{flex:1}
+.top a.skip{color:var(--mist);font-size:14px;font-weight:600;text-decoration:none}
+.top a.skip:hover{color:var(--sky)}
+.top .btn{min-height:40px;padding:0 16px;font-size:14px}
+.chip{min-height:36px;padding:0 14px;border-radius:999px;border:1px solid rgba(122,223,255,.3);background:rgba(10,21,48,.55);color:var(--silver);font:600 13px var(--body);cursor:pointer;backdrop-filter:blur(6px)}
+.chip:hover{border-color:var(--cyan);color:#fff}
+.chip[aria-pressed="true"]{color:var(--sky);border-color:var(--sky)}
+
+/* the title card at the start */
+.intro{position:fixed;inset:0;z-index:3;display:flex;flex-direction:column;justify-content:center;padding:0 max(20px,6vw);pointer-events:none;transition:opacity .4s}
+.intro > *{pointer-events:auto}
+.intro .eyebrow{font:600 12px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--sky)}
+.intro h1{font-size:clamp(40px,6.4vw,84px);line-height:1.02;margin:18px 0 0;max-width:13ch}
+.intro h1 em{font-style:normal;background:linear-gradient(90deg,var(--sky),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.intro p{color:var(--silver);font-size:19px;margin:18px 0 0;max-width:32rem}
+.intro .row{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.hint{position:fixed;left:50%;bottom:32px;transform:translateX(-50%);z-index:3;color:var(--mist);font-size:13px;letter-spacing:.14em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:8px;transition:opacity .4s}
+.hint i{width:1px;height:34px;background:linear-gradient(var(--sky),transparent);animation:drip 1.8s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* chapter caption: a film's lower third */
+.cap{position:fixed;left:max(20px,6vw);bottom:72px;z-index:3;max-width:34rem;opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s cubic-bezier(.2,.7,.2,1);pointer-events:none}
+.cap.on{opacity:1;transform:none;pointer-events:auto}
+.cap .eyebrow{font:600 12px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--sky)}
+.cap h2{font-size:clamp(30px,4.2vw,54px);line-height:1.06;margin-top:12px;text-shadow:0 2px 30px rgba(5,10,22,.9)}
+.cap p{margin:12px 0 0;color:var(--silver);font-size:18px;text-shadow:0 1px 16px rgba(5,10,22,.9)}
+.cap .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding:0;list-style:none}
+.cap .chips li{border:1px solid rgba(122,223,255,.3);background:rgba(10,21,48,.6);backdrop-filter:blur(6px);color:var(--sky);border-radius:999px;padding:6px 14px;font-weight:600;font-size:14px}
+.cap .row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.cap .links{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap}.cap .links a{color:var(--sky);font-weight:600;text-decoration:none}
+/* the guide's line, like a subtitle */
+.say{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:3;max-width:min(90vw,620px);text-align:center;color:#fff;font:500 16px/1.4 var(--body);
+  background:rgba(5,10,22,.55);backdrop-filter:blur(6px);border:1px solid rgba(122,223,255,.18);border-radius:12px;padding:8px 14px;opacity:0;transition:opacity .35s}
+.say.on{opacity:1}
+.say b{color:var(--sky);font-weight:600}
+
+.after{position:relative;z-index:6;background:var(--space);border-top:1px solid rgba(122,223,255,.16)}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:24px}
+.after .posts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;padding-block:64px 40px}
+.after .posts a{border-top:2px solid rgba(122,223,255,.35);padding-top:16px;text-decoration:none}
+.after .posts time{font-size:14px;color:var(--mist)}.after .posts h3{font:500 19px/1.3 var(--display);margin:6px 0 0}
+.after .posts a:hover h3{color:var(--sky)}
+.after .eyebrow{font:600 12px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--sky);display:block;padding-top:64px}
+footer{display:flex;flex-wrap:wrap;gap:16px 28px;justify-content:space-between;padding-block:28px 40px;color:var(--mist);font-size:14px;border-top:1px solid rgba(122,223,255,.12)}
+footer nav{display:flex;flex-wrap:wrap;gap:18px}footer a{text-decoration:none}footer a:hover{color:var(--sky)}
+
+.fallback{display:none}
+.nogl .fallback{display:block;position:relative;z-index:6;padding:120px 24px}
+.nogl #c,.nogl .player,.nogl .cap,.nogl .say,.nogl .hint{display:none}
+
+@media (max-width:760px){
+  .top .skip{display:none}
+  .cap{left:20px;right:20px;bottom:40px}
+  .cap h2{font-size:30px}.cap p{font-size:16px}
+  .say{bottom:auto;top:calc(70px + env(safe-area-inset-top,0px));font-size:14px}
+  .hint{display:none}
+  .intro{justify-content:flex-end;padding-bottom:110px}
+  .top .chip#sound{display:none}
+}
+@media (prefers-reduced-motion:reduce){.hint i{animation:none}}
+</style>
+
+<canvas id="c" aria-hidden="true"></canvas>
+
+<header class="top">
+  <img src="wordmark.png" alt="Radlor">
+  <span class="sp"></span>
+  <button class="chip" type="button" id="play" hidden>Pause</button>
+  <button class="chip" type="button" id="sound" aria-pressed="false">Voice off</button>
+  <a class="skip" href="#after">Skip the journey</a>
+  <a class="btn glow" href="#">Try Radlic</a>
+</header>
+
+<div class="intro" id="intro">
+  <span class="eyebrow">Education technology</span>
+  <h1>Learning that meets every child <em>where they are.</em></h1>
+  <p>Come along. Our guide will show you what we build.</p>
+  <div class="row">
+    <button class="btn glow" type="button" id="start"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg>Play the journey</button>
+    <a class="btn ghost" href="#after">Skip to the end</a>
+  </div>
+</div>
+<div class="hint" id="hint"><span>Scroll to fly</span><i></i></div>
+
+<div class="cap" id="cap" aria-live="polite"></div>
+<p class="say" id="say"></p>
+
+
+
+<div class="spacer" aria-hidden="true"></div>
+
+<section class="after" id="after">
+  <div class="fallback wrap" id="fallback"></div>
+  <div class="wrap">
+    <span class="eyebrow">Writing · what we're learning</span>
+    <div class="posts">
+      <a href="#"><time>29 Aug 2026</time><h3>A sixteen-year-old's math gap is often in grade four</h3></a>
+      <a href="#"><time>29 Aug 2026</time><h3>A camera claim you can check</h3></a>
+      <a href="#"><time>19 Aug 2026</time><h3>A child should never see their level</h3></a>
+    </div>
+    <footer>
+      <span>© 2026 Radlor Inc. · support@radlor.com</span>
+      <nav><a href="#">Radlic</a><a href="#">About</a><a href="#">Schools</a><a href="#">Contact</a><a href="#">Data &amp; safety</a><a href="#">Privacy</a><a href="#">Terms</a></nav>
+    </footer>
+  </div>
+</section>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+               "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+</script>
+<script type="module">
+import * as THREE from 'three'
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js'
+
+const CH = [
+  { t: .13, eyebrow: '01 · Mission', h: 'Every child already has the treasure.', p: 'We build learning that finds it, and lights it up.',
+    say: "Hi! I'm Radlor's guide. Every child already has something bright inside." },
+  { t: .33, eyebrow: '02 · How we build', h: 'Four rules in everything we make.', chips: ['One idea at a time', 'No levels, no red crosses', 'Harder means different', "Children's data stays small"],
+    say: 'Every product we build follows four rules. Watch them go by.' },
+  { t: .54, eyebrow: '03 · Our first product', h: 'Radlic: math that adapts.', p: 'Grades 3–8. Every answer shapes the next question.', cta: [['Try Radlic', 'glow']],
+    say: 'This is Radlic, our first world. Each answer lights the way to the next question.' },
+  { t: .74, eyebrow: "04 · Who it's for", h: 'Families, schools and partners.', links: ['Parents →', 'Schools →', 'Partners →'],
+    say: 'Parents, teachers and partners all start from here.' },
+  { t: .93, eyebrow: '05 · What comes next', h: 'More is coming.', p: 'New learning products are in research.', cta: [['Try Radlic', 'glow'], ['Talk to us', 'ghost']],
+    say: "That's the journey so far. More worlds are on the way. Want to try Radlic?" },
+]
+const DURATION = 60
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+const small = innerWidth < 760
+const $ = id => document.getElementById(id)
+
+// ── renderer, with a studio environment so metal, glass and gloss reflect like the real thing ──
+let renderer
+try { renderer = new THREE.WebGLRenderer({ canvas: $('c'), antialias: true, powerPreference: 'high-performance' }) }
+catch (e) {
+  document.documentElement.classList.add('nogl')
+  $('fallback').innerHTML = CH.map(c => `<h2 style="margin:28px 0 8px">${c.h}</h2><p style="color:#C9D3E0;margin:0">${c.p || (c.chips || []).join(' · ')}</p>`).join('')
+  throw e
+}
+renderer.setPixelRatio(Math.min(devicePixelRatio, small ? 1.5 : 1.75))
+renderer.setSize(innerWidth, innerHeight)
+renderer.toneMapping = THREE.ACESFilmicToneMapping
+renderer.toneMappingExposure = 1.0
+const scene = new THREE.Scene()
+scene.background = new THREE.Color(0x050a16)
+scene.fog = new THREE.FogExp2(0x050a16, 0.006)
+const pmrem = new THREE.PMREMGenerator(renderer)
+scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture
+const camera = new THREE.PerspectiveCamera(small ? 62 : 48, innerWidth / innerHeight, 0.1, 900)
+const composer = new EffectComposer(renderer)
+composer.addPass(new RenderPass(scene, camera))
+composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.6, 0.45, 0.82))
+composer.addPass(new OutputPass())
+
+scene.add(new THREE.HemisphereLight(0xbfe6ff, 0x0a1530, 0.6))
+const key = new THREE.DirectionalLight(0xffffff, 1.7); key.position.set(12, 18, 10); scene.add(key)
+const rim = new THREE.DirectionalLight(0x4cb4f8, 2.4); rim.position.set(-14, 4, -12); scene.add(rim)
+const guideLight = new THREE.PointLight(0x00e5ff, 10, 22, 2); scene.add(guideLight)
+
+// ── materials ──
+const CYAN = 0x00e5ff, SKY = 0x7adfff, BLUE = 0x0061f3
+const M = {
+  pearl: new THREE.MeshPhysicalMaterial({ color: 0xd9e2ee, roughness: .3, metalness: 0, clearcoat: 1, clearcoatRoughness: .08, envMapIntensity: .7 }),
+  visor: new THREE.MeshPhysicalMaterial({ color: 0x03050a, roughness: .05, metalness: .3, clearcoat: 1, clearcoatRoughness: .02, envMapIntensity: 1.6 }),
+  chrome: new THREE.MeshStandardMaterial({ color: 0xc9d6e8, metalness: 1, roughness: .16, envMapIntensity: .85 }),
+  gold: new THREE.MeshStandardMaterial({ color: 0xffc85a, metalness: 1, roughness: .22, envMapIntensity: 1.3 }),
+  blueGloss: new THREE.MeshPhysicalMaterial({ color: 0x1f5fd6, roughness: .28, metalness: .1, clearcoat: 1, clearcoatRoughness: .1 }),
+  rock: new THREE.MeshStandardMaterial({ color: 0x1a2748, roughness: .9, metalness: .05, flatShading: true }),
+  rockTop: new THREE.MeshStandardMaterial({ color: 0x3b8f7a, roughness: .75, flatShading: true }),
+  wall: new THREE.MeshPhysicalMaterial({ color: 0xc3d0e4, roughness: .6, clearcoat: .15, envMapIntensity: .6 }),
+  trim: new THREE.MeshStandardMaterial({ color: 0x0b4fa8, roughness: .4, metalness: .2 }),
+  glassPane: new THREE.MeshStandardMaterial({ color: 0xffe7a8, emissive: 0xffc96b, emissiveIntensity: 1.6, roughness: .2 }),
+  leaf: new THREE.MeshStandardMaterial({ color: 0x2fae8c, roughness: .7, flatShading: true }),
+  trunk: new THREE.MeshStandardMaterial({ color: 0x5a3e2b, roughness: .9 }),
+}
+const glass = (tint = 0xbfefff, extra = {}) => new THREE.MeshPhysicalMaterial({ color: tint, metalness: 0, roughness: .04, transmission: 1, thickness: 1.2, ior: 1.5, envMapIntensity: 1.5, transparent: true, ...extra })
+const glow = (c, i = 2) => new THREE.MeshStandardMaterial({ color: c, emissive: c, emissiveIntensity: i, roughness: .35 })
+function radialTex(inner, outer = 'rgba(0,0,0,0)') {
+  const cv = document.createElement('canvas'); cv.width = cv.height = 128
+  const g = cv.getContext('2d'), gr = g.createRadialGradient(64, 64, 0, 64, 64, 64)
+  gr.addColorStop(0, inner); gr.addColorStop(1, outer); g.fillStyle = gr; g.fillRect(0, 0, 128, 128)
+  const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; return t
+}
+const glowSprite = (color, size) => { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: radialTex(color), blending: THREE.AdditiveBlending, depthWrite: false, transparent: true })); s.scale.setScalar(size); return s }
+// a soft rim-light halo that follows the silhouette (atmospheres, glass edges)
+const fresnel = (color, power = 2.6, strength = 1.2) => new THREE.ShaderMaterial({
+  uniforms: { c: { value: new THREE.Color(color) }, p: { value: power }, s: { value: strength } },
+  vertexShader: 'varying vec3 n; varying vec3 v; void main(){ vec4 mv = modelViewMatrix * vec4(position,1.); n = normalize(normalMatrix*normal); v = normalize(-mv.xyz); gl_Position = projectionMatrix*mv; }',
+  fragmentShader: 'uniform vec3 c; uniform float p; uniform float s; varying vec3 n; varying vec3 v; void main(){ float f = pow(1.-max(dot(n,v),0.), p)*s; gl_FragColor = vec4(c*f, f); }',
+  transparent: true, blending: THREE.AdditiveBlending, depthWrite: false })
+const ease = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2
+const clamp01 = x => Math.max(0, Math.min(1, x))
+// cheap 3D value noise, for rocks
+const hash = (x, y, z) => { const s = Math.sin(x * 127.1 + y * 311.7 + z * 74.7) * 43758.5453; return s - Math.floor(s) }
+function roughen(geo, amt, freq = 1.3) {
+  const p = geo.attributes.position, v = new THREE.Vector3()
+  for (let i = 0; i < p.count; i++) { v.fromBufferAttribute(p, i); const n = hash(Math.round(v.x * freq), Math.round(v.y * freq), Math.round(v.z * freq)); v.multiplyScalar(1 + (n - .5) * amt); p.setXYZ(i, v.x, v.y, v.z) }
+  geo.computeVertexNormals(); return geo
+}
+// a floating island: a jagged rock underneath and a soft grassy cap
+function island(r = 2.4, grass = true) {
+  const g = new THREE.Group()
+  const under = roughen(new THREE.ConeGeometry(r, r * 1.6, 9, 3), .35); under.rotateX(Math.PI); under.translate(0, -r * .8 - .15, 0)
+  g.add(new THREE.Mesh(under, M.rock))
+  const cap = roughen(new THREE.CylinderGeometry(r * 1.02, r * .96, .35, 18, 1), .06, 3)
+  g.add(new THREE.Mesh(cap, grass ? M.rockTop : M.rock))
+  return g
+}
+function tree(h = 1) {
+  const g = new THREE.Group()
+  const t = new THREE.Mesh(new THREE.CylinderGeometry(.06 * h, .09 * h, .5 * h, 6), M.trunk); t.position.y = .25 * h; g.add(t)
+  for (let k = 0; k < 3; k++) { const c = new THREE.Mesh(roughen(new THREE.IcosahedronGeometry((.42 - k * .1) * h, 1), .18, 6), M.leaf); c.position.y = (.62 + k * .3) * h; g.add(c) }
+  return g
+}
+function gearGeo(r, teeth, depth) {
+  const s = new THREE.Shape(), inner = r * .82, outer = r * 1.05
+  for (let k = 0; k < teeth; k++) {
+    const a0 = k / teeth * Math.PI * 2, st = Math.PI * 2 / teeth
+    const pts = [[inner, a0], [outer, a0 + st * .18], [outer, a0 + st * .45], [inner, a0 + st * .62]]
+    pts.forEach(([rr, a], j) => (k === 0 && j === 0 ? s.moveTo : s.lineTo).call(s, Math.cos(a) * rr, Math.sin(a) * rr))
+  }
+  s.closePath()
+  const hole = new THREE.Path(); hole.absarc(0, 0, r * .28, 0, Math.PI * 2, true); s.holes.push(hole)
+  for (let k = 0; k < 5; k++) { const a = k / 5 * Math.PI * 2, h = new THREE.Path(); h.absarc(Math.cos(a) * r * .56, Math.sin(a) * r * .56, r * .12, 0, Math.PI * 2, true); s.holes.push(h) }
+  const g = new THREE.ExtrudeGeometry(s, { depth, bevelEnabled: true, bevelThickness: depth * .25, bevelSize: r * .03, bevelSegments: 3, curveSegments: 18 })
+  g.center(); return g
+}
+function starGeo(r, depth) {
+  const s = new THREE.Shape()
+  for (let k = 0; k < 10; k++) { const a = Math.PI / 2 + k * Math.PI / 5, rr = k % 2 ? r * .45 : r; (k ? s.lineTo : s.moveTo).call(s, Math.cos(a) * rr, Math.sin(a) * rr) }
+  s.closePath()
+  const g = new THREE.ExtrudeGeometry(s, { depth, bevelEnabled: true, bevelThickness: depth * .6, bevelSize: r * .12, bevelSegments: 4 }); g.center(); return g
+}
+function prismRoof(w, h, d) {
+  const s = new THREE.Shape(); s.moveTo(-w / 2, 0); s.lineTo(0, h); s.lineTo(w / 2, 0); s.closePath()
+  const g = new THREE.ExtrudeGeometry(s, { depth: d, bevelEnabled: true, bevelThickness: .06, bevelSize: .06, bevelSegments: 2 }); g.translate(0, 0, -d / 2); return g
+}
+
+// ── the flight path, and its glowing trail ──
+const P = [[0, 0, 30], [0, 0, 0], [6, 2, -45], [-6, -1, -95], [7, 3, -150], [-5, 0, -205], [0, 2, -262], [0, 3, -300]].map(p => new THREE.Vector3(...p))
+const path = new THREE.CatmullRomCurve3(P, false, 'catmullrom', .3)
+const stationT = CH.map(c => c.t)
+const TUBE_SEG = 600, RAD = 6
+const trailGeo = new THREE.TubeGeometry(path, TUBE_SEG, 0.025, RAD, false)
+const trail = new THREE.Mesh(trailGeo, new THREE.MeshBasicMaterial({ color: CYAN, transparent: true, opacity: .35, depthWrite: false })); scene.add(trail)
+
+// ── stars, dust and nebulae ──
+{
+  const N = small ? 2500 : 5000, pos = new Float32Array(N * 3), col = new Float32Array(N * 3)
+  const pal = [new THREE.Color(0xffffff), new THREE.Color(SKY), new THREE.Color(0x9fb0c6), new THREE.Color(CYAN)]
+  for (let i = 0; i < N; i++) { pos.set([(Math.random() - .5) * 400, (Math.random() - .5) * 260, 60 - Math.random() * 420], i * 3); const c = pal[(Math.random() * 4) | 0]; col.set([c.r, c.g, c.b], i * 3) }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.BufferAttribute(col, 3))
+  scene.add(new THREE.Points(g, new THREE.PointsMaterial({ size: .5, vertexColors: true, transparent: true, depthWrite: false, map: radialTex('rgba(255,255,255,1)'), blending: THREE.AdditiveBlending })))
+  for (const [c, s, p] of [['rgba(0,97,243,.30)', 180, [-60, 20, -80]], ['rgba(109,79,224,.24)', 200, [80, -30, -170]], ['rgba(0,229,255,.14)', 160, [-70, 40, -250]], ['rgba(0,97,243,.26)', 220, [60, 10, -310]]]) { const sp = glowSprite(c, s); sp.position.set(...p); scene.add(sp) }
+}
+
+// ── the guide ──
+const robot = new THREE.Group()
+{
+  robot.add(new THREE.Mesh(new THREE.SphereGeometry(1, 64, 48), M.pearl))
+  const seam = new THREE.Mesh(new THREE.TorusGeometry(1.002, .012, 8, 96), new THREE.MeshStandardMaterial({ color: 0xaab8cc, roughness: .5 })); seam.rotation.x = Math.PI / 2; seam.position.y = -.35; seam.scale.setScalar(.94); robot.add(seam)
+  const visor = new THREE.Mesh(new THREE.SphereGeometry(1.01, 64, 48, Math.PI / 2 - 1.05, 2.1, .95, 1.15), M.visor); robot.add(visor)
+  const eyeG = new THREE.CapsuleGeometry(.1, .14, 8, 16)
+  for (const x of [-.3, .3]) { const e = new THREE.Mesh(eyeG, glow(CYAN, 5)); e.position.set(x, .08, .985); robot.add(e) }
+  for (const x of [-1, 1]) {
+    const ear = new THREE.Mesh(new THREE.CylinderGeometry(.27, .27, .22, 32), M.pearl); ear.rotation.z = Math.PI / 2; ear.position.x = x * .97; robot.add(ear)
+    const cap = new THREE.Mesh(new THREE.CylinderGeometry(.17, .17, .24, 32), M.blueGloss); cap.rotation.z = Math.PI / 2; cap.position.x = x * 1.01; robot.add(cap)
+    const led = new THREE.Mesh(new THREE.TorusGeometry(.2, .018, 8, 40), glow(CYAN, 3)); led.rotation.y = Math.PI / 2; led.position.x = x * 1.12; robot.add(led)
+  }
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(.14, .22, .09, 32), M.blueGloss); base.position.y = .99; robot.add(base)
+  const stem = new THREE.Mesh(new THREE.CylinderGeometry(.03, .03, .42, 16), M.chrome); stem.position.y = 1.2; robot.add(stem)
+  const ball = new THREE.Mesh(new THREE.SphereGeometry(.13, 32, 24), M.pearl); ball.position.y = 1.45; robot.add(ball)
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(1.8, .05, 16, 160), glow(CYAN, 3.2)); ring.rotation.x = Math.PI / 2.3; ring.rotation.y = .35; robot.add(ring)
+  robot.userData.ring = ring
+  robot.add(glowSprite('rgba(0,229,255,.12)', 6))
+}
+scene.add(robot)
+const SPARK = 140, sparkPos = new Float32Array(SPARK * 3)
+const sparkGeo = new THREE.BufferGeometry(); sparkGeo.setAttribute('position', new THREE.BufferAttribute(sparkPos, 3))
+scene.add(new THREE.Points(sparkGeo, new THREE.PointsMaterial({ size: .3, color: SKY, transparent: true, opacity: .85, depthWrite: false, map: radialTex('rgba(255,255,255,1)'), blending: THREE.AdditiveBlending })))
+let sparkI = 0
+
+// ── stations ──
+const stations = []
+function station(i, side) { const g = new THREE.Group(), p = path.getPointAt(stationT[i]); g.position.copy(p).add(new THREE.Vector3(side * (small ? 7 : 11), 1.5, -3)); g.userData.side = side; scene.add(g); stations.push(g); return g }
+
+// start: the Radlor ring, in chrome with a lit inner edge
+const startRing = new THREE.Group()
+{ const r = new THREE.Mesh(new THREE.TorusGeometry(9, .22, 24, 220), M.chrome); startRing.add(r)
+  const r2 = new THREE.Mesh(new THREE.TorusGeometry(8.72, .05, 12, 220), glow(CYAN, 3)); startRing.add(r2)
+  const r3 = new THREE.Mesh(new THREE.TorusGeometry(9.3, .03, 8, 220), glow(SKY, 1.6)); startRing.add(r3)
+  startRing.rotation.x = Math.PI / 2.25; scene.add(startRing) }
+
+// 1 · mission: a crystal cluster growing out of a floating rock — the treasure inside
+const s1 = station(0, -1)
+{
+  const base = island(3.2, false); base.position.y = -2.2; s1.add(base)
+  const crystalGeo = (h, r) => { const g = new THREE.CylinderGeometry(r, r * 1.08, h, 6, 1); const tip = new THREE.ConeGeometry(r, r * 1.6, 6); tip.translate(0, h / 2 + r * .8, 0)
+    const m = new THREE.Group(); return [g, tip] }
+  const cMat = glass(0x8feaff, { iridescence: 1, iridescenceIOR: 1.6, thickness: 2.4, attenuationColor: new THREE.Color(0x00a8ff), attenuationDistance: 3 })
+  const core = new THREE.PointLight(0x00e5ff, 0, 16, 2); core.position.y = 1; s1.add(core)
+  const crystals = new THREE.Group(); s1.add(crystals)
+  const spec = [[0, 0, 0, 4.6, .8, 0, 0], [1.4, -.3, .6, 3, .55, .35, -.3], [-1.3, -.4, .4, 3.4, .6, -.3, .25], [.5, -.6, -1.2, 2.4, .45, .2, .5], [-.7, -.7, -1, 2, .4, -.4, -.4], [1.9, -.8, -.6, 1.6, .35, .6, .2]]
+  for (const [x, y, z, h, r, rz, rx] of spec) {
+    const [body, tip] = crystalGeo(h, r); const g = new THREE.Group()
+    g.add(new THREE.Mesh(body, cMat)); g.add(new THREE.Mesh(tip, cMat))
+    const innerGlow = new THREE.Mesh(new THREE.CylinderGeometry(r * .35, r * .4, h * .8, 6), glow(CYAN, 0)); g.add(innerGlow)
+    g.position.set(x, y + h / 2 - 1.3, z); g.rotation.set(rx, 0, rz); crystals.add(g)
+  }
+  const shards = new THREE.Group(); for (let k = 0; k < 8; k++) { const sh = new THREE.Mesh(new THREE.OctahedronGeometry(.18 + Math.random() * .15, 0), cMat); sh.userData.a = k / 8 * Math.PI * 2; shards.add(sh) } s1.add(shards)
+  const aura = glowSprite('rgba(0,229,255,.7)', 1); aura.position.y = 1; s1.add(aura)
+  s1.userData = { ...s1.userData, crystals, shards, aura, core }
+}
+
+// 2 · how we build: four little dioramas on glass-topped pedestals
+const s2 = station(1, 1)
+{
+  const pedestal = () => { const g = new THREE.Group()
+    const prof = [[0, 0], [1.3, 0], [1.4, .08], [1.4, .3], [1.25, .38], [1.1, .4], [0, .4]].map(([x, y]) => new THREE.Vector2(x, y))
+    g.add(new THREE.Mesh(new THREE.LatheGeometry(prof, 48), M.chrome))
+    const rimLed = new THREE.Mesh(new THREE.TorusGeometry(1.4, .025, 8, 64), glow(CYAN, 2.4)); rimLed.rotation.x = Math.PI / 2; rimLed.position.y = .2; g.add(rimLed)
+    return g }
+  const slot = (x, y) => { const g = new THREE.Group(); g.position.set(x, y, 0); const p = pedestal(); p.position.y = -1.6; g.add(p); s2.add(g); return g }
+  // a · one idea at a time — a real lightbulb
+  const a = slot(-3.4, 2.6)
+  { const bulbProf = []; for (let k = 0; k <= 24; k++) { const t = k / 24, ang = t * Math.PI; bulbProf.push(new THREE.Vector2(Math.max(.001, Math.sin(ang) * (t < .55 ? 1 : .55 + .45 * Math.sin(ang))) * (t > .75 ? .55 : 1), Math.cos(ang) * 1.05)) }
+    const bulb = new THREE.Mesh(new THREE.SphereGeometry(.9, 48, 32), glass(0xfff6d8, { thickness: .4 })); bulb.position.y = .45; a.add(bulb)
+    const neck = new THREE.Mesh(new THREE.CylinderGeometry(.42, .5, .45, 32), glass(0xfff6d8, { thickness: .3 })); neck.position.y = -.4; a.add(neck)
+    for (let k = 0; k < 4; k++) { const th = new THREE.Mesh(new THREE.TorusGeometry(.42, .06, 12, 40), M.chrome); th.rotation.x = Math.PI / 2; th.position.y = -.68 - k * .13; a.add(th) }
+    const cap = new THREE.Mesh(new THREE.SphereGeometry(.2, 20, 12, 0, Math.PI * 2, Math.PI / 2), M.gold); cap.position.y = -1.2; a.add(cap)
+    const coil = new THREE.CatmullRomCurve3(Array.from({ length: 30 }, (_, k) => new THREE.Vector3(Math.cos(k * 1.3) * .14, .1 + k * .018, Math.sin(k * 1.3) * .14)))
+    const fil = new THREE.Mesh(new THREE.TubeGeometry(coil, 120, .018, 6), glow(0xffd479, 0)); fil.position.y = .15; a.add(fil)
+    const wires = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(-.12, -.5, 0), new THREE.Vector3(-.14, .2, 0), new THREE.Vector3(0, .3, 0), new THREE.Vector3(.14, .2, 0), new THREE.Vector3(.12, -.5, 0)]), 40, .012, 6), M.chrome); a.add(wires)
+    const bl = new THREE.PointLight(0xffd479, 0, 8, 2); bl.position.y = .45; a.add(bl)
+    a.userData = { fil, bl } }
+  // b · no levels — a polished spiral slide with a chrome ball gliding down it
+  const b = slot(3.4, 2.6)
+  { const helix = new THREE.CatmullRomCurve3(Array.from({ length: 60 }, (_, k) => new THREE.Vector3(Math.cos(k * .32) * .95, -1.1 + k * .042, Math.sin(k * .32) * .95)))
+    b.add(new THREE.Mesh(new THREE.TubeGeometry(helix, 240, .12, 16), M.blueGloss))
+    const post = new THREE.Mesh(new THREE.CylinderGeometry(.08, .08, 2.8, 16), M.chrome); post.position.y = .1; b.add(post)
+    const ball = new THREE.Mesh(new THREE.SphereGeometry(.22, 32, 24), M.chrome); b.add(ball)
+    b.userData = { helix, ball } }
+  // c · harder means different — one iridescent object that becomes another
+  const c = slot(-3.4, -2.6)
+  { const forms = [new RoundedBoxGeometry(1.3, 1.3, 1.3, 6, .28), new THREE.IcosahedronGeometry(.95, 3), new THREE.TorusKnotGeometry(.62, .2, 160, 24)]
+    const mat = new THREE.MeshPhysicalMaterial({ color: 0x8f7cff, roughness: .15, metalness: .25, clearcoat: 1, iridescence: 1, iridescenceIOR: 1.8, iridescenceThicknessRange: [200, 800] })
+    const morph = new THREE.Mesh(forms[0], mat); c.add(morph); c.userData = { morph, forms } }
+  // d · data stays small — a padlock under a glass dome, with only three small cards inside
+  const d = slot(3.4, -2.6)
+  { const dome = new THREE.Mesh(new THREE.SphereGeometry(1.2, 48, 24, 0, Math.PI * 2, 0, Math.PI / 2), glass(0xd8f4ff, { thickness: .2 })); dome.position.y = -1.2; d.add(dome)
+    const body = new THREE.Mesh(new RoundedBoxGeometry(.8, .62, .34, 5, .1), M.gold); body.position.y = -.75; d.add(body)
+    const shackle = new THREE.Mesh(new THREE.TorusGeometry(.25, .065, 16, 40, Math.PI), M.chrome); shackle.position.y = -.44; d.add(shackle)
+    for (const x of [-.25, .25]) { const leg = new THREE.Mesh(new THREE.CylinderGeometry(.065, .065, .16, 16), M.chrome); leg.position.set(x, -.52, 0); d.add(leg) }
+    const hole = new THREE.Mesh(new THREE.CylinderGeometry(.06, .06, .36, 16), new THREE.MeshStandardMaterial({ color: 0x111111 })); hole.rotation.x = Math.PI / 2; hole.position.y = -.72; d.add(hole)
+    const chips = new THREE.Group(); for (let k = 0; k < 3; k++) { const q = new THREE.Mesh(new RoundedBoxGeometry(.3, .2, .04, 3, .04), glow(CYAN, 2)); q.userData.k = k; chips.add(q) } chips.position.y = -.2; d.add(chips)
+    d.userData = { chips } }
+  s2.userData = { ...s2.userData, parts: [a, b, c, d] }
+}
+
+// 3 · Radlic: a banded planet in the app's colours, atmosphere, rings, moons and a lit path of questions
+const s3 = station(2, -1)
+{
+  const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 512; const g = cv.getContext('2d')
+  const gr = g.createLinearGradient(0, 0, 0, 512); [['#F7B98A', 0], ['#E583F0', .2], ['#7B61F2', .38], ['#2F63E8', .55], ['#1C7FEA', .66], ['#39C3F2', .82], ['#BFE9FF', 1]].forEach(([c, o]) => gr.addColorStop(o, c))
+  g.fillStyle = gr; g.fillRect(0, 0, 1024, 512)
+  for (let k = 0; k < 260; k++) { const y = Math.random() * 512, h = 1 + Math.random() * 7; g.fillStyle = `rgba(${Math.random() < .5 ? '255,255,255' : '40,60,150'},${Math.random() * .1})`; g.beginPath(); g.moveTo(0, y); for (let x = 0; x <= 1024; x += 32) g.lineTo(x, y + Math.sin(x * .01 + k) * 6); g.lineTo(1024, y + h); g.lineTo(0, y + h); g.fill() }
+  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8
+  const planet = new THREE.Mesh(new THREE.SphereGeometry(4.2, 96, 64), new THREE.MeshPhysicalMaterial({ map: tex, color: 0xbfc6d6, roughness: .75, clearcoat: .2, clearcoatRoughness: .5, envMapIntensity: .4 }))
+  planet.rotation.z = .35; s3.add(planet)
+  const atmo = new THREE.Mesh(new THREE.SphereGeometry(4.55, 64, 48), fresnel(0x7fc8ff, 2.8, .75)); s3.add(atmo)
+  const rc = document.createElement('canvas'); rc.width = 512; rc.height = 8; const rg = rc.getContext('2d')
+  for (let x = 0; x < 512; x++) { const a = (.25 + .5 * Math.abs(Math.sin(x * .07)) * (x > 60 && x < 470 ? 1 : 0)) * (Math.random() * .4 + .6); rg.fillStyle = `rgba(200,225,255,${a * .8})`; rg.fillRect(x, 0, 1, 8) }
+  const rtex = new THREE.CanvasTexture(rc)
+  const ringGeo = new THREE.RingGeometry(5.4, 8.2, 128, 1); const uv = ringGeo.attributes.uv, pos = ringGeo.attributes.position, v3 = new THREE.Vector3()
+  for (let i = 0; i < uv.count; i++) { v3.fromBufferAttribute(pos, i); uv.setXY(i, (v3.length() - 5.4) / 2.8, .5) }
+  const rings = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({ map: rtex, transparent: true, side: THREE.DoubleSide, depthWrite: false })); rings.rotation.x = Math.PI / 2.2; rings.rotation.y = .2; s3.add(rings)
+  const moons = new THREE.Group(); for (const [r, sz, c] of [[10, .5, 0xe6f2ff], [11.5, .32, 0xffd9b8]]) { const m = new THREE.Mesh(new THREE.SphereGeometry(sz, 32, 24), new THREE.MeshStandardMaterial({ color: c, roughness: .7 })); m.userData.r = r; moons.add(m) } s3.add(moons)
+  const nodes = [], pts = []
+  for (let k = 0; k < 7; k++) {
+    const a = -1.3 + k * .52, r = 10.2, y = 2 + Math.sin(k * 1.3) * 1.3
+    const p = new THREE.Vector3(Math.cos(a) * r, y, Math.sin(a) * r); pts.push(p)
+    const n = k === 6 ? new THREE.Mesh(starGeo(.55, .18), M.gold) : new THREE.Mesh(new RoundedBoxGeometry(.72, .72, .72, 5, .16), new THREE.MeshPhysicalMaterial({ color: 0x14244d, roughness: .25, clearcoat: 1, emissive: 0x34d399, emissiveIntensity: 0 }))
+    n.position.copy(p); s3.add(n); nodes.push(n)
+  }
+  s3.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 160, .04, 8), new THREE.MeshBasicMaterial({ color: SKY, transparent: true, opacity: .55 })))
+  s3.userData = { ...s3.userData, planet, nodes, moons, rings }
+}
+
+// 4 · who it's for: three floating islands — a home, a school, and gears that turn together
+const s4 = station(3, 1)
+{
+  // home
+  const h = island(2.3); h.position.x = -6.5; s4.add(h)
+  { const house = new THREE.Group(); h.add(house)
+    const walls = new THREE.Mesh(new RoundedBoxGeometry(1.9, 1.3, 1.6, 4, .08), M.wall); walls.position.y = .82; house.add(walls)
+    const roof = new THREE.Mesh(prismRoof(2.25, .95, 1.85), M.blueGloss); roof.position.y = 1.47; house.add(roof)
+    const chim = new THREE.Mesh(new RoundedBoxGeometry(.28, .6, .28, 3, .04), M.wall); chim.position.set(.55, 2.05, -.3); house.add(chim)
+    const door = new THREE.Mesh(new RoundedBoxGeometry(.42, .72, .06, 3, .05), M.trim); door.position.set(-.35, .54, .81); house.add(door)
+    const knob = new THREE.Mesh(new THREE.SphereGeometry(.035, 12, 8), M.gold); knob.position.set(-.22, .55, .85); house.add(knob)
+    for (const x of [.42]) { const f = new THREE.Mesh(new RoundedBoxGeometry(.5, .5, .06, 3, .03), M.trim); f.position.set(x, .95, .81); house.add(f); const pane = new THREE.Mesh(new THREE.PlaneGeometry(.38, .38), M.glassPane); pane.position.set(x, .95, .845); house.add(pane) }
+    const side = new THREE.Mesh(new THREE.PlaneGeometry(.4, .4), M.glassPane); side.rotation.y = Math.PI / 2; side.position.set(.96, .95, 0); house.add(side)
+    const t1 = tree(1.1); t1.position.set(1.5, .15, .6); h.add(t1); const t2 = tree(.8); t2.position.set(-1.5, .15, -.7); h.add(t2)
+    const path = new THREE.Mesh(new THREE.CircleGeometry(.5, 20), new THREE.MeshStandardMaterial({ color: 0xc9d3e0, roughness: .9 })); path.rotation.x = -Math.PI / 2; path.position.set(-.35, .19, 1.3); path.scale.set(.6, 1.4, 1); h.add(path) }
+  // school
+  const s = island(2.9); s.position.x = 0; s4.add(s)
+  { const sch = new THREE.Group(); s.add(sch)
+    const body = new THREE.Mesh(new RoundedBoxGeometry(3.4, 1.6, 1.8, 4, .08), M.wall); body.position.y = .98; sch.add(body)
+    const roof = new THREE.Mesh(prismRoof(3.8, .8, 2.05), M.blueGloss); roof.position.y = 1.78; sch.add(roof)
+    const clockB = new THREE.Mesh(new THREE.CylinderGeometry(.32, .32, .08, 40), M.wall); clockB.rotation.x = Math.PI / 2; clockB.position.set(0, 2.1, 1.05); sch.add(clockB)
+    const clockR = new THREE.Mesh(new THREE.TorusGeometry(.32, .04, 10, 40), M.gold); clockR.position.set(0, 2.1, 1.1); sch.add(clockR)
+    const hand1 = new THREE.Mesh(new THREE.BoxGeometry(.03, .22, .02), M.trim); hand1.position.set(0, 2.18, 1.12); sch.add(hand1)
+    const hand2 = new THREE.Mesh(new THREE.BoxGeometry(.03, .16, .02), M.trim); hand2.geometry.translate(0, .08, 0); hand2.position.set(0, 2.1, 1.12); hand2.rotation.z = -1.2; sch.add(hand2)
+    for (const x of [-1.1, -.55, .55, 1.1]) { const col = new THREE.Mesh(new THREE.CylinderGeometry(.09, .1, 1.3, 16), M.pearl); col.position.set(x, .83, 1.05); sch.add(col) }
+    const lintel = new THREE.Mesh(new RoundedBoxGeometry(2.7, .16, .4, 3, .04), M.pearl); lintel.position.set(0, 1.55, 1.02); sch.add(lintel)
+    for (let k = 0; k < 3; k++) { const st = new THREE.Mesh(new RoundedBoxGeometry(2.8 - k * .2, .1, .35, 2, .03), M.pearl); st.position.set(0, .23 + k * .1, 1.3 - k * .18); sch.add(st) }
+    const door = new THREE.Mesh(new RoundedBoxGeometry(.6, .9, .06, 3, .05), M.trim); door.position.set(0, .66, .92); sch.add(door)
+    for (const x of [-1.35, 1.35]) { const pane = new THREE.Mesh(new THREE.PlaneGeometry(.4, .5), M.glassPane); pane.position.set(x, 1.05, .915); sch.add(pane) }
+    const pole = new THREE.Mesh(new THREE.CylinderGeometry(.025, .025, 1.3, 10), M.chrome); pole.position.set(1.3, 2.55, -.4); sch.add(pole)
+    const flag = new THREE.Mesh(new THREE.PlaneGeometry(.7, .42, 14, 4), new THREE.MeshStandardMaterial({ color: 0x00c8ff, emissive: 0x0090ff, emissiveIntensity: .6, side: THREE.DoubleSide, roughness: .6 })); flag.geometry.translate(.35, 0, 0); flag.position.set(1.32, 3, -.4); sch.add(flag)
+    const t = tree(.9); t.position.set(-2.1, .15, -.3); s.add(t)
+    s.userData.flag = flag }
+  // gears
+  const gIs = island(2.2); gIs.position.x = 6.5; s4.add(gIs)
+  const g1 = new THREE.Mesh(gearGeo(.95, 14, .3), M.chrome); g1.position.set(-.45, 1.6, 0); gIs.add(g1)
+  const g2 = new THREE.Mesh(gearGeo(.62, 9, .3), M.blueGloss); g2.position.set(.98, 1.08, 0); gIs.add(g2)
+  const g3 = new THREE.Mesh(gearGeo(.45, 7, .26), M.gold); g3.position.set(.2, 2.95, 0); gIs.add(g3)
+  const stand = new THREE.Mesh(new THREE.CylinderGeometry(.06, .06, 1.4, 10), M.chrome); stand.position.set(-.45, .85, -.2); gIs.add(stand)
+  s4.userData = { ...s4.userData, g1, g2, g3, islands: [h, s, gIs], flag: s.userData.flag }
+}
+
+// 5 · what comes next: a chrome portal with a swirling energy disc
+const s5 = station(4, 0)
+s5.position.copy(path.getPointAt(.975)).add(new THREE.Vector3(0, 0, -14))
+{
+  const rings = []
+  for (let k = 0; k < 3; k++) { const r = new THREE.Mesh(new THREE.TorusGeometry(5.2 + k * 1.1, .18 - k * .04, 24, 200), k === 0 ? M.chrome : M.blueGloss); s5.add(r); rings.push(r)
+    const led = new THREE.Mesh(new THREE.TorusGeometry(5.2 + k * 1.1 - .2, .03, 8, 200), glow(k % 2 ? SKY : CYAN, 3)); r.add(led) }
+  const disc = new THREE.Mesh(new THREE.CircleGeometry(5, 96), new THREE.ShaderMaterial({ uniforms: { t: { value: 0 } }, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+    vertexShader: 'varying vec2 u; void main(){ u = uv*2.-1.; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }',
+    fragmentShader: 'uniform float t; varying vec2 u; void main(){ float r = length(u), a = atan(u.y,u.x); float s = sin(a*5. + r*14. - t*2.2)*.5+.5; float s2 = sin(a*9. - r*22. + t*1.6)*.5+.5; vec3 c = mix(vec3(0.,.38,.95), vec3(0.,.9,1.), s*s2); float m = smoothstep(1.,.15,r); gl_FragColor = vec4(c*(.35+.9*s*s2)*m, m*.9); }' }))
+  s5.add(disc)
+  s5.add(glowSprite('rgba(0,97,243,.5)', 20))
+  s5.userData = { ...s5.userData, rings, disc }
+}
+
+// ── HUD ──
+const cap = $('cap'), say = $('say')
+let shown = -2, voiceOn = false, audio = null
+function showChapter(i) {
+  if (i === shown) return; shown = i
+  if (i < 0) { cap.classList.remove('on'); say.classList.remove('on'); return }
+  const c = CH[i]; cap.classList.remove('on')
+  setTimeout(() => {
+    cap.innerHTML = `<span class="eyebrow">${c.eyebrow}</span><h2>${c.h}</h2>` + (c.p ? `<p>${c.p}</p>` : '') +
+      (c.chips ? `<ul class="chips">${c.chips.map(x => `<li>${x}</li>`).join('')}</ul>` : '') +
+      (c.links ? `<div class="links">${c.links.map(x => `<a href="#">${x}</a>`).join('')}</div>` : '') +
+      (c.cta ? `<div class="row">${c.cta.map(([l, k]) => `<a class="btn ${k}" href="#">${l}</a>`).join('')}</div>` : '')
+    cap.classList.add('on'); say.innerHTML = `<b>Guide:</b> ${c.say}`; say.classList.add('on')
+    if (voiceOn) { if (audio) audio.pause(); audio = new Audio(`audio/tour-${i}.mp3`); audio.play().catch(() => {}) }
+  }, 220)
+}
+
+// ── time: scroll is the timeline; Play moves the scroll for you ──
+const spacer = document.querySelector('.spacer')
+const maxScroll = () => Math.max(1, spacer.offsetTop + spacer.offsetHeight - innerHeight)
+let target = 0, t = 0, playing = false
+const setPlaying = v => { playing = v; $('play').hidden = !v }
+addEventListener('scroll', () => { target = clamp01(scrollY / maxScroll()) }, { passive: true })
+for (const ev of ['wheel', 'touchstart']) addEventListener(ev, () => { if (playing) setPlaying(false) }, { passive: true })
+addEventListener('keydown', e => { if (playing && ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', ' '].includes(e.key)) setPlaying(false) })
+$('start').onclick = () => { if (target > .98) scrollTo(0, 0); setPlaying(!reduce) }
+$('play').onclick = () => setPlaying(false)
+$('sound').onclick = () => { voiceOn = !voiceOn; $('sound').setAttribute('aria-pressed', voiceOn); $('sound').textContent = voiceOn ? 'Voice on' : 'Voice off'; if (!voiceOn && audio) audio.pause() }
+target = clamp01(scrollY / maxScroll())
+
+// ── frame loop ──
+const clock = new THREE.Clock(), tan = new THREE.Vector3(), look = new THREE.Vector3(), camPos = new THREE.Vector3(), lookAt = new THREE.Vector3()
+let camInit = false
+const nearest = x => { let b = -1, d = 1; stationT.forEach((s, i) => { const dd = Math.abs(x - s); if (dd < d) { d = dd; b = i } }); return [b, d] }
+function frame() {
+  const dt = Math.min(clock.getDelta(), .05), now = clock.elapsedTime
+  if (playing) { const [, d] = nearest(target); const next = Math.min(1, target + dt / DURATION * (d < .035 ? .28 : 1) * 1.6); scrollTo(0, next * maxScroll()); target = next; if (next >= 1) setPlaying(false) }
+  t += (target - t) * (reduce ? 1 : Math.min(1, dt * 3.2)); const u = clamp01(t)
+  const along = .02 + u * .955
+  path.getPointAt(along, robot.position); robot.position.y += Math.sin(now * 1.6) * .16; path.getTangentAt(along, tan)
+  const [ni, nd] = nearest(u), pull = ease(clamp01(1 - nd / .085)), st = stations[ni]
+  const side = st ? -st.userData.side || 1 : 1
+  camPos.copy(robot.position).addScaledVector(tan, -9 + pull * (small ? -2 : 3)).add(new THREE.Vector3(side * (3 + pull * (small ? 2 : 5)), 2.4 + pull * 1.2, 0))
+  if (u < .06) camPos.lerp(new THREE.Vector3(9, 3, 26), 1 - ease(clamp01(u / .06)))
+  if (!camInit) { camera.position.copy(camPos); camInit = true }
+  camera.position.lerp(camPos, reduce ? 1 : Math.min(1, dt * 2.4))
+  look.copy(robot.position).addScaledVector(tan, 4); if (st) look.lerp(st.position, pull * (small ? .75 : .55))
+  lookAt.lerp(look, reduce ? 1 : Math.min(1, dt * 3)); camera.lookAt(lookAt)
+  robot.lookAt(camera.position); robot.userData.ring.rotation.z += dt * 1.2; guideLight.position.copy(robot.position).addScaledVector(tan, 3).y -= 2.5
+  const idx = RAD * 6; trail.geometry.setDrawRange(0, Math.floor(trailGeo.index.count * along / idx) * idx)
+  for (let k = 0; k < 2; k++) { const j = sparkI++ % SPARK; sparkPos.set([robot.position.x + (Math.random() - .5) * .8, robot.position.y + (Math.random() - .5) * .8, robot.position.z + (Math.random() - .5) * .8], j * 3) }
+  for (let j = 0; j < SPARK; j++) sparkPos[j * 3 + 1] -= dt * .25
+  sparkGeo.attributes.position.needsUpdate = true
+
+  const w = i => ease(clamp01(1 - Math.abs(u - stationT[i]) / .09))
+  startRing.rotation.z += dt * .08
+  { const d = s1.userData, k = w(0); d.crystals.rotation.y += dt * .15; d.core.intensity = k * 60; d.aura.scale.setScalar(1 + k * 12)
+    d.crystals.children.forEach((c, i) => c.children[2].material.emissiveIntensity = k * (1.4 + Math.sin(now * 2 + i) * .4))
+    d.shards.children.forEach((sh, i) => { const a = sh.userData.a + now * .4; sh.position.set(Math.cos(a) * 4.2, 1 + Math.sin(a * 2) * .6, Math.sin(a) * 4.2); sh.rotation.x += dt; sh.rotation.y += dt * 1.3 }) }
+  { const d = s2.userData, k = w(1); d.parts.forEach((p, i) => { const s = .5 + .5 * ease(clamp01(k * 1.4 - i * .12)); p.scale.setScalar(s); p.rotation.y = Math.sin(now * .5 + i) * .25 })
+    const [a, b, c, dd] = d.parts
+    a.userData.fil.material.emissiveIntensity = k * 6; a.userData.bl.intensity = k * 14
+    b.userData.ball.position.copy(b.userData.helix.getPointAt(1 - ((now * .16) % 1))).add(new THREE.Vector3(0, .2, 0))
+    const mo = c.userData; mo.morph.rotation.x += dt * .5; mo.morph.rotation.y += dt * .7; const f = Math.floor(now / 2.4) % 3; if (mo.morph.geometry !== mo.forms[f]) mo.morph.geometry = mo.forms[f]
+    dd.userData.chips.children.forEach(q => { const a2 = now * .9 + q.userData.k * 2.1; q.position.set(Math.cos(a2) * .55, Math.sin(a2 * 1.3) * .15, Math.sin(a2) * .55); q.rotation.y = a2 }) }
+  { const d = s3.userData, k = w(2); d.planet.rotation.y += dt * .08; d.rings.rotation.z += dt * .02
+    d.moons.children.forEach((m, i) => { const a = now * (.25 - i * .08) + i * 2; m.position.set(Math.cos(a) * m.userData.r, Math.sin(a) * 1.4, Math.sin(a) * m.userData.r) })
+    d.nodes.forEach((n, i) => { const on = clamp01(k * 1.3 - i * .12); if (n.material.emissive) n.material.emissiveIntensity = on * 1.2; n.rotation.y += dt * (i === 6 ? 1.5 : .6); n.scale.setScalar(.75 + on * .4) }) }
+  { const d = s4.userData, k = w(3); d.g1.rotation.z += dt * .7; d.g2.rotation.z -= dt * .7 * (14 / 9); d.g3.rotation.z -= dt * .7 * (14 / 7)
+    d.islands.forEach((is, i) => { is.position.y = Math.sin(now * .9 + i * 1.7) * .25 + (1 - ease(clamp01(k * 1.5 - i * .15))) * -6; is.rotation.y = Math.sin(now * .3 + i) * .15 })
+    const fp = d.flag.geometry.attributes.position; for (let i = 0; i < fp.count; i++) { const x = fp.getX(i); fp.setZ(i, Math.sin(x * 6 - now * 5) * .06 * x) } fp.needsUpdate = true }
+  { const d = s5.userData, k = w(4); d.rings.forEach((r, i) => { r.rotation.x = Math.sin(now * .3 + i) * .4; r.rotation.y = now * (.15 - i * .06) }); d.disc.material.uniforms.t.value = now; d.disc.scale.setScalar(.6 + k * .4) }
+
+  $('intro').style.opacity = String(1 - clamp01(u / .05)); $('intro').style.visibility = u > .06 ? 'hidden' : 'visible'
+  $('hint').style.opacity = String(1 - clamp01(u / .03))
+  showChapter(nd < .06 ? ni : -1)
+  composer.render(); requestAnimationFrame(frame)
+}
+requestAnimationFrame(frame)
+addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); composer.setSize(innerWidth, innerHeight) })
+</script>
