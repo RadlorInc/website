@@ -117,7 +117,8 @@ export const APP_ID = `${APP_URL}/#app`
  * one that is real. `scripts/check-pricing.mjs` fails the moment that stops being true.
  */
 /**
- * What the app teaches NOW: grades 3–8, each split into modules. ⚠️ COPIED FROM THE APP, NOT DERIVED —
+ * The app's LESSON grades, 3–8, each split into modules (KG–2 are 23 story chapters, not listed here; llms.txt says
+ * so). ⚠️ COPIED FROM THE APP, NOT DERIVED —
  * `TITLES` in `../milo-story-mode/src/features/lessons/modules.ts`, read off `origin/release` on
  * 2026-09-19 (sw v205). Grade 3 Module 1's title is `MODULE_1_TITLE` in `grade3Module1.ts`.
  * If the app renames or adds a module, this list is stale until it is re-copied; there is no gate.

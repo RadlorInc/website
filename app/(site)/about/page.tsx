@@ -5,7 +5,7 @@ import { APP_NAME, COMPANY, FOUNDED_YEAR, SUPPORT_EMAIL, VISION } from '@/site'
 
 export const metadata: Metadata = {
   title: 'About',
-  description: `${COMPANY} is a small software company building learning tools that adapt to the child using them. Our first product is ${APP_NAME}, adaptive math for grades 3 to 8.`,
+  description: `${COMPANY} is a small software company building learning tools that adapt to the child using them. Our first product is ${APP_NAME}, adaptive math for kindergarten through grade 8.`,
   alternates: { canonical: '/about' },
 }
 
@@ -42,7 +42,7 @@ export default function About() {
         <h2>What is {COMPANY}?</h2>
         <p>
           {COMPANY} is a software company building learning tools that adapt to the person using them —
-          starting with math. Our first product is {APP_NAME}: adaptive math for grades 3 to 8.
+          starting with math. Our first product is {APP_NAME}: adaptive math for kindergarten through grade 8.
         </p>
         <blockquote>{VISION}</blockquote>
 
