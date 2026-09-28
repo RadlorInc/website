@@ -133,23 +133,30 @@ for (const path of PAGES) {
   ok(!injected, `${path} carries no Vercel analytics script${injected ? ' — ⚠️ THE DASHBOARD TOGGLE IS ON' : ''}`)
 }
 
-// ⚠️ WHAT THE PRODUCT PAGES PROMISE (founder, N21, 2026-09-26). Only grades 3 to 8 are live (KG to 2 is Draft
-// learn#233), the app's /play says games are "coming soon", and teachers adding students is paused until a
-// school-consent route exists. So no page here may sell KG, game time or class rosters until they ship — flip
-// these rules in the SAME change that puts them back. Read off the served HTML (tags stripped; JSON-LD and the
-// head tags included), not the repo, for the same reason as everything above.
-const KG = /\bKG\b|[Kk]indergarten/   // case-sensitive KG: module names say "kg" (kilograms)
+// ⚠️ WHAT THE PRODUCT PAGES PROMISE (founder, N21, 2026-09-26; grades flipped 2026-09-28). The app's /play says
+// games are "coming soon", and teachers adding students is paused until a school-consent route exists — so no page
+// here may sell game time or class rosters until they ship; flip those rules in the SAME change that puts them back.
+// The GRADES are kindergarten through grade 8 since 2026-09-28 (KG to 2 live in the app, learn#305): no page may
+// still say the old "3 to 8" / "3–8", and the product pages must state K–8 — the app's smoke:live flipped with this.
+// Read off the served HTML (tags stripped; JSON-LD and the head tags included), not the repo, for the same reason
+// as everything above.
+const OLD_RANGE = /\b3 ?(to|–) ?8\b/i
+const K8 = /\bK–8\b|kindergarten through grade 8/i
 const GAME_TIME = /game[ -]?time|spend (them|points|it) on (game|minutes)/i
 // `[^.<]*` keeps a match inside one sentence of one element; tags are replaced by "<" before matching.
 const ROSTER = /\bteachers?\b[^.<]*\b(class(es)?|students?)\b|\brosters?\b|temporary passwords?|class exercises?|logins? for (each|every) student/i
-const CLAIM_PAGES = ['/radlic', '/', '/for-schools', '/contact', '/llms.txt']
+// /about added 2026-09-28: it said "grades 3 to 8" twice and was never read by this gate.
+const CLAIM_PAGES = ['/radlic', '/', '/about', '/for-schools', '/contact', '/llms.txt']
 const visible = html => html.replace(/<[^>]*>/g, '<')
 
-// Positive control for the three detectors: each must SEE the sentence it was written for.
-ok(KG.test('Math · Grade KG to 8') && GAME_TIME.test('spend them on game time') &&
+// Positive control for the detectors: each must SEE the sentence it was written for (and the old range's detector
+// must NOT see the new wording, or every page would fail).
+ok(OLD_RANGE.test('Math · Grades 3 to 8') && OLD_RANGE.test('Grades 3–8. Every answer') && !OLD_RANGE.test('Math · Grades K–8') &&
+   K8.test('Math · Grades K–8') && K8.test('adaptive math for kindergarten through grade 8') &&
+   GAME_TIME.test('spend them on game time') &&
    ROSTER.test('Set up a class with usernames and temporary passwords') &&
    ROSTER.test('Teachers make classes by grade'),
-   'positive control: the KG / game-time / roster detectors SEE the claims they exist for')
+   'positive control: the old-range / K–8 / game-time / roster detectors SEE the claims they exist for')
 
 for (const path of CLAIM_PAGES) {
   let text
@@ -158,12 +165,12 @@ for (const path of CLAIM_PAGES) {
     if (!res.ok) { cannotSee(`${path} -> ${res.status}; claims NOT checked`); continue }
     text = visible(await res.text())
   } catch (e) { cannotSee(`${path} — could not be fetched (${e.message}); claims NOT checked`); continue }
-  const kg = KG.exec(text), game = GAME_TIME.exec(text), roster = ROSTER.exec(text)
-  ok(!kg, `${path} claims no KG${kg ? ` — ⚠️ "${kg[0]}"` : ''}`)
+  const old = OLD_RANGE.exec(text), game = GAME_TIME.exec(text), roster = ROSTER.exec(text)
+  ok(!old, `${path} no longer says the old grade range${old ? ` — ⚠️ "${old[0]}"` : ''}`)
   ok(!game, `${path} sells no game time${game ? ` — ⚠️ "${game[0]}"` : ''}`)
   ok(!roster, `${path} claims no teacher rosters${roster ? ` — ⚠️ "${roster[0].slice(0, 120)}"` : ''}`)
   // The page is still the one making the grade claim — a blank or wrong page must not read as clean.
-  if (path === '/radlic' || path === '/llms.txt') ok(/3 to 8/.test(text), `${path} still states "3 to 8" (control: the page read is the real one)`)
+  if (path === '/radlic' || path === '/llms.txt') ok(K8.test(text), `${path} states the grades as K–8 (control: the page read is the real one)`)
 }
 
 // The claim is only breakable while the pages still make it. If someone rewrites /privacy to admit

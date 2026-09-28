@@ -58,7 +58,7 @@ export default function Home() {
           right AT THE TIME. `rl-reveal` is scroll-driven, so it does nothing for an element
           already in view on load — which these were, inside the old hero. Below the fold they
           enter the viewport as you scroll, so the scroll timeline is exactly the right lever and
-          `--i` staggers them. Still no counters: "3–8" cannot count up from zero.
+          `--i` staggers them. Still no counters: "K–8" cannot count up from zero.
 
           ⚠️ REWRITTEN 2026-09-19 FOR THE APP AS IT IS NOW. The three facts used to be "Ages 3–18",
           "a short check" and "0 frames uploaded" — the age bands, the placement check and the camera
@@ -68,7 +68,7 @@ export default function Home() {
         <div className="mx-auto w-full max-w-5xl px-6 py-16">
           <ul className="rl-hero-facts">
             {[
-              ['Grades 3–8', 'one idea per lesson, taught step by step', '/radlic'],
+              ['Grades K–8', 'one idea per lesson, taught step by step', '/radlic'],
               ['Harder means different', 'each level up is a new kind of question', '/radlic'],
               ['No email for your child', 'you set their username and password', '/data-and-safety'],
             ].map(([term, detail, href], i) => (
@@ -100,7 +100,7 @@ export default function Home() {
               certain parts where the extra information is needed." The full answer is /about. */}
           <p className="rl-reveal mt-5 text-lg text-muted max-w-3xl leading-relaxed" style={{ '--i': 1 } as React.CSSProperties}>
             {COMPANY} is a software company building learning tools that adapt to the person using
-            them — starting with math. Our first product is {APP_NAME}: adaptive math for grades 3 to 8.
+            them — starting with math. Our first product is {APP_NAME}: adaptive math for kindergarten through grade 8.
           </p>
           <Link href="/about" className="rl-link rl-reveal mt-6 inline-block text-sm text-accent" style={{ '--i': 2 } as React.CSSProperties}>
             More about {COMPANY} →
@@ -179,7 +179,7 @@ export default function Home() {
               Math that changes as your child answers.
             </p>
             <p className="mt-3 text-muted max-w-2xl leading-relaxed">
-              {APP_NAME} teaches one idea at a time for grades 3 to 8, then adjusts each question as your child
+              {APP_NAME} teaches one idea at a time for kindergarten through grade 8, then adjusts each question as your child
               practices. Real math. Real thinking. No guessing.
             </p>
             <p className="mt-5 text-sm text-accent">Read more →</p>

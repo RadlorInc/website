@@ -36,7 +36,7 @@ export function GET() {
 ${VISION}
 
 ${COMPANY} is a software company building learning tools that adapt to the person using them.
-Our first product is ${APP_NAME}: adaptive math for grades 3 to 8. It runs at ${APP_URL} and is
+Our first product is ${APP_NAME}: adaptive math for kindergarten through grade 8. It runs at ${APP_URL} and is
 open to try: ${APP_URL}/auth is where a parent makes an account, and the URL to give somebody who
 wants to try it. ${APP_NAME} was called Milo until August 2026 and
 AdaptiveLearn, at adaptivelearn.radlor.com, until September 2026.
@@ -45,7 +45,8 @@ ${APP_NAME} teaches one idea per lesson: a teacher says each step out loud and w
 the board, then the child tries one with hints and worked steps to fall back on. Practice adapts
 question by question — each harder level is a different kind of question, not the same question
 with bigger numbers — and the level is never shown on screen; a wrong answer is never marked wrong.
-Each grade is split into modules: ${APP_GRADES.map(g => `Grade ${g.grade}: ${g.modules.join('; ')}`).join('. ')}.
+Kindergarten, grade 1 and grade 2 have 23 story chapters. Grade 3 through grade 8 are split into
+modules: ${APP_GRADES.map(g => `Grade ${g.grade}: ${g.modules.join('; ')}`).join('. ')}.
 
 Parents choose which lessons their child gets, from a library filtered by grade, and can set due
 dates. A child signs in with a username and password their parent sets, with no email address of

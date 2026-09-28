@@ -36,7 +36,7 @@ const STOPS = [
   {
     eyebrow: '03 · Our first product',
     title: `${APP_NAME}: math that adapts.`,
-    body: 'Grades 3–8. Every answer shapes the next question.',
+    body: 'Grades K–8. Every answer shapes the next question.',
     cta: [{ label: `Try ${APP_NAME}`, href: `${APP_URL}/auth` }],
   },
   {
@@ -193,7 +193,7 @@ export function Journey() {
           <p className="mt-5 sm:mt-6 text-base sm:text-lg text-muted max-w-[30rem] leading-relaxed">
             Most educational apps give every child the same questions in the same order. We build the other kind:
             software that watches how a child answers and changes the next question because of it. Our first
-            product, <strong className="text-foreground font-medium">{APP_NAME}</strong>, teaches math for grades 3 to 8.
+            product, <strong className="text-foreground font-medium">{APP_NAME}</strong>, teaches math for kindergarten through grade 8.
           </p>
           <div className="mt-7 sm:mt-9 flex flex-wrap gap-3">
             <a href={`${APP_URL}/auth`} className="rl-cta rounded-full bg-accent px-6 py-3 text-on-accent font-medium hover:opacity-90">
