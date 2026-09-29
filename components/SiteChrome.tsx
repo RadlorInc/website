@@ -12,7 +12,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
   return (
     <>
     <header className="rl-header border-b border-line">
-      <div className="mx-auto max-w-5xl px-6 h-16 flex items-center justify-between gap-6">
+      <div className="mx-auto max-w-5xl px-6 h-16 grid grid-cols-[1fr_auto_1fr] items-center gap-6">
           {/* The whole lockup is now ONE image — the chrome wordmark with the robot in the
               'o'. The `<span>Radlor</span>` that used to sit beside the mark is gone because
               the picture contains the word.
@@ -25,7 +25,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
               ⚠️ One artwork, not two. The black ground is keyed to alpha, so it composites on
               any of the palette's dark values; that is why the header is pinned dark rather
               than art-directed per theme the way the old mono marks were. */}
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center justify-self-start">
             <Image
               src="/wordmark.png"
               alt={COMPANY}
@@ -37,14 +37,14 @@ export function SiteChrome({ children }: { children: ReactNode }) {
           </Link>
         {/* No hamburger. On a narrow frame the links drop out of the header and the footer — which
             carries the same list — becomes the navigation. One CTA is what a phone has room for. */}
-        <nav className="flex items-center gap-5 text-sm">
-          <div className="hidden md:flex items-center gap-5">
-            {HEADER.map(n => (
-              <Link key={n.href} href={n.href} className="rl-link text-muted hover:text-foreground transition-colors">
-                {n.label}
-              </Link>
-            ))}
-          </div>
+        {/* Logo left, links in the middle column, button right (founder, 2026-09-29: "options in center"). */}
+        <nav className="hidden md:flex items-center gap-8 text-sm">
+          {HEADER.map(n => (
+            <Link key={n.href} href={n.href} className="rl-link text-muted hover:text-foreground transition-colors">
+              {n.label}
+            </Link>
+          ))}
+        </nav>
           {/* The button on every page. Founder, 2026-09-25: "hide the Join the waitlist button at the top and
               from everywhere, and put Try Radlic". It goes where /radlic's "Sign up free" goes — the app's sign-in
               / sign-up page. The /waitlist page and its form still exist (unlinked), so an old shared link keeps
@@ -52,11 +52,10 @@ export function SiteChrome({ children }: { children: ReactNode }) {
               waitlist, "the only door"; history in git.) */}
           <a
             href={`${APP_URL}/auth`}
-            className="rl-cta rl-cta-quiet rounded-full bg-accent px-4 py-2 text-on-accent text-sm font-medium whitespace-nowrap hover:opacity-90 transition-opacity"
+            className="col-start-3 justify-self-end rl-cta rl-cta-quiet rounded-full bg-accent px-4 py-2 text-on-accent text-sm font-medium whitespace-nowrap hover:opacity-90 transition-opacity"
           >
             Try Radlic
           </a>
-        </nav>
       </div>
     </header>
 
