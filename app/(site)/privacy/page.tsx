@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { APP_NAME, COMPANY, SITE_URL, SUPPORT_EMAIL } from '@/site'
+import { CircleReveal } from '@/components/scroll/Scroll'
+import { ART } from '@/components/scroll/art'
 
 export const metadata: Metadata = {
   title: 'Privacy on this website',
@@ -49,12 +51,18 @@ export default function Privacy() {
         <div className="rl-glow rl-parallax" style={{ '--p': '30px' } as React.CSSProperties} />
       </div>
       <div className="relative z-10 mx-auto max-w-5xl px-6 pt-20">
+      <div className="grid items-center gap-8 sm:grid-cols-[minmax(0,1fr)_minmax(0,0.6fr)]">
+        <div>
       <h1 className="rl-focus font-display text-5xl">Privacy on this website</h1>
       <p className="rl-rise mt-6 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.12s' } as React.CSSProperties}>
         This page is about <strong className="text-foreground font-medium">radlor.com</strong>, the site
         you are reading. {APP_NAME} — the product — handles children&rsquo;s data and has its own,
         longer policy.
       </p>
+        </div>
+        {/* A cover picture (scroll style F), decorative; the legal text below is unchanged. */}
+        <CircleReveal pic={ART.privacy} priority className="w-56 sm:w-full max-w-[340px] justify-self-center" />
+      </div>
 
       <div className="rl-prose prose mt-10">
         <h2>What this website does not do</h2>

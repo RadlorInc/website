@@ -1,29 +1,29 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { APP_NAME, APP_URL } from '@/site'
 
 /**
- * THE HOME PAGE'S FIRST SCREEN IS A JOURNEY (founder's call, 2026-09-25): the robot guide flies past six floating
- * islands, and each flick of the scroll carries the reader to the next one and stops there.
+ * THE HOME PAGE'S FIRST SCREEN IS A JOURNEY (founder's call, 2026-09-25): six stops, each with one picture that
+ * draws what its words say, and each flick of the scroll carries the reader to the next one and stops there.
  *
- * ⚠️ THE WORDS ARE THE PAGE, THE WORLD IS DECORATION. Every stop below is ordinary HTML that this client component
- * still server-renders, so a crawler, an answer engine, a screen reader and a browser without WebGL all get the full
- * copy on the first byte. The 3D (`scene.js`, three from npm) is imported only after mount, in its own chunk.
+ * ⚠️ THE WORDS ARE THE PAGE, THE PICTURES ARE DECORATION (`alt=""`, inside an `aria-hidden` stage). Every stop is
+ * ordinary server-rendered HTML, so a crawler, an answer engine and a screen reader get the full copy on the first byte.
+ * The pictures are flat 2D illustrations, one per stop (see `ART`). They replaced a three.js low-poly world on
+ * 2026-09-29 (founder).
  *
- * ⚠️ THE SCROLL POSITION IS THE ONE SOURCE OF TRUTH. Each stop is one screen tall; the scene reads where the page is.
- * A gesture does not move the scene, it animates the PAGE to the next stop — so the scrollbar, keys, Back and
+ * ⚠️ THE SCROLL POSITION IS THE ONE SOURCE OF TRUTH. Each stop is one screen tall; the picture shown follows where the page is.
+ * A gesture does not move the picture, it animates the PAGE to the next stop — so the scrollbar, keys, Back and
  * "find in page" all keep working, and nothing can disagree with what the reader sees.
  *
  * Why one flick = one stop: on a free scroll the reader had to land precisely on each topic (founder, 2026-09-25:
  * "they scroll, they reach the next thing"). A trackpad keeps firing wheel events for a second after the finger
- * lifts; a gesture only counts after a pause in that stream, and the pause is scaled to the device's frame time,
- * because a slow device delivers one swipe's events a frame apart.
+ * lifts; a new gesture is told from that tail because it speeds up (see onWheel).
  *
  * The previous scroll-linked hero (a 180-frame flip-book, deleted in 1d4cfae) failed on smoothness and on phone
- * contrast. This one draws every frame live, and the copy sits on its own shade, never over the artwork's brightest
- * part.
+ * contrast. The copy sits on its own shade, never over a picture.
  */
 
 const STOPS = [
@@ -57,20 +57,28 @@ const STOPS = [
 ] as const
 const LAST = STOPS.length  // stop 0 is the opening screen, then one per entry above
 const RAIL = ['Start', 'Mission', 'How we build', APP_NAME, 'Who it’s for', 'What comes next']
-
-type Scene = { pause(): void; resume(): void; dispose(): void } | null
+// One picture per rail stop, each drawing its own words: a boy whose lesson shapes itself around him; a treasure
+// that lights up; four rules being built; steps of maths that fit the child; families, schools and partners
+// together; an idea still growing. Flat 2D illustrations on transparent ground (generated 2026-09-29, founder's
+// brief: no metallic renders, no women or girls, full-length trousers).
+const ART = [
+  { src: '/journey-adapts.webp', w: 576, h: 789 },
+  { src: '/journey-treasure.webp', w: 835, h: 701 },
+  { src: '/journey-rules.webp', w: 829, h: 802 },
+  { src: '/journey-steps.webp', w: 850, h: 806 },
+  { src: '/journey-together.webp', w: 868, h: 850 },
+  { src: '/journey-next.webp', w: 638, h: 538 },
+]
 
 export function Journey() {
   const root = useRef<HTMLElement>(null)
-  const canvas = useRef<HTMLCanvasElement>(null)
   const [here, setHere] = useState(0)
   const [playing, setPlaying] = useState(false)
   const api = useRef<{ go(i: number): void; play(on: boolean): void } | null>(null)
 
   useEffect(() => {
-    const section = root.current!, cv = canvas.current!
+    const section = root.current!
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
-    const small = innerWidth < 760
     let top = 0, vh = 1
     const measure = () => { top = section.getBoundingClientRect().top + scrollY; vh = section.querySelector<HTMLElement>('.rl-stop')!.offsetHeight }
     measure()
@@ -80,14 +88,14 @@ export function Journey() {
     const inJourney = () => scrollY <= top + LAST * vh + 2
 
     // ── moving the page between stops: eased, time-based, never the browser's own smooth-scroll ──
-    let anim = 0, animating = false, frameMs = 16, lastWheel = 0, playTimer = 0, isPlaying = false
+    let anim = 0, animating = false, lastWheel = 0, peak = 0, low = 0, slowing = false, playTimer = 0, isPlaying = false
     const easeIO = (k: number) => -(Math.cos(Math.PI * k) - 1) / 2
     function go(i: number) {
       i = Math.max(0, Math.min(LAST, i))
       const from = scrollY, to = top + i * vh
       cancelAnimationFrame(anim)
       if (reduce || Math.abs(to - from) < 1) { scrollTo({ top: to, behavior: 'instant' }); animating = false; return }
-      const dur = 1400 + 900 * Math.min(3, Math.abs(to - from) / vh), t0 = performance.now()
+      const dur = 1000 + 600 * Math.min(3, Math.abs(to - from) / vh), t0 = performance.now()
       animating = true
       const tick = (now: number) => {
         const k = Math.min(1, (now - t0) / dur)
@@ -110,12 +118,20 @@ export function Journey() {
     // leaving the journey: past the last stop going down, or before the first going up, the page scrolls normally
     const passes = (dir: number) => { const x = getX(); return (dir > 0 && x >= LAST - .02) || (dir < 0 && x <= .02) }
 
+    // A NEW SWIPE IS ONE THAT CLEARLY SPEEDS UP AGAIN. A trackpad keeps sending a decaying tail of wheel events for a
+    // second or two after the fingers lift. Waiting for a silent gap alone dropped light swipes made inside that tail
+    // ("it only changes with a hard swipe"); reacting to any small rise made one swipe skip stops ("too loose", both
+    // founder, 2026-09-29). So: once the stream has fallen well below its peak, a swipe is new only when it climbs to
+    // three times the lowest point of that tail (and at least 6 more). Swipes during a move are ignored, never queued.
     const onWheel = (e: WheelEvent) => {
-      const now = performance.now(), fresh = now - lastWheel > Math.max(180, frameMs * 2.5); lastWheel = now
+      const now = performance.now(), abs = Math.abs(e.deltaY)
+      const fresh = now - lastWheel > 180 || (slowing && abs >= Math.max(low * 3, low + 6))
+      if (fresh) { peak = low = abs; slowing = false }
+      else { peak = Math.max(peak, abs); low = Math.min(low, abs); if (abs < peak * 0.7) slowing = true }
+      lastWheel = now
       if (!inJourney() || e.ctrlKey) return  // ctrl+wheel is a pinch-zoom
       const dir = Math.sign(e.deltaY); if (!dir || (!animating && passes(dir))) return
       e.preventDefault(); stopPlaying()
-      // while it moves, the wheel is ignored outright: a swipe's inertia ends inside the move and can never chain
       if (fresh && !animating) step(dir)
     }
     let ty: number | null = null
@@ -128,7 +144,7 @@ export function Journey() {
     const onTouchEnd = (e: TouchEvent) => {
       if (ty === null) return
       const dy = ty - e.changedTouches[0].clientY; ty = null
-      if (Math.abs(dy) > 40 && !animating && !passes(Math.sign(dy))) { stopPlaying(); step(Math.sign(dy)) }
+      if (Math.abs(dy) > 32 && !animating && !passes(Math.sign(dy))) { stopPlaying(); step(Math.sign(dy)) }
     }
     const onKey = (e: KeyboardEvent) => {
       if (!inJourney() || e.altKey || e.metaKey || e.ctrlKey) return
@@ -148,20 +164,9 @@ export function Journey() {
     addEventListener('scroll', onScroll, { passive: true })
     const onResize = () => measure(); addEventListener('resize', onResize)
 
-    // ── the world, loaded after the words, and only drawn while the journey is on screen ──
-    let scene: Scene = null, disposed = false, visible = true
-    let last = performance.now()
-    const getXTimed = () => { const now = performance.now(); frameMs += (now - last - frameMs) * .2; last = now; return getX() }
-    import('./scene.js').then(({ mountJourney }) => {
-      if (disposed) return
-      scene = mountJourney({ canvas: cv, getX: getXTimed, reduce, small, onReady: () => section.classList.add('is-live') })
-      if (scene && !visible) scene.pause()
-    })
-    const io = new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible) scene?.resume(); else scene?.pause() })
-    io.observe(section)
 
     return () => {
-      disposed = true; io.disconnect(); scene?.dispose(); cancelAnimationFrame(anim); clearTimeout(playTimer)
+      cancelAnimationFrame(anim); clearTimeout(playTimer)
       removeEventListener('wheel', onWheel); removeEventListener('touchstart', onTouchStart); removeEventListener('touchmove', onTouchMove)
       removeEventListener('touchend', onTouchEnd); removeEventListener('keydown', onKey); removeEventListener('scroll', onScroll); removeEventListener('resize', onResize)
     }
@@ -171,7 +176,11 @@ export function Journey() {
     <section ref={root} className="rl-journey rl-dark" aria-label="The Radlor journey">
       <div className="rl-journey-track" aria-hidden="true">
         <div className="rl-journey-stage">
-          <canvas ref={canvas} className="rl-journey-canvas" />
+          {ART.map((p, i) => (
+            <div key={p.src} className="rl-journey-art" data-on={here === i || undefined}>
+              <Image src={p.src} alt="" width={p.w} height={p.h} priority={i === 0} sizes="(max-width: 760px) 82vw, 44vw" />
+            </div>
+          ))}
           <div className="rl-journey-shade" />
         </div>
       </div>

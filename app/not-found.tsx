@@ -23,9 +23,8 @@ export default function NotFound() {
   return (
     <SiteChrome>
     <section className="mx-auto max-w-5xl px-6 pt-20 pb-24">
-      {/* ⚠️ `rl-dark` PINS THIS PANEL DARK IN BOTH THEMES, and that is not decoration — the mascot
-          render has a pure black ground, so on the light theme an unpinned panel would frame it as
-          a black rectangle. Same reasoning as the header and the wordmark. */}
+      {/* `rl-dark` keeps this panel dark in both themes, like the header. The picture is a 2D illustration on a
+          transparent ground (2026-09-29), so it needs no blend. */}
       <div className="rl-dark rounded-2xl border border-line overflow-hidden">
         <div className="flex flex-col sm:flex-row items-center gap-8 p-8 sm:p-12">
           {/* Decorative: the sentence beside it already says everything this says.
@@ -33,15 +32,15 @@ export default function NotFound() {
               accessibility tree, and there is real text next to it, so announcing the mascot would
               add a noun a screen reader user cannot use. */}
           <Image
-            src="/milo-thinking.webp"
+            src="/about-how.webp"
             alt=""
             aria-hidden="true"
-            width={720}
-            height={682}
+            width={764}
+            height={814}
             /* Above the fold on this page — lazy-loading it leaves an empty panel for a beat on the
                one page a visitor arrives at already confused. */
             priority
-            className="rl-onblack w-40 sm:w-56 h-auto shrink-0"
+            className="w-40 sm:w-56 h-auto shrink-0"
           />
           <div className="text-center sm:text-left">
             <p className="text-sm uppercase tracking-[0.18em] text-accent font-medium">404</p>

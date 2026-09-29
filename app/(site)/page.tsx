@@ -1,15 +1,23 @@
 import Link from 'next/link'
 import { APP_NAME, COMPANY, SITE_URL } from '@/site'
 import { posts } from '@/content/posts'
+import Image from 'next/image'
 import { Journey } from '@/components/journey/Journey'
+import { CircleReveal, PathRows, ZoomMoment, type PathRow } from '@/components/scroll/Scroll'
+import { ART, POST_COVERS } from '@/components/scroll/art'
+
+const BELIEFS: PathRow[] = [
+  { ...ART.homeInvisible, title: 'Difficulty is invisible', body: 'No level, rank or red cross. A wrong answer is met warmly and taught again.' },
+  { ...ART.journeySteps, title: 'Harder should mean different', body: 'The next level is a new kind of question, not bigger numbers.' },
+  { ...ART.safetyStore, title: 'Children’s data stays small', body: 'Only what teaching needs. A child never needs an email address.' },
+]
 
 /**
  * The home page states, in the first screen, what an answer engine has to be able to repeat:
  * who we are, what we make, and who it is for. Everything below it is evidence for that sentence.
  *
  * ⚠️ THIS FILE STAYS A SERVER COMPONENT. The first screen is `<Journey />`, a client component — but its
- * words are server-rendered like everything else here, and the 3D it draws is imported after mount in its
- * own chunk. Until 2026-09-25 this comment said "no canvas, no scroll listener"; the founder chose the
+ * words are server-rendered like everything else here, and its pictures are plain images. Until 2026-09-25 this comment said "no canvas, no scroll listener"; the founder chose the
  * journey that day, and the two reasons behind the old rule (a flip-book hero that stepped, and copy
  * that could not be kept legible over it on a phone) are what Journey.tsx is built against.
  */
@@ -18,7 +26,7 @@ export default function Home() {
     <>
       {/* THE FIRST SCREEN IS THE JOURNEY (founder's call, 2026-09-25) — see components/journey/Journey.tsx.
           It carries the <h1> and the same headline, subhead and "Try Radlic" the video hero had, as real HTML;
-          the 3D world behind it loads afterwards and is decoration. Everything below is unchanged. */}
+          its pictures are decoration. Below it, the sections use the scroll styles in components/scroll. */}
       <Journey />
 
       {/* ⚠️ THREE FACTS SINCE 2026-09-18: the price fact was removed with every other price on the
@@ -83,139 +91,49 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ⚠️ THIS BLOCK IS HERE BECAUSE A READER ASKED FOR IT, AND ITS POSITION IS THE POINT.
-          Malaika's closing note: "consider moving the about section right after the main homepage?
-          That would help a parent know right from the start what the website is all about." A
-          parent landing cold met the headline, four facts, then our beliefs — and never a plain
-          sentence saying what Radlor IS. This is that sentence, above the beliefs, with the full
-          story still one click away. Keep it SHORT: the moment it grows into the /about page it
-          stops doing the job it was added for. */}
-      <section className="mx-auto max-w-5xl px-6">
-        <div className="rl-rule" />
-        <div className="py-14">
-          <h2 className="rl-reveal-focus font-display text-3xl">What is {COMPANY}?</h2>
-          {/* ⚠️ ONE PARAGRAPH, AND IT STAYS ONE PARAGRAPH. It had a second that began "Every child
-              learns differently…" — which is now the heading of the product section further down
-              this same page, and Malaika's first note was "sometimes less is more. There are only
-              certain parts where the extra information is needed." The full answer is /about. */}
-          <p className="rl-reveal mt-5 text-lg text-muted max-w-3xl leading-relaxed" style={{ '--i': 1 } as React.CSSProperties}>
-            {COMPANY} is a software company building learning tools that adapt to the person using
-            them — starting with math. Our first product is {APP_NAME}: adaptive math for kindergarten through grade 8.
-          </p>
-          <Link href="/about" className="rl-link rl-reveal mt-6 inline-block text-sm text-accent" style={{ '--i': 2 } as React.CSSProperties}>
-            More about {COMPANY} →
-          </Link>
-        </div>
+      {/* ⚠️ "WHAT IS RADLOR" STAYS RIGHT AFTER THE HERO: a reader asked for a plain sentence saying what Radlor is before
+          the beliefs. Since 2026-09-29 it is the page's one zoom (scroll style E): the picture grows, then the answer. */}
+      <ZoomMoment pic={ART.aboutWhat} title={`What is ${COMPANY}?`}>
+        Learning software that adapts to the child, starting with math. {APP_NAME}: kindergarten to grade 8.{' '}
+        <Link href="/about" className="rl-link text-accent">More about {COMPANY} →</Link>
+      </ZoomMoment>
+
+      {/* What we believe: three pictures on a drawn path (G). Each line is the old paragraph cut down, no new claim. */}
+      <section className="mx-auto max-w-5xl px-6 py-10">
+        <h2 className="font-display text-3xl text-center">What we believe</h2>
+        <PathRows rows={BELIEFS} />
       </section>
 
-      <section className="mx-auto max-w-5xl px-6">
-        <div className="rl-rule" />
-        <div className="py-14">
-          <h2 className="rl-reveal-focus font-display text-3xl">What we believe</h2>
-          <div className="mt-10 grid gap-10 sm:grid-cols-3">
-            {[
-              {
-                h: 'Difficulty is invisible',
-                p: 'A child should never be shown a level, a rank or a red cross. The software moves the difficulty; the child just keeps going. Getting something wrong is answered warmly and then taught again.',
-              },
-              {
-                h: 'Harder should mean different',
-                p: 'The next level up is a different kind of question — a picture, then bare numbers, then a missing number, a story, a mistake to spot — not the same question with bigger numbers.',
-              },
-              {
-                h: 'Children’s data stays small',
-                p: 'We collect what teaching requires and nothing else. A child never needs an email address: their parent sets a username for them, and the parent’s side of the app is behind a PIN.',
-              },
-            ].map((c, i) => (
-              <div key={c.h} className="rl-reveal-focus" style={{ '--i': i + 1 } as React.CSSProperties}>
-                <span className="rl-lampdot block mb-4" style={{ '--i': i + 1 } as React.CSSProperties} aria-hidden="true" />
-                <h3 className="font-medium text-lg">{c.h}</h3>
-                <p className="mt-3 text-muted leading-relaxed">{c.p}</p>
-              </div>
-            ))}
+      {/* The product, opening out of a circle (F). The heading is the mechanism: difficulty MOVES (up after two right,
+          down after the worked steps), so "gets harder" would be half of it. */}
+      <section className="mx-auto max-w-5xl px-6 py-14">
+        <div className="grid items-center gap-10 sm:grid-cols-2">
+          <CircleReveal pic={ART.journeyAdapts} className="w-64 sm:w-full max-w-[420px] justify-self-center" />
+          <div>
+            <h2 className="font-display text-4xl">Question difficulty moves with your child.</h2>
+            <p className="mt-4 text-lg text-muted">{APP_NAME}: math that changes as your child answers.</p>
+            <Link href="/radlic" className="rl-link mt-5 inline-block text-accent font-medium">See how {APP_NAME} works →</Link>
           </div>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-5xl px-6">
-        <div className="rl-rule" />
-        <div className="py-14">
-          {/* ⚠️ THIS HEADING STATES THE PRODUCT CLAIM, AND THE TWO IT REPLACED DID NOT.
-              Malaika offered "Learning that meets them where they are" and, in a margin comment,
-              "every child learns differently. their math should too". The second shipped briefly
-              and is wrong twice over:
-
-                * GRAMMAR. "should too" carries the verb from the first clause, so it reads as
-                  "their math should LEARN DIFFERENTLY too" — and math does not learn. Swapping
-                  "math" for "questions" does not help; the borrowed verb is the problem, not the
-                  noun. A mirrored line only works when both halves can share one verb
-                  ("Every child is different. Their math should be too.").
-                * MEANING. "their math should be different" can be read as mathematics itself
-                  being different per child, which is the opposite of the card's own
-                  "Real math. Real thinking. No guessing."
-
-              What the product actually does is set the difficulty of the next question from how
-              the child answered the last one — up after two right first time, and down when the
-              worked steps were needed (the app's `adaptive.ts`, re-read 2026-09-19), which is why the
-              verb is "moves" and not "rises". Do not shorten it to "gets harder":
-              that is half the mechanism, and the half that would put off the parent of a child who
-              is struggling — who is exactly the parent this is for.
-
-              The company tagline is TAGLINE in site.ts. It sets every page <title> and the OG
-              image; changing it is a brand decision, not a copy one, and it is untouched. */}
-          <h2 className="rl-reveal-focus font-display text-3xl">
-            Question difficulty moves with your child.
-          </h2>
-          <Link
-            href="/radlic"
-            className="rl-reveal rl-card mt-8 block rounded-2xl border border-line bg-surface p-8 hover:border-accent"
-            style={{ '--i': 1 } as React.CSSProperties}
-          >
-            <div className="flex flex-wrap items-baseline justify-between gap-3">
-              <h3 className="font-display text-2xl">{APP_NAME}</h3>
-              <span className="text-xs uppercase tracking-widest text-accent">Live</span>
-            </div>
-            <p className="mt-3 text-lg max-w-2xl leading-relaxed">
-              Math that changes as your child answers.
-            </p>
-            <p className="mt-3 text-muted max-w-2xl leading-relaxed">
-              {APP_NAME} teaches one idea at a time for kindergarten through grade 8, then adjusts each question as your child
-              practices. Real math. Real thinking. No guessing.
-            </p>
-            <p className="mt-5 text-sm text-accent">Read more →</p>
-          </Link>
         </div>
       </section>
 
       {posts.length > 0 && (
-        <section className="mx-auto max-w-5xl px-6">
-          <div className="rl-rule" />
-          <div className="py-14">
-            <div className="rl-reveal flex items-baseline justify-between gap-4">
-              <h2 className="font-display text-3xl">Writing</h2>
-              <Link href="/writing" className="rl-link text-sm text-accent">
-                All posts →
-              </Link>
-            </div>
-            {/* ⚠️ THIS LINE EXISTS BECAUSE A READER ASKED "I don't understand the writing
-                portion?" — a bare <h2>Writing</h2> over three dated rows says what the section
-                is CALLED, not what it is. One line, doing one job: what the posts are, and why
-                to open one. It deliberately claims nothing about frequency, which is the same
-                reason the URL is /writing and not /blog. */}
-            <p className="rl-reveal mt-3 text-muted max-w-2xl">
-              What we&rsquo;ve learned building it — one finding per post.
-            </p>
-            <ul className="mt-8 divide-y divide-line">
-              {posts.slice(0, 3).map((p, i) => (
-                <li key={p.slug} className="rl-reveal" style={{ '--i': i + 1 } as React.CSSProperties}>
-                  <Link href={`/writing/${p.slug}`} className="rl-row flex flex-wrap gap-x-6 gap-y-1 py-4 group">
-                    <span className="text-sm text-muted tabular-nums w-24">{p.date}</span>
-                    <span className="flex-1 group-hover:text-accent transition-colors">{p.title}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+        <section className="mx-auto max-w-5xl px-6 pb-16">
+          <div className="flex items-baseline justify-between gap-4">
+            <h2 className="font-display text-3xl">Writing</h2>
+            <Link href="/writing" className="rl-link text-sm text-accent">All posts →</Link>
           </div>
+          {/* Each post is its cover picture and title: one finding per post. */}
+          <ul className="mt-8 grid gap-6 sm:grid-cols-3">
+            {posts.slice(0, 3).map(p => (
+              <li key={p.slug}>
+                <Link href={`/writing/${p.slug}`} className="group block">
+                  <Image src={POST_COVERS[p.slug].src} alt="" width={POST_COVERS[p.slug].w} height={POST_COVERS[p.slug].h} className="h-44 w-auto mx-auto" />
+                  <span className="mt-4 block font-display text-xl leading-snug group-hover:text-accent transition-colors">{p.title}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </section>
       )}
 

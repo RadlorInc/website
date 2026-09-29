@@ -15,6 +15,8 @@ import { APP_ID, APP_NAME, APP_URL, COMPANY, SITE_URL } from '@/site'
 import demos from '@/content/radlic-demo.json'
 import LessonDemo, { type Demo } from './LessonDemo'
 import s from './radlic.module.css'
+import { CircleReveal, PinnedStory, ZoomMoment, type Step } from '@/components/scroll/Scroll'
+import { ART } from '@/components/scroll/art'
 
 /** The app. It keeps its own origin; nothing of it is served from radlor.com. */
 const RADLIC = APP_URL
@@ -46,22 +48,16 @@ function AppJsonLd() {
   return <script type="application/ld+json">{JSON.stringify(json)}</script>
 }
 
-const STEPS: { h: string; p: string }[] = [
-  { h: 'Watch', p: 'Each lesson explains one idea step by step, the way a good teacher would at the board. A voice reads every line as the chalk goes up.' },
-  { h: 'Practice', p: 'Two right answers in a row bring a different, harder kind of question — from a picture to bare numbers to a word problem. A miss brings the worked steps and an easier kind.' },
-  { h: 'Review', p: 'Topics they found hard come back later for review, so nothing slips away quietly.' },
+// Scroll styles (founder's picks, 2026-09-29): the three steps are a pinned story (C), "nothing to be scared of" is the
+// page's one zoom (E), and "you choose" opens out of a circle (F). One picture and one short line each; every line
+// restates the page as it was and adds no claim.
+const STEPS: Step[] = [
+  { ...ART.radlicWatch, title: 'Watch', body: 'One idea at a time, step by step, the way a teacher does it at the board. A voice reads every line.' },
+  { ...ART.radlicPractice, title: 'Practice', body: 'Two right in a row bring a different, harder kind of question. A miss brings the worked steps and an easier kind.' },
+  { ...ART.radlicReview, title: 'Review', body: 'What they found hard comes back later, so nothing slips away quietly.' },
 ]
 
-const AUDIENCE: { h: string; items: string[] }[] = [
-  {
-    h: 'For parents',
-    items: [
-      'Pick whole modules or single topics, from any grade, kindergarten through grade 8',
-      'Add a due date if you like',
-      'See which lessons they finished and what they find hard',
-    ],
-  },
-]
+const CHOOSE = ['Any topic, kindergarten to grade 8', 'A due date if you like', 'See what they finished and what they find hard']
 
 const Check = () => (
   <svg className={s.check} viewBox="0 0 20 20" aria-hidden="true">
@@ -99,40 +95,21 @@ export default function RadlicPage() {
 
       <section id="how" className={s.section}>
         <h2 className={s.h2}>How a lesson works</h2>
-        <ol className={s.steps}>
-          {STEPS.map(({ h, p }, k) => (
-            <li key={h} className={s.step}>
-              <span className={s.stepN}>{k + 1}</span>
-              <h3 className={s.h3}>{h}</h3>
-              <p>{p}</p>
-            </li>
-          ))}
-        </ol>
+        <PinnedStory steps={STEPS} />
       </section>
 
-      <section className={s.calm}>
-        <h2 className={s.h2}>Nothing to be scared of</h2>
-        <p>
-          No timer, and no red cross anywhere. Your child never sees a level. A wrong answer gets another go,
-          then the worked steps — never a mark.
-        </p>
-      </section>
+      <ZoomMoment pic={ART.radlicCalm} title="Nothing to be scared of">
+        No timer. No red cross. No level. A wrong answer gets another go, then the worked steps.
+      </ZoomMoment>
 
-      <section className={s.section}>
-        <h2 className={s.h2}>You choose what they learn</h2>
-        <div className={s.cards}>
-          {AUDIENCE.map(({ h, items }) => (
-            <div key={h} className={s.card}>
-              <h3 className={s.h3}>{h}</h3>
-              <ul className={s.list}>
-                {items.map(t => <li key={t}><Check />{t}</li>)}
-              </ul>
-            </div>
-          ))}
+      <section className={`${s.section} ${s.choose}`}>
+        <CircleReveal pic={ART.radlicChoose} className={s.choosePic} />
+        <div>
+          <h2 className={s.h2}>You choose what they learn</h2>
+          <ul className={s.list}>
+            {CHOOSE.map(t => <li key={t}><Check />{t}</li>)}
+          </ul>
         </div>
-        <p className={s.small}>
-          If the connection drops during a lesson, their answers are kept on the device and sent when it is back.
-        </p>
       </section>
 
       <section className={s.final}>

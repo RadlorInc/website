@@ -281,6 +281,14 @@ and serve `noindex` on that route. Doing both in the wrong order achieves nothin
 
 ## The image system — 2026-09-07
 
+> **Superseded 2026-09-29 (founder):** the metallic robot and icon renders are gone from every page. The site is now
+> flat 2D illustrations (`public/il-*.webp`, `about-*`, `journey-*`; index in `components/scroll/art.ts`) on four scroll
+> styles the founder picked — pinned story, zoom, circle reveal, drawn path — in `components/scroll/Scroll.tsx`, with a
+> page top in `PageHero.tsx`. One picture and one short line per point; `/data-and-safety` keeps its full wording under
+> each "Read the details", and `/privacy`, `/terms` and the posts keep their text with a cover picture. Brief for new
+> pictures: men and boys only, full-length trousers, no metallic look. `SectionIcon` and `MiloPanel` survive only for
+> the hidden `/pricing` and `/waitlist/problem`. The rules below about black-ground renders apply only to those.
+
 Until this landed the site had **no images beyond the hero video and the wordmark**. It now has 35,
 governed by three components and two CSS rules. Read this before adding one.
 
@@ -387,12 +395,13 @@ app/not-found.tsx          the 404. Nav links built from HEADER, so a renamed pa
 app/about/  app/contact/
 app/writing/               index + [slug], markdown via `marked`, Article JSON-LD
 app/robots.ts  app/sitemap.ts  app/llms.txt/route.ts  app/opengraph-image.tsx
-components/                MiloPanel · SectionIcon · SectionFigure — the only three, and each
+components/scroll/         Scroll.tsx (the four scroll styles), PageHero.tsx, art.ts (every illustration)
+components/                MiloPanel · SectionIcon — legacy, only /waitlist/problem and hidden /pricing; each
                            answers a different question. See "The image system" above.
 content/posts.ts + content/posts/*.md    three posts
 content/legal.ts           the Terms of Use body + DRAFT, PLACEHOLDERS and the module-scope guard
-components/journey/        the home page's first screen (2026-09-25): Journey.tsx (the words, the stops, the scroll)
-                           + scene.js (the 3D world, three.js from npm). Replaced the looping video hero.
+components/journey/        the home page's first screen (2026-09-25): Journey.tsx (the words, the stops, the scroll,
+                           one 2D illustration per stop). Replaced the looping video hero; its three.js world went 2026-09-29.
 public/milo-*.webp   (10)  the mascot, one pose per page
 public/ico-*.webp    (17)  section chips, 256x256, shown at 40px
 public/fig-*.webp     (8)  content figures, 900px wide

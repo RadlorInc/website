@@ -8,7 +8,7 @@ This repo is **radlor.com**: the marketing and company site for Radlor. It is NO
 
 | | |
 |---|---|
-| **This site** | `radlor.com` — this repo. Next 16 App Router, Tailwind 4, no database, no auth. The only client JS beyond Next's own is `/radlic`'s demo player and the home page's journey (`components/journey/`, three.js bundled from npm, loaded after the words; both first-party, since 2026-09-25). |
+| **This site** | `radlor.com` — this repo. Next 16 App Router, Tailwind 4, no database, no auth. The only client JS beyond Next's own is `/radlic`'s demo player and the home page's journey scroll (`components/journey/`; both first-party). The journey's pictures are flat 2D illustrations (`public/journey-*.webp`); its three.js world was removed on 2026-09-29. |
 | **The product** | **Radlic** at `radlic.com` (AdaptiveLearn at `adaptivelearn.radlor.com` until 2026-09-24); its product page here is `/radlic` (`/adaptivelearn` 308s to it) — a **separate repo and a separate Vercel project**, at `../milo-story-mode` on this machine (GitHub `RadlorMain/learn`). Deliberately separate: that repo carries ~1,100 tests, an AR/camera stack and a deploy pipeline that has broken silently more than once. A marketing edit must never be able to take the app down, and vice versa. |
 | **Every shared fact** | [`site.ts`](site.ts) — origin, support address, product URL, nav, company facts. **Put a string there before you put it in a page.** The product repo learned this the hard way: its support address lived as a literal in four files, so a brand change meant four edits and hoping none was missed. |
 | **Facts I could not derive** | [`docs/brand-facts.md`](docs/brand-facts.md) — the `TODO`s in `site.ts` and what they feed. |

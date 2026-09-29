@@ -79,6 +79,8 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
     <html lang="en" className={`${sans.variable} ${display.variable} h-full`}>
       <body className="min-h-full flex flex-col">
         <OrganizationJsonLd />
+        {/* Without JS the circle reveal (components/scroll) would stay a small circle: open it outright. */}
+        <noscript><style>{'.rl-circle{clip-path:none}'}</style></noscript>
 
         {children}
       </body>

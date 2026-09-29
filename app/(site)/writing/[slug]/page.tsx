@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation'
 import { marked } from 'marked'
 import { COMPANY, SITE_URL } from '@/site'
 import { body, bySlug, posts } from '@/content/posts'
+import { CircleReveal } from '@/components/scroll/Scroll'
+import { POST_COVERS } from '@/components/scroll/art'
 
 export const dynamicParams = false
 export const generateStaticParams = () => posts.map(p => ({ slug: p.slug }))
@@ -44,12 +46,16 @@ export default async function Article({ params }: PageProps<'/writing/[slug]'>) 
       <Link href="/writing" className="rl-rise rl-link text-sm text-accent">
         ← Writing
       </Link>
-      <header className="mt-6">
+      <header className="mt-6 grid items-center gap-8 sm:grid-cols-[minmax(0,1fr)_minmax(0,0.7fr)]">
+        <div>
         <time dateTime={post.date} className="rl-rise block text-sm text-muted tabular-nums" style={{ '--d': '0.08s' } as React.CSSProperties}>
           {post.date}
         </time>
         <h1 className="rl-focus font-display text-4xl sm:text-5xl leading-tight mt-2 max-w-3xl" style={{ '--d': '0.14s' } as React.CSSProperties}>{post.title}</h1>
         <p className="rl-rise mt-5 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.22s' } as React.CSSProperties}>{post.description}</p>
+        </div>
+        {/* The post's cover (scroll style F), decorative: the title beside it carries the meaning. */}
+        <CircleReveal pic={POST_COVERS[post.slug]} priority className="w-60 sm:w-full max-w-[380px] justify-self-center" />
       </header>
 
       {/* The one raw-HTML write on the site, and it is unavoidable: rendering markdown IS
