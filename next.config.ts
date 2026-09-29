@@ -25,6 +25,10 @@ const CSP = [
 ].join("; ");
 
 const nextConfig: NextConfig = {
+  // Every image here is a small ready-made file (webp illustrations of 30–70 KB, the wordmark PNGs), so the resizer
+  // only upscaled an 850 px drawing to "1920" or "3840" and sent the same bytes back — and locally it hung on those
+  // sizes, so on a laptop only one journey picture appeared (founder, 2026-09-29). The files are served as they are.
+  images: { unoptimized: true },
   async headers() {
     return [
       {
