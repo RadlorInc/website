@@ -30,7 +30,7 @@ export const posts: Post[] = [
     slug: 'a-camera-claim-you-can-check',
     title: 'A camera claim you can check',
     description:
-      'A promise not to upload video is weaker than an app with no upload path. AdaptiveLearn reads hand gestures inside the browser, and a content security policy the build tests is what stops a frame leaving — here is how to check the same of any app.',
+      'A promise not to upload video is weaker than an app with no upload path. Radlic reads hand gestures inside the browser, and a content security policy the build tests is what stops a frame leaving — here is how to check the same of any app.',
     date: '2026-08-29',
   },
   {

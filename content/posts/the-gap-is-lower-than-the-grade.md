@@ -21,7 +21,7 @@ Teaching the quadratics again treats the symptom you can see.
 
 ## Finding the root instead of the symptom
 
-AdaptiveLearn starts with a short placement check, and the thing it is looking for is not a level. It
+Radlic starts with a short placement check, and the thing it is looking for is not a level. It
 is the **root gap**: the deepest skill that is missing, underneath whatever the child is visibly
 stuck on.
 

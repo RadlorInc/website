@@ -15,7 +15,7 @@ instructed to refuse connections to anywhere except a short list of destinations
 code later is not a quiet one-line change. It breaks visibly, on the allowlist, in front of whoever
 tries.
 
-That is the shape of the claim on AdaptiveLearn's camera chapters, and it is deliberately made in a
+That is the shape of the claim on Radlic's camera chapters, and it is deliberately made in a
 form somebody outside the company can check.
 
 ## What actually happens on the device

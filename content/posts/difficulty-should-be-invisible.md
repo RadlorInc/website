@@ -5,7 +5,7 @@ The common answer is a score, a level and a streak. It is easy to build and it f
 demo. In practice it turns a math lesson into a verdict, and a child who has decided they are "a
 level 2" stops trying to be anything else.
 
-We took the other road. In AdaptiveLearn the difficulty moves constantly and is never shown.
+We took the other road. In Radlic the difficulty moves constantly and is never shown.
 
 ## What "adaptive" actually means here
 
