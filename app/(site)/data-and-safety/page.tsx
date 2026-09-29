@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
-import { SectionFigure } from '@/components/SectionFigure'
-import { SectionIcon } from '@/components/SectionIcon'
-import { MiloPanel } from '@/components/MiloPanel'
+import { PathRows, type PathRow } from '@/components/scroll/Scroll'
+import { PageHero } from '@/components/scroll/PageHero'
+import { ART } from '@/components/scroll/art'
 import Link from 'next/link'
 import { APP_NAME, APP_URL, SITE_URL, SUPPORT_EMAIL } from '@/site'
 
@@ -50,135 +50,130 @@ const NEVER = [
   'Third-party analytics or tracking inside the product. There is no Google Analytics, no pixel, no session recorder.',
 ]
 
+// One picture and one plain line per question a parent has, joined by a drawn path (scroll style G) under a
+// circle-reveal top (F) (founder, 2026-09-29: "least text"). ⚠️ THE FULL WORDING IS STILL HERE, word for word, under
+// each "Read the details": this is the page a regulator reads, so the short line may only summarise what the details
+// say and never add to it.
 export default function DataAndSafety() {
+  const rows: PathRow[] = [
+    {
+      ...ART.safetyStore, title: 'What we store',
+      body: 'Only what teaching needs: your child’s name, their lessons and progress, and your account.',
+      more: (
+        <>
+          <dl>
+            {STORE.map(([h, p]) => (
+              <div key={h}><dt><strong>{h}</strong></dt><dd>{p}</dd></div>
+            ))}
+          </dl>
+          <p>If you asked for early access before you had an account, we also still have the email address
+          you gave us and the grade (or, before 19 September 2026, the age band) you picked, from that request.</p>
+        </>
+      ),
+    },
+    {
+      ...ART.safetyNever, title: 'What we never store',
+      body: 'No video, photos or audio of your child. No date of birth. Nothing sold or shared with an advertiser.',
+      more: <ul>{NEVER.map(t => <li key={t}>{t}</li>)}</ul>,
+    },
+    {
+      ...ART.safetyAccess, title: 'Who can access it?',
+      body: 'You, your child, their teacher if a school uses it, and the two companies that host it for us. Nobody else.',
+      more: (
+        <>
+          <p>
+            <strong>You.</strong> A parent account can see its own children, and no other family&rsquo;s.
+          </p>
+          <p>
+            That is not a rule we wrote down and hope everybody follows — the database itself refuses to
+            return another family&rsquo;s rows, and we test that by trying it.
+          </p>
+          <p>
+            <strong>Your child, if you give them a login.</strong> Signed in as themselves they see their
+            own lessons. Your dashboard asks for your PIN every time it opens.
+          </p>
+          <p>
+            <strong>Your child&rsquo;s teacher, if a school is using it.</strong> A teacher can see the
+            students in a class they created — including their class exercise results — and nothing
+            outside it. If you are not using {APP_NAME} through a school, no teacher can see anything.
+          </p>
+          <p>
+            <strong>Two companies that hold it for us,</strong> because we do not run our own servers.{' '}
+            <strong>Supabase</strong> stores the database and <strong>Vercel</strong> serves the app. They
+            store it on our behalf under contract and use it for nothing of their own. If you sign in with
+            Google, Google confirms to us that the email address is yours and tells us nothing else about
+            you.
+          </p>
+          <p>
+            Nobody else. We do not sell it, rent it or share it with advertisers, and we have no
+            advertisers to share it with.
+          </p>
+        </>
+      ),
+    },
+    {
+      ...ART.safetyDelete, title: 'Deleting it',
+      body: 'Delete a child and everything attached to them goes with it. Removed, not hidden.',
+      more: (
+        <>
+          <p>
+            Delete a child from your account and everything attached to them goes with it — every session,
+            every answer, every record. Not marked as hidden: removed. You can download a copy of each
+            child&rsquo;s data first, and close the whole account yourself from the account page in the
+            parent dashboard, which removes your children and their logins with it. If anything is left
+            you want gone, email <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
+          </p>
+        </>
+      ),
+    },
+    {
+      ...ART.safetyUnfinished, title: 'What we have not finished',
+      body: 'Signing up is not a formal age-verification method, and we will not claim it is. We are working on it.',
+      more: (
+        <>
+          <p>
+            We would rather write this than let you find it out later. {APP_NAME} is early software.
+            Signing up is an email address and a password, or a Google account — it is not one of the
+            formal age-verification methods that a regulator such as the American COPPA rules expect of a
+            service aimed at young children, and we are not going to claim it is. We are working on it. In
+            the meantime the honest position is that an adult sets the account up, and the design assumes
+            that adult is nearby.
+          </p>
+          <p>
+            If a specific requirement matters to you — for a school, a district, or your own peace of mind
+            — write and ask. You will get a straight answer about what we do and do not have, including
+            the parts we have not built yet.
+          </p>
+        </>
+      ),
+    },
+    {
+      ...ART.contactHero, title: 'Asking us anything',
+      body: <><a href={`mailto:${SUPPORT_EMAIL}`} className="rl-link text-accent">{SUPPORT_EMAIL}</a> reaches the people who built it.</>,
+      more: (
+        <>
+          <p>
+            <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a> reaches the people who built the thing.
+            The full legal policy is published inside the product at{' '}
+            <a href={`${APP_URL}/legal/privacy`}>radlic.com/legal/privacy</a>; this page is
+            the same facts without the lawyering. Privacy on this website — as opposed to in the product —
+            is <Link href="/privacy" className="rl-link">its own short page</Link>.
+          </p>
+        </>
+      ),
+    },
+  ]
   return (
     <section className="relative isolate overflow-hidden">
-      {/* Decorative, `aria-hidden`, behind the text — a screen reader gets the copy alone. */}
       <div className="rl-progress" aria-hidden="true" />
-      <div className="rl-lightfield" aria-hidden="true">
-        <div className="rl-glow rl-parallax" style={{ '--p': '30px' } as React.CSSProperties} />
-      </div>
-      <div className="relative z-10 mx-auto max-w-5xl px-6 pt-20">
-      <p className="rl-rise text-sm uppercase tracking-[0.18em] text-accent font-medium">Data and safety</p>
-      <h1 className="rl-focus font-display text-5xl mt-4 max-w-3xl" style={{ '--d': '0.09s' } as React.CSSProperties}>
-        What we know about your child, in <span className="rl-lit" style={{ '--lit': 0.5 } as React.CSSProperties}>plain</span> English.
-      </h1>
-      <p className="rl-rise mt-6 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.18s' } as React.CSSProperties}>
-        {APP_NAME} is used by children, so you should be able to read this page and simply know where
-        you stand. It is in plain English, it describes what we actually do, and where something is a
-        limitation rather than a promise, it says so.
-      </p>
-
-      <div className="rl-prose prose mt-14">
-        <div className="not-prose mb-10">
-          {/* The panel restates the page's OWN sentences — the "never" list and the sharing
-              paragraph below — and adds nothing. A decorative band must not be where a claim
-              first appears. */}
-          <MiloPanel src="/milo-safety.webp" width={760} height={788}>
-            <p className="text-lg">
-              A child never needs an email address, and nothing we hold is sold or shared with an
-              advertiser.
-            </p>
-          </MiloPanel>
-        </div>
-
-        <SectionIcon src="/ico-store.webp" />
-        <h2>What we store</h2>
-        <div className="not-prose mt-6 grid gap-px bg-line border border-line rounded-2xl overflow-hidden">
-          {STORE.map(([h, p], i) => (
-            <div key={h} className="rl-reveal-left bg-surface p-6 flex flex-wrap gap-x-8 gap-y-2" style={{ '--i': i + 1 } as React.CSSProperties}>
-              <p className="font-medium w-48 shrink-0">{h}</p>
-              <p className="flex-1 min-w-56 text-muted leading-relaxed">{p}</p>
-            </div>
-          ))}
-        </div>
-        <p className="mt-6">
-          If you asked for early access before you had an account, we also still have the email address
-          you gave us and the grade (or, before 19 September 2026, the age band) you picked, from that request.
-        </p>
-
-        <SectionIcon src="/ico-empty.webp" />
-        <h2>What we never store</h2>
-        <ul>
-          {NEVER.map(t => (
-            <li key={t}>{t}</li>
-          ))}
-        </ul>
-
-        <SectionFigure src="/fig-vault.webp" width={900} height={490}>
-          No video, no photographs, no audio, no date of birth, and nothing sold or shared with an
-          advertiser.
-        </SectionFigure>
-
-        <SectionIcon src="/ico-key.webp" />
-        <h2>Who can access it?</h2>
-        <p>
-          <strong>You.</strong> A parent account can see its own children, and no other family&rsquo;s.
-        </p>
-        <SectionFigure src="/fig-lockers.webp" width={900} height={444}>
-          A parent account opens its own family, and no other.
-        </SectionFigure>
-        <p>
-          That is not a rule we wrote down and hope everybody follows — the database itself refuses to
-          return another family&rsquo;s rows, and we test that by trying it.
-        </p>
-        <p>
-          <strong>Your child, if you give them a login.</strong> Signed in as themselves they see their
-          own lessons. Your dashboard asks for your PIN every time it opens.
-        </p>
-        <p>
-          <strong>Your child&rsquo;s teacher, if a school is using it.</strong> A teacher can see the
-          students in a class they created — including their class exercise results — and nothing
-          outside it. If you are not using {APP_NAME} through a school, no teacher can see anything.
-        </p>
-        <p>
-          <strong>Two companies that hold it for us,</strong> because we do not run our own servers.{' '}
-          <strong>Supabase</strong> stores the database and <strong>Vercel</strong> serves the app. They
-          store it on our behalf under contract and use it for nothing of their own. If you sign in with
-          Google, Google confirms to us that the email address is yours and tells us nothing else about
-          you.
-        </p>
-        <p>
-          Nobody else. We do not sell it, rent it or share it with advertisers, and we have no
-          advertisers to share it with.
-        </p>
-
-        <SectionIcon src="/ico-delete.webp" />
-        <h2>Deleting it</h2>
-        <p>
-          Delete a child from your account and everything attached to them goes with it — every session,
-          every answer, every record. Not marked as hidden: removed. You can download a copy of each
-          child&rsquo;s data first, and close the whole account yourself from the account page in the
-          parent dashboard, which removes your children and their logins with it. If anything is left
-          you want gone, email <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
-        </p>
-
-        <SectionIcon src="/ico-unfinished.webp" />
-        <h2>What we have not finished</h2>
-        <p>
-          We would rather write this than let you find it out later. {APP_NAME} is early software.
-          Signing up is an email address and a password, or a Google account — it is not one of the
-          formal age-verification methods that a regulator such as the American COPPA rules expect of a
-          service aimed at young children, and we are not going to claim it is. We are working on it. In
-          the meantime the honest position is that an adult sets the account up, and the design assumes
-          that adult is nearby.
-        </p>
-        <p>
-          If a specific requirement matters to you — for a school, a district, or your own peace of mind
-          — write and ask. You will get a straight answer about what we do and do not have, including
-          the parts we have not built yet.
-        </p>
-
-        <SectionIcon src="/ico-bubble.webp" />
-        <h2>Asking us anything</h2>
-        <p>
-          <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a> reaches the people who built the thing.
-          The full legal policy is published inside the product at{' '}
-          <a href={`${APP_URL}/legal/privacy`}>radlic.com/legal/privacy</a>; this page is
-          the same facts without the lawyering. Privacy on this website — as opposed to in the product —
-          is <Link href="/privacy" className="rl-link">its own short page</Link>.
-        </p>
-      </div>
+      <div className="relative z-10 mx-auto max-w-5xl px-6 pb-20">
+      <PageHero
+        eyebrow="Data and safety"
+        title={<>What we know about your child, in <span className="rl-lit" style={{ '--lit': 0.5 } as React.CSSProperties}>plain</span> English.</>}
+        line="A child never needs an email address, and nothing we hold is sold or shared with an advertiser."
+        pic={ART.safetyHero}
+      />
+      <PathRows rows={rows} />
 
       <script type="application/ld+json">{JSON.stringify({
             '@context': 'https://schema.org',

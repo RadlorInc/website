@@ -14,21 +14,20 @@ export const metadata: Metadata = {
 export default function Thanks() {
   return (
     <section className="mx-auto max-w-5xl px-6 pt-20 pb-24">
-      {/* ⚠️ `rl-dark` pins this panel dark in BOTH themes. The mascot render has a pure black
-          ground, so on the light theme an unpinned panel would frame it as a black rectangle —
-          the wordmark has the same property and the header solves it the same way. */}
+      {/* `rl-dark` keeps this panel dark in both themes, like the header. The picture is a 2D illustration on a
+          transparent ground (2026-09-29), so it needs no blend. */}
       <div className="rl-dark rl-rise rounded-2xl border border-line overflow-hidden mb-10 max-w-2xl">
         <div className="flex items-center gap-6 p-6 sm:p-8">
           {/* Decorative — the heading beside it carries the meaning. Empty alt + aria-hidden so a
               screen reader is not handed a noun it cannot act on. */}
           <Image
-            src="/milo-celebrating.webp"
+            src="/il-schools-confidence.webp"
             alt=""
             aria-hidden="true"
-            width={720}
-            height={682}
+            width={758}
+            height={805}
             priority
-            className="rl-onblack w-24 sm:w-32 h-auto shrink-0"
+            className="w-24 sm:w-32 h-auto shrink-0"
           />
           <p className="text-lg leading-relaxed">
             Thanks for signing up. We read every one of these.

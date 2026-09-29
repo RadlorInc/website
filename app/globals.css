@@ -878,7 +878,7 @@ body {
 
 /* --- the journey (home page, first screen) -------------------------------- */
 
-/* One screen per stop. The world is a sticky stage inside a TRACK that is exactly as tall as the journey,
+/* One screen per stop. The pictures are a sticky stage inside a TRACK that is exactly as tall as the journey,
    so it stays put while the words scroll past, and leaves the moment the last stop does.
    ⚠️ NOT `margin-bottom: -100svh` on the stage: sticky measures its limit from the MARGIN box, so a negative
    margin let the world stay stuck for one extra screen, painted over the facts band below.
@@ -900,24 +900,51 @@ body {
   overflow: hidden;
 }
 
-/* The canvas fades in once the world is built, so there is no black flash or half-built frame. */
-.rl-journey-canvas {
+/* One picture per stop, right of the words; only the current stop's is shown. Each arrives with two of the site's
+   scroll styles at once (founder, 2026-09-29): it OPENS OUT OF A CIRCLE (F) while it ZOOMS from small to full (E), and
+   the one being left closes back into its circle as it shrinks. The first stop does the same on page load
+   (@starting-style; a browser without it simply shows the picture). */
+.rl-journey-art {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  opacity: 0;
-  transition: opacity 0.9s ease;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: max(80px, 8vw);
+  pointer-events: none;
 }
 
-.rl-journey.is-live .rl-journey-canvas {
+.rl-journey-art img {
+  width: auto;
+  height: auto;
+  max-width: min(42vw, 520px);
+  max-height: 66svh;
+  opacity: 0;
+  clip-path: circle(4% at 50% 50%);
+  transform: scale(0.5);
+  transition:
+    clip-path 1.2s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 1.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 0.5s ease;
+}
+
+.rl-journey-art[data-on] img {
   opacity: 1;
+  clip-path: circle(75% at 50% 50%);
+  transform: none;
+}
+
+@starting-style {
+  .rl-journey-art[data-on] img { opacity: 0; clip-path: circle(4% at 50% 50%); transform: scale(0.5); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rl-journey-art img { transition: none; clip-path: none; transform: none; }
 }
 
 /* THE SHADE IS WHAT KEEPS THE WORDS READABLE, and it is shaped by where the words are: they sit
-   lower-left, the islands are framed right of them (scene.js offsets the camera). So it darkens
-   the left and the bottom and leaves the world's own colours alone where the words are not. */
+   lower-left, the pictures right of them. So it darkens the left and the bottom and leaves the
+   pictures alone. */
 .rl-journey-shade {
   position: absolute;
   inset: 0;
@@ -1038,6 +1065,16 @@ body {
 
 /* On a phone the words span the width, so the shade comes from below instead, and the dots shrink. */
 @media (max-width: 760px) {
+  /* the words fill the lower half, so the picture takes the top, centred */
+  .rl-journey-art {
+    align-items: flex-start;
+    justify-content: center;
+    padding: 11svh 20px 0;
+  }
+  .rl-journey-art img {
+    max-width: 82vw;
+    max-height: 40svh;
+  }
   .rl-journey-shade {
     background:
       /* high enough to sit under the opening screen's full intro, which reaches ~60% up a phone */
@@ -1059,4 +1096,64 @@ body {
   .rl-journey-hint {
     display: none;  /* no room under the intro on a phone, and a swipe needs no instruction */
   }
+}
+
+/* ============================================================================
+   SCROLL STYLES — components/scroll/Scroll.tsx (founder's picks, 2026-09-29: C pinned story, E zoom,
+   F circle reveal, G drawn path). Each default below is the FINISHED state except the circle, which
+   starts small and is opened by JS; a <noscript> style in app/layout.tsx and reduced motion open it outright.
+   ============================================================================ */
+
+/* F · circle reveal */
+.rl-circle { clip-path: circle(var(--r, 8%) at 50% 48%); }
+.rl-circle img { width: 100%; height: auto; }
+
+/* E · zoom: a pinned stretch two screens tall; the picture scales, the heading fades in last */
+.rl-zoom { position: relative; height: 210svh; }
+.rl-zoom-sticky {
+  position: sticky; top: 0; height: 100svh; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem;
+  padding: 0 24px; text-align: center;
+}
+.rl-zoom-pic { width: min(620px, 86vw); max-height: 58svh; object-fit: contain; height: auto; transform: scale(var(--z, 1)); will-change: transform; }
+.rl-zoom-cap { opacity: var(--cap, 1); max-width: 36rem; }
+
+/* G · drawn path */
+.rl-path { position: relative; display: grid; gap: clamp(2.5rem, 7vw, 5rem); padding-block: 2rem; }
+.rl-path-line { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.rl-path-line path { fill: none; stroke: var(--accent); stroke-width: 3px; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0; opacity: 0.55; }
+.rl-path-row { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: clamp(1.5rem, 5vw, 4rem); transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.rl-path-row:not([data-lit]) { opacity: 0.18; transform: translateY(24px); }
+.rl-path-row:nth-child(odd of .rl-path-row) .rl-path-pic { order: 2; }
+.rl-path-pic { width: min(340px, 100%); height: auto; justify-self: center; }
+.rl-path-text { position: relative; min-width: 0; max-width: 28rem; background: var(--background); border-radius: 12px; padding: 0.5rem 0.25rem; } /* the line passes behind the words, never through them */
+.rl-more summary { cursor: pointer; color: var(--accent); font-size: 0.95rem; font-weight: 500; list-style: none; }
+.rl-more summary::-webkit-details-marker { display: none; }
+.rl-more summary::before { content: '+ '; }
+.rl-more[open] summary::before { content: '– '; }
+
+/* C · pinned story: the picture sticks beside the steps, each step is most of a screen tall */
+.rl-story { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(1.5rem, 5vw, 4rem); }
+.rl-story-pics { position: sticky; top: 12svh; height: 76svh; order: 2; }
+.rl-story-pics img { position: absolute; inset: 0; margin: auto; width: auto; height: auto; max-width: 100%; max-height: 100%; opacity: 0; transform: translateY(18px) scale(0.96); transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.rl-story-pics img[data-on] { opacity: 1; transform: none; }
+.rl-story-steps { list-style: none; margin: 0; padding: 0; }
+.rl-story-steps li { min-height: 70svh; display: flex; flex-direction: column; justify-content: center; opacity: 0.3; transition: opacity 0.5s ease; }
+.rl-story-steps li[data-on] { opacity: 1; }
+.rl-story-n { font-family: var(--font-display-src), Georgia, serif; font-size: 1.1rem; color: var(--accent); margin-bottom: 0.5rem; }
+
+@media (max-width: 760px) {
+  .rl-path-row { grid-template-columns: 1fr; text-align: center; justify-items: center; }
+  .rl-path-row:nth-child(odd of .rl-path-row) .rl-path-pic { order: 0; }
+  .rl-path-pic { width: min(260px, 70vw); }
+  .rl-path-line { opacity: 0.6; }
+  .rl-story { grid-template-columns: 1fr; }
+  .rl-story-pics { top: 64px; height: 36svh; order: 0; z-index: 1; background: var(--background); }
+  .rl-story-steps li { min-height: 55svh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rl-circle { clip-path: none; }
+  .rl-path-row, .rl-story-pics img, .rl-story-steps li { transition: none; }
+  .rl-path-row:not([data-lit]) { opacity: 1; transform: none; }
 }
