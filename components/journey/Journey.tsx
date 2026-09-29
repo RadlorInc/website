@@ -178,7 +178,7 @@ export function Journey() {
         <div className="rl-journey-stage">
           {ART.map((p, i) => (
             <div key={p.src} className="rl-journey-art" data-on={here === i || undefined}>
-              <Image src={p.src} alt="" width={p.w} height={p.h} priority={i === 0} sizes="(max-width: 760px) 82vw, 44vw" />
+              <Image src={p.src} alt="" width={p.w} height={p.h} priority={i === 0} sizes="(max-width: 760px) 82vw, 46vw" />
             </div>
           ))}
           <div className="rl-journey-shade" />

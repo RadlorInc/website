@@ -914,11 +914,13 @@ body {
   pointer-events: none;
 }
 
+/* ⚠️ A REAL WIDTH, NOT `auto`. With `width: auto` the picture took the intrinsic size of whichever srcset file the
+   browser chose, which on a laptop came out a fifth of the screen (founder's screenshots, 2026-09-29). */
 .rl-journey-art img {
-  width: auto;
+  width: min(46vw, 680px);
   height: auto;
-  max-width: min(42vw, 520px);
-  max-height: 66svh;
+  max-height: 74svh;
+  object-fit: contain;
   opacity: 0;
   clip-path: circle(4% at 50% 50%);
   transform: scale(0.5);
@@ -1072,7 +1074,7 @@ body {
     padding: 11svh 20px 0;
   }
   .rl-journey-art img {
-    max-width: 82vw;
+    width: min(82vw, 420px);
     max-height: 40svh;
   }
   .rl-journey-shade {
@@ -1135,7 +1137,7 @@ body {
 /* C · pinned story: the picture sticks beside the steps, each step is most of a screen tall */
 .rl-story { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(1.5rem, 5vw, 4rem); }
 .rl-story-pics { position: sticky; top: 12svh; height: 76svh; order: 2; }
-.rl-story-pics img { position: absolute; inset: 0; margin: auto; width: auto; height: auto; max-width: 100%; max-height: 100%; opacity: 0; transform: translateY(18px) scale(0.96); transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.rl-story-pics img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transform: translateY(18px) scale(0.96); transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1); }
 .rl-story-pics img[data-on] { opacity: 1; transform: none; }
 .rl-story-steps { list-style: none; margin: 0; padding: 0; }
 .rl-story-steps li { min-height: 70svh; display: flex; flex-direction: column; justify-content: center; opacity: 0.3; transition: opacity 0.5s ease; }
