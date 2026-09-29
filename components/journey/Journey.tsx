@@ -57,16 +57,15 @@ const STOPS = [
 ] as const
 const LAST = STOPS.length  // stop 0 is the opening screen, then one per entry above
 const RAIL = ['Start', 'Mission', 'How we build', APP_NAME, 'Who it’s for', 'What comes next']
-// One picture per rail stop, each drawing its own words: a boy whose lesson shapes itself around him; a treasure
-// that lights up; four rules being built; steps of maths that fit the child; families, schools and partners
-// together; an idea still growing. Flat 2D illustrations on transparent ground (generated 2026-09-29, founder's
-// brief: no metallic renders, no women or girls, full-length trousers).
+// One picture per rail stop, each drawing its own words: a tablet whose shapes rearrange into a new path; a treasure
+// chest that lights up; four rule blocks being stacked; stairs built of maths objects; homes and a school joined by
+// one path; an idea still growing. Flat 2D illustrations on transparent ground, no people (founder, 2026-09-29).
 const ART = [
-  { src: '/journey-adapts.webp', w: 576, h: 789 },
-  { src: '/journey-treasure.webp', w: 835, h: 701 },
-  { src: '/journey-rules.webp', w: 829, h: 802 },
-  { src: '/journey-steps.webp', w: 850, h: 806 },
-  { src: '/journey-together.webp', w: 868, h: 850 },
+  { src: '/journey-adapts.webp', w: 750, h: 1001 },
+  { src: '/journey-treasure.webp', w: 713, h: 769 },
+  { src: '/journey-rules.webp', w: 903, h: 872 },
+  { src: '/journey-steps.webp', w: 836, h: 822 },
+  { src: '/journey-together.webp', w: 914, h: 672 },
   { src: '/journey-next.webp', w: 638, h: 538 },
 ]
 

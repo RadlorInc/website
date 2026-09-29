@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 
 /**
  * THE FOUR SCROLL STYLES THE FOUNDER PICKED (2026-09-29, from the "Radlor Scroll Styles" preview): C pinned story,
@@ -24,9 +24,11 @@ const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v))
 function useScrollFrame(frame: () => void) {
   const cb = useRef(frame)
   useEffect(() => { cb.current = frame })
-  useEffect(() => {
+  // A layout effect, not a passive one: React detaches refs in the same commit that runs layout cleanups, but runs
+  // passive cleanups later — a scroll frame fired in that gap read a null ref (three console errors on every page
+  // change, 2026-09-29).
+  useLayoutEffect(() => {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    // a frame queued just before the page is left must not run against an unmounted element
     let queued = 0
     const run = () => { queued = 0; cb.current() }
     const on = () => { if (!queued) queued = requestAnimationFrame(run) }

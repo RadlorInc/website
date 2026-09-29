@@ -24,8 +24,8 @@ export default function Thanks() {
             src="/il-schools-confidence.webp"
             alt=""
             aria-hidden="true"
-            width={758}
-            height={805}
+            width={790}
+            height={712}
             priority
             className="w-24 sm:w-32 h-auto shrink-0"
           />

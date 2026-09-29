@@ -35,8 +35,8 @@ export default function NotFound() {
             src="/about-how.webp"
             alt=""
             aria-hidden="true"
-            width={764}
-            height={814}
+            width={804}
+            height={723}
             /* Above the fold on this page — lazy-loading it leaves an empty panel for a beat on the
                one page a visitor arrives at already confused. */
             priority

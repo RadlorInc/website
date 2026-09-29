@@ -20,7 +20,7 @@ export default function Problem() {
     <section className="mx-auto max-w-5xl px-6 pt-20 pb-24">
       <div className="mb-10 max-w-2xl">
         {/* Restates this page's own line: "Nothing was stored." */}
-        <MiloPanel src="/il-contact-support.webp" width={890} height={762} size="sm" priority>
+        <MiloPanel src="/il-contact-support.webp" width={824} height={754} size="sm" priority>
           <p className="text-lg">Nothing was stored, so there is nothing to undo.</p>
         </MiloPanel>
       </div>

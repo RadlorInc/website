@@ -286,7 +286,8 @@ and serve `noindex` on that route. Doing both in the wrong order achieves nothin
 > styles the founder picked — pinned story, zoom, circle reveal, drawn path — in `components/scroll/Scroll.tsx`, with a
 > page top in `PageHero.tsx`. One picture and one short line per point; `/data-and-safety` keeps its full wording under
 > each "Read the details", and `/privacy`, `/terms` and the posts keep their text with a cover picture. Brief for new
-> pictures: men and boys only, full-length trousers, no metallic look. `SectionIcon` and `MiloPanel` survive only for
+> pictures (founder, 2026-09-29): no people or hands at all — objects that draw the section's words — generated on
+> white with Nano Banana 2 and the white flood-filled out; no metallic look. `SectionIcon` and `MiloPanel` survive only for
 > the hidden `/pricing` and `/waitlist/problem`. The rules below about black-ground renders apply only to those.
 
 Until this landed the site had **no images beyond the hero video and the wordmark**. It now has 35,
