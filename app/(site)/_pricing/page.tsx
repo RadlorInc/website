@@ -8,7 +8,7 @@ const additional = usd(PRICING.monthly.additional)
 
 export const metadata: Metadata = {
   title: `Pricing — ${APP_NAME} is ${first} a month for the first child`,
-  description: `${APP_NAME} costs ${first} a month for the first child and ${additional} for each additional child, up to ${PRICING.maxChildren}. Annual billing saves over 20%. Every age band and every chapter is included on every plan.`,
+  description: `${APP_NAME} costs ${first} a month for the first child and ${additional} for each additional child, up to ${PRICING.maxChildren}. Annual billing saves over 20%. Every grade and every lesson is included on every plan.`,
   alternates: { canonical: '/pricing' },
 }
 
@@ -43,8 +43,8 @@ export default function Pricing() {
             <span className="rl-lit" style={{ '--lit': 0.62 } as React.CSSProperties}>{first}</span> a month for the first child.
           </h1>
           <p className="rl-rise mt-6 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.18s' } as React.CSSProperties}>
-            Each additional child is {additional}. Annual billing saves over 20%. Every age band and
-            every chapter is on every plan — there is no tier that holds content back.
+            Each additional child is {additional}. Annual billing saves over 20%. Every grade and
+            every lesson is on every plan — there is no tier that holds content back.
           </p>
           <p className="rl-rise mt-5 text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.22s' } as React.CSSProperties}>
             <strong className="text-foreground font-medium">
@@ -120,11 +120,10 @@ export default function Pricing() {
         <h2 className="rl-reveal-focus font-display text-3xl">What every plan includes</h2>
         <ul className="mt-8 grid gap-6 sm:grid-cols-2 max-w-3xl">
           {[
-            ['Every age band', 'Ages 3–18.'],
-            ['Every chapter', 'Nothing is locked behind a higher tier.'],
-            ['Placement check', 'Helps your child start where they actually are.'],
+            ['Every grade', 'Kindergarten through grade 8.'],
+            ['Every lesson', 'Nothing is locked behind a higher tier.'],
+            ['Where they are stuck', 'See which topics your child is stuck on, and give them any topic from any grade.'],
             ['Parent view', 'See where your child is and what they last worked on.'],
-            ['Camera chapters', 'Available on compatible devices with a webcam.'],
             ['Full access', 'Annual and monthly plans include the same product.'],
           ].map(([label, t], i) => (
             <li key={label} className="rl-reveal-left flex gap-3 text-muted leading-relaxed" style={{ '--i': i + 1 } as React.CSSProperties}>

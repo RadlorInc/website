@@ -29,6 +29,12 @@
 > - Figures dropped as describing the old app: `fig-stages`, `fig-gestures`, `fig-ages`, `fig-roster`,
 >   `fig-camera`, `fig-store` (four cards = the old four stored items). Files left in `public/`.
 > - The two dated posts about the placement check and the camera were left as they are — dated writing.
+>   **2026-09-30:** the gap post was rewritten (`updated` set): the placement check is described as removed
+>   and why, and the post now names only what the app does (stuck report, any-grade topics, spaced review).
+>   Its teenage examples became a seventh-grader (title too; slug unchanged). The camera post was rewritten
+>   the same day: camera chapters removed; the claim is now `Permissions-Policy: camera=()` plus the CSP,
+>   both asserted by the app's `src/__tests__/cspHeader.test.ts`. The hidden `_pricing` feature list
+>   lost "Placement check", "Camera chapters" and "Ages 3–18".
 
 ## ⚠️ THIS REPOSITORY IS PUBLIC — 2026-08-31
 

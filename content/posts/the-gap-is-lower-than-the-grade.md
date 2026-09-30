@@ -1,6 +1,6 @@
-When a fifteen-year-old cannot do the algebra in front of them, the instinct is to teach the algebra
-again, more slowly. Sometimes that works. Often it does not, because the algebra is not where the
-problem is.
+When a seventh-grader cannot solve the equation in front of them, the instinct is to teach the
+equation again, more slowly. Sometimes that works. Often it does not, because the equation is not
+where the problem is.
 
 Placing a child by their school year assumes the year taught them. That assumption is doing an
 enormous amount of unexamined work, and when it is wrong it is wrong quietly — the child keeps being
@@ -11,68 +11,59 @@ handed material one level above a gap nobody has looked for.
 A grade level tells you what a child has been *taught*. It is a record of attendance and curriculum,
 not of understanding, and the two come apart constantly and without announcement.
 
-This matters more the older the child is, because the gaps compound. A missing idea in grade four
+This matters more the higher the grade, because the gaps compound. A missing idea in grade four
 does not stay in grade four. It sits underneath fractions, then underneath ratio, then underneath
 everything in algebra that depends on ratio, and each layer built on top makes it harder to see —
-what you observe at fifteen is a teenager failing at quadratics, not a nine-year-old who never quite
+what you observe in grade seven is a child failing at equations, not a nine-year-old who never quite
 got equivalence.
 
-Teaching the quadratics again treats the symptom you can see.
+Teaching the equations again treats the symptom you can see.
 
-## Finding the root instead of the symptom
+## What we tried, and why we took it out
 
-Radlic starts with a short placement check, and the thing it is looking for is not a level. It
-is the **root gap**: the deepest skill that is missing, underneath whatever the child is visibly
-stuck on.
+When this post was first written, Radlic started with a short placement check. It walked a graph of
+skills and their prerequisites: when a skill expected for the child's age failed, it descended into
+that skill's prerequisites, and kept descending until it reached one whose own prerequisites all
+passed. That skill was the **root gap**, and it was meant to be the first thing taught.
 
-It works by walking a graph of skills and their prerequisites. The check starts at the skills expected
-for the child's age. When one of them fails, it does not stop and record a score — it descends into
-the prerequisites of the failed skill, and if one of those fails it descends again, and it keeps going
-until it reaches a skill whose own prerequisites all pass.
+We removed the check on 20 September 2026. The idea behind it still holds; our evidence that it
+worked did not. Its accuracy had only ever been measured in simulation, never against real children,
+and a check that names the wrong root sends weeks of teaching to the wrong place. A placement result
+we could not stand behind was worse than none, so we took it out rather than keep it with a caveat.
 
-That skill is the root. It is the first thing worth teaching, and it is frequently several grades
-below where the child is sitting. A sixteen-year-old's root gap can be in grade four, and if it is,
-then every hour spent re-explaining grade-ten material is an hour spent building on the same hole.
+## What Radlic does instead
 
-Two things fall out of doing it this way, and both matter more than they look:
+It does not guess where the root is. It shows the adult where the trouble is, lets them reach back
+to any grade, and keeps weak skills in play.
 
-**The check gets easier as it goes on.** Descending into prerequisites means descending into simpler
-material. A child who is struggling does not experience a test that grinds them down — the questions
-get more approachable the further in they get, and the check ends on something they can do. That is a
-design goal, not a side effect. A placement check that ends in failure has taught the child something
-about themselves that will outlast whatever it measured.
+**A parent sees where the child is stuck.** The parent's report shows how often the child's first
+try was right, and lists a topic as stuck once the child has done six or more practice problems in
+it and fewer than half were right on the first try. That is a narrower signal than a root gap — it
+shows where the trouble appears, not where it starts — but it comes from the child's own answers.
 
-**A single wrong answer does not condemn a skill.** Everyone slips. If one careless miss were enough
-to mark a skill failed, the check would descend on a false trail and report a root gap that is not
-there — and a wrong root produces a wrong plan, weeks of teaching aimed at the wrong place. So a miss
-is a strike rather than a verdict: the skill is offered again with a fresh question, a pass forgives
-the slip, and only a second miss confirms it.
+**The parent can reach back to any grade.** Lessons are chosen by the parent, as whole modules or
+single topics, from any grade. If the algebra trouble looks like fractions underneath, the parent can
+give the child the fractions topics, without the child being told they are going back.
+
+**Weak earlier topics come back.** Practice mixes in a problem from the weakest earlier topic the
+child has finished but not mastered, so a skill that did not stick is revisited instead of being
+built on.
+
+**The difficulty keeps moving inside every topic.** A child who starts too high drops to easier
+questions within a few answers, and one who starts too low climbs.
 
 ## What we have not solved
 
-The confirmation runs one way. A missed question is double-checked; a *correct* one is not.
-
-That means a lucky guess can still end a descent one level early — on a multiple-choice item with four
-options, a child who knows nothing gets it right about a quarter of the time. Confirming passes as
-well as fails would close that hole, and it would also roughly double the length of every check.
-
-We have not made that trade, and the reasoning is worth stating plainly rather than hiding: a check
-long enough to be airtight is a check a seven-year-old stops taking seriously halfway through, and the
-data from a demoralised child is worse than the data from a slightly shorter probe. The design leans
-toward the child finishing.
-
-That is a real limitation, not a solved problem. It is also the reason the placement check is a
-starting point rather than a diagnosis — the difficulty keeps moving inside every chapter afterwards,
-so a place that was set slightly too high corrects itself within a few questions rather than standing
-for a term.
+The hard part — finding the root without a parent's judgement — is the part we took out. A parent
+can see that a child is stuck on ratio; the app does not yet tell them the trouble is in grade-four
+equivalence. We would rather say that plainly than ship a check whose answer we cannot vouch for.
 
 ## What the child sees
 
 None of this.
 
-There is no level announced at the end, no score, no "you are working at a grade four standard". The
-check is a set of questions, some of which are harder than others, and then the child starts playing.
-A parent can see where their child actually is. The child gets to not know they were being measured.
+There is no level, no score, no "you are working at a grade four standard". The report is for the
+parent. The child gets to not know they were being measured.
 
-That is the same principle the difficulty engine runs on, and it is the reason both exist: the useful
-part of finding a gap is teaching from it. Telling a child the number is not part of the job.
+The useful part of finding a gap is teaching from it. Telling a child the number is not part of the
+job.
