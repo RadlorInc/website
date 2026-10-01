@@ -7,7 +7,7 @@
  * says "grades K–8" / "kindergarten through grade 8" (founder, 2026-09-28: KG to 2 are live in the app; both sites
  * flipped in one change), the rest is the app's /help in short. No game-time claim (the app's /play is "coming
  * soon") and no teacher-class claim (adding students is paused until a school-consent route exists) until they are
- * live; `npm run check:site-claims` fails if either comes back. The two chalkboards are real lesson screens: content/radlic-demo.json.
+ * live; `npm run check:site-claims` fails if either comes back. The demo plays two real topics whole, every chalkboard screen: content/radlic-demo.json.
  */
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -89,7 +89,7 @@ export default function RadlicPage() {
         </div>
         <div className={s.heroDemo}>
           <LessonDemo demos={demos as Demo[]} />
-          <p className={s.demoNote}>Two real lesson screens, exactly as a child sees them.</p>
+          <p className={s.demoNote}>One whole lesson, every screen exactly as a child sees it.</p>
         </div>
       </section>
 
