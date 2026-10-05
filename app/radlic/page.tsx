@@ -93,6 +93,16 @@ export default function RadlicPage() {
         </div>
       </section>
 
+      {/* A screen recording of the real app (RadlorInc/radlor-internal content/motion/capture/radlic-demo.mjs): Grade 3
+          "Plates of cookies", then module practice. Muted so it may autoplay; controls so it can be paused. */}
+      <section className={s.section} aria-labelledby="watch">
+        <h2 id="watch" className={s.h2}>See Radlic in 40 seconds</h2>
+        <video className={s.video} src="/radlic-demo.mp4" poster="/radlic-demo-poster.jpg" width={1920} height={1080}
+          autoPlay muted loop playsInline controls preload="metadata"
+          aria-label="The Radlic app: picking a Grade 3 topic, a lesson at the chalkboard, the child's first question, then practice" />
+        <p className={s.demoNote}>The real app, recorded: one lesson, then practice.</p>
+      </section>
+
       <section id="how" className={s.section}>
         <h2 className={s.h2}>How a lesson works</h2>
         <PinnedStory steps={STEPS} />
