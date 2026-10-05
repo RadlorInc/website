@@ -101,8 +101,9 @@
 /* ── sections ────────────────────────────────────────── */
 .section { padding-top: 56px; padding-bottom: 56px; }
 .video {
-  display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 22px; background: #EFF8FF;
-  border: 1px solid var(--line); box-shadow: 0 30px 60px -30px rgba(var(--shadow), .3);
+  display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 22px; background: var(--paper-2);
+  /* the video opens on the same pale sky as the page, so its edge is drawn: a white frame and a blue rule */
+  border: 6px solid #fff; outline: 2px solid rgba(var(--shadow), .22); box-shadow: 0 30px 60px -30px rgba(var(--shadow), .45);
 }
 .h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 3.4vw, 36px); line-height: 1.15; margin: 0 0 24px; }
 
