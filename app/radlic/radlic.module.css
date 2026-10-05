@@ -1,18 +1,27 @@
-/* radlor.com/radlic (`page.tsx` + `LessonDemo.tsx`), ported from the app's landing page 2026-09-25. Warm paper, ink text, one orange for actions, the chalkboard
-   as the picture. Text colours were chosen for ≥ 4.5:1 on their own background. */
+/* radlor.com/radlic (`page.tsx` + `LessonDemo.tsx`), ported from the app's landing page 2026-09-25. In the app's own
+   colours since 2026-10-05 (founder): "Sky light · flat" from milo-story-mode src/app/globals.css — pale sky paper, every
+   text a blue, soft-blue buttons with deep-blue text (never white on pale blue), the chalkboard untouched. Text colours
+   are ≥ 4.5:1 on their own background. */
 .page {
   --font-display: var(--rl-fredoka), system-ui, sans-serif;
   --font-chalk: var(--rl-gaegu), 'Comic Sans MS', cursive;
   font-family: var(--rl-nunito), system-ui, sans-serif;
   font-weight: 600;
-  --ink: #2e1d12;
-  --ink-2: #5a4632;
-  --paper: #fff8ec;
-  --paper-2: #fcefd6;
-  --line: rgba(46, 29, 18, .12);
-  --orange: #f26b2c;
-  --orange-ink: #b2440f;   /* orange for text on paper */
-  --cta: #c9501a;          /* button fill: white on it passes 4.5:1 */
+  --ink: #083D85;          /* headings and body: the app's deep blue, 9.6:1 on paper */
+  --ink-2: #1F5AAE;        /* secondary text, 6.3:1 on paper */
+  --paper: #EFF8FF;        /* the app's pale sky page */
+  --paper-2: #E3F3FE;
+  --line: rgba(8, 61, 133, .14);
+  --orange: #2B8AEB;       /* (name kept) the accent: focus rings, marks */
+  --orange-ink: #0B4FA8;   /* (name kept) accent for text on paper, 7.6:1 */
+  --cta: #A5D6FB;          /* the app's filled control … */
+  --on-cta: #0B4FA8;       /* … with deep-blue text, 5.2:1 */
+  --cta-hover: #8FCBFA;
+  --shadow: 8, 61, 133;    /* rgb of shadows */
+  /* the site-wide tokens the shared scroll components read (Scroll.tsx → globals.css), set here so they follow this
+     page's colours in light and dark mode alike */
+  --background: var(--paper); --surface: #fff; --foreground: var(--ink); --muted: var(--ink-2);
+  --accent: var(--orange-ink); --accent-soft: var(--paper-2);
   min-height: 100dvh;
   background: var(--paper);
   color: var(--ink);
@@ -40,16 +49,16 @@
 .ctaRow { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 .cta {
   min-height: 56px; display: inline-flex; align-items: center; justify-content: center; padding: 0 32px;
-  background: var(--cta); color: #fff; border-radius: 999px; font-weight: 800; font-size: 18px; text-decoration: none;
-  box-shadow: 0 8px 20px -10px rgba(178, 68, 15, .8); transition: background-color .2s, box-shadow .2s;
+  background: var(--cta); color: var(--on-cta); border-radius: 999px; font-weight: 800; font-size: 18px; text-decoration: none;
+  box-shadow: 0 8px 20px -10px rgba(var(--shadow), .55); transition: background-color .2s, box-shadow .2s;
 }
-.cta:hover { background: #b2440f; box-shadow: 0 10px 24px -10px rgba(178, 68, 15, .9); }
+.cta:hover { background: var(--cta-hover); box-shadow: 0 10px 24px -10px rgba(var(--shadow), .65); }
 .ctaGhost {
   min-height: 56px; display: inline-flex; align-items: center; padding: 0 22px; border-radius: 999px;
   border: 2px solid var(--line); color: var(--ink); font-weight: 700; font-size: 17px; text-decoration: none;
   transition: border-color .2s, background-color .2s;
 }
-.ctaGhost:hover { border-color: rgba(46, 29, 18, .3); background: #fff; }
+.ctaGhost:hover { border-color: rgba(var(--shadow), .3); background: #fff; }
 
 .heroDemo { min-width: 0; }
 .demoNote { margin: 10px 4px 0; font-size: 14px; color: var(--ink-2); text-align: center; }
@@ -57,14 +66,14 @@
 /* ── the demo card ───────────────────────────────────── */
 .demo {
   background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 14px;
-  box-shadow: 0 30px 60px -30px rgba(46, 29, 18, .35);
+  box-shadow: 0 30px 60px -30px rgba(var(--shadow), .3);
 }
 .tabs { display: flex; gap: 6px; background: var(--paper-2); padding: 4px; border-radius: 14px; margin-bottom: 10px; }
 .tab {
   flex: 1; min-height: 44px; border: 0; border-radius: 10px; background: transparent; cursor: pointer;
   font: inherit; font-weight: 700; font-size: 14px; color: var(--ink-2); transition: background-color .2s, color .2s;
 }
-.tab[aria-selected='true'] { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(46, 29, 18, .15); }
+.tab[aria-selected='true'] { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(var(--shadow), .15); }
 .demoTitle { margin: 4px 4px 10px; font-family: var(--font-display); font-weight: 600; font-size: 17px; }
 .stack { display: grid; }
 .stack > * { grid-area: 1 / 1; }
@@ -92,14 +101,15 @@
 /* ── sections ────────────────────────────────────────── */
 .section { padding-top: 56px; padding-bottom: 56px; }
 .video {
-  display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 22px; background: #EFF8FF;
-  border: 1px solid var(--line); box-shadow: 0 30px 60px -30px rgba(46, 29, 18, .35);
+  display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 22px; background: var(--paper-2);
+  /* the video opens on the same pale sky as the page, so its edge is drawn: a white frame and a blue rule */
+  border: 6px solid #fff; outline: 2px solid rgba(var(--shadow), .22); box-shadow: 0 30px 60px -30px rgba(var(--shadow), .45);
 }
 .h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 3.4vw, 36px); line-height: 1.15; margin: 0 0 24px; }
 
 .list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; font-size: 16px; line-height: 1.5; color: var(--ink-2); }
 .list li { display: flex; gap: 10px; align-items: flex-start; }
-.check { flex: none; width: 20px; height: 20px; margin-top: 2px; color: #2f7a5b; }
+.check { flex: none; width: 20px; height: 20px; margin-top: 2px; color: #4A8F20; }   /* the app's green = right */
 
 .final { text-align: center; padding-top: 40px; padding-bottom: 64px; }
 .final .h2 { margin-bottom: 20px; }
