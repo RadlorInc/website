@@ -127,3 +127,9 @@ half the time.
 > full-colour `public/mark.png` was the header lockup until 2026-08-30. All three were deleted on
 > 2026-08-31; `mark.png` is regenerable from `radlor_logo/logo.png` if it is ever wanted back.
 > Next cannot have both `icon.tsx` and `icon.png`.
+
+## `/radlic` uses the app's colours, not this palette (founder, 2026-10-05)
+
+The Radlic landing page is in the Radlic app's "Sky light · flat" palette (milo-story-mode `src/app/globals.css`), so a
+parent goes from the page to the app without a change of look. The tokens, with contrast, are at the top of
+`app/radlic/radlic.module.css`, scoped to `.page`; the rest of radlor.com keeps the palette above.
