@@ -2,316 +2,1503 @@
  {
   "id": "g3m5-t1",
   "tag": "Grade 3 · Fractions",
-  "title": "More friends, more cuts",
-  "label": "What if 4 friends share the sandwich? Then we cut 4 pieces, and every piece is the same size. Each friend gets 1 of the 4 equal pieces.",
-  "marks": [
+  "title": "Cut the sandwich fairly",
+  "hook": "You and a friend share one sandwich. It is cut into 2 pieces. Is that fair?",
+  "turn": "This sandwich is cut into 3 pieces. Are the pieces fair?",
+  "screens": [
    {
-    "beat": 0,
-    "at": "friends",
-    "c": "d",
-    "d": "M150 55 a10.4 10.4 0 1 0 0.1 0 M150 75.8 L150 101.4 L133.2 135 M150 101.4 L166.8 135 M132.4 85.4 L150 82.2 L167.6 85.4",
-    "quick": true
+    "title": "Two pieces is not enough to know",
+    "label": "2 pieces, one for each of you. That sounds fair. But look. This sandwich has 2 pieces too, one big and one small. So is counting the pieces enough? No.",
+    "marks": [
+     {
+      "beat": 0,
+      "at": "2",
+      "c": "w",
+      "d": "M80 50 h360 v70 h-360 Z M260 50 v70"
+     },
+     {
+      "beat": 0,
+      "at": "each",
+      "t": "you",
+      "x": 170,
+      "y": 85,
+      "s": 24,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "each",
+      "t": "friend",
+      "x": 350,
+      "y": 85,
+      "s": 24,
+      "c": "d"
+     },
+     {
+      "beat": 1,
+      "at": "sandwich",
+      "c": "w",
+      "d": "M80 180 h360 v70 h-360 Z M350 180 v70"
+     },
+     {
+      "beat": 1,
+      "at": "big",
+      "t": "big",
+      "x": 215,
+      "y": 215,
+      "s": 26,
+      "c": "r"
+     },
+     {
+      "beat": 1,
+      "at": "small",
+      "t": "small",
+      "x": 395,
+      "y": 215,
+      "s": 22,
+      "c": "r"
+     },
+     {
+      "beat": 2,
+      "at": "counting",
+      "t": "2 pieces",
+      "x": 520,
+      "y": 85,
+      "s": 22,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 2,
+      "at": "counting",
+      "t": "2 pieces",
+      "x": 520,
+      "y": 215,
+      "s": 22,
+      "c": "d"
+     },
+     {
+      "beat": 2,
+      "at": "No",
+      "t": "counting is not enough",
+      "x": 300,
+      "y": 320,
+      "s": 30,
+      "c": "r"
+     }
+    ],
+    "says": [
+     "2 pieces, one for each of you. That sounds fair.",
+     "But look. This sandwich has 2 pieces too, one big and one small.",
+     "So is counting the pieces enough? No."
+    ]
    },
    {
-    "beat": 0,
-    "at": "friends",
-    "c": "d",
-    "d": "M250 55 a10.4 10.4 0 1 0 0.1 0 M250 75.8 L250 101.4 L233.2 135 M250 101.4 L266.8 135 M232.4 85.4 L250 82.2 L267.6 85.4",
-    "quick": true
+    "title": "The big idea",
+    "label": "A cut is fair only when every piece is the same size.",
+    "marks": [
+     {
+      "beat": 0,
+      "at": "fair",
+      "t": "fair",
+      "x": 300,
+      "y": 70,
+      "s": 36,
+      "c": "y"
+     },
+     {
+      "beat": 0,
+      "at": "every",
+      "c": "w",
+      "d": "M100 120 h400 v80 h-400 Z M200 120 v80 M300 120 v80 M400 120 v80"
+     },
+     {
+      "beat": 0,
+      "at": "same",
+      "c": "y",
+      "d": "M106 225 v20 M194 225 v20 M106 235 H194 M118 227 L106 235 L118 243 M182 227 L194 235 L182 243",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "same",
+      "c": "y",
+      "d": "M206 225 v20 M294 225 v20 M206 235 H294 M218 227 L206 235 L218 243 M282 227 L294 235 L282 243",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "same",
+      "c": "y",
+      "d": "M306 225 v20 M394 225 v20 M306 235 H394 M318 227 L306 235 L318 243 M382 227 L394 235 L382 243",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "same",
+      "c": "y",
+      "d": "M406 225 v20 M494 225 v20 M406 235 H494 M418 227 L406 235 L418 243 M482 227 L494 235 L482 243",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "size",
+      "t": "every piece the same size",
+      "x": 300,
+      "y": 300,
+      "s": 30,
+      "c": "y"
+     }
+    ],
+    "says": [
+     "A cut is fair only when every piece is the same size."
+    ]
    },
    {
-    "beat": 0,
-    "at": "friends",
-    "c": "d",
-    "d": "M350 55 a10.4 10.4 0 1 0 0.1 0 M350 75.8 L350 101.4 L333.2 135 M350 101.4 L366.8 135 M332.4 85.4 L350 82.2 L367.6 85.4",
-    "quick": true
+    "title": "Cut down the middle",
+    "label": "Look. I'll cut the sandwich right down the middle. Now check. Are both pieces the same size? Yes, they match. That's 2 fair pieces, one for you and one for your friend.",
+    "marks": [
+     {
+      "beat": 0,
+      "at": "sandwich",
+      "c": "w",
+      "d": "M150 50 h300 v80 h-300 Z"
+     },
+     {
+      "beat": 0,
+      "at": "middle",
+      "c": "y",
+      "w": 4,
+      "d": "M300 38 V142"
+     },
+     {
+      "beat": 1,
+      "at": "both",
+      "c": "y",
+      "d": "M156 155 v20 M294 155 v20 M156 165 H294 M168 157 L156 165 L168 173 M282 157 L294 165 L282 173",
+      "quick": true
+     },
+     {
+      "beat": 1,
+      "at": "both",
+      "c": "y",
+      "d": "M306 155 v20 M444 155 v20 M306 165 H444 M318 157 L306 165 L318 173 M432 157 L444 165 L432 173",
+      "quick": true
+     },
+     {
+      "beat": 1,
+      "at": "match",
+      "t": "they match",
+      "x": 300,
+      "y": 210,
+      "s": 28,
+      "c": "y"
+     },
+     {
+      "beat": 2,
+      "at": "fair",
+      "t": "2 fair pieces",
+      "x": 300,
+      "y": 265,
+      "s": 32,
+      "c": "y"
+     },
+     {
+      "beat": 2,
+      "at": "you",
+      "t": "you",
+      "x": 225,
+      "y": 330,
+      "s": 26,
+      "c": "b"
+     },
+     {
+      "beat": 2,
+      "at": "friend",
+      "t": "friend",
+      "x": 375,
+      "y": 330,
+      "s": 26,
+      "c": "b"
+     }
+    ],
+    "says": [
+     "Look. I'll cut the sandwich right down the middle.",
+     "Now check. Are both pieces the same size? Yes, they match.",
+     "That's 2 fair pieces, one for you and one for your friend."
+    ]
    },
    {
-    "beat": 0,
-    "at": "friends",
-    "c": "d",
-    "d": "M450 55 a10.4 10.4 0 1 0 0.1 0 M450 75.8 L450 101.4 L433.2 135 M450 101.4 L466.8 135 M432.4 85.4 L450 82.2 L467.6 85.4",
-    "quick": true
+    "title": "More friends, more cuts",
+    "label": "What if 4 friends share the sandwich? Then we cut 4 pieces, and every piece is the same size. Each friend gets 1 of the 4 equal pieces.",
+    "marks": [
+     {
+      "beat": 0,
+      "at": "friends",
+      "c": "d",
+      "d": "M150 55 a10.4 10.4 0 1 0 0.1 0 M150 75.8 L150 101.4 L133.2 135 M150 101.4 L166.8 135 M132.4 85.4 L150 82.2 L167.6 85.4",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "friends",
+      "c": "d",
+      "d": "M250 55 a10.4 10.4 0 1 0 0.1 0 M250 75.8 L250 101.4 L233.2 135 M250 101.4 L266.8 135 M232.4 85.4 L250 82.2 L267.6 85.4",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "friends",
+      "c": "d",
+      "d": "M350 55 a10.4 10.4 0 1 0 0.1 0 M350 75.8 L350 101.4 L333.2 135 M350 101.4 L366.8 135 M332.4 85.4 L350 82.2 L367.6 85.4",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "friends",
+      "c": "d",
+      "d": "M450 55 a10.4 10.4 0 1 0 0.1 0 M450 75.8 L450 101.4 L433.2 135 M450 101.4 L466.8 135 M432.4 85.4 L450 82.2 L467.6 85.4",
+      "quick": true
+     },
+     {
+      "beat": 1,
+      "at": "cut",
+      "c": "w",
+      "d": "M100 170 h400 v70 h-400 Z M200 170 v70 M300 170 v70 M400 170 v70"
+     },
+     {
+      "beat": 1,
+      "at": "same",
+      "c": "y",
+      "d": "M106 255 v20 M194 255 v20 M106 265 H194 M118 257 L106 265 L118 273 M182 257 L194 265 L182 273",
+      "quick": true
+     },
+     {
+      "beat": 1,
+      "at": "same",
+      "c": "y",
+      "d": "M206 255 v20 M294 255 v20 M206 265 H294 M218 257 L206 265 L218 273 M282 257 L294 265 L282 273",
+      "quick": true
+     },
+     {
+      "beat": 1,
+      "at": "same",
+      "c": "y",
+      "d": "M306 255 v20 M394 255 v20 M306 265 H394 M318 257 L306 265 L318 273 M382 257 L394 265 L382 273",
+      "quick": true
+     },
+     {
+      "beat": 1,
+      "at": "same",
+      "c": "y",
+      "d": "M406 255 v20 M494 255 v20 M406 265 H494 M418 257 L406 265 L418 273 M482 257 L494 265 L482 273",
+      "quick": true
+     },
+     {
+      "beat": 2,
+      "at": "gets",
+      "d": "M100 170 h100 v70 h-100 Z",
+      "c": "b",
+      "wash": true
+     },
+     {
+      "beat": 2,
+      "at": "1",
+      "t": "1 of 4 equal pieces",
+      "x": 300,
+      "y": 330,
+      "s": 30,
+      "c": "b"
+     }
+    ],
+    "says": [
+     "What if 4 friends share the sandwich?",
+     "Then we cut 4 pieces, and every piece is the same size.",
+     "Each friend gets 1 of the 4 equal pieces."
+    ]
    },
    {
-    "beat": 1,
-    "at": "cut",
-    "c": "w",
-    "d": "M100 170 h400 v70 h-400 Z M200 170 v70 M300 170 v70 M400 170 v70"
+    "title": "Check with your eyes",
+    "label": "How can you check a cut? Just look at the pieces. If every piece matches, the cut is fair. If even one piece is bigger, it is not fair.",
+    "marks": [
+     {
+      "beat": 1,
+      "at": "every",
+      "c": "w",
+      "d": "M80 60 h360 v70 h-360 Z M200 60 v70 M320 60 v70"
+     },
+     {
+      "beat": 1,
+      "at": "matches",
+      "c": "y",
+      "d": "M86 145 v20 M194 145 v20 M86 155 H194 M98 147 L86 155 L98 163 M182 147 L194 155 L182 163",
+      "quick": true
+     },
+     {
+      "beat": 1,
+      "at": "matches",
+      "c": "y",
+      "d": "M206 145 v20 M314 145 v20 M206 155 H314 M218 147 L206 155 L218 163 M302 147 L314 155 L302 163",
+      "quick": true
+     },
+     {
+      "beat": 1,
+      "at": "matches",
+      "c": "y",
+      "d": "M326 145 v20 M434 145 v20 M326 155 H434 M338 147 L326 155 L338 163 M422 147 L434 155 L422 163",
+      "quick": true
+     },
+     {
+      "beat": 1,
+      "at": "fair",
+      "t": "fair",
+      "x": 510,
+      "y": 95,
+      "s": 32,
+      "c": "y"
+     },
+     {
+      "beat": 1,
+      "at": "fair",
+      "d": "M548 95 L557 106 L576 82",
+      "c": "y",
+      "w": 4
+     },
+     {
+      "beat": 2,
+      "at": "one",
+      "c": "w",
+      "d": "M80 220 h360 v70 h-360 Z M272 220 v70 M356 220 v70"
+     },
+     {
+      "beat": 2,
+      "at": "bigger",
+      "c": "r",
+      "d": "M70 255 a106 48 0 1 0 212 0 a106 48 0 1 0 -212 0"
+     },
+     {
+      "beat": 2,
+      "at": "not",
+      "t": "not fair",
+      "x": 515,
+      "y": 255,
+      "s": 30,
+      "c": "r"
+     }
+    ],
+    "says": [
+     "How can you check a cut? Just look at the pieces.",
+     "If every piece matches, the cut is fair.",
+     "If even one piece is bigger, it is not fair."
+    ]
    },
    {
-    "beat": 1,
-    "at": "same",
-    "c": "y",
-    "d": "M106 255 v20 M194 255 v20 M106 265 H194 M118 257 L106 265 L118 273 M182 257 L194 265 L182 273",
-    "quick": true
-   },
-   {
-    "beat": 1,
-    "at": "same",
-    "c": "y",
-    "d": "M206 255 v20 M294 255 v20 M206 265 H294 M218 257 L206 265 L218 273 M282 257 L294 265 L282 273",
-    "quick": true
-   },
-   {
-    "beat": 1,
-    "at": "same",
-    "c": "y",
-    "d": "M306 255 v20 M394 255 v20 M306 265 H394 M318 257 L306 265 L318 273 M382 257 L394 265 L382 273",
-    "quick": true
-   },
-   {
-    "beat": 1,
-    "at": "same",
-    "c": "y",
-    "d": "M406 255 v20 M494 255 v20 M406 265 H494 M418 257 L406 265 L418 273 M482 257 L494 265 L482 273",
-    "quick": true
-   },
-   {
-    "beat": 2,
-    "at": "gets",
-    "d": "M100 170 h100 v70 h-100 Z",
-    "c": "b",
-    "wash": true
-   },
-   {
-    "beat": 2,
-    "at": "1",
-    "t": "1 of 4 equal pieces",
-    "x": 300,
-    "y": 330,
-    "s": 30,
-    "c": "b"
+    "title": "One thing not to do",
+    "label": "Here's the part people mix up. Don't just COUNT the pieces and call it fair. 4 pieces are not fair if one is bigger. Every piece has to be the same size. Okay. Your turn.",
+    "marks": [
+     {
+      "beat": 0,
+      "at": "mix",
+      "d": "M300 30 L345 105 L255 105 L300 30",
+      "c": "r"
+     },
+     {
+      "beat": 0,
+      "at": "mix",
+      "t": "!",
+      "x": 300,
+      "y": 80,
+      "s": 40,
+      "c": "r"
+     },
+     {
+      "beat": 1,
+      "at": "COUNT",
+      "c": "w",
+      "d": "M60 140 h300 v60 h-300 Z M180 140 v60 M240 140 v60 M300 140 v60"
+     },
+     {
+      "beat": 1,
+      "at": "pieces",
+      "t": "4 pieces",
+      "x": 440,
+      "y": 170,
+      "s": 26,
+      "c": "r"
+     },
+     {
+      "beat": 1,
+      "at": "fair",
+      "t": "= fair",
+      "x": 530,
+      "y": 170,
+      "s": 26,
+      "c": "r"
+     },
+     {
+      "beat": 1,
+      "at": "fair",
+      "c": "r",
+      "w": 4.5,
+      "d": "M492 150 L568 190 M568 150 L492 190"
+     },
+     {
+      "beat": 2,
+      "at": "bigger",
+      "c": "r",
+      "d": "M53 170 a58 42 0 1 0 116 0 a58 42 0 1 0 -116 0"
+     },
+     {
+      "beat": 2,
+      "at": "Every",
+      "c": "y",
+      "d": "M60 270 h300 v60 h-300 Z M135 270 v60 M210 270 v60 M285 270 v60"
+     },
+     {
+      "beat": 2,
+      "at": "same",
+      "t": "same size = fair",
+      "x": 475,
+      "y": 300,
+      "s": 24,
+      "c": "y"
+     }
+    ],
+    "says": [
+     "Here's the part people mix up.",
+     "Don't just COUNT the pieces and call it fair.",
+     "4 pieces are not fair if one is bigger. Every piece has to be the same size.",
+     "Okay. Your turn."
+    ]
    }
-  ],
-  "says": [
-   "What if 4 friends share the sandwich?",
-   "Then we cut 4 pieces, and every piece is the same size.",
-   "Each friend gets 1 of the 4 equal pieces."
   ]
  },
  {
   "id": "g8m4-t1",
   "tag": "Grade 8 · Geometry",
-  "title": "Follow one corner",
-  "label": "Take corner A. It starts at (1, 1). Move it 4 to the right, and x goes from 1 up to 5. Move it 2 up, and y goes from 1 up to 3. So A lands on (5, 3). We call that new point A prime.",
-  "marks": [
+  "title": "Slides (translations)",
+  "hook": "A triangle sticker sits on a grid. You slide it 4 squares right and 2 squares up, without turning it. Where does it land?",
+  "turn": "Point A is at (2, 1). The triangle slides 5 right and 3 up. What is the x-coordinate of A′?",
+  "screens": [
    {
-    "beat": 0,
-    "at": "corner",
-    "c": "d",
-    "w": 1.2,
-    "d": "M40 360 V72 M40 360 H328 M76 360 V72 M40 324 H328 M112 360 V72 M40 288 H328 M148 360 V72 M40 252 H328 M184 360 V72 M40 216 H328 M220 360 V72 M40 180 H328 M256 360 V72 M40 144 H328 M292 360 V72 M40 108 H328 M328 360 V72 M40 72 H328",
-    "quick": true
+    "title": "Dragging is not exact",
+    "label": "You could just drag it across and hope it lands right. But where exactly does it land? Hoping can't tell you. You need the new spot of every single corner.",
+    "marks": [
+     {
+      "beat": 0,
+      "at": "drag",
+      "c": "d",
+      "w": 1.2,
+      "d": "M40 360 V72 M40 360 H328 M76 360 V72 M40 324 H328 M112 360 V72 M40 288 H328 M148 360 V72 M40 252 H328 M184 360 V72 M40 216 H328 M220 360 V72 M40 180 H328 M256 360 V72 M40 144 H328 M292 360 V72 M40 108 H328 M328 360 V72 M40 72 H328",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "drag",
+      "d": "M40 360 L328 360",
+      "c": "w",
+      "w": 2.6,
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "drag",
+      "d": "M40 360 L40 72",
+      "c": "w",
+      "w": 2.6,
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "drag",
+      "t": "2",
+      "x": 112,
+      "y": 376,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "drag",
+      "t": "2",
+      "x": 24,
+      "y": 288,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "drag",
+      "t": "4",
+      "x": 184,
+      "y": 376,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "drag",
+      "t": "4",
+      "x": 24,
+      "y": 216,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "drag",
+      "t": "6",
+      "x": 256,
+      "y": 376,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "drag",
+      "t": "6",
+      "x": 24,
+      "y": 144,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "drag",
+      "t": "8",
+      "x": 328,
+      "y": 376,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "drag",
+      "t": "8",
+      "x": 24,
+      "y": 72,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "drag",
+      "d": "M76 324 L148 324 L76 252 L76 324",
+      "c": "w"
+     },
+     {
+      "beat": 0,
+      "at": "across",
+      "c": "d",
+      "d": "M112 288 L256 216 M242.00924945565873 215.4911786108915 L256 216 L248.01260678468202 227.49789326893813"
+     },
+     {
+      "beat": 0,
+      "at": "hope",
+      "t": "?",
+      "x": 272,
+      "y": 196,
+      "s": 34,
+      "c": "r"
+     },
+     {
+      "beat": 1,
+      "at": "exactly",
+      "t": "where exactly?",
+      "x": 470,
+      "y": 110,
+      "s": 30,
+      "c": "w"
+     },
+     {
+      "beat": 2,
+      "at": "corner",
+      "c": "y",
+      "d": "M66 324 a10 10 0 1 0 20 0 a10 10 0 1 0 -20 0",
+      "quick": true
+     },
+     {
+      "beat": 2,
+      "at": "corner",
+      "c": "y",
+      "d": "M138 324 a10 10 0 1 0 20 0 a10 10 0 1 0 -20 0",
+      "quick": true
+     },
+     {
+      "beat": 2,
+      "at": "corner",
+      "c": "y",
+      "d": "M66 252 a10 10 0 1 0 20 0 a10 10 0 1 0 -20 0",
+      "quick": true
+     },
+     {
+      "beat": 2,
+      "at": "corner",
+      "t": "3 corners",
+      "x": 470,
+      "y": 190,
+      "s": 28,
+      "c": "y"
+     },
+     {
+      "beat": 2,
+      "at": "corner",
+      "t": "3 new spots",
+      "x": 470,
+      "y": 230,
+      "s": 28,
+      "c": "y"
+     }
+    ],
+    "says": [
+     "You could just drag it across and hope it lands right.",
+     "But where exactly does it land? Hoping can't tell you.",
+     "You need the new spot of every single corner."
+    ]
    },
    {
-    "beat": 0,
-    "at": "corner",
-    "d": "M40 360 L328 360",
-    "c": "w",
-    "w": 2.6,
-    "quick": true
+    "title": "The big idea",
+    "label": "In a slide, every point moves the same distance in the same direction.",
+    "marks": [
+     {
+      "beat": 0,
+      "at": "slide",
+      "c": "d",
+      "w": 1.2,
+      "d": "M40 360 V72 M40 360 H328 M76 360 V72 M40 324 H328 M112 360 V72 M40 288 H328 M148 360 V72 M40 252 H328 M184 360 V72 M40 216 H328 M220 360 V72 M40 180 H328 M256 360 V72 M40 144 H328 M292 360 V72 M40 108 H328 M328 360 V72 M40 72 H328",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "slide",
+      "d": "M40 360 L328 360",
+      "c": "w",
+      "w": 2.6,
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "slide",
+      "d": "M40 360 L40 72",
+      "c": "w",
+      "w": 2.6,
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "slide",
+      "t": "2",
+      "x": 112,
+      "y": 376,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "slide",
+      "t": "2",
+      "x": 24,
+      "y": 288,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "slide",
+      "t": "4",
+      "x": 184,
+      "y": 376,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "slide",
+      "t": "4",
+      "x": 24,
+      "y": 216,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "slide",
+      "t": "6",
+      "x": 256,
+      "y": 376,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "slide",
+      "t": "6",
+      "x": 24,
+      "y": 144,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "slide",
+      "t": "8",
+      "x": 328,
+      "y": 376,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "slide",
+      "t": "8",
+      "x": 24,
+      "y": 72,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "slide",
+      "d": "M76 324 L148 324 L76 252 L76 324",
+      "c": "w"
+     },
+     {
+      "beat": 0,
+      "at": "slide",
+      "t": "A",
+      "x": 62,
+      "y": 340,
+      "s": 20,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "slide",
+      "t": "B",
+      "x": 160,
+      "y": 340,
+      "s": 20,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "slide",
+      "t": "C",
+      "x": 62,
+      "y": 240,
+      "s": 20,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "point",
+      "c": "y",
+      "d": "M76 324 L220 252 M206.00924945565873 251.4911786108915 L220 252 L212.01260678468202 263.4978932689381"
+     },
+     {
+      "beat": 0,
+      "at": "point",
+      "c": "y",
+      "d": "M148 324 L292 252 M278.00924945565873 251.4911786108915 L292 252 L284.012606784682 263.4978932689381"
+     },
+     {
+      "beat": 0,
+      "at": "point",
+      "c": "y",
+      "d": "M76 252 L220 180 M206.00924945565873 179.4911786108915 L220 180 L212.01260678468202 191.49789326893813"
+     },
+     {
+      "beat": 0,
+      "at": "distance",
+      "t": "same distance",
+      "x": 470,
+      "y": 150,
+      "s": 30,
+      "c": "y"
+     },
+     {
+      "beat": 0,
+      "at": "direction",
+      "t": "same direction",
+      "x": 470,
+      "y": 200,
+      "s": 30,
+      "c": "y"
+     },
+     {
+      "beat": 0,
+      "at": "direction",
+      "d": "M220 252 L292 252 L220 180 L220 252",
+      "c": "y"
+     }
+    ],
+    "says": [
+     "In a slide, every point moves the same distance in the same direction."
+    ]
    },
    {
-    "beat": 0,
-    "at": "corner",
-    "d": "M40 360 L40 72",
-    "c": "w",
-    "w": 2.6,
-    "quick": true
+    "title": "Follow one corner",
+    "label": "Take corner A. It starts at (1, 1). Move it 4 to the right, and x goes from 1 up to 5. Move it 2 up, and y goes from 1 up to 3. So A lands on (5, 3). We call that new point A prime.",
+    "marks": [
+     {
+      "beat": 0,
+      "at": "corner",
+      "c": "d",
+      "w": 1.2,
+      "d": "M40 360 V72 M40 360 H328 M76 360 V72 M40 324 H328 M112 360 V72 M40 288 H328 M148 360 V72 M40 252 H328 M184 360 V72 M40 216 H328 M220 360 V72 M40 180 H328 M256 360 V72 M40 144 H328 M292 360 V72 M40 108 H328 M328 360 V72 M40 72 H328",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "corner",
+      "d": "M40 360 L328 360",
+      "c": "w",
+      "w": 2.6,
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "corner",
+      "d": "M40 360 L40 72",
+      "c": "w",
+      "w": 2.6,
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "corner",
+      "t": "2",
+      "x": 112,
+      "y": 376,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "corner",
+      "t": "2",
+      "x": 24,
+      "y": 288,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "corner",
+      "t": "4",
+      "x": 184,
+      "y": 376,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "corner",
+      "t": "4",
+      "x": 24,
+      "y": 216,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "corner",
+      "t": "6",
+      "x": 256,
+      "y": 376,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "corner",
+      "t": "6",
+      "x": 24,
+      "y": 144,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "corner",
+      "t": "8",
+      "x": 328,
+      "y": 376,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "corner",
+      "t": "8",
+      "x": 24,
+      "y": 72,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "corner",
+      "d": "M76 324 L148 324 L76 252 L76 324",
+      "c": "w"
+     },
+     {
+      "beat": 0,
+      "at": "corner",
+      "t": "A",
+      "x": 62,
+      "y": 340,
+      "s": 20,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "corner",
+      "t": "B",
+      "x": 160,
+      "y": 340,
+      "s": 20,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "corner",
+      "t": "C",
+      "x": 62,
+      "y": 240,
+      "s": 20,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "A",
+      "c": "y",
+      "d": "M65 324 a11 11 0 1 0 22 0 a11 11 0 1 0 -22 0"
+     },
+     {
+      "beat": 0,
+      "at": "(1,",
+      "t": "A (1, 1)",
+      "x": 470,
+      "y": 80,
+      "s": 30,
+      "c": "w"
+     },
+     {
+      "beat": 1,
+      "at": "right",
+      "c": "b",
+      "d": "M76 324 L220 324 M207.7138441335348 317.28804245954115 L220 324 L207.7138441335348 330.71195754045885"
+     },
+     {
+      "beat": 1,
+      "at": "5",
+      "t": "x: 1 → 5",
+      "x": 470,
+      "y": 150,
+      "s": 30,
+      "c": "b"
+     },
+     {
+      "beat": 2,
+      "at": "up",
+      "c": "b",
+      "d": "M220 324 L220 252 M213.28804245954115 264.2861558664652 L220 252 L226.71195754045885 264.2861558664652"
+     },
+     {
+      "beat": 2,
+      "at": "3",
+      "t": "y: 1 → 3",
+      "x": 470,
+      "y": 210,
+      "s": 30,
+      "c": "b"
+     },
+     {
+      "beat": 3,
+      "at": "lands",
+      "c": "y",
+      "d": "M209 252 a11 11 0 1 0 22 0 a11 11 0 1 0 -22 0"
+     },
+     {
+      "beat": 3,
+      "at": "prime",
+      "t": "A′",
+      "x": 236,
+      "y": 238,
+      "s": 20,
+      "c": "y",
+      "quick": true
+     },
+     {
+      "beat": 3,
+      "at": "prime",
+      "t": "A′ (5, 3)",
+      "x": 470,
+      "y": 290,
+      "s": 36,
+      "c": "y"
+     }
+    ],
+    "says": [
+     "Take corner A. It starts at (1, 1).",
+     "Move it 4 to the right, and x goes from 1 up to 5.",
+     "Move it 2 up, and y goes from 1 up to 3.",
+     "So A lands on (5, 3). We call that new point A prime."
+    ]
    },
    {
-    "beat": 0,
-    "at": "corner",
-    "t": "2",
-    "x": 112,
-    "y": 376,
-    "s": 18,
-    "c": "d",
-    "quick": true
+    "title": "Every corner moves the same",
+    "label": "The other two corners do the same thing. B at (3, 1) goes to (7, 3). C at (1, 3) goes to (5, 5). Every corner went 4 right and 2 up. Nothing stretched and nothing turned, so it is the same triangle, just moved.",
+    "marks": [
+     {
+      "beat": 0,
+      "at": "other",
+      "c": "d",
+      "w": 1.2,
+      "d": "M40 360 V72 M40 360 H328 M76 360 V72 M40 324 H328 M112 360 V72 M40 288 H328 M148 360 V72 M40 252 H328 M184 360 V72 M40 216 H328 M220 360 V72 M40 180 H328 M256 360 V72 M40 144 H328 M292 360 V72 M40 108 H328 M328 360 V72 M40 72 H328",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "other",
+      "d": "M40 360 L328 360",
+      "c": "w",
+      "w": 2.6,
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "other",
+      "d": "M40 360 L40 72",
+      "c": "w",
+      "w": 2.6,
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "other",
+      "t": "2",
+      "x": 112,
+      "y": 376,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "other",
+      "t": "2",
+      "x": 24,
+      "y": 288,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "other",
+      "t": "4",
+      "x": 184,
+      "y": 376,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "other",
+      "t": "4",
+      "x": 24,
+      "y": 216,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "other",
+      "t": "6",
+      "x": 256,
+      "y": 376,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "other",
+      "t": "6",
+      "x": 24,
+      "y": 144,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "other",
+      "t": "8",
+      "x": 328,
+      "y": 376,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "other",
+      "t": "8",
+      "x": 24,
+      "y": 72,
+      "s": 18,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "other",
+      "d": "M76 324 L148 324 L76 252 L76 324",
+      "c": "w"
+     },
+     {
+      "beat": 0,
+      "at": "other",
+      "t": "A",
+      "x": 62,
+      "y": 340,
+      "s": 20,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "other",
+      "t": "B",
+      "x": 160,
+      "y": 340,
+      "s": 20,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "other",
+      "t": "C",
+      "x": 62,
+      "y": 240,
+      "s": 20,
+      "c": "d",
+      "quick": true
+     },
+     {
+      "beat": 0,
+      "at": "other",
+      "c": "d",
+      "d": "M76 324 L220 252 M206.00924945565873 251.4911786108915 L220 252 L212.01260678468202 263.4978932689381"
+     },
+     {
+      "beat": 1,
+      "at": "B",
+      "c": "d",
+      "d": "M148 324 L292 252 M278.00924945565873 251.4911786108915 L292 252 L284.012606784682 263.4978932689381"
+     },
+     {
+      "beat": 1,
+      "at": "B",
+      "t": "B (3, 1) → (7, 3)",
+      "x": 470,
+      "y": 80,
+      "s": 24,
+      "c": "w"
+     },
+     {
+      "beat": 1,
+      "at": "C",
+      "c": "d",
+      "d": "M76 252 L220 180 M206.00924945565873 179.4911786108915 L220 180 L212.01260678468202 191.49789326893813"
+     },
+     {
+      "beat": 1,
+      "at": "C",
+      "t": "C (1, 3) → (5, 5)",
+      "x": 470,
+      "y": 125,
+      "s": 24,
+      "c": "w"
+     },
+     {
+      "beat": 1,
+      "at": "C",
+      "d": "M220 252 L292 252 L220 180 L220 252",
+      "c": "y"
+     },
+     {
+      "beat": 2,
+      "at": "Every",
+      "t": "every corner:",
+      "x": 470,
+      "y": 195,
+      "s": 24,
+      "c": "d"
+     },
+     {
+      "beat": 2,
+      "at": "up",
+      "t": "4 right, 2 up",
+      "x": 470,
+      "y": 232,
+      "s": 30,
+      "c": "y"
+     },
+     {
+      "beat": 3,
+      "at": "same",
+      "t": "same triangle,",
+      "x": 470,
+      "y": 300,
+      "s": 28,
+      "c": "w"
+     },
+     {
+      "beat": 3,
+      "at": "moved",
+      "t": "just moved",
+      "x": 470,
+      "y": 340,
+      "s": 28,
+      "c": "w"
+     }
+    ],
+    "says": [
+     "The other two corners do the same thing.",
+     "B at (3, 1) goes to (7, 3). C at (1, 3) goes to (5, 5).",
+     "Every corner went 4 right and 2 up.",
+     "Nothing stretched and nothing turned, so it is the same triangle, just moved."
+    ]
    },
    {
-    "beat": 0,
-    "at": "corner",
-    "t": "2",
-    "x": 24,
-    "y": 288,
-    "s": 18,
-    "c": "d",
-    "quick": true
+    "title": "Right and up add",
+    "label": "Is there a rule that works for every point? Yes. Right adds to x, and left takes away from x. Up adds to y, and down takes away from y. So for 4 right and 2 up, every point (x, y) becomes (x + 4, y + 2).",
+    "marks": [
+     {
+      "beat": 0,
+      "at": "rule",
+      "t": "a rule for every point?",
+      "x": 300,
+      "y": 50,
+      "s": 32,
+      "c": "w"
+     },
+     {
+      "beat": 1,
+      "at": "Right",
+      "c": "b",
+      "d": "M60 125 L130 125 M117.71384413353478 118.28804245954116 L130 125 L117.71384413353478 131.71195754045885"
+     },
+     {
+      "beat": 1,
+      "at": "adds",
+      "t": "adds to x",
+      "x": 230,
+      "y": 125,
+      "s": 28,
+      "c": "w"
+     },
+     {
+      "beat": 1,
+      "at": "left",
+      "c": "b",
+      "d": "M400 125 L330 125 M342.2861558664652 131.71195754045885 L330 125 L342.2861558664652 118.28804245954116"
+     },
+     {
+      "beat": 1,
+      "at": "takes",
+      "t": "takes from x",
+      "x": 500,
+      "y": 125,
+      "s": 26,
+      "c": "w"
+     },
+     {
+      "beat": 2,
+      "at": "Up",
+      "c": "b",
+      "d": "M95 225 L95 170 M88.28804245954116 182.2861558664652 L95 170 L101.71195754045884 182.2861558664652"
+     },
+     {
+      "beat": 2,
+      "at": "adds",
+      "t": "adds to y",
+      "x": 230,
+      "y": 198,
+      "s": 28,
+      "c": "w"
+     },
+     {
+      "beat": 2,
+      "at": "down",
+      "c": "b",
+      "d": "M365 170 L365 225 M371.71195754045885 212.7138441335348 L365 225 L358.28804245954115 212.7138441335348"
+     },
+     {
+      "beat": 2,
+      "at": "takes",
+      "t": "takes from y",
+      "x": 500,
+      "y": 198,
+      "s": 26,
+      "c": "w"
+     },
+     {
+      "beat": 3,
+      "at": "right",
+      "t": "4 right, 2 up",
+      "x": 300,
+      "y": 270,
+      "s": 26,
+      "c": "d"
+     },
+     {
+      "beat": 3,
+      "at": "becomes",
+      "t": "(x, y) → (x + 4, y + 2)",
+      "x": 300,
+      "y": 325,
+      "s": 36,
+      "c": "y"
+     }
+    ],
+    "says": [
+     "Is there a rule that works for every point? Yes.",
+     "Right adds to x, and left takes away from x.",
+     "Up adds to y, and down takes away from y.",
+     "So for 4 right and 2 up, every point (x, y) becomes (x + 4, y + 2)."
+    ]
    },
    {
-    "beat": 0,
-    "at": "corner",
-    "t": "4",
-    "x": 184,
-    "y": 376,
-    "s": 18,
-    "c": "d",
-    "quick": true
-   },
-   {
-    "beat": 0,
-    "at": "corner",
-    "t": "4",
-    "x": 24,
-    "y": 216,
-    "s": 18,
-    "c": "d",
-    "quick": true
-   },
-   {
-    "beat": 0,
-    "at": "corner",
-    "t": "6",
-    "x": 256,
-    "y": 376,
-    "s": 18,
-    "c": "d",
-    "quick": true
-   },
-   {
-    "beat": 0,
-    "at": "corner",
-    "t": "6",
-    "x": 24,
-    "y": 144,
-    "s": 18,
-    "c": "d",
-    "quick": true
-   },
-   {
-    "beat": 0,
-    "at": "corner",
-    "t": "8",
-    "x": 328,
-    "y": 376,
-    "s": 18,
-    "c": "d",
-    "quick": true
-   },
-   {
-    "beat": 0,
-    "at": "corner",
-    "t": "8",
-    "x": 24,
-    "y": 72,
-    "s": 18,
-    "c": "d",
-    "quick": true
-   },
-   {
-    "beat": 0,
-    "at": "corner",
-    "d": "M76 324 L148 324 L76 252 L76 324",
-    "c": "w"
-   },
-   {
-    "beat": 0,
-    "at": "corner",
-    "t": "A",
-    "x": 62,
-    "y": 340,
-    "s": 20,
-    "c": "d",
-    "quick": true
-   },
-   {
-    "beat": 0,
-    "at": "corner",
-    "t": "B",
-    "x": 160,
-    "y": 340,
-    "s": 20,
-    "c": "d",
-    "quick": true
-   },
-   {
-    "beat": 0,
-    "at": "corner",
-    "t": "C",
-    "x": 62,
-    "y": 240,
-    "s": 20,
-    "c": "d",
-    "quick": true
-   },
-   {
-    "beat": 0,
-    "at": "A",
-    "c": "y",
-    "d": "M65 324 a11 11 0 1 0 22 0 a11 11 0 1 0 -22 0"
-   },
-   {
-    "beat": 0,
-    "at": "(1,",
-    "t": "A (1, 1)",
-    "x": 470,
-    "y": 80,
-    "s": 30,
-    "c": "w"
-   },
-   {
-    "beat": 1,
-    "at": "right",
-    "c": "b",
-    "d": "M76 324 L220 324 M207.7138441335348 317.28804245954115 L220 324 L207.7138441335348 330.71195754045885"
-   },
-   {
-    "beat": 1,
-    "at": "5",
-    "t": "x: 1 → 5",
-    "x": 470,
-    "y": 150,
-    "s": 30,
-    "c": "b"
-   },
-   {
-    "beat": 2,
-    "at": "up",
-    "c": "b",
-    "d": "M220 324 L220 252 M213.28804245954115 264.2861558664652 L220 252 L226.71195754045885 264.2861558664652"
-   },
-   {
-    "beat": 2,
-    "at": "3",
-    "t": "y: 1 → 3",
-    "x": 470,
-    "y": 210,
-    "s": 30,
-    "c": "b"
-   },
-   {
-    "beat": 3,
-    "at": "lands",
-    "c": "y",
-    "d": "M209 252 a11 11 0 1 0 22 0 a11 11 0 1 0 -22 0"
-   },
-   {
-    "beat": 3,
-    "at": "prime",
-    "t": "A′",
-    "x": 236,
-    "y": 238,
-    "s": 20,
-    "c": "y",
-    "quick": true
-   },
-   {
-    "beat": 3,
-    "at": "prime",
-    "t": "A′ (5, 3)",
-    "x": 470,
-    "y": 290,
-    "s": 36,
-    "c": "y"
+    "title": "One thing not to do",
+    "label": "Here's the part people mix up. Don't add the right move to y. Right and left change x, the FIRST number. Up and down change y, the second one. So 4 right and 2 up takes (1, 1) to (5, 3). Not to (3, 5). Okay. Your turn.",
+    "marks": [
+     {
+      "beat": 0,
+      "at": "mix",
+      "d": "M300 30 L345 105 L255 105 L300 30",
+      "c": "r"
+     },
+     {
+      "beat": 0,
+      "at": "mix",
+      "t": "!",
+      "x": 300,
+      "y": 80,
+      "s": 40,
+      "c": "r"
+     },
+     {
+      "beat": 1,
+      "at": "Right",
+      "t": "(x, y)",
+      "x": 300,
+      "y": 160,
+      "s": 44,
+      "c": "w"
+     },
+     {
+      "beat": 1,
+      "at": "FIRST",
+      "c": "y",
+      "d": "M255 160 a18 22 0 1 0 36 0 a18 22 0 1 0 -36 0"
+     },
+     {
+      "beat": 1,
+      "at": "FIRST",
+      "t": "right, left",
+      "x": 230,
+      "y": 205,
+      "s": 22,
+      "c": "y"
+     },
+     {
+      "beat": 2,
+      "at": "second",
+      "c": "b",
+      "d": "M315 160 a18 22 0 1 0 36 0 a18 22 0 1 0 -36 0"
+     },
+     {
+      "beat": 2,
+      "at": "second",
+      "t": "up, down",
+      "x": 380,
+      "y": 205,
+      "s": 22,
+      "c": "b"
+     },
+     {
+      "beat": 3,
+      "at": "(5,",
+      "t": "(1, 1) → (5, 3)",
+      "x": 300,
+      "y": 270,
+      "s": 34,
+      "c": "y"
+     },
+     {
+      "beat": 3,
+      "at": "Not",
+      "t": "(1, 1) → (3, 5)",
+      "x": 300,
+      "y": 330,
+      "s": 34,
+      "c": "w"
+     },
+     {
+      "beat": 3,
+      "at": "Not",
+      "c": "r",
+      "w": 4.5,
+      "d": "M338 312 L428 348 M428 312 L338 348"
+     }
+    ],
+    "says": [
+     "Here's the part people mix up.",
+     "Don't add the right move to y. Right and left change x, the FIRST number.",
+     "Up and down change y, the second one.",
+     "So 4 right and 2 up takes (1, 1) to (5, 3). Not to (3, 5).",
+     "Okay. Your turn."
+    ]
    }
-  ],
-  "says": [
-   "Take corner A. It starts at (1, 1).",
-   "Move it 4 to the right, and x goes from 1 up to 5.",
-   "Move it 2 up, and y goes from 1 up to 3.",
-   "So A lands on (5, 3). We call that new point A prime."
   ]
  }
 ]
