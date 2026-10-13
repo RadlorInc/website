@@ -1,4 +1,4 @@
-import { APP_GRADES, APP_NAME, APP_URL, COMPANY, PAGES, SITE_URL, SOCIAL, SUPPORT_EMAIL, TAGLINE, VISION } from '@/site'
+import { APP_GRADES, APP_NAME, APP_URL, COMPANY, PAGES, SITE_URL, SOCIAL, SUPPORT_EMAIL, SUPPORT_PHONE, TAGLINE, VISION } from '@/site'
 import { posts } from '@/content/posts'
 
 /**
@@ -66,6 +66,7 @@ ${SOCIAL.map(s => `- ${s.name}: ${s.url}`).join('\n')}
 
 ## Contact
 ${SUPPORT_EMAIL}
+${SUPPORT_PHONE}
 `
   return new Response(text, {
     headers: { 'content-type': 'text/plain; charset=utf-8' },

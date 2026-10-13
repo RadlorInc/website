@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Instrument_Serif } from 'next/font/google'
 import './globals.css'
-import { COMPANY, FOUNDED_YEAR, LOCATION, SITE_URL, SOCIAL, SUPPORT_EMAIL, TAGLINE } from '@/site'
+import { COMPANY, FOUNDED_YEAR, LOCATION, SITE_URL, SOCIAL, SUPPORT_EMAIL, SUPPORT_TEL, TAGLINE } from '@/site'
 
 const sans = Inter({ variable: '--font-sans-src', subsets: ['latin'] })
 const display = Instrument_Serif({ variable: '--font-display-src', subsets: ['latin'], weight: '400' })
@@ -38,6 +38,7 @@ function OrganizationJsonLd() {
         description: TAGLINE,
         foundingDate: FOUNDED_YEAR,
         email: SUPPORT_EMAIL,
+        telephone: SUPPORT_TEL,
         ...(SOCIAL.length ? { sameAs: SOCIAL.map(s => s.url) } : {}),
         // Guarded on the DATA being there, not on a sentinel spelling. The previous version
         // tested `city === 'TODO'`, which is exactly as good as whoever remembers to type TODO —

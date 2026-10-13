@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { PathRows, type PathRow } from '@/components/scroll/Scroll'
 import { PageHero } from '@/components/scroll/PageHero'
 import { ART } from '@/components/scroll/art'
-import { APP_NAME, APP_URL, COMPANY, SUPPORT_EMAIL } from '@/site'
+import { APP_NAME, APP_URL, COMPANY, SUPPORT_EMAIL, SUPPORT_PHONE, SUPPORT_TEL } from '@/site'
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -32,6 +32,12 @@ export default function Contact() {
           >
             {SUPPORT_EMAIL}
           </a>
+          <p className="mt-4">
+            or call{' '}
+            <a href={`tel:${SUPPORT_TEL}`} className="rl-link text-accent">
+              {SUPPORT_PHONE}
+            </a>
+          </p>
         </PageHero>
         <PathRows rows={ROWS} />
       </div>
