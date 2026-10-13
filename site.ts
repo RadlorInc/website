@@ -76,6 +76,9 @@ export const TAGLINE = 'Learning software that adapts to the child in front of i
 export const VISION =
   'Education technology. We build learning products for children; the treasure is already inside the child, we just light it up.'
 export const SUPPORT_EMAIL = 'support@radlor.com'
+/** Toll-free support line (founder, 2026-10-14). `SUPPORT_TEL` is the same number for `tel:` links. */
+export const SUPPORT_PHONE = '1-888-812-9373'
+export const SUPPORT_TEL = '+18888129373'
 
 /** The live product. Its own origin — a separate Vercel project, deployed from the app repo. Called AdaptiveLearn at
  *  adaptivelearn.radlor.com until 2026-09-24 (RENAME-MANUAL §D in the app repo); its landing page is `/radlic` here. */
