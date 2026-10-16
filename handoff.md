@@ -147,6 +147,31 @@ Run it by hand at deploy time until that trade changes.
 trigger has been written here, where the shared-database problem is already documented, and still
 needs mirroring next to the other two.
 
+## `/radlic`: a recording of the app, and the app's colours — 2026-10-05
+
+Two PRs, both merged that day (state as measured 2026-10-05; check `origin/main`, not this paragraph):
+
+- **#11** (merged by the founder): the hero demo plays a whole lesson (`b273152`), and a new section under the hero,
+  **"What your child sees"** — `public/radlic-demo.mp4` (41 s, H.264, no audio, ~3.9 MB) + `public/radlic-demo-poster.jpg`,
+  self-hosted because the CSP is `'self'`; `autoPlay muted loop playsInline controls`. The interactive demo is unchanged.
+- **#12**: the page in the Radlic app's "Sky light · flat" palette — tokens at the top of `app/radlic/radlic.module.css`,
+  scoped to `.page` (including the site-wide tokens the shared scroll components read), so the rest of radlor.com keeps
+  its palette; noted at the end of `docs/brand-palette.md`. The chalkboard stays green with its wood frame, as in the app.
+  The recording has a white frame and a blue rule because its opening is the same pale sky as the page.
+
+Verified on production 2026-10-05: the heading and the video on `/radlic`, the new colours in its CSS, and
+`npm run check:site-claims` exiting 0. ⚠️ **The recording shows the app as it was on 2026-10-05. Nothing gates it** — when
+the app's screens change, it is stale until it is re-recorded. How, in the private `RadlorInc/radlor-internal`:
+`content/motion/capture/radlic-demo.mjs` (records the app's dev server with every click logged) →
+`content/motion/pieces/radlic-demo-16x9.html` (`node make.mjs …`) → re-encode for the web with `-an -crf 30` and replace
+the two files in `public/`. `content/STATUS.md` there holds the details.
+
+Two things learned the hard way that day:
+- **Commits pushed after a PR is merged do not join it.** #11 was merged while two more commits were being pushed to its
+  branch; they needed #12. Before pushing more to a PR branch, `gh pr view <n> --json state`.
+- **Deploy state is readable without the Vercel connector:** `gh api repos/RadlorInc/website/deployments?sha=<sha>`, then
+  `…/deployments/<id>/statuses` — `success` on the `Production` one means the deploy landed.
+
 ## Where it is right now
 
 **Live at radlor.com**, as the Vercel project `website`, from `github.com/RadlorInc/website`.
