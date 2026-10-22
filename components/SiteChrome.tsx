@@ -36,8 +36,8 @@ export function SiteChrome({ children }: { children: ReactNode }) {
             />
           </Link>
         {/* No hamburger. On a narrow frame the links drop out of the header and the footer — which
-            carries the same list — becomes the navigation. One CTA is what a phone has room for. */}
-        {/* Logo left, links in the middle column, button right (founder, 2026-09-29: "options in center"). */}
+            carries the same list — becomes the navigation. Logo left, links centred (founder, 2026-09-29); no button
+            on the right since 2026-10-22 (founder: "remove Our products from the nav"). */}
         <nav className="hidden md:flex items-center gap-8 text-sm">
           {HEADER.map(n => (
             <Link key={n.href} href={n.href} className="rl-link text-muted hover:text-foreground transition-colors">
@@ -45,18 +45,6 @@ export function SiteChrome({ children }: { children: ReactNode }) {
             </Link>
           ))}
         </nav>
-          {/* The button on every page. Founder, 2026-09-25: "hide the Join the waitlist button at the top and
-              from everywhere, and put Try Radlic". It goes where /radlic's "Sign up free" goes — the app's sign-in
-              / sign-up page. The /waitlist page and its form still exist (unlinked), so an old shared link keeps
-              working and /privacy's description of that form stays true. (2026-08-31 to 2026-09-25 this was the
-              waitlist, "the only door"; history in git.) */}
-          {/* 2026-10-22 (founder): the company has two products, so the header no longer sells one of them. */}
-          <Link
-            href="/#products"
-            className="col-start-3 justify-self-end rl-cta rl-cta-quiet rounded-full bg-accent px-4 py-2 text-on-accent text-sm font-medium whitespace-nowrap hover:opacity-90 transition-opacity"
-          >
-            Our products
-          </Link>
       </div>
     </header>
 

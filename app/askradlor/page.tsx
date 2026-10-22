@@ -8,8 +8,10 @@
  * count (it is a setting in the app's database). ⚠️ NOT the Radlic "Ask maths" add-on: it is off pending legal
  * sign-off, and no page here may mention it until it is live.
  *
- * The demo is a real askRadlor answer recorded from the app (whiteboard-ai reports/bio-demos/
- * realistic-what-is-a-food-chain.mp4), served from this site so /privacy's "nothing from a third party" holds.
+ * The demo is a real public askRadlor answer, screen-recorded on 2026-10-22 from Explore
+ * (www.askradlor.com/v/Y_wDTn3Dg_55yToSwnH3_w, "what are the things present in the conducting system in the heart?",
+ * founder's pick). Silent: the voice is made in the viewer's browser and a headless recording cannot carry it. Served
+ * from this site so /privacy's "nothing from a third party" holds.
  */
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -85,10 +87,10 @@ export default function AskRadlorPage() {
           <p className={s.note}>Explore needs no account.</p>
         </div>
         <div className={s.heroDemo}>
-          <video className={s.video} src="/askradlor-demo.mp4" poster="/askradlor-demo-poster.jpg" width={960} height={640}
+          <video className={s.video} src="/askradlor-demo.mp4" poster="/askradlor-demo-poster.jpg" width={814} height={512}
             autoPlay muted loop playsInline controls preload="metadata"
-            aria-label="An askRadlor answer to “What is a food chain?”: grass, grasshopper, lizard and crow are drawn and joined by arrows while a voice explains each step" />
-          <p className={s.demoNote}>A real answer: “What is a food chain?” Unmute for the voice.</p>
+            aria-label="An askRadlor answer about the heart's conducting system: a heart is drawn and the SA node, AV node, bundle of His, bundle branches and Purkinje fibres are labelled step by step" />
+          <p className={s.demoNote}>A real answer from Explore: “What is in the heart’s conducting system?”</p>
         </div>
       </section>
 

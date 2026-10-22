@@ -31,7 +31,7 @@ const PRODUCTS = [
     name: ASK_NAME,
     who: 'For ages 13+ · Any question',
     line: 'Ask anything, watch it drawn. Type a question and a short voiced video draws the answer step by step on a whiteboard.',
-    pic: { src: '/askradlor-demo-poster.jpg', w: 960, h: 640, alt: 'An askRadlor answer: a food chain drawn on a whiteboard, from grass to grasshopper, lizard and crow' },
+    pic: { src: '/askradlor-demo-poster.jpg', w: 814, h: 512, alt: 'An askRadlor answer: a heart drawn on a whiteboard with its conducting system labelled, from the SA node to the Purkinje fibres' },
     page: '/askradlor',
     go: { label: 'Explore videos', href: ASK_EXPLORE_URL },
   },
@@ -65,7 +65,6 @@ const FOR = [
   { label: 'Families', body: `${APP_NAME} for children, K–8`, href: '/radlic' },
   { label: 'Learners 13+', body: `${ASK_NAME} for any question`, href: '/askradlor' },
   { label: 'Schools', body: 'How we work with schools', href: '/for-schools' },
-  { label: 'Partners', body: 'Build something with us', href: '/contact' },
 ]
 
 const btn = 'rl-cta inline-flex min-h-11 items-center rounded-full px-6 py-3 font-medium'
@@ -142,7 +141,7 @@ export default function Home() {
 
       <section className="mx-auto max-w-5xl px-6 py-16">
         <h2 className="font-display text-3xl sm:text-4xl">Who we build for</h2>
-        <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {FOR.map(f => (
             <li key={f.label}>
               <Link href={f.href} className="group flex h-full min-h-11 flex-col rounded-2xl border border-line bg-surface p-5 transition-colors hover:border-accent">

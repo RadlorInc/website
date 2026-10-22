@@ -49,7 +49,9 @@ not cause it.
 Same day, second pass (founder: "Radlic dominates, askRadlor is nowhere"): the home page was rewritten as the COMPANY
 page: vision hero, then the two products as equal cards, then "Why we build" (VISION plus four things both products
 share), who it's for, writing and contact. The journey scroll and the Radlic facts band are gone (in git), and with
-them the 360 px sideways scroll. The header button is now "Our products" (/#products), not "Try Radlic".
+them the 360 px sideways scroll. Later the same day: the whole site is always the dark palette (no light theme),
+the header has no button, "Who we build for" has no Partners, and the askRadlor demo is the founder's pick, the
+heart conducting-system answer from Explore (silent screen recording; source URL in app/askradlor/page.tsx).
 
 ## ⚠️ THIS REPOSITORY IS PUBLIC — 2026-08-31
 
