@@ -103,7 +103,7 @@ export default function Home() {
         <ul className="mt-10 grid gap-6 md:grid-cols-2">
           {PRODUCTS.map(p => (
             <li key={p.name} className="flex flex-col overflow-hidden rounded-2xl border border-line bg-surface">
-              <Link href={p.page} className="group block bg-white" aria-label={`${p.name}: learn more`}>
+              <Link href={p.page} className="group block border-b border-line" aria-label={`${p.name}: learn more`}>
                 <Image src={p.pic.src} alt={p.pic.alt} width={p.pic.w} height={p.pic.h}
                   className="aspect-[16/10] w-full object-cover object-top transition-opacity group-hover:opacity-90" />
               </Link>

@@ -70,12 +70,13 @@ export const COMPANY = 'Radlor'
 export const TAGLINE = 'Learning software that adapts to the learner in front of it.'
 
 /**
- * The company belief, in the founder's own words (2026-08-20). Distinct from TAGLINE: the tagline
+ * The company belief, in the founder's own words (2026-08-20; "children/child" became "every learner" on 2026-10-22
+ * when askRadlor, for ages 13+, joined Radlic — founder approved the wording). Distinct from TAGLINE: the tagline
  * is what the PRODUCT does, this is why we build it at all. Both are stated on `/about` and in
  * `llms.txt`, from here, so the two surfaces cannot drift apart.
  */
 export const VISION =
-  'Education technology. We build learning products for children; the treasure is already inside the child, we just light it up.'
+  'Education technology. We build learning products; the treasure is already inside every learner, we just light it up.'
 export const SUPPORT_EMAIL = 'support@radlor.com'
 /** Toll-free support line (founder, 2026-10-14). `SUPPORT_TEL` is the same number for `tel:` links. */
 export const SUPPORT_PHONE = '1-888-812-9373'

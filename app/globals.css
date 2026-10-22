@@ -14,53 +14,30 @@
  * Cyan #00E5FF · Blue #0061F3 · BlueInk #0B57C7 · Slate #4E6076 · Ink #0A1119 · Paper #F5F8FC
  */
 :root {
-  --background: #f5f8fc;   /* Paper — the mark's own light ground, cooled toward its blue */
-  --surface: #ffffff;      /* the robot's body */
-  --foreground: #0a1119;   /* Ink — the visor. 17.8:1 on Paper */
-  --muted: #4e6076;        /* Slate — 6.1:1 on Paper */
-  --line: #dbe3ed;
+  /* ONE GROUND FOR THE WHOLE SITE (founder, 2026-10-22: "one colour all the way, no white bands in between").
+     The site used to follow the visitor's light/dark setting while the header and the home bands were pinned dark,
+     so a light-mode visitor saw dark–white–dark stripes. It is now always the dark side of the palette — the ground
+     of `Mark Full Color Dark.png`. The light values (Paper #F5F8FC, Ink, Slate, BlueInk) are in git and in BRAND. */
+  color-scheme: dark;
+  --background: #070b11;   /* the ground of `Mark Full Color Dark.png` */
+  --surface: #0e141c;
+  --foreground: #f5f8fc;
+  --muted: #b3c2d3;        /* 10.9:1 */
+  --line: #1e2833;
 
-  /* Links and small accent text. A darkened stop of the mark's own blue: the literal
-     #0061F3 measures 4.96:1 and passes, but only just — and it is the identity colour, so it
-     should be free to be a GRAPHIC at full strength rather than pinned to a text job. */
-  --accent: #0b57c7;       /* 6.2:1 on Paper */
-  --on-accent: #ffffff;    /* what goes ON an accent surface. 6.6:1 */
-  --accent-soft: #e4eefd;
+  /* On a near-black ground the accent is the ring's light end, not its dark one. */
+  --accent: #7adfff;       /* 13.0:1 */
+  /* ⚠️ NOT white. White on this is 1.5:1 — which is what the CTA shipped as until
+     2026-08-29, because `text-white` was hard-coded in six files instead of tokenised. */
+  --on-accent: #0a1119;    /* 12.9:1 */
+  --accent-soft: #0f2231;
 
-  /* The identity blue, for GRAPHICS only — the ring's outer edge and the collar. */
-  --brand-blue: #0061f3;
+  --brand-blue: #4da6ff;
   --brand-deep: #062a6b;
 
-  /* THE LIGHT. The ring's core and the robot's eyes: the brightest thing in the mark and the
-     only part of it that glows. 1.4:1 on Paper — WORSE than the amber it replaces — so the
-     rule it inherits is absolute: never a text colour. It goes BEHIND words, or it is a
-     filled surface whose text is --on-glow. */
-  --glow: #00e5ff;
+  /* THE LIGHT: the ring's core and the robot's eyes. It goes BEHIND words, never in them. */
+  --glow: #22e9ff;
   --on-glow: #0a1119;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #070b11;   /* the ground of `Mark Full Color Dark.png` */
-    --surface: #0e141c;
-    --foreground: #f5f8fc;
-    --muted: #b3c2d3;        /* 10.9:1 */
-    --line: #1e2833;
-
-    /* On a near-black ground the accent is the ring's light end, not its dark one. */
-    --accent: #7adfff;       /* 13.0:1 */
-    /* ⚠️ NOT white. White on this is 1.5:1 — which is what the CTA shipped as until
-       2026-08-29, because `text-white` was hard-coded in six files instead of tokenised. */
-    --on-accent: #0a1119;    /* 12.9:1 */
-    --accent-soft: #0f2231;
-
-    --brand-blue: #4da6ff;
-    --brand-deep: #062a6b;
-
-    /* The glow lifts on a dark ground, the way the ring reads brighter against black. */
-    --glow: #22e9ff;
-    --on-glow: #0a1119;
-  }
 }
 
 @theme inline {
