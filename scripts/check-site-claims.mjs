@@ -20,7 +20,7 @@ const BASE = (process.argv[2] ?? 'https://radlor.com').replace(/\/$/, '')
 // third party to arrive (a CAPTCHA, an embed, a browser-side database client).
 // /radlic since 2026-09-25: the Radlic landing page, the one page here with a script of its own (the demo player).
 // /waitlist left 2026-09-26: it 308s to /radlic (N23), so it would only re-check /radlic.
-const PAGES = ['/', '/privacy', '/terms', '/radlic']
+const PAGES = ['/', '/privacy', '/terms', '/radlic', '/askradlor']
 
 /**
  * ⚠️ THREE STATES, THREE EXIT CODES: 2 "could not look", 1 "looked and found a defect", 0 "looked
@@ -146,7 +146,7 @@ const GAME_TIME = /game[ -]?time|spend (them|points|it) on (game|minutes)/i
 // `[^.<]*` keeps a match inside one sentence of one element; tags are replaced by "<" before matching.
 const ROSTER = /\bteachers?\b[^.<]*\b(class(es)?|students?)\b|\brosters?\b|temporary passwords?|class exercises?|logins? for (each|every) student/i
 // /about added 2026-09-28: it said "grades 3 to 8" twice and was never read by this gate.
-const CLAIM_PAGES = ['/radlic', '/', '/about', '/for-schools', '/contact', '/llms.txt']
+const CLAIM_PAGES = ['/radlic', '/', '/about', '/contact', '/llms.txt']
 const visible = html => html.replace(/<[^>]*>/g, '<')
 
 // Positive control for the detectors: each must SEE the sentence it was written for (and the old range's detector

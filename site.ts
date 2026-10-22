@@ -66,15 +66,17 @@ export const BRAND = {
 } as const
 
 export const COMPANY = 'Radlor'
-export const TAGLINE = 'Learning software that adapts to the child in front of it.'
+/** Broadened 2026-10-22 (founder) when askRadlor joined Radlic: it was "…adapts to the child in front of it." */
+export const TAGLINE = 'Learning software that adapts to the learner in front of it.'
 
 /**
- * The company belief, in the founder's own words (2026-08-20). Distinct from TAGLINE: the tagline
+ * The company belief, in the founder's own words (2026-08-20; "children/child" became "every learner" on 2026-10-22
+ * when askRadlor, for ages 13+, joined Radlic — founder approved the wording). Distinct from TAGLINE: the tagline
  * is what the PRODUCT does, this is why we build it at all. Both are stated on `/about` and in
  * `llms.txt`, from here, so the two surfaces cannot drift apart.
  */
 export const VISION =
-  'Education technology. We build learning products for children; the treasure is already inside the child, we just light it up.'
+  'Education technology. We build learning products; the treasure is already inside every learner, we just light it up.'
 export const SUPPORT_EMAIL = 'support@radlor.com'
 /** Toll-free support line (founder, 2026-10-14). `SUPPORT_TEL` is the same number for `tel:` links. */
 export const SUPPORT_PHONE = '1-888-812-9373'
@@ -84,6 +86,19 @@ export const SUPPORT_TEL = '+18888129373'
  *  adaptivelearn.radlor.com until 2026-09-24 (RENAME-MANUAL §D in the app repo); its landing page is `/radlic` here. */
 export const APP_URL = 'https://radlic.com'
 export const APP_NAME = 'Radlic'
+
+/**
+ * The second product (2026-10-22): ask any question, the answer plays as a voiced whiteboard lesson drawn live.
+ * Its own repo (`../whiteboard-ai/app`) and Vercel project; its landing page is `/askradlor` here. For anyone, not
+ * only children. ⚠️ Its Radlic "Ask maths" add-on is OFF pending legal sign-off — no page here may mention it yet.
+ */
+// www is canonical: the bare domain 308s there (measured 2026-10-22).
+export const ASK_URL = 'https://www.askradlor.com'
+export const ASK_NAME = 'askRadlor'
+/** Public videos, no sign-in needed (`/explore` in the app). */
+export const ASK_EXPLORE_URL = `${ASK_URL}/explore`
+/** Its JSON-LD id. The app does not emit one yet; if it ever does, it should use this same string (see APP_ID). */
+export const ASK_ID = `${ASK_URL}/#app`
 
 /**
  * The app's entity id, declared HERE and referenced by the app itself at the same string.
@@ -203,7 +218,10 @@ export const PLANS = Array.from({ length: PRICING.maxChildren }, (_, i) => price
 export const PAGES = [
   { href: '/', label: 'Home', where: 'footer' },
   // The product page. /adaptivelearn was it until 2026-09-25 and now 308s here (next.config.ts).
-  { href: '/radlic', label: 'Radlic', where: 'both' },
+  // 2026-10-22 (founder): the products are on the home page's product cards, so the header does not repeat them.
+  { href: '/radlic', label: 'Radlic', where: 'footer' },
+  // The second product's landing page (founder, 2026-10-22); the app itself stays on askradlor.com.
+  { href: '/askradlor', label: 'askRadlor', where: 'footer' },
   // ⚠️ HIDDEN 2026-09-10, founder's call. The page still exists at `app/(site)/_pricing/` — the
   // underscore keeps it out of routing, so /pricing 404s and it is absent from the header, the
   // footer, the sitemap and llms.txt because all four read this list. Restore by renaming the
@@ -212,13 +230,16 @@ export const PAGES = [
   // home hero fact, the /waitlist sentence, the /adaptivelearn FAQ and its JSON-LD offers are
   // gone. PRICING stays as the source for the hidden page and check:pricing; nothing renders it.
   // { href: '/pricing', label: 'Pricing', where: 'both' },
-  { href: '/for-schools', label: 'Schools', where: 'both' },
+  // ⚠️ HIDDEN 2026-10-22 (founder: "we are not talking to schools yet"). Same as /pricing: the page is at
+  // `app/(site)/_for-schools/`, so /for-schools 404s and is in no list. Restore: rename the folder, uncomment this row,
+  // its BLURB line in llms.txt and its entry in check-site-claims' CLAIM_PAGES.
+  // { href: '/for-schools', label: 'Schools', where: 'both' },
   { href: '/writing', label: 'Writing', where: 'both' },
   { href: '/about', label: 'About', where: 'both' },
   // Hidden 2026-09-25 (founder: "hide the waitlist from everywhere"; the CTA is now "Try Radlic").
   // The page still answers at /waitlist for old links; restore this row to list it again.
   // { href: '/waitlist', label: 'Waitlist', where: 'footer' },
-  { href: '/contact', label: 'Contact', where: 'footer' },
+  { href: '/contact', label: 'Contact', where: 'both' },
   { href: '/data-and-safety', label: 'Data & safety', where: 'footer' },
   { href: '/privacy', label: 'Privacy', where: 'footer' },
   // ⚠️ The WEBSITE's terms, not the app's. The app has its own, longer Terms of Service on its

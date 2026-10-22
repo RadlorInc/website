@@ -1,119 +1,131 @@
 import Link from 'next/link'
-import { APP_NAME, COMPANY, SITE_URL } from '@/site'
-import { posts } from '@/content/posts'
 import Image from 'next/image'
-import { Journey } from '@/components/journey/Journey'
-import { CircleReveal, PathRows, ZoomMoment, type PathRow } from '@/components/scroll/Scroll'
+import type { ReactNode } from 'react'
+import { APP_NAME, ASK_NAME, COMPANY, SITE_URL, TAGLINE, VISION } from '@/site'
+import { posts } from '@/content/posts'
+import { CircleReveal } from '@/components/scroll/Scroll'
 import { ART, POST_COVERS } from '@/components/scroll/art'
 
-const BELIEFS: PathRow[] = [
-  { ...ART.homeInvisible, title: 'Difficulty is invisible', body: 'No level, rank or red cross. A wrong answer is met warmly and taught again.' },
-  { ...ART.journeySteps, title: 'Harder should mean different', body: 'The next level is a new kind of question, not bigger numbers.' },
-  { ...ART.safetyStore, title: 'Children’s data stays small', body: 'Only what teaching needs. A child never needs an email address.' },
+/**
+ * The home page is the COMPANY's page, not a product's (founder, 2026-10-22: "Radlic dominates, askRadlor is nowhere;
+ * the site should show our vision and why we build"). So: who we are and why, then the two products side by side at
+ * equal weight, then what they share. Each product's own pitch lives on its landing page (/radlic, /askradlor).
+ *
+ * ⚠️ Replaced the scroll "journey" first screen (founder's pick 2026-09-25, in git before this change) and the Radlic
+ * facts band. Every product line below restates that product's own landing page; add no claim here that its page
+ * does not make.
+ *
+ * ⚠️ STAYS A SERVER COMPONENT — no client JS on this page beyond the shared scroll styles.
+ */
+
+const PRODUCTS = [
+  {
+    name: APP_NAME,
+    who: 'For children · Math, grades K–8',
+    line: 'Math lessons that adapt. A teacher at the chalkboard, one idea at a time, then practice that follows what your child gets right and wrong.',
+    pic: { src: '/radlic-demo-poster.jpg', w: 1920, h: 1080, alt: 'The Radlic app: picking a math topic by grade' },
+    page: '/radlic',
+  },
+  {
+    name: ASK_NAME,
+    who: 'For ages 13+ · Any question',
+    line: 'Ask anything, watch it drawn. Type a question and a short voiced video draws the answer step by step on a whiteboard.',
+    pic: { src: '/askradlor-demo-poster.jpg', w: 814, h: 512, alt: 'An askRadlor answer: a heart drawn on a whiteboard with its conducting system labelled, from the SA node to the Purkinje fibres' },
+    page: '/askradlor',
+  },
 ]
 
-/**
- * The home page states, in the first screen, what an answer engine has to be able to repeat:
- * who we are, what we make, and who it is for. Everything below it is evidence for that sentence.
- *
- * ⚠️ THIS FILE STAYS A SERVER COMPONENT. The first screen is `<Journey />`, a client component — but its
- * words are server-rendered like everything else here, and its pictures are plain images. Until 2026-09-25 this comment said "no canvas, no scroll listener"; the founder chose the
- * journey that day, and the two reasons behind the old rule (a flip-book hero that stepped, and copy
- * that could not be kept legible over it on a phone) are what Journey.tsx is built against.
- */
+/** What both products share. Each line must be true of BOTH — check both landing pages before adding one. */
+const SHARED: { title: string; body: string; icon: ReactNode }[] = [
+  {
+    title: 'A teacher at the board',
+    body: `Both teach by drawing. A voice explains each step as it appears: chalk in ${APP_NAME}, a whiteboard in ${ASK_NAME}.`,
+    icon: <><rect x="3" y="4" width="18" height="12" rx="1.5" /><path d="M12 16v4M8 20h8M7 12l3-3 2 2 4-4" /></>,
+  },
+  {
+    title: 'One idea at a time',
+    body: `A ${APP_NAME} lesson explains one idea. An ${ASK_NAME} video answers one question. Step by step, never all at once.`,
+    icon: <><circle cx="12" cy="12" r="8" /><circle cx="12" cy="12" r="3" /></>,
+  },
+  {
+    title: 'It answers back',
+    body: `${APP_NAME}’s practice changes with every answer. In ${ASK_NAME} you ask a follow-up in the same chat.`,
+    icon: <><path d="M20 12a8 8 0 0 1-13.7 5.7L4 20v-5h5" /><path d="M4 12a8 8 0 0 1 13.7-5.7L20 4v5h-5" /></>,
+  },
+  {
+    title: 'Honest by default',
+    body: `${APP_NAME} asks no email of a child. ${ASK_NAME} says plainly that AI answers can be wrong.`,
+    icon: <><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" /><path d="M9 12l2 2 4-4" /></>,
+  },
+]
+
+
+const btn = 'rl-cta inline-flex min-h-11 items-center rounded-full px-6 py-3 font-medium'
+const primary = `${btn} bg-accent text-on-accent hover:opacity-90`
+const quiet = `${btn} rl-cta-quiet border border-line hover:border-foreground transition-colors`
+
 export default function Home() {
   return (
     <>
-      {/* THE FIRST SCREEN IS THE JOURNEY (founder's call, 2026-09-25) — see components/journey/Journey.tsx.
-          It carries the <h1> and the same headline, subhead and "Try Radlic" the video hero had, as real HTML;
-          its pictures are decoration. Below it, the sections use the scroll styles in components/scroll. */}
-      <Journey />
-
-      {/* ⚠️ THREE FACTS SINCE 2026-09-18: the price fact was removed with every other price on the
-          site (founder's call — /pricing is hidden, see PAGES in site.ts). Restore it from git.
-
-          The facts on their own band below the hero, sharing its dark ground. They were
-          inside the hero once and did not fit a single screen alongside the headline, the subhead
-          and two CTAs on a short laptop.
-
-          ⚠️ FOUR LINKS, NOT ONE. This was a single <Link href="/data-and-safety"> wrapped around
-          the whole list, so pressing any fact — the price, the age range — landed on data and
-          safety. A reader outside the team hit it immediately: "Idk if we can press and it takes
-          u to explain further but on my end I see the data and safety information instead."
-          Each fact now goes to the page that substantiates THAT fact. If you add a fact, give it
-          a destination that explains it; a fact linking to the wrong page is worse than a fact
-          that does not link at all.
-
-          ⚠️ FOUR FACTS, FOUR DIFFERENT QUESTIONS — and that rule is what fixed the jargon here.
-          The same reader asked "what does 6 age bands mean?", which reads as a vocabulary
-          problem and was really a structure problem: facts 1 and 2 BOTH answered "who is it
-          for", so the second had no question of its own left to answer and fell back on our
-          internal word for a content-organisation decision. It now answers "how does it know
-          where my child is", which is a question a parent actually has. The four are: is it for
-          my child's age, how does it know where to start, is my child safe, what does it cost.
-          Add a fifth only if it answers a fifth question.
-
-          "six stages that look nothing alike" keeps the idea that "6 age bands" was reaching
-          for — the idea was never the problem, the label was. It was the old `/adaptivelearn` page's own
-          claim: a five-year-old gets a narrated story world, a sixteen-year-old a design studio
-          with a working chalkboard.
-
-          ⚠️ A <ul>, NOT A <dl>. Making each item its own link inside a <dl> cannot be done
-          validly: the spec lets a <div> child of <dl> contain only <dt> and <dd>, so an <a>
-          wrapping the pair is invalid markup. A list of four links is what this actually is.
-
-          ⚠️ THE ANIMATION IS `rl-reveal` HERE, and the earlier note saying it could not work was
-          right AT THE TIME. `rl-reveal` is scroll-driven, so it does nothing for an element
-          already in view on load — which these were, inside the old hero. Below the fold they
-          enter the viewport as you scroll, so the scroll timeline is exactly the right lever and
-          `--i` staggers them. Still no counters: "K–8" cannot count up from zero.
-
-          ⚠️ REWRITTEN 2026-09-19 FOR THE APP AS IT IS NOW. The three facts used to be "Ages 3–18",
-          "a short check" and "0 frames uploaded" — the age bands, the placement check and the camera
-          chapters are all hidden in the app since 2026-09-13. The three now answer: is it for my
-          child's grade, how does it get harder, and what does my child have to hand over. */}
-      <section className="rl-hero-band">
-        <div className="mx-auto w-full max-w-5xl px-6 py-16">
-          <ul className="rl-hero-facts">
-            {[
-              ['Grades K–8', 'one idea per lesson, taught step by step', '/radlic'],
-              ['Harder means different', 'each level up is a new kind of question', '/radlic'],
-              ['No email for your child', 'you set their username and password', '/data-and-safety'],
-            ].map(([term, detail, href], i) => (
-              <li key={term} className="rl-reveal" style={{ '--i': i + 1 } as React.CSSProperties}>
-                <Link href={href} className="rl-hero-factlink">
-                  <span className="rl-fact-term font-display text-xl sm:text-2xl leading-tight">{term}</span>
-                  <span className="rl-fact-detail mt-1.5 text-sm text-muted leading-relaxed">{detail}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+      {/* WHO WE ARE AND WHY — the company, no product named in the first screen's heading. */}
+      <section className="rl-dark overflow-x-clip">
+        <div className="mx-auto grid max-w-5xl items-center gap-10 px-6 pt-14 pb-20 sm:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] sm:pt-20 sm:pb-24">
+          <div className="order-2 sm:order-1">
+            <p className="text-sm uppercase tracking-[0.18em] text-accent font-medium">{COMPANY} · Education technology</p>
+            <h1 className="rl-focus font-display mt-4 text-[2.6rem] leading-[1.05] sm:text-6xl">
+              Learning that adapts to the <span className="rl-lit">learner</span>.
+            </h1>
+            <p className="mt-6 max-w-[32rem] text-lg leading-relaxed text-muted">
+              We build learning products that teach the way a good teacher does: one idea at a time, drawn out on a
+              board, and changed by how you answer.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a href="#products" className={primary}>See our products</a>
+              <a href="#why" className={quiet}>Why we build</a>
+            </div>
+          </div>
+          <CircleReveal pic={ART.journeyTreasure} priority className="order-1 sm:order-2 w-56 sm:w-full max-w-[420px] justify-self-center" />
         </div>
       </section>
 
-      {/* ⚠️ "WHAT IS RADLOR" STAYS RIGHT AFTER THE HERO: a reader asked for a plain sentence saying what Radlor is before
-          the beliefs. Since 2026-09-29 it is the page's one zoom (scroll style E): the picture grows, then the answer. */}
-      <ZoomMoment pic={ART.aboutWhat} title={`What is ${COMPANY}?`}>
-        Learning software that adapts to the child, starting with math. {APP_NAME}: kindergarten to grade 8.{' '}
-        <Link href="/about" className="rl-link text-accent">More about {COMPANY} →</Link>
-      </ZoomMoment>
-
-      {/* What we believe: three pictures on a drawn path (G). Each line is the old paragraph cut down, no new claim. */}
-      <section className="mx-auto max-w-5xl px-6 py-10">
-        <h2 className="font-display text-3xl text-center">What we believe</h2>
-        <PathRows rows={BELIEFS} />
+      {/* THE TWO PRODUCTS, EQUAL WEIGHT: same card, same size, one link each (the Try / Explore buttons live on each product page, not here). Order is launch order. */}
+      <section id="products" className="mx-auto max-w-5xl scroll-mt-20 px-6 py-16 sm:py-20">
+        <p className="text-sm uppercase tracking-[0.18em] text-accent font-medium">Our products</p>
+        <h2 className="font-display mt-3 text-4xl sm:text-5xl">Two products, one way of teaching.</h2>
+        <ul className="mt-10 grid gap-6 md:grid-cols-2">
+          {PRODUCTS.map(p => (
+            <li key={p.name}>
+              <Link href={p.page} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface transition-colors hover:border-accent">
+                <Image src={p.pic.src} alt={p.pic.alt} width={p.pic.w} height={p.pic.h}
+                  className="aspect-[16/10] w-full border-b border-line object-cover object-top" />
+                <div className="flex flex-1 flex-col p-6 sm:p-7">
+                  <span className="text-xs uppercase tracking-[0.16em] text-muted font-medium">{p.who}</span>
+                  <h3 className="font-display mt-2 text-3xl">{p.name}</h3>
+                  <span className="mt-3 flex-1 leading-relaxed text-muted">{p.line}</span>
+                  <span className="mt-6 font-medium text-accent">Learn more <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-1">→</span></span>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
 
-      {/* The product, opening out of a circle (F). The heading is the mechanism: difficulty MOVES (up after two right,
-          down after the worked steps), so "gets harder" would be half of it. */}
-      <section className="mx-auto max-w-5xl px-6 py-14">
-        <div className="grid items-center gap-10 sm:grid-cols-2">
-          <CircleReveal pic={ART.journeyAdapts} className="w-64 sm:w-full max-w-[420px] justify-self-center" />
-          <div>
-            <h2 className="font-display text-4xl">Question difficulty moves with your child.</h2>
-            <p className="mt-4 text-lg text-muted">{APP_NAME}: math that changes as your child answers.</p>
-            <Link href="/radlic" className="rl-link mt-5 inline-block text-accent font-medium">See how {APP_NAME} works →</Link>
-          </div>
+      {/* WHY WE BUILD — the founder's belief, word for word from site.ts, then what both products hold to. */}
+      <section id="why" className="rl-dark scroll-mt-16">
+        <div className="mx-auto max-w-5xl px-6 py-16 sm:py-24">
+          <p className="text-sm uppercase tracking-[0.18em] text-accent font-medium">Why we build</p>
+          <blockquote className="font-display mt-4 max-w-[46rem] text-3xl leading-snug sm:text-4xl">“{VISION}”</blockquote>
+          <ul className="mt-12 grid gap-5 sm:grid-cols-2">
+            {SHARED.map(s => (
+              <li key={s.title} className="rounded-2xl border border-line bg-surface p-6">
+                <svg viewBox="0 0 24 24" className="h-7 w-7 text-accent" fill="none" stroke="currentColor" strokeWidth="1.8"
+                  strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{s.icon}</svg>
+                <h3 className="font-display mt-4 text-2xl">{s.title}</h3>
+                <p className="mt-2 leading-relaxed text-muted">{s.body}</p>
+              </li>
+            ))}
+          </ul>
+          <Link href="/about" className="rl-link mt-10 inline-block text-accent font-medium">More about {COMPANY} →</Link>
         </div>
       </section>
 
@@ -123,7 +135,6 @@ export default function Home() {
             <h2 className="font-display text-3xl">Writing</h2>
             <Link href="/writing" className="rl-link text-sm text-accent">All posts →</Link>
           </div>
-          {/* Each post is its cover picture and title: one finding per post. */}
           <ul className="mt-8 grid gap-6 sm:grid-cols-3">
             {posts.slice(0, 3).map(p => (
               <li key={p.slug}>
@@ -137,12 +148,18 @@ export default function Home() {
         </section>
       )}
 
+      <section className="mx-auto max-w-5xl px-6 pb-20 text-center">
+        <h2 className="font-display text-3xl sm:text-4xl">Want to build with us?</h2>
+        <p className="mt-3 text-muted">Schools, partners, press, or just a question.</p>
+        <Link href="/contact" className={`${primary} mt-6`}>Talk to us</Link>
+      </section>
+
       <script type="application/ld+json">{JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'WebPage',
             '@id': `${SITE_URL}/#webpage`,
             url: SITE_URL,
-            name: `${COMPANY} — learning software that adapts to the child in front of it`,
+            name: `${COMPANY} — ${TAGLINE}`,
             isPartOf: { '@id': `${SITE_URL}/#website` },
             about: { '@id': `${SITE_URL}/#organization` },
           })}</script>

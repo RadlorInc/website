@@ -36,6 +36,26 @@
 >   both asserted by the app's `src/__tests__/cspHeader.test.ts`. The hidden `_pricing` feature list
 >   lost "Placement check", "Camera chapters" and "Ages 3–18".
 
+
+## askRadlor on the site (2026-10-22, branch `askradlor`, not pushed)
+
+Founder: radlor.com shows both products. New `/askradlor` landing page (app's dark monochrome look; buttons go to
+www.askradlor.com/signup and /explore), `PAGES` row, `ASK_*` in `site.ts`, home hero + stop 03 + a home section,
+/about, root description and llms.txt name both. Tagline "child" → "learner". Every askRadlor claim is copied from the
+app's own landing page (whiteboard-ai `main`, src/app/page.tsx), so re-read it when that page changes. ⚠️ Do NOT
+mention the Radlic "Ask maths" add-on until it is live (legal gate). Left alone: `VISION` (founder's own words, still
+says "children"). The home page already scrolls sideways at 360 px, and production does the same, so this branch did
+not cause it.
+Same day, second pass (founder: "Radlic dominates, askRadlor is nowhere"): the home page was rewritten as the COMPANY
+page: vision hero, then the two products as equal cards, then "Why we build" (VISION plus four things both products
+share), who it's for, writing and contact. The journey scroll and the Radlic facts band are gone (in git), and with
+them the 360 px sideways scroll. Later the same day: the whole site is always the dark palette (no light theme),
+the header has no button, "Who we build for" has no Partners, and the askRadlor demo is the founder's pick, the
+heart conducting-system answer from Explore (silent screen recording; source URL in app/askradlor/page.tsx).
+Then (founder: "the same thing repeats"): the header lists Writing, About and Contact only (both products are in
+the footer and on the home cards), each product card is one link to its page, "Who we build for" is gone, and
+/for-schools is HIDDEN like /pricing (folder `app/(site)/_for-schools/`; restore steps beside its row in site.ts).
+
 ## ⚠️ THIS REPOSITORY IS PUBLIC — 2026-08-31
 
 `RadlorInc/website` is **public**. That was established on 2026-08-31, by accident, after a commit
