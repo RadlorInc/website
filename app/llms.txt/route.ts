@@ -58,7 +58,7 @@ are paused until there is a way for a school to give consent for its students.
 The second product is ${ASK_NAME}, at ${ASK_URL}, for ages 13 and over. You type a question and get a
 short voiced video that draws the answer step by step on a whiteboard, drawn live in the browser
 rather than generated as video; you can ask a follow-up in the same chat. It covers biology,
-physics, chemistry, and home or car fixes. Answers are written by AI and can be wrong. Public
+physics, chemistry, home improvements and auto repairs. Answers are written by AI and can be wrong. Public
 videos are at ${ASK_EXPLORE_URL} and need no account.
 
 ## Pages

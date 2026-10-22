@@ -22,7 +22,7 @@ import s from './askradlor.module.css'
 export const metadata: Metadata = {
   title: { absolute: 'askRadlor — ask anything, watch the answer drawn' },
   description:
-    'Type a question and get a short voiced video that draws the answer step by step on a whiteboard. Biology, physics, chemistry, and home or car fixes. For ages 13 and over.',
+    'Type a question and get a short voiced video that draws the answer step by step on a whiteboard. Biology, physics, chemistry, home improvements and auto repairs. For ages 13 and over.',
   alternates: { canonical: '/askradlor' },
   openGraph: { url: `${SITE_URL}/askradlor`, title: 'askRadlor — ask anything, watch the answer drawn' },
 }
@@ -44,7 +44,7 @@ function AppJsonLd() {
 }
 
 const STEPS = [
-  { title: 'Type a question', body: 'Biology, physics, chemistry, or a home or car fix. One question per video works best.' },
+  { title: 'Type a question', body: 'Biology, physics, chemistry, home improvements or auto repairs. One question per video works best.' },
   { title: 'Watch it drawn', body: 'A whiteboard lesson, voiced, step by step. Ask a follow-up in the same chat.' },
   { title: 'Replay any time', body: 'Your videos stay in your library. Watching again is free.' },
 ]
