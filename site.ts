@@ -66,7 +66,8 @@ export const BRAND = {
 } as const
 
 export const COMPANY = 'Radlor'
-export const TAGLINE = 'Learning software that adapts to the child in front of it.'
+/** Broadened 2026-10-22 (founder) when askRadlor joined Radlic: it was "…adapts to the child in front of it." */
+export const TAGLINE = 'Learning software that adapts to the learner in front of it.'
 
 /**
  * The company belief, in the founder's own words (2026-08-20). Distinct from TAGLINE: the tagline
@@ -84,6 +85,16 @@ export const SUPPORT_TEL = '+18888129373'
  *  adaptivelearn.radlor.com until 2026-09-24 (RENAME-MANUAL §D in the app repo); its landing page is `/radlic` here. */
 export const APP_URL = 'https://radlic.com'
 export const APP_NAME = 'Radlic'
+
+/**
+ * The second product (2026-10-22): ask any question, the answer plays as a voiced whiteboard lesson drawn live.
+ * Its own repo (`../whiteboard-ai/app`) and Vercel project; its landing page is `/askradlor` here. For anyone, not
+ * only children. ⚠️ Its Radlic "Ask maths" add-on is OFF pending legal sign-off — no page here may mention it yet.
+ */
+export const ASK_URL = 'https://askradlor.com'
+export const ASK_NAME = 'askRadlor'
+/** Public videos, no sign-in needed (`/explore` in the app). */
+export const ASK_EXPLORE_URL = `${ASK_URL}/explore`
 
 /**
  * The app's entity id, declared HERE and referenced by the app itself at the same string.
