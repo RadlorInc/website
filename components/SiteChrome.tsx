@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { APP_URL, COMPANY, FOOTER, FOUNDED_YEAR, HEADER, SOCIAL, SUPPORT_EMAIL, TAGLINE } from '@/site'
+import { COMPANY, FOOTER, FOUNDED_YEAR, HEADER, SOCIAL, SUPPORT_EMAIL, TAGLINE } from '@/site'
 
 /**
  * The Radlor header and footer around a company page. Worn by `app/(site)/layout.tsx` (every company page) and by
@@ -50,12 +50,13 @@ export function SiteChrome({ children }: { children: ReactNode }) {
               / sign-up page. The /waitlist page and its form still exist (unlinked), so an old shared link keeps
               working and /privacy's description of that form stays true. (2026-08-31 to 2026-09-25 this was the
               waitlist, "the only door"; history in git.) */}
-          <a
-            href={`${APP_URL}/auth`}
+          {/* 2026-10-22 (founder): the company has two products, so the header no longer sells one of them. */}
+          <Link
+            href="/#products"
             className="col-start-3 justify-self-end rl-cta rl-cta-quiet rounded-full bg-accent px-4 py-2 text-on-accent text-sm font-medium whitespace-nowrap hover:opacity-90 transition-opacity"
           >
-            Try Radlic
-          </a>
+            Our products
+          </Link>
       </div>
     </header>
 

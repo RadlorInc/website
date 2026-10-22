@@ -46,6 +46,10 @@ app's own landing page (whiteboard-ai `main`, src/app/page.tsx), so re-read it w
 mention the Radlic "Ask maths" add-on until it is live (legal gate). Left alone: `VISION` (founder's own words, still
 says "children"). The home page already scrolls sideways at 360 px, and production does the same, so this branch did
 not cause it.
+Same day, second pass (founder: "Radlic dominates, askRadlor is nowhere"): the home page was rewritten as the COMPANY
+page: vision hero, then the two products as equal cards, then "Why we build" (VISION plus four things both products
+share), who it's for, writing and contact. The journey scroll and the Radlic facts band are gone (in git), and with
+them the 360 px sideways scroll. The header button is now "Our products" (/#products), not "Try Radlic".
 
 ## ⚠️ THIS REPOSITORY IS PUBLIC — 2026-08-31
 
