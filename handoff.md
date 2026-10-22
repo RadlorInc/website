@@ -36,6 +36,17 @@
 >   both asserted by the app's `src/__tests__/cspHeader.test.ts`. The hidden `_pricing` feature list
 >   lost "Placement check", "Camera chapters" and "Ages 3–18".
 
+
+## askRadlor on the site (2026-10-22, branch `askradlor`, not pushed)
+
+Founder: radlor.com shows both products. New `/askradlor` landing page (app's dark monochrome look; buttons go to
+www.askradlor.com/signup and /explore), `PAGES` row, `ASK_*` in `site.ts`, home hero + stop 03 + a home section,
+/about, root description and llms.txt name both. Tagline "child" → "learner". Every askRadlor claim is copied from the
+app's own landing page (whiteboard-ai `main`, src/app/page.tsx), so re-read it when that page changes. ⚠️ Do NOT
+mention the Radlic "Ask maths" add-on until it is live (legal gate). Left alone: `VISION` (founder's own words, still
+says "children"). The home page already scrolls sideways at 360 px, and production does the same, so this branch did
+not cause it.
+
 ## ⚠️ THIS REPOSITORY IS PUBLIC — 2026-08-31
 
 `RadlorInc/website` is **public**. That was established on 2026-08-31, by accident, after a commit

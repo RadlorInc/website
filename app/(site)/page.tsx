@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { APP_NAME, COMPANY, SITE_URL } from '@/site'
+import { APP_NAME, ASK_NAME, COMPANY, SITE_URL } from '@/site'
 import { posts } from '@/content/posts'
 import Image from 'next/image'
 import { Journey } from '@/components/journey/Journey'
@@ -94,7 +94,8 @@ export default function Home() {
       {/* ⚠️ "WHAT IS RADLOR" STAYS RIGHT AFTER THE HERO: a reader asked for a plain sentence saying what Radlor is before
           the beliefs. Since 2026-09-29 it is the page's one zoom (scroll style E): the picture grows, then the answer. */}
       <ZoomMoment pic={ART.aboutWhat} title={`What is ${COMPANY}?`}>
-        Learning software that adapts to the child, starting with math. {APP_NAME}: kindergarten to grade 8.{' '}
+        Learning software that adapts to the learner. {APP_NAME}: math, kindergarten to grade 8. {ASK_NAME}: ask anything,
+        watch the answer drawn.{' '}
         <Link href="/about" className="rl-link text-accent">More about {COMPANY} →</Link>
       </ZoomMoment>
 
@@ -113,6 +114,20 @@ export default function Home() {
             <h2 className="font-display text-4xl">Question difficulty moves with your child.</h2>
             <p className="mt-4 text-lg text-muted">{APP_NAME}: math that changes as your child answers.</p>
             <Link href="/radlic" className="rl-link mt-5 inline-block text-accent font-medium">See how {APP_NAME} works →</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* The second product (2026-10-22). Same shape as the Radlic section, mirrored; its own demo is on /askradlor. */}
+      <section className="mx-auto max-w-5xl px-6 py-14">
+        <div className="grid items-center gap-10 sm:grid-cols-2">
+          <div className="sm:order-2">
+            <Image src="/askradlor-demo-poster.jpg" alt="An askRadlor answer drawn on a whiteboard: a food chain from grass to grasshopper, lizard and crow" width={960} height={640} className="w-full h-auto rounded-2xl border border-line" />
+          </div>
+          <div>
+            <h2 className="font-display text-4xl">Ask anything. Watch it drawn.</h2>
+            <p className="mt-4 text-lg text-muted">{ASK_NAME}: type a question, get a short voiced video that draws the answer step by step. Ages 13 and over.</p>
+            <Link href="/askradlor" className="rl-link mt-5 inline-block text-accent font-medium">See how {ASK_NAME} works →</Link>
           </div>
         </div>
       </section>

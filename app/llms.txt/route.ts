@@ -1,4 +1,4 @@
-import { APP_GRADES, APP_NAME, APP_URL, COMPANY, PAGES, SITE_URL, SOCIAL, SUPPORT_EMAIL, SUPPORT_PHONE, TAGLINE, VISION } from '@/site'
+import { APP_GRADES, APP_NAME, APP_URL, ASK_EXPLORE_URL, ASK_NAME, ASK_URL, COMPANY, PAGES, SITE_URL, SOCIAL, SUPPORT_EMAIL, SUPPORT_PHONE, TAGLINE, VISION } from '@/site'
 import { posts } from '@/content/posts'
 
 /**
@@ -13,6 +13,7 @@ export const dynamic = 'force-static'
  *  `PAGES` fails the type-check here until it has one — the list cannot go quietly stale. */
 const BLURB: Record<(typeof PAGES)[number]['href'], string> = {
   '/': `what ${COMPANY} builds and why`,
+  '/askradlor': `${ASK_NAME}: ask any question and watch a short voiced whiteboard video draw the answer; sign-up is on ${ASK_URL}, and ${ASK_EXPLORE_URL} shows public videos with no account`,
   '/radlic': `${APP_NAME}, the math app: how a lesson teaches, how practice adapts, and two real lesson chalkboards; sign-up is on ${APP_URL}`,
   // hidden 2026-09-25 with its footer row in site.ts — restore both together:
   // '/waitlist': `join the waitlist for a place in ${APP_NAME}: an email address, optionally a child's grade, and nothing else`,
@@ -36,7 +37,7 @@ export function GET() {
 ${VISION}
 
 ${COMPANY} is a software company building learning tools that adapt to the person using them.
-Our first product is ${APP_NAME}: adaptive math for kindergarten through grade 8. It runs at ${APP_URL} and is
+It makes two products. The first is ${APP_NAME}: adaptive math for kindergarten through grade 8. It runs at ${APP_URL} and is
 open to try: ${APP_URL}/auth is where a parent makes an account, and the URL to give somebody who
 wants to try it. ${APP_NAME} was called Milo until August 2026 and
 AdaptiveLearn, at adaptivelearn.radlor.com, until September 2026.
@@ -52,6 +53,12 @@ Parents choose which lessons their child gets, from a library filtered by grade,
 dates. A child signs in with a username and password their parent sets, with no email address of
 their own; the parent dashboard asks for a PIN each time it opens. Classroom accounts for schools
 are paused until there is a way for a school to give consent for its students.
+
+The second product is ${ASK_NAME}, at ${ASK_URL}, for ages 13 and over. You type a question and get a
+short voiced video that draws the answer step by step on a whiteboard, drawn live in the browser
+rather than generated as video; you can ask a follow-up in the same chat. It covers biology,
+physics, chemistry, and home or car fixes. Answers are written by AI and can be wrong. Public
+videos are at ${ASK_EXPLORE_URL} and need no account.
 
 ## Pages
 ${PAGES.map(p => `- [${p.label} — ${BLURB[p.href]}](${SITE_URL}${p.href === '/' ? '' : p.href})`).join('\n')}

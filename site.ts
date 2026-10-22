@@ -91,10 +91,13 @@ export const APP_NAME = 'Radlic'
  * Its own repo (`../whiteboard-ai/app`) and Vercel project; its landing page is `/askradlor` here. For anyone, not
  * only children. ⚠️ Its Radlic "Ask maths" add-on is OFF pending legal sign-off — no page here may mention it yet.
  */
-export const ASK_URL = 'https://askradlor.com'
+// www is canonical: the bare domain 308s there (measured 2026-10-22).
+export const ASK_URL = 'https://www.askradlor.com'
 export const ASK_NAME = 'askRadlor'
 /** Public videos, no sign-in needed (`/explore` in the app). */
 export const ASK_EXPLORE_URL = `${ASK_URL}/explore`
+/** Its JSON-LD id. The app does not emit one yet; if it ever does, it should use this same string (see APP_ID). */
+export const ASK_ID = `${ASK_URL}/#app`
 
 /**
  * The app's entity id, declared HERE and referenced by the app itself at the same string.
@@ -215,6 +218,8 @@ export const PAGES = [
   { href: '/', label: 'Home', where: 'footer' },
   // The product page. /adaptivelearn was it until 2026-09-25 and now 308s here (next.config.ts).
   { href: '/radlic', label: 'Radlic', where: 'both' },
+  // The second product's landing page (founder, 2026-10-22); the app itself stays on askradlor.com.
+  { href: '/askradlor', label: 'askRadlor', where: 'both' },
   // ⚠️ HIDDEN 2026-09-10, founder's call. The page still exists at `app/(site)/_pricing/` — the
   // underscore keeps it out of routing, so /pricing 404s and it is absent from the header, the
   // footer, the sitemap and llms.txt because all four read this list. Restore by renaming the

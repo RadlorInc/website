@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
-import { APP_NAME, APP_URL } from '@/site'
+import { APP_NAME, APP_URL, ASK_NAME } from '@/site'
 
 /**
  * THE HOME PAGE'S FIRST SCREEN IS A JOURNEY (founder's call, 2026-09-25): six stops, each with one picture that
@@ -34,10 +34,10 @@ const STOPS = [
     chips: ['One idea at a time', 'No levels, no red crosses', 'Harder means different', 'Children’s data stays small'],
   },
   {
-    eyebrow: '03 · Our first product',
-    title: `${APP_NAME}: math that adapts.`,
-    body: 'Grades K–8. Every answer shapes the next question.',
-    cta: [{ label: `Try ${APP_NAME}`, href: `${APP_URL}/auth` }],
+    eyebrow: '03 · Our products',
+    title: 'Two ways to learn.',
+    body: `${APP_NAME}: math for grades K–8, where every answer shapes the next question. ${ASK_NAME}: ask anything, and watch the answer drawn.`,
+    cta: [{ label: `Try ${APP_NAME}`, href: `${APP_URL}/auth` }, { label: `Try ${ASK_NAME}`, href: '/askradlor', quiet: true }],
   },
   {
     eyebrow: '04 · Who it’s for',
@@ -56,7 +56,7 @@ const STOPS = [
   },
 ] as const
 const LAST = STOPS.length  // stop 0 is the opening screen, then one per entry above
-const RAIL = ['Start', 'Mission', 'How we build', APP_NAME, 'Who it’s for', 'What comes next']
+const RAIL = ['Start', 'Mission', 'How we build', 'Our products', 'Who it’s for', 'What comes next']
 // One picture per rail stop, each drawing its own words: a tablet whose shapes rearrange into a new path; a treasure
 // chest that lights up; four rule blocks being stacked; stairs built of maths objects; homes and a school joined by
 // one path; an idea still growing. Flat 2D illustrations on transparent ground, no people (founder, 2026-09-29).
@@ -196,17 +196,20 @@ export function Journey() {
         <div className="rl-stop-copy">
           <p className="text-sm uppercase tracking-[0.18em] text-accent font-medium">Radlor</p>
           <h1 className="font-display text-[2.6rem] sm:text-6xl leading-[1.05] mt-4 max-w-[30rem]">
-            Learning software that adapts to the <span className="rl-lit">child</span> in front of it.
+            Learning software that adapts to the <span className="rl-lit">learner</span> in front of it.
           </h1>
           <p className="mt-5 sm:mt-6 text-base sm:text-lg text-muted max-w-[30rem] leading-relaxed">
             Most educational apps give every child the same questions in the same order. We build the other kind:
-            software that watches how a child answers and changes the next question because of it. Our first
-            product, <strong className="text-foreground font-medium">{APP_NAME}</strong>, teaches math for kindergarten through grade 8.
+            software that watches how you answer and changes what comes next. <strong className="text-foreground font-medium">{APP_NAME}</strong> teaches
+            math for kindergarten through grade 8; <strong className="text-foreground font-medium">{ASK_NAME}</strong> answers any question as a voiced whiteboard video.
           </p>
           <div className="mt-7 sm:mt-9 flex flex-wrap gap-3">
             <a href={`${APP_URL}/auth`} className="rl-cta rounded-full bg-accent px-6 py-3 text-on-accent font-medium hover:opacity-90">
               Try {APP_NAME}
             </a>
+            <Link href="/askradlor" className="rl-cta rl-cta-quiet rounded-full border border-line px-6 py-3 font-medium hover:border-foreground transition-colors">
+              Try {ASK_NAME}
+            </Link>
             <button type="button" onClick={() => api.current?.play(!playing)} className="rl-cta rl-cta-quiet rounded-full border border-line px-6 py-3 font-medium hover:border-foreground transition-colors">
               {playing ? 'Pause the journey' : '▶ Play the journey'}
             </button>
