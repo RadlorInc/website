@@ -37,24 +37,26 @@
 >   lost "Placement check", "Camera chapters" and "Ages 3–18".
 
 
-## askRadlor on the site (2026-10-22, branch `askradlor`, not pushed)
+## askRadlor on the site + company-first home (2026-10-22, PR #15, branch `askradlor`, open)
 
-Founder: radlor.com shows both products. New `/askradlor` landing page (app's dark monochrome look; buttons go to
-www.askradlor.com/signup and /explore), `PAGES` row, `ASK_*` in `site.ts`, home hero + stop 03 + a home section,
-/about, root description and llms.txt name both. Tagline "child" → "learner". Every askRadlor claim is copied from the
-app's own landing page (whiteboard-ai `main`, src/app/page.tsx), so re-read it when that page changes. ⚠️ Do NOT
-mention the Radlic "Ask maths" add-on until it is live (legal gate). Left alone: `VISION` (founder's own words, still
-says "children"). The home page already scrolls sideways at 360 px, and production does the same, so this branch did
-not cause it.
-Same day, second pass (founder: "Radlic dominates, askRadlor is nowhere"): the home page was rewritten as the COMPANY
-page: vision hero, then the two products as equal cards, then "Why we build" (VISION plus four things both products
-share), who it's for, writing and contact. The journey scroll and the Radlic facts band are gone (in git), and with
-them the 360 px sideways scroll. Later the same day: the whole site is always the dark palette (no light theme),
-the header has no button, "Who we build for" has no Partners, and the askRadlor demo is the founder's pick, the
-heart conducting-system answer from Explore (silent screen recording; source URL in app/askradlor/page.tsx).
-Then (founder: "the same thing repeats"): the header lists Writing, About and Contact only (both products are in
-the footer and on the home cards), each product card is one link to its page, "Who we build for" is gone, and
-/for-schools is HIDDEN like /pricing (folder `app/(site)/_for-schools/`; restore steps beside its row in site.ts).
+**State:** RadlorInc/website#15 is open. Checks pass. Preview: `website-git-askradlor-radlor1.vercel.app` (needs a
+Vercel login). Not merged. ⚠️ Merge it AFTER RadlorInc/whiteboard-ai#38 is live: `/askradlor` says "Your first 20
+videos are free.", and until #38 ships the app still gives 10 a month.
+
+What the branch does (founder's calls, all on 2026-10-22):
+- **`/askradlor`** is a landing page like `/radlic`, in the app's dark black-and-white look. The demo is the labelled-heart
+  answer from Explore, silent (the voice is made in the browser). Its source URL is in `app/askradlor/page.tsx`.
+  Buttons: sign up and Explore. Claims are copied from the app's landing page, plus "Your first 20 videos are free."
+  (founder's wording). `ASK_URL` is `www.askradlor.com`, because the bare domain 308s there.
+- **The home page is the company page:** vision hero, then two equal product cards (one link each), then "Why we build"
+  (`VISION` plus four things both products share), Writing and "Talk to us". The journey scroll and the Radlic facts
+  band are deleted (in git).
+- **One colour:** `:root` is always the dark palette. The light theme was removed ("no white bands").
+- **Header:** Writing, About and Contact only. Both products are in the footer. No header button.
+- **`/for-schools` HIDDEN**, like /pricing: the folder is `app/(site)/_for-schools/`. Restore steps are beside its
+  row in `site.ts`.
+- Tagline: "…adapts to the learner…". `VISION`: "…the treasure is already inside every learner…" (founder approved).
+- ⚠️ Do NOT mention the Radlic "Ask maths" add-on until it is live (legal gate). No prices anywhere.
 
 ## ⚠️ THIS REPOSITORY IS PUBLIC — 2026-08-31
 
