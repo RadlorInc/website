@@ -20,7 +20,8 @@ const BLURB: Record<(typeof PAGES)[number]['href'], string> = {
   // ⚠️ /pricing is hidden — see the commented row in `PAGES`. Kept here, commented, so restoring
   // the page is one uncomment in each file rather than rewriting this sentence from the table.
   // '/pricing': `what ${APP_NAME} costs: ${usd(PRICING.monthly.first)} a month for the first child, ${usd(PRICING.monthly.additional)} for each additional child up to ${PRICING.maxChildren}, annual billing saving over 20%`,
-  '/for-schools': 'schools: classroom accounts are paused for now; how to get in touch',
+  // hidden 2026-10-22 with its row in site.ts — restore both together:
+  // '/for-schools': 'schools: classroom accounts are paused for now; how to get in touch',
   '/writing': 'notes on building adaptive learning software',
   '/about': `why ${COMPANY} started and how we work`,
   '/contact': 'early access, schools, support, press',

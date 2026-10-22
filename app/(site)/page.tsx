@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { ReactNode } from 'react'
-import { APP_NAME, APP_URL, ASK_EXPLORE_URL, ASK_NAME, COMPANY, SITE_URL, TAGLINE, VISION } from '@/site'
+import { APP_NAME, ASK_NAME, COMPANY, SITE_URL, TAGLINE, VISION } from '@/site'
 import { posts } from '@/content/posts'
 import { CircleReveal } from '@/components/scroll/Scroll'
 import { ART, POST_COVERS } from '@/components/scroll/art'
@@ -25,7 +25,6 @@ const PRODUCTS = [
     line: 'Math lessons that adapt. A teacher at the chalkboard, one idea at a time, then practice that follows what your child gets right and wrong.',
     pic: { src: '/radlic-demo-poster.jpg', w: 1920, h: 1080, alt: 'The Radlic app: picking a math topic by grade' },
     page: '/radlic',
-    go: { label: `Try ${APP_NAME}`, href: `${APP_URL}/auth` },
   },
   {
     name: ASK_NAME,
@@ -33,7 +32,6 @@ const PRODUCTS = [
     line: 'Ask anything, watch it drawn. Type a question and a short voiced video draws the answer step by step on a whiteboard.',
     pic: { src: '/askradlor-demo-poster.jpg', w: 814, h: 512, alt: 'An askRadlor answer: a heart drawn on a whiteboard with its conducting system labelled, from the SA node to the Purkinje fibres' },
     page: '/askradlor',
-    go: { label: 'Explore videos', href: ASK_EXPLORE_URL },
   },
 ]
 
@@ -61,11 +59,6 @@ const SHARED: { title: string; body: string; icon: ReactNode }[] = [
   },
 ]
 
-const FOR = [
-  { label: 'Families', body: `${APP_NAME} for children, K–8`, href: '/radlic' },
-  { label: 'Learners 13+', body: `${ASK_NAME} for any question`, href: '/askradlor' },
-  { label: 'Schools', body: 'How we work with schools', href: '/for-schools' },
-]
 
 const btn = 'rl-cta inline-flex min-h-11 items-center rounded-full px-6 py-3 font-medium'
 const primary = `${btn} bg-accent text-on-accent hover:opacity-90`
@@ -95,26 +88,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* THE TWO PRODUCTS, EQUAL WEIGHT: same card, same size, same two links. Order is launch order. */}
+      {/* THE TWO PRODUCTS, EQUAL WEIGHT: same card, same size, one link each (the Try / Explore buttons live on each product page, not here). Order is launch order. */}
       <section id="products" className="mx-auto max-w-5xl scroll-mt-20 px-6 py-16 sm:py-20">
         <p className="text-sm uppercase tracking-[0.18em] text-accent font-medium">Our products</p>
         <h2 className="font-display mt-3 text-4xl sm:text-5xl">Two products, one way of teaching.</h2>
         <ul className="mt-10 grid gap-6 md:grid-cols-2">
           {PRODUCTS.map(p => (
-            <li key={p.name} className="flex flex-col overflow-hidden rounded-2xl border border-line bg-surface">
-              <Link href={p.page} className="group block border-b border-line" aria-label={`${p.name}: learn more`}>
+            <li key={p.name}>
+              <Link href={p.page} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface transition-colors hover:border-accent">
                 <Image src={p.pic.src} alt={p.pic.alt} width={p.pic.w} height={p.pic.h}
-                  className="aspect-[16/10] w-full object-cover object-top transition-opacity group-hover:opacity-90" />
-              </Link>
-              <div className="flex flex-1 flex-col p-6 sm:p-7">
-                <p className="text-xs uppercase tracking-[0.16em] text-muted font-medium">{p.who}</p>
-                <h3 className="font-display mt-2 text-3xl">{p.name}</h3>
-                <p className="mt-3 flex-1 leading-relaxed text-muted">{p.line}</p>
-                <div className="mt-6 flex flex-wrap items-center gap-3">
-                  <Link href={p.page} className={primary}>Learn more</Link>
-                  <a href={p.go.href} className={quiet}>{p.go.label}</a>
+                  className="aspect-[16/10] w-full border-b border-line object-cover object-top" />
+                <div className="flex flex-1 flex-col p-6 sm:p-7">
+                  <span className="text-xs uppercase tracking-[0.16em] text-muted font-medium">{p.who}</span>
+                  <h3 className="font-display mt-2 text-3xl">{p.name}</h3>
+                  <span className="mt-3 flex-1 leading-relaxed text-muted">{p.line}</span>
+                  <span className="mt-6 font-medium text-accent">Learn more <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-1">→</span></span>
                 </div>
-              </div>
+              </Link>
             </li>
           ))}
         </ul>
@@ -137,20 +127,6 @@ export default function Home() {
           </ul>
           <Link href="/about" className="rl-link mt-10 inline-block text-accent font-medium">More about {COMPANY} →</Link>
         </div>
-      </section>
-
-      <section className="mx-auto max-w-5xl px-6 py-16">
-        <h2 className="font-display text-3xl sm:text-4xl">Who we build for</h2>
-        <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FOR.map(f => (
-            <li key={f.label}>
-              <Link href={f.href} className="group flex h-full min-h-11 flex-col rounded-2xl border border-line bg-surface p-5 transition-colors hover:border-accent">
-                <span className="font-display text-xl group-hover:text-accent transition-colors">{f.label} →</span>
-                <span className="mt-1 text-sm text-muted">{f.body}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
       </section>
 
       {posts.length > 0 && (

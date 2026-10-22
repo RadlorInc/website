@@ -52,6 +52,9 @@ share), who it's for, writing and contact. The journey scroll and the Radlic fac
 them the 360 px sideways scroll. Later the same day: the whole site is always the dark palette (no light theme),
 the header has no button, "Who we build for" has no Partners, and the askRadlor demo is the founder's pick, the
 heart conducting-system answer from Explore (silent screen recording; source URL in app/askradlor/page.tsx).
+Then (founder: "the same thing repeats"): the header lists Writing, About and Contact only (both products are in
+the footer and on the home cards), each product card is one link to its page, "Who we build for" is gone, and
+/for-schools is HIDDEN like /pricing (folder `app/(site)/_for-schools/`; restore steps beside its row in site.ts).
 
 ## ⚠️ THIS REPOSITORY IS PUBLIC — 2026-08-31
 

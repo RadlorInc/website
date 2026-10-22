@@ -218,9 +218,10 @@ export const PLANS = Array.from({ length: PRICING.maxChildren }, (_, i) => price
 export const PAGES = [
   { href: '/', label: 'Home', where: 'footer' },
   // The product page. /adaptivelearn was it until 2026-09-25 and now 308s here (next.config.ts).
-  { href: '/radlic', label: 'Radlic', where: 'both' },
+  // 2026-10-22 (founder): the products are on the home page's product cards, so the header does not repeat them.
+  { href: '/radlic', label: 'Radlic', where: 'footer' },
   // The second product's landing page (founder, 2026-10-22); the app itself stays on askradlor.com.
-  { href: '/askradlor', label: 'askRadlor', where: 'both' },
+  { href: '/askradlor', label: 'askRadlor', where: 'footer' },
   // ⚠️ HIDDEN 2026-09-10, founder's call. The page still exists at `app/(site)/_pricing/` — the
   // underscore keeps it out of routing, so /pricing 404s and it is absent from the header, the
   // footer, the sitemap and llms.txt because all four read this list. Restore by renaming the
@@ -229,13 +230,16 @@ export const PAGES = [
   // home hero fact, the /waitlist sentence, the /adaptivelearn FAQ and its JSON-LD offers are
   // gone. PRICING stays as the source for the hidden page and check:pricing; nothing renders it.
   // { href: '/pricing', label: 'Pricing', where: 'both' },
-  { href: '/for-schools', label: 'Schools', where: 'both' },
+  // ⚠️ HIDDEN 2026-10-22 (founder: "we are not talking to schools yet"). Same as /pricing: the page is at
+  // `app/(site)/_for-schools/`, so /for-schools 404s and is in no list. Restore: rename the folder, uncomment this row,
+  // its BLURB line in llms.txt and its entry in check-site-claims' CLAIM_PAGES.
+  // { href: '/for-schools', label: 'Schools', where: 'both' },
   { href: '/writing', label: 'Writing', where: 'both' },
   { href: '/about', label: 'About', where: 'both' },
   // Hidden 2026-09-25 (founder: "hide the waitlist from everywhere"; the CTA is now "Try Radlic").
   // The page still answers at /waitlist for old links; restore this row to list it again.
   // { href: '/waitlist', label: 'Waitlist', where: 'footer' },
-  { href: '/contact', label: 'Contact', where: 'footer' },
+  { href: '/contact', label: 'Contact', where: 'both' },
   { href: '/data-and-safety', label: 'Data & safety', where: 'footer' },
   { href: '/privacy', label: 'Privacy', where: 'footer' },
   // ⚠️ The WEBSITE's terms, not the app's. The app has its own, longer Terms of Service on its
