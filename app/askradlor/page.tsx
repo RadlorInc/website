@@ -4,8 +4,8 @@
  *
  * ⚠️ EVERY CLAIM IS THE APP'S OWN LANDING PAGE, re-read from RadlorInc/whiteboard-ai `main` (src/app/page.tsx) on
  * 2026-10-22: the subjects, "ages 13 and over", "answers are written by AI and can be wrong", replays are free. When
- * that page changes, this one is stale until re-read. No price (no page on this site states one) and no free-video
- * count (it is a setting in the app's database). ⚠️ NOT the Radlic "Ask maths" add-on: it is off pending legal
+ * that page changes, this one is stale until re-read. No price (no page on this site states one). "First 20 videos free" is the
+ * founder's statement (2026-10-22), not read from the app; the app's own landing page words its free allowance differently. ⚠️ NOT the Radlic "Ask maths" add-on: it is off pending legal
  * sign-off, and no page here may mention it until it is live.
  *
  * The demo is a real public askRadlor answer, screen-recorded on 2026-10-22 from Explore
@@ -50,7 +50,7 @@ const STEPS = [
 ]
 
 const FACTS = [
-  'Free videos every month. A video that fails is never counted.',
+  'Your first 20 videos are free.',  // founder's wording, 2026-10-22
   'Replaying your own videos is free.',
   'For ages 13 and over.',
   'Answers are written by AI and can be wrong.',
