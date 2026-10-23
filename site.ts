@@ -94,7 +94,7 @@ export const APP_NAME = 'Radlic'
  */
 // www is canonical: the bare domain 308s there (measured 2026-10-22).
 export const ASK_URL = 'https://www.askradlor.com'
-export const ASK_NAME = 'askRadlor'
+export const ASK_NAME = 'Ask Radlor'   // two words since the app's rename (whiteboard-ai#50, 23 Oct 2026)
 /** Public videos, no sign-in needed (`/explore` in the app). */
 export const ASK_EXPLORE_URL = `${ASK_URL}/explore`
 /** Its JSON-LD id. The app does not emit one yet; if it ever does, it should use this same string (see APP_ID). */
@@ -221,7 +221,7 @@ export const PAGES = [
   // 2026-10-22 (founder): the products are on the home page's product cards, so the header does not repeat them.
   { href: '/radlic', label: 'Radlic', where: 'footer' },
   // The second product's landing page (founder, 2026-10-22); the app itself stays on askradlor.com.
-  { href: '/askradlor', label: 'askRadlor', where: 'footer' },
+  { href: '/askradlor', label: ASK_NAME, where: 'footer' },
   // ⚠️ HIDDEN 2026-09-10, founder's call. The page still exists at `app/(site)/_pricing/` — the
   // underscore keeps it out of routing, so /pricing 404s and it is absent from the header, the
   // footer, the sitemap and llms.txt because all four read this list. Restore by renaming the

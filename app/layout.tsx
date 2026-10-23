@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: { default: `${COMPANY} — ${TAGLINE}`, template: `%s · ${COMPANY}` },
   description:
     `${COMPANY} builds learning software that adapts to the learner. Radlic teaches math for kindergarten through ` +
-    'grade 8 with practice that changes question by question; askRadlor answers any question as a voiced whiteboard video.',
+    'grade 8 with practice that changes question by question; Ask Radlor answers any question as a voiced whiteboard video.',
   applicationName: COMPANY,
   alternates: { canonical: '/' },
   openGraph: { type: 'website', siteName: COMPANY, url: SITE_URL, locale: 'en_US' },
