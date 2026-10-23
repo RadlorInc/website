@@ -30,7 +30,7 @@ const PRODUCTS = [
     name: ASK_NAME,
     who: 'For ages 13+ · Any question',
     line: 'Ask anything, watch it drawn. Type a question and a short voiced video draws the answer step by step on a whiteboard.',
-    pic: { src: '/askradlor-demo-poster.jpg', w: 814, h: 512, alt: 'An askRadlor answer: a heart drawn on a whiteboard with its conducting system labelled, from the SA node to the Purkinje fibres' },
+    pic: { src: '/askradlor-demo-poster.jpg', w: 814, h: 512, alt: 'An Ask Radlor answer: a heart drawn on a whiteboard with its conducting system labelled, from the SA node to the Purkinje fibres' },
     page: '/askradlor',
   },
 ]
