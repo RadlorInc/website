@@ -8,7 +8,7 @@ import { APP_NAME, SITE_URL, SUPPORT_EMAIL } from '@/site'
 export const metadata: Metadata = {
   title: `${APP_NAME} for schools`,
   description:
-    'Radlic for schools: classroom accounts are paused while we build a way for a school to give consent for its students. Write to us and we will tell you when they open.',
+    'Radlor for schools: classroom accounts are paused while we build a way for a school to give consent for its students. Write to us and we will tell you when they open.',
   alternates: { canonical: '/for-schools' },
 }
 
@@ -68,7 +68,7 @@ export default function ForSchools() {
             pic={ART.schoolsHero}
           >
             <a
-              href={`mailto:${SUPPORT_EMAIL}?subject=Radlic%20for%20our%20school`}
+              href={`mailto:${SUPPORT_EMAIL}?subject=Radlor%20for%20our%20school`}
               className="rl-cta mt-8 inline-block rounded-full bg-accent px-6 py-3 text-on-accent font-medium hover:opacity-90"
             >
               Talk to us

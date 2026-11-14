@@ -69,7 +69,7 @@ export default function NotFound() {
 
       <div className="mt-9 flex flex-wrap gap-3">
         <a href={`${APP_URL}/auth`} className="rl-cta rounded-full bg-accent px-6 py-3 text-on-accent font-medium hover:opacity-90">
-          Try Radlic
+          Try {APP_NAME}
         </a>
         <Link href="/" className="rl-cta rl-cta-quiet rounded-full border border-line px-6 py-3 font-medium hover:border-foreground transition-colors">
           Back to the start

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: `${COMPANY} — ${TAGLINE}`, template: `%s · ${COMPANY}` },
   description:
-    `${COMPANY} builds learning software that adapts to the learner. Radlic teaches math for kindergarten through ` +
+    `${COMPANY} builds learning software that adapts to the learner. The Radlor app teaches math for kindergarten through ` +
     'grade 8 with practice that changes question by question; Ask Radlor answers any question as a voiced whiteboard video.',
   applicationName: COMPANY,
   alternates: { canonical: '/' },
