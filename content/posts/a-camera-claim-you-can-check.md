@@ -16,17 +16,17 @@ one-line change. It breaks visibly, in front of whoever tries.
 
 ## What changed on 20 September 2026
 
-When this post was first written, Radlic had camera chapters: in the 9–11 band a child could answer
+When this post was first written, the Radlor app (then called Radlic) had camera chapters: in the 9–11 band a child could answer
 by holding fingers up or tilting a hand, and the hand tracking ran inside the browser. The post
 described how that was built so nothing could leave the device.
 
 Those chapters are gone. We removed them on 20 September 2026, along with the 9–11 band they lived in.
-Radlic now has no camera feature at all, and the stronger version of the claim is now the true one:
+The app now has no camera feature at all, and the stronger version of the claim is now the true one:
 the app does not merely avoid uploading video — the browser will not let it open a camera.
 
 ## The three things that make it checkable
 
-**One: the browser is told the app may not use a camera.** Radlic sends a `Permissions-Policy`
+**One: the browser is told the app may not use a camera.** The app sends a `Permissions-Policy`
 header with `camera=()`, and the same for the microphone and location. With that header in place, a
 request for the camera from the app is refused by the browser before any prompt reaches the child.
 Adding a camera back would mean changing that header, in public, not slipping a call into a screen.
