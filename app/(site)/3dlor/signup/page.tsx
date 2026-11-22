@@ -123,7 +123,7 @@ export default async function Signup({ searchParams }: PageProps<'/3dlor/signup'
 
           <label className={`flex gap-3 text-sm ${bad === 'terms' ? 'text-accent' : 'text-muted'}`}>
             <input type="checkbox" name="terms" value="yes" required className="mt-1" />
-            <span>I have the right to share these files. I will check each script and step for accuracy before you make the video.</span>
+            <span>I have the right to share these files with Radlor.</span>
           </label>
 
           <div>
