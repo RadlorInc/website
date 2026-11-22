@@ -84,10 +84,10 @@ export const SUPPORT_TEL = '+18888129373'
 
 /** The live product. Its own origin — a separate Vercel project, deployed from the app repo. Called AdaptiveLearn at
  *  adaptivelearn.radlor.com until 2026-09-24 (RENAME-MANUAL §D in the app repo); its landing page is `/radlic` here. */
-/** Renamed Radlic → Radlor and moved radlic.com → app.radlor.com (founder, 2026-11-14); radlic.com redirects there.
- *  The landing page keeps its indexed path, `/radlic`. */
 export const APP_URL = 'https://app.radlor.com'
-export const APP_NAME = 'Radlor'
+/** The name is Radlic again (founder, 2026-11-22; it was "Radlor" from 2026-11-14). The app stays at app.radlor.com
+ *  until the founder decides the domain; radlic.com redirects there. */
+export const APP_NAME = 'Radlic'
 
 /**
  * The second product (2026-10-22): ask any question, the answer plays as a voiced whiteboard lesson drawn live.
@@ -221,7 +221,7 @@ export const PAGES = [
   { href: '/', label: 'Home', where: 'footer' },
   // The product page. /adaptivelearn was it until 2026-09-25 and now 308s here (next.config.ts).
   // 2026-10-22 (founder): the products are on the home page's product cards, so the header does not repeat them.
-  { href: '/radlic', label: 'Radlor app', where: 'footer' },
+  { href: '/radlic', label: 'Radlic', where: 'footer' },
   // The second product's landing page (founder, 2026-10-22); the app itself stays on askradlor.com.
   { href: '/askradlor', label: ASK_NAME, where: 'footer' },
   // ⚠️ HIDDEN 2026-09-10, founder's call. The page still exists at `app/(site)/_pricing/` — the
@@ -238,7 +238,7 @@ export const PAGES = [
   // { href: '/for-schools', label: 'Schools', where: 'both' },
   { href: '/writing', label: 'Writing', where: 'both' },
   { href: '/about', label: 'About', where: 'both' },
-  // Hidden 2026-09-25 (founder: "hide the waitlist from everywhere"; the CTA is now "Try Radlor").
+  // Hidden 2026-09-25 (founder: "hide the waitlist from everywhere"; the CTA is now "Try Radlic").
   // The page still answers at /waitlist for old links; restore this row to list it again.
   // { href: '/waitlist', label: 'Waitlist', where: 'footer' },
   { href: '/contact', label: 'Contact', where: 'both' },

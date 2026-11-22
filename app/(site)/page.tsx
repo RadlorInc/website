@@ -23,7 +23,7 @@ const PRODUCTS = [
     name: APP_NAME,
     who: 'For children · Math, grades K–8',
     line: 'Math lessons that adapt. A teacher at the chalkboard, one idea at a time, then practice that follows what your child gets right and wrong.',
-    pic: { src: '/radlic-demo-poster.jpg', w: 1920, h: 1080, alt: 'The Radlor app: picking a math topic by grade' },
+    pic: { src: '/radlic-demo-poster.jpg', w: 1920, h: 1080, alt: 'The Radlic app: picking a math topic by grade' },
     page: '/radlic',
   },
   {

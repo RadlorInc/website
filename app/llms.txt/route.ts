@@ -26,7 +26,7 @@ const BLURB: Record<(typeof PAGES)[number]['href'], string> = {
   '/about': `why ${COMPANY} started and how we work`,
   '/contact': 'early access, schools, support, press',
   '/data-and-safety': "what we store about a child, who can see it, how to delete it, and what we do not collect",
-  '/terms': 'the terms of use for this website, in force since 6 September 2026 — what this site is, what it collects, and what its content does and does not promise; the Radlor app has its own separate Terms of Service on its own origin',
+  '/terms': 'the terms of use for this website, in force since 6 September 2026 — what this site is, what it collects, and what its content does and does not promise; the Radlic app has its own separate Terms of Service on its own origin',
   '/privacy': 'the privacy policy for this website: no cookies, no analytics, nothing loaded from a third party, and one form — the waitlist — which stores an email address and an optional grade, and nothing else',
 }
 
@@ -38,10 +38,10 @@ export function GET() {
 ${VISION}
 
 ${COMPANY} is a software company building learning tools that adapt to the person using them.
-It makes two products. The first is the ${APP_NAME} app: adaptive math for kindergarten through grade 8. It runs at ${APP_URL} and is
+It makes two products. The first is ${APP_NAME}: adaptive math for kindergarten through grade 8. It runs at ${APP_URL} and is
 open to try: ${APP_URL}/auth is where a parent makes an account, and the URL to give somebody who
-wants to try it. The app was called Milo until August 2026,
-AdaptiveLearn (at adaptivelearn.radlor.com) until September 2026, and Radlic (at radlic.com) until November 2026.
+wants to try it. ${APP_NAME} was called Milo until August 2026 and
+AdaptiveLearn, at adaptivelearn.radlor.com, until September 2026. Its old address radlic.com redirects to ${APP_URL}.
 
 ${APP_NAME} teaches one idea per lesson: a teacher says each step out loud and writes or draws it on
 the board, then the child tries one with hints and worked steps to fall back on. Practice adapts

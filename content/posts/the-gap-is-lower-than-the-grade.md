@@ -21,7 +21,7 @@ Teaching the equations again treats the symptom you can see.
 
 ## What we tried, and why we took it out
 
-When this post was first written, the Radlor app (then called Radlic) started with a short placement check. It walked a graph of
+When this post was first written, Radlic started with a short placement check. It walked a graph of
 skills and their prerequisites: when a skill expected for the child's age failed, it descended into
 that skill's prerequisites, and kept descending until it reached one whose own prerequisites all
 passed. That skill was the **root gap**, and it was meant to be the first thing taught.
@@ -31,7 +31,7 @@ worked did not. Its accuracy had only ever been measured in simulation, never ag
 and a check that names the wrong root sends weeks of teaching to the wrong place. A placement result
 we could not stand behind was worse than none, so we took it out rather than keep it with a caveat.
 
-## What the Radlor app does instead
+## What Radlic does instead
 
 It does not guess where the root is. It shows the adult where the trouble is, lets them reach back
 to any grade, and keeps weak skills in play.

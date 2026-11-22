@@ -8,7 +8,7 @@ import { APP_NAME, APP_URL, SITE_URL, SUPPORT_EMAIL } from '@/site'
 export const metadata: Metadata = {
   title: 'Data and safety',
   description:
-    'What the Radlor app stores about a child, who else can see it, and how to delete it all. A child never needs an email address, and nothing is sold or shared with an advertiser.',
+    'What Radlic stores about a child, who else can see it, and how to delete it all. A child never needs an email address, and nothing is sold or shared with an advertiser.',
   alternates: { canonical: '/data-and-safety' },
 }
 
