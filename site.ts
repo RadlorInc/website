@@ -66,8 +66,9 @@ export const BRAND = {
 } as const
 
 export const COMPANY = 'Radlor'
-/** Broadened 2026-10-22 (founder) when askRadlor joined Radlic: it was "…adapts to the child in front of it." */
-export const TAGLINE = 'Learning software that adapts to the learner in front of it.'
+/** 2026-11-22 (founder: one company, three products, one purpose: visual learning and visual teaching). It was
+ *  "Learning software that adapts to the learner in front of it." while the company had only learning apps. */
+export const TAGLINE = 'We make learning and teaching visual.'
 
 /**
  * The company belief, in the founder's own words (2026-08-20; "children/child" became "every learner" on 2026-10-22
@@ -101,6 +102,19 @@ export const ASK_NAME = 'Ask Radlor'   // two words since the app's rename (whit
 export const ASK_EXPLORE_URL = `${ASK_URL}/explore`
 /** Its JSON-LD id. The app does not emit one yet; if it ever does, it should use this same string (see APP_ID). */
 export const ASK_ID = `${ASK_URL}/#app`
+
+/**
+ * The third product (2026-11-22): 3D how-to, setup and support video libraries for product brands, so that their
+ * customers understand the product. A service, not an app. Its page is `/3d-videos` here; the sign-up, the form and
+ * the payment live under `/3d-videos/signup` (built in a separate change, so this repo only links to it).
+ * ⚠️ Never say how the videos are made: the wording is "our own 3D system". No delivery-time promise, no price here
+ * (the plans are draft and live on the sign-up page).
+ */
+export const V3D_NAME = '3D Product Videos'
+export const V3D_PATH = '/3d-videos'
+export const V3D_SIGNUP_PATH = '/3d-videos/signup'
+/** The page with the research behind all three products. Every claim on it has a checked source in `content/evidence.ts`. */
+export const WHY_PATH = '/why-visual-learning'
 
 /**
  * The app's entity id, declared HERE and referenced by the app itself at the same string.
@@ -224,6 +238,10 @@ export const PAGES = [
   { href: '/radlic', label: 'Radlic', where: 'footer' },
   // The second product's landing page (founder, 2026-10-22); the app itself stays on askradlor.com.
   { href: '/askradlor', label: ASK_NAME, where: 'footer' },
+  // The third product's page (founder, 2026-11-22). Its sign-up lives under it and is not a row here.
+  { href: V3D_PATH, label: V3D_NAME, where: 'footer' },
+  // The research behind all three products, with its source list (founder, 2026-11-22).
+  { href: WHY_PATH, label: 'Why visual learning', where: 'both' },
   // ⚠️ HIDDEN 2026-09-10, founder's call. The page still exists at `app/(site)/_pricing/` — the
   // underscore keeps it out of routing, so /pricing 404s and it is absent from the header, the
   // footer, the sitemap and llms.txt because all four read this list. Restore by renaming the

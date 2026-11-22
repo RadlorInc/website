@@ -20,7 +20,8 @@ const BASE = (process.argv[2] ?? 'https://radlor.com').replace(/\/$/, '')
 // third party to arrive (a CAPTCHA, an embed, a browser-side database client).
 // /radlic since 2026-09-25: the Radlic landing page, the one page here with a script of its own (the demo player).
 // /waitlist left 2026-09-26: it 308s to /radlic (N23), so it would only re-check /radlic.
-const PAGES = ['/', '/privacy', '/terms', '/radlic', '/askradlor']
+// /3d-videos and /why-visual-learning since 2026-11-22: a video page and a page full of outbound source links.
+const PAGES = ['/', '/privacy', '/terms', '/radlic', '/askradlor', '/3d-videos', '/why-visual-learning']
 
 /**
  * ⚠️ THREE STATES, THREE EXIT CODES: 2 "could not look", 1 "looked and found a defect", 0 "looked
