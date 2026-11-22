@@ -15,7 +15,8 @@
     "check:headers": "node --no-warnings scripts/check-headers.mjs",
     "check:migrations": "node --no-warnings scripts/check-migration-provenance.mjs",
     "check:og": "node --no-warnings scripts/check-og.mjs",
-    "test:3d": "node --test --no-warnings app/api/3dlor/_lib/lib.test.ts",
+    "test:3d": "node --test --no-warnings app/api/3dlor/_lib/lib.test.ts app/help/_lib/help.test.ts scripts/help-upload.test.mjs",
+    "test:help-rls": "scripts/test-help-rls.sh",
     "check:evidence": "node --experimental-strip-types --no-warnings scripts/check-evidence.mjs"
   },
   "dependencies": {
