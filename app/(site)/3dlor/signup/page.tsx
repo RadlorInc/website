@@ -1,16 +1,16 @@
 import type { Metadata } from 'next'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { SUPPORT_EMAIL } from '@/site'
+import { SUPPORT_EMAIL, V3D_NAME } from '@/site'
 import { SignIn, Notice } from '@/components/v3d/SignIn'
-import { PLANS, PLAN_KEYS, FREE_MONTHS, depositCents, usd } from '@/app/api/3d-videos/_lib/plans'
-import { FIELDS } from '@/app/api/3d-videos/_lib/validate'
-import { configured, dbJson, pendingFrom, sessionFrom } from '@/app/api/3d-videos/_lib/server'
+import { PLANS, PLAN_KEYS, FREE_MONTHS, depositCents, usd } from '@/app/api/3dlor/_lib/plans'
+import { FIELDS } from '@/app/api/3dlor/_lib/validate'
+import { configured, dbJson, pendingFrom, sessionFrom } from '@/app/api/3dlor/_lib/server'
 
 export const metadata: Metadata = {
   title: 'Start your 3D video library',
   description: 'Sign up for a 3D how-to and support video library: tell us about your product, send photos and pick a package.',
-  alternates: { canonical: '/3d-videos/signup' },
+  alternates: { canonical: '/3dlor/signup' },
   robots: { index: false, follow: false },
 }
 
@@ -32,7 +32,7 @@ function Field({ name, title, hint, area, type = 'text', bad }: {
   )
 }
 
-export default async function Signup({ searchParams }: PageProps<'/3d-videos/signup'>) {
+export default async function Signup({ searchParams }: PageProps<'/3dlor/signup'>) {
   const sp = await searchParams
   const e = typeof sp.e === 'string' ? sp.e : undefined
   const bad = typeof sp.f === 'string' ? sp.f : undefined
@@ -43,12 +43,12 @@ export default async function Signup({ searchParams }: PageProps<'/3d-videos/sig
   if (session) {
     const open = await dbJson<{ id: string }[]>(
       `v3d_orders?select=id&user_id=eq.${session.uid}&payment_status=eq.unpaid&limit=1`).catch(() => [])
-    if (open.length) redirect('/3d-videos/account')
+    if (open.length) redirect('/3dlor/account')
   }
 
   return (
     <section className="mx-auto max-w-3xl px-6 py-16">
-      <p className="text-sm uppercase tracking-[0.18em] text-accent font-medium">3D videos</p>
+      <p className="text-sm uppercase tracking-[0.18em] text-accent font-medium">{V3D_NAME}</p>
       <h1 className="font-display text-4xl sm:text-5xl leading-tight mt-3">Start your 3D video library</h1>
       <p className="mt-5 text-lg text-muted leading-relaxed">
         Tell us about your product and send your photos. Our own 3D system turns them into how-to, setup and
@@ -64,10 +64,10 @@ export default async function Signup({ searchParams }: PageProps<'/3d-videos/sig
         <>
           <h2 className="mt-12 text-2xl font-display">1. Sign in with your email</h2>
           <p className="mt-2 text-muted">We email you a code. No password. You use the same email later to see your order.</p>
-          <SignIn next="/3d-videos/signup" pendingEmail={pendingFrom(h.get('cookie'))?.email} e={e} />
+          <SignIn next="/3dlor/signup" pendingEmail={pendingFrom(h.get('cookie'))?.email} e={e} />
         </>
       ) : (
-        <form method="post" action="/api/3d-videos/order" className="mt-10 grid gap-6">
+        <form method="post" action="/api/3dlor/order" className="mt-10 grid gap-6">
           <Notice e={e} />
           <p className="text-sm text-muted">Signed in as {session.email}.</p>
 
@@ -93,7 +93,7 @@ export default async function Signup({ searchParams }: PageProps<'/3d-videos/sig
               )
             })}
             <p className="text-sm text-muted">
-              More products, CAD import or staff training? <a className="rl-link text-accent" href={`mailto:${SUPPORT_EMAIL}?subject=3D%20videos%20Enterprise`}>Contact us</a> for an Enterprise plan.
+              More products, CAD import or staff training? <a className="rl-link text-accent" href={`mailto:${SUPPORT_EMAIL}?subject=3Dlor%20Enterprise`}>Contact us</a> for an Enterprise plan.
               Fixed prices. No interest and no late fees.
             </p>
           </fieldset>

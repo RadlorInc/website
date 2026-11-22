@@ -8,20 +8,20 @@ import { configured, db, dbJson, sameOrigin, seeOther, sessionFrom } from '../_l
  * The customer sets only the form fields. Payment and progress columns are never read from input.
  */
 export async function POST(req: Request) {
-  if (!configured()) return seeOther('/3d-videos/signup?e=closed')
+  if (!configured()) return seeOther('/3dlor/signup?e=closed')
   const s = sessionFrom(req.headers.get('cookie'))
-  if (!s) return seeOther('/3d-videos/signup?e=signin')
-  if (!sameOrigin(req)) return seeOther('/3d-videos/signup?e=form')
+  if (!s) return seeOther('/3dlor/signup?e=signin')
+  if (!sameOrigin(req)) return seeOther('/3dlor/signup?e=form')
 
   const form = await req.formData().catch(() => null)
-  if (!form) return seeOther('/3d-videos/signup?e=form')
+  if (!form) return seeOther('/3dlor/signup?e=form')
   const parsed = parseOrder(form)
-  if (!parsed.ok) return seeOther(`/3d-videos/signup?e=field&f=${parsed.error}`)
+  if (!parsed.ok) return seeOther(`/3dlor/signup?e=field&f=${parsed.error}`)
 
   try {
     const open = await dbJson<{ id: string }[]>(
       `v3d_orders?select=id&user_id=eq.${s.uid}&payment_status=eq.unpaid&limit=1`)
-    if (open.length) return seeOther('/3d-videos/account')
+    if (open.length) return seeOther('/3dlor/account')
 
     const res = await db('v3d_orders', {
       method: 'POST',
@@ -36,8 +36,8 @@ export async function POST(req: Request) {
     })
     if (!res.ok) throw new Error(`insert ${res.status} ${await res.text().catch(() => '')}`)
   } catch (err) {
-    console.error('[3d-videos] order insert failed', String(err).slice(0, 300))
-    return seeOther('/3d-videos/signup?e=save')
+    console.error('[3dlor] order insert failed', String(err).slice(0, 300))
+    return seeOther('/3dlor/signup?e=save')
   }
-  return seeOther('/3d-videos/account?new=1')
+  return seeOther('/3dlor/account?new=1')
 }

@@ -1,5 +1,5 @@
 /**
- * radlor.com/3d-videos — the third product (founder, 2026-11-22): 3D how-to, setup and support video libraries for
+ * radlor.com/3dlor — the third product (founder, 2026-11-22): 3D how-to, setup and support video libraries for
  * product brands. A service page: what it is, who it is for, the demo, how the work goes, the limits, one sign-up button.
  *
  * ⚠️ EVERY CLAIM RESTATES THE PRODUCT'S OWN PITCH NOTES as read on 2026-11-22. Rules that a build cannot check:
@@ -10,7 +10,7 @@
  * The demo is our own demo video (a French press, 22 s), served from this site without sound so that /privacy's
  * "nothing from a third party" holds. It is a demo, not the maker's official instructions, and the page says that too.
  *
- * ⚠️ The sign-up route (`/3d-videos/signup`) is built in a separate change. This page only links to it.
+ * ⚠️ The sign-up route (`/3dlor/signup`) is built in a separate change. This page only links to it.
  */
 import type { Metadata } from 'next'
 import Link from 'next/link'

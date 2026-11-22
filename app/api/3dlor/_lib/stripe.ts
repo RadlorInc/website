@@ -90,9 +90,9 @@ export function checkoutParams(o: { orderId: string; uid: string; email: string;
     client_reference_id: o.orderId,
     line_items: [
       { quantity: 1, price_data: { currency: 'usd', unit_amount: depositCents(o.plan),
-        product_data: { name: `3D video library, ${p.name}: build, first half (second half at delivery)` } } },
+        product_data: { name: `3Dlor, ${p.name}: library build, first half (second half at delivery)` } } },
       { quantity: 1, price_data: { currency: 'usd', unit_amount: p.careCents, recurring: { interval: 'month' },
-        product_data: { name: `3D video care plan, ${p.name} (${p.careVideos})` } } },
+        product_data: { name: `3Dlor care plan, ${p.name} (${p.careVideos})` } } },
     ],
     subscription_data: {
       trial_end: trialEnd,
@@ -100,8 +100,8 @@ export function checkoutParams(o: { orderId: string; uid: string; email: string;
       description: `${FREE_MONTHS} free months, then month to month. Fixed price, no interest and no late fees.`,
     },
     metadata: meta,
-    success_url: `${o.site}/3d-videos/account?paid=1`,
-    cancel_url: `${o.site}/3d-videos/account`,
+    success_url: `${o.site}/3dlor/account?paid=1`,
+    cancel_url: `${o.site}/3dlor/account`,
   }
 }
 

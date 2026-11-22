@@ -8,7 +8,7 @@ export function StripeButton({ orderId, kind, label }: { orderId: string; kind: 
   async function go() {
     setBusy(true)
     setError('')
-    const res = await fetch(`/api/3d-videos/${kind}`, {
+    const res = await fetch(`/api/3dlor/${kind}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ order_id: orderId }),

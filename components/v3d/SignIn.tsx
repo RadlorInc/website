@@ -28,7 +28,7 @@ export function SignIn({ next, pendingEmail, e }: { next: string; pendingEmail?:
     <div className="max-w-md">
       <Notice e={e} />
       {pendingEmail && e !== 'expired' ? (
-        <form method="post" action="/api/3d-videos/auth/verify" className="mt-6">
+        <form method="post" action="/api/3dlor/auth/verify" className="mt-6">
           <label className="block text-sm text-muted">
             We sent a code to <strong className="text-foreground">{pendingEmail}</strong>. Enter it here.
             <input name="code" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9 ]{6,12}" required className={input} />
@@ -37,7 +37,7 @@ export function SignIn({ next, pendingEmail, e }: { next: string; pendingEmail?:
           <p className="mt-4 text-sm text-muted">No email after a few minutes? Check spam, or enter your email again below.</p>
         </form>
       ) : null}
-      <form method="post" action="/api/3d-videos/auth/start" className="mt-6">
+      <form method="post" action="/api/3dlor/auth/start" className="mt-6">
         <input type="hidden" name="next" value={next} />
         <label className="block text-sm text-muted">
           Work email

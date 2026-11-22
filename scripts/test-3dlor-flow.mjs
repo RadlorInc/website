@@ -2,7 +2,7 @@
 // End-to-end and attack test for the 3D video sign-up, against a LOCAL stack only:
 //   a local Supabase (`supabase start`, with this repo's migration) and `next dev`.
 //
-//   node --env-file=.env.local scripts/test-3d-videos-flow.mjs http://localhost:3031 http://127.0.0.1:56324
+//   node --env-file=.env.local scripts/test-3dlor-flow.mjs http://localhost:3031 http://127.0.0.1:56324
 //                                                              ^ the site               ^ Mailpit (local email)
 //
 // ⚠️ It refuses to run against a supabase.co URL: it signs up test users and writes rows.
@@ -37,16 +37,16 @@ const cookieOf = (res, name) => res.headers.getSetCookie().map(c => c.split(';')
 const form = o => { const f = new FormData(); for (const [k, v] of Object.entries(o)) f.set(k, v); return f }
 
 async function signIn(email) {
-  const a = await fetch(`${BASE}/api/3d-videos/auth/start`, { method: 'POST', headers: H, body: form({ email, next: '/3d-videos/signup' }), redirect: 'manual' })
+  const a = await fetch(`${BASE}/api/3dlor/auth/start`, { method: 'POST', headers: H, body: form({ email, next: '/3dlor/signup' }), redirect: 'manual' })
   const pending = cookieOf(a, 'v3d_pending')
   const code = await mailCode(email)
-  const b = await fetch(`${BASE}/api/3d-videos/auth/verify`, { method: 'POST', headers: { ...H, Cookie: pending }, body: form({ code }), redirect: 'manual' })
+  const b = await fetch(`${BASE}/api/3dlor/auth/verify`, { method: 'POST', headers: { ...H, Cookie: pending }, body: form({ code }), redirect: 'manual' })
   return cookieOf(b, 'v3d_session')
 }
 
 const ORDER = { plan: 'growth', terms: 'yes', company: 'Acme', contact_name: 'Sam', product_name: 'Kettle K1', topics: 'Descale\nFirst use', languages: 'English, Spanish' }
 async function makeOrder(cookie, extra = {}) {
-  const r = await fetch(`${BASE}/api/3d-videos/order`, { method: 'POST', headers: { ...H, Cookie: cookie }, body: form({ ...ORDER, ...extra }), redirect: 'manual' })
+  const r = await fetch(`${BASE}/api/3dlor/order`, { method: 'POST', headers: { ...H, Cookie: cookie }, body: form({ ...ORDER, ...extra }), redirect: 'manual' })
   return r.headers.get('location')
 }
 const admin = (path, init = {}) => fetch(`${SB}/rest/v1/${path}`, { ...init, headers: { apikey: SERVICE, Authorization: `Bearer ${SERVICE}`, 'Content-Type': 'application/json', ...(init.headers ?? {}) } })
@@ -59,7 +59,7 @@ async function orderOf(email) {
 const JPEG = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, ...new Array(200).fill(1)])
 const PDF = new TextEncoder().encode('%PDF-1.4\n%test\n')
 async function upload(cookie, order_id, kind, bytes, name, type) {
-  const r = await fetch(`${BASE}/api/3d-videos/files`, { method: 'POST', headers: { ...H, Cookie: cookie },
+  const r = await fetch(`${BASE}/api/3dlor/files`, { method: 'POST', headers: { ...H, Cookie: cookie },
     body: form({ order_id, kind, file: new File([bytes], name, { type }) }) })
   return { status: r.status, body: await r.json().catch(() => null) }
 }
@@ -71,17 +71,17 @@ const A = `a-${run}@example.com`, B = `b-${run}@example.com`
 console.log('\nMain flow')
 const ca = await signIn(A)
 ok(!!ca, 'customer A signs in with an emailed code')
-ok((await makeOrder(ca)) === '/3d-videos/account?new=1', 'A submits the onboarding form')
-ok((await makeOrder(ca)) === '/3d-videos/account', 'a second submit makes no duplicate open order')
+ok((await makeOrder(ca)) === '/3dlor/account?new=1', 'A submits the onboarding form')
+ok((await makeOrder(ca)) === '/3dlor/account', 'a second submit makes no duplicate open order')
 const { uid: uidA, order: oa } = await orderOf(A)
 ok(oa?.plan === 'growth' && oa.payment_status === 'unpaid' && oa.videos_ordered === 40, 'order saved: growth, unpaid, 40 videos')
 const upJ = await upload(ca, oa.id, 'photo', JPEG, 'front.jpg', 'image/jpeg')
 const upP = await upload(ca, oa.id, 'manual', PDF, 'manual.pdf', 'application/pdf')
 ok(upJ.status === 201 && upP.status === 201, 'A uploads a photo and a PDF')
-const dl = await fetch(`${BASE}/api/3d-videos/files/${upJ.body.id}`, { headers: { Cookie: ca } })
+const dl = await fetch(`${BASE}/api/3dlor/files/${upJ.body.id}`, { headers: { Cookie: ca } })
 const dlBytes = new Uint8Array(await dl.arrayBuffer())
 ok(dl.status === 200 && dlBytes.length === JPEG.length && /attachment/.test(dl.headers.get('content-disposition') ?? ''), 'A downloads the photo (as an attachment)')
-const page = await fetch(`${BASE}/3d-videos/account`, { headers: { Cookie: ca } }).then(r => r.text())
+const page = await fetch(`${BASE}/3dlor/account`, { headers: { Cookie: ca } }).then(r => r.text())
 ok(page.includes('Kettle K1') && page.includes('front.jpg') && page.includes('$2,200'), 'account page shows the order, the file and the amount due today')
 
 console.log('\nAttack: bad uploads')
@@ -99,32 +99,32 @@ console.log('\nAttack: another customer')
 const cb = await signIn(B)
 await makeOrder(cb, { company: 'Other', product_name: 'Lamp L2', plan: 'basic', languages: 'English' })
 const { order: ob } = await orderOf(B)
-ok((await fetch(`${BASE}/api/3d-videos/files/${upJ.body.id}`, { headers: { Cookie: cb } })).status === 404, "B cannot download A's file")
+ok((await fetch(`${BASE}/api/3dlor/files/${upJ.body.id}`, { headers: { Cookie: cb } })).status === 404, "B cannot download A's file")
 ok((await upload(cb, oa.id, 'photo', JPEG, 'x.jpg', 'image/jpeg')).status === 404, "B cannot upload into A's order")
-ok((await post('/api/3d-videos/checkout', cb, { order_id: oa.id })).status !== 200, "B cannot open a checkout for A's order")
-ok((await post('/api/3d-videos/portal', cb, { order_id: oa.id })).status !== 200, "B cannot open A's billing portal")
-const pageB = await fetch(`${BASE}/3d-videos/account`, { headers: { Cookie: cb } }).then(r => r.text())
+ok((await post('/api/3dlor/checkout', cb, { order_id: oa.id })).status !== 200, "B cannot open a checkout for A's order")
+ok((await post('/api/3dlor/portal', cb, { order_id: oa.id })).status !== 200, "B cannot open A's billing portal")
+const pageB = await fetch(`${BASE}/3dlor/account`, { headers: { Cookie: cb } }).then(r => r.text())
 ok(!pageB.includes('Kettle K1') && !pageB.includes('front.jpg'), "B's account page shows nothing of A's")
 const forged = (() => { const [body, mac] = cb.split('=')[1].split('.'); const p = JSON.parse(Buffer.from(body, 'base64url')); p.uid = uidA
   return `v3d_session=${Buffer.from(JSON.stringify(p)).toString('base64url')}.${mac}` })()
-ok((await fetch(`${BASE}/api/3d-videos/files/${upJ.body.id}`, { headers: { Cookie: forged } })).status === 401, "B's cookie edited to A's user id → 401")
+ok((await fetch(`${BASE}/api/3dlor/files/${upJ.body.id}`, { headers: { Cookie: forged } })).status === 401, "B's cookie edited to A's user id → 401")
 await makeOrder(cb, { payment_status: 'paid', videos_delivered: '99', user_id: uidA, plan: 'pro', languages: 'English' })
 const [obAfter] = await admin(`v3d_orders?select=payment_status,videos_delivered,user_id&id=eq.${ob.id}`).then(r => r.json())
 ok(obAfter.payment_status === 'unpaid' && obAfter.videos_delivered === 0, 'B cannot set payment_status or progress through the form')
 
 console.log('\nAttack: no login, other sites')
 ok((await upload('', oa.id, 'photo', JPEG, 'a.jpg', 'image/jpeg')).status === 401, 'upload without login → 401')
-ok((await fetch(`${BASE}/api/3d-videos/files/${upJ.body.id}`)).status === 401, 'download without login → 401')
-ok((await post('/api/3d-videos/checkout', '', { order_id: oa.id })).status === 401, 'checkout without login → 401')
-ok((await post('/api/3d-videos/portal', '', { order_id: oa.id })).status === 401, 'portal without login → 401')
-ok((await fetch(`${BASE}/api/3d-videos/order`, { method: 'POST', headers: H, body: form(ORDER), redirect: 'manual' })).headers.get('location')?.includes('e=signin'), 'order without login → sign-in')
-ok((await post('/api/3d-videos/checkout', ca, { order_id: oa.id }, { Origin: 'https://evil.example' })).status === 403, 'checkout from another origin → 403')
-ok((await upload(ca, oa.id, 'photo', JPEG, 'a.jpg', 'image/jpeg').then(() => fetch(`${BASE}/api/3d-videos/files`, { method: 'POST', headers: { Cookie: ca }, body: form({}) }))).status === 403, 'upload with no Origin → 403')
+ok((await fetch(`${BASE}/api/3dlor/files/${upJ.body.id}`)).status === 401, 'download without login → 401')
+ok((await post('/api/3dlor/checkout', '', { order_id: oa.id })).status === 401, 'checkout without login → 401')
+ok((await post('/api/3dlor/portal', '', { order_id: oa.id })).status === 401, 'portal without login → 401')
+ok((await fetch(`${BASE}/api/3dlor/order`, { method: 'POST', headers: H, body: form(ORDER), redirect: 'manual' })).headers.get('location')?.includes('e=signin'), 'order without login → sign-in')
+ok((await post('/api/3dlor/checkout', ca, { order_id: oa.id }, { Origin: 'https://evil.example' })).status === 403, 'checkout from another origin → 403')
+ok((await upload(ca, oa.id, 'photo', JPEG, 'a.jpg', 'image/jpeg').then(() => fetch(`${BASE}/api/3dlor/files`, { method: 'POST', headers: { Cookie: ca }, body: form({}) }))).status === 403, 'upload with no Origin → 403')
 const longF = await makeOrder(cb, { company: 'x'.repeat(5000) })
-ok(longF === '/3d-videos/account' || longF?.includes('e=field'), 'oversized field is refused (or no new order is made)')
+ok(longF === '/3dlor/account' || longF?.includes('e=field'), 'oversized field is refused (or no new order is made)')
 
 console.log('\nAttack: skip payment, forged webhook')
-const thanks = await fetch(`${BASE}/3d-videos/account?paid=1`, { headers: { Cookie: ca } })
+const thanks = await fetch(`${BASE}/3dlor/account?paid=1`, { headers: { Cookie: ca } })
 const [oaAfter] = await admin(`v3d_orders?select=payment_status&id=eq.${oa.id}`).then(r => r.json())
 ok(thanks.status === 200 && oaAfter.payment_status === 'unpaid', 'visiting the success URL does not mark the order paid')
 await admin(`v3d_orders?id=eq.${oa.id}`, { method: 'PATCH', body: JSON.stringify({ stripe_session_id: `cs_test_${run}` }) })
@@ -132,7 +132,7 @@ const event = JSON.stringify({ id: `evt_${run}`, type: 'checkout.session.complet
   id: `cs_test_${run}`, object: 'checkout.session', payment_status: 'paid', amount_total: 220000, customer: 'cus_x', subscription: 'sub_x',
   metadata: { v3d_order_id: oa.id, v3d_trial_end: '1800000000' } } } })
 const sign = (secret, t = Math.floor(Date.now() / 1000)) => `t=${t},v1=${createHmac('sha256', secret).update(`${t}.${event}`).digest('hex')}`
-const hook = (sig, b = event) => fetch(`${BASE}/api/3d-videos/webhook`, { method: 'POST', headers: { 'Stripe-Signature': sig, 'Content-Type': 'application/json' }, body: b })
+const hook = (sig, b = event) => fetch(`${BASE}/api/3dlor/webhook`, { method: 'POST', headers: { 'Stripe-Signature': sig, 'Content-Type': 'application/json' }, body: b })
 ok((await hook('')).status === 400, 'webhook without a signature → 400')
 ok((await hook(sign('whsec_attacker'))).status === 400, 'webhook signed with another secret → 400')
 ok((await hook(sign(WHSEC, Math.floor(Date.now() / 1000) - 600))).status === 400, 'webhook older than 5 minutes (replay) → 400')
@@ -142,7 +142,7 @@ ok(still.payment_status === 'unpaid', 'after all forged webhooks the order is st
 const good = await hook(sign(WHSEC))
 const [paid] = await admin(`v3d_orders?select=payment_status,stripe_customer_id,care_starts_at&id=eq.${oa.id}`).then(r => r.json())
 ok(good.status === 200 && paid.payment_status === 'paid' && paid.stripe_customer_id === 'cus_x' && paid.care_starts_at?.startsWith('2027-01-15'), 'a correctly signed event marks the order paid')
-const again = (await post('/api/3d-videos/checkout', ca, { order_id: oa.id })).status
+const again = (await post('/api/3dlor/checkout', ca, { order_id: oa.id })).status
 ok(again === 409 || (again === 503 && !process.env.STRIPE_SECRET_KEY), `a paid order cannot open a second checkout (got ${again})`)
 
 console.log('\nRLS (direct to the database, the second layer)')
@@ -169,16 +169,16 @@ const pub = await fetch(`${SB}/storage/v1/object/public/v3d-uploads/${fileRow.pa
 ok(pub.status >= 400, `the bucket is not public (got ${pub.status})`)
 
 console.log('\nAttack: sign-in')
-const bad = await fetch(`${BASE}/api/3d-videos/auth/verify`, { method: 'POST', headers: H, body: form({ code: '123456' }), redirect: 'manual' })
+const bad = await fetch(`${BASE}/api/3dlor/auth/verify`, { method: 'POST', headers: H, body: form({ code: '123456' }), redirect: 'manual' })
 ok(bad.headers.get('location')?.includes('e=expired') && !cookieOf(bad, 'v3d_session'), 'a code without the email step gets no session')
 const E = `e-${run}@example.com`
-const s1 = await fetch(`${BASE}/api/3d-videos/auth/start`, { method: 'POST', headers: H, body: form({ email: E, next: '/3d-videos/account' }), redirect: 'manual' })
+const s1 = await fetch(`${BASE}/api/3dlor/auth/start`, { method: 'POST', headers: H, body: form({ email: E, next: '/3dlor/account' }), redirect: 'manual' })
 const pend = cookieOf(s1, 'v3d_pending')
 const tries = []
-for (let i = 0; i < 6; i++) tries.push((await fetch(`${BASE}/api/3d-videos/auth/verify`, { method: 'POST', headers: { ...H, Cookie: pend }, body: form({ code: String(100000 + i) }), redirect: 'manual' })).headers.get('location'))
+for (let i = 0; i < 6; i++) tries.push((await fetch(`${BASE}/api/3dlor/auth/verify`, { method: 'POST', headers: { ...H, Cookie: pend }, body: form({ code: String(100000 + i) }), redirect: 'manual' })).headers.get('location'))
 ok(tries.slice(0, 5).every(l => l.includes('e=code')) && tries[5].includes('e=wait'), 'the 6th wrong code in 15 minutes is refused (brute force)')
-const nxt = await fetch(`${BASE}/api/3d-videos/auth/start`, { method: 'POST', headers: H, body: form({ email: 'bad', next: 'https://evil.example' }), redirect: 'manual' })
-ok(nxt.headers.get('location')?.startsWith('/3d-videos/account'), 'an outside "next" URL is not followed (no open redirect)')
+const nxt = await fetch(`${BASE}/api/3dlor/auth/start`, { method: 'POST', headers: H, body: form({ email: 'bad', next: 'https://evil.example' }), redirect: 'manual' })
+ok(nxt.headers.get('location')?.startsWith('/3dlor/account'), 'an outside "next" URL is not followed (no open redirect)')
 
 console.log(fail ? '\n❌ FAILED' : '\n✅ all checks passed')
 process.exit(fail)

@@ -7,7 +7,7 @@ import { ART } from '@/components/scroll/art'
 export const metadata: Metadata = {
   title: 'Privacy on this website',
   description:
-    'radlor.com runs no analytics, loads nothing from a third party and sets no cookie unless you sign in to a 3D video order. This page says exactly what does and does not happen when you read it, sign up or pay.',
+    'radlor.com runs no analytics, loads nothing from a third party and sets no cookie unless you sign in to 3Dlor. This page says exactly what does and does not happen when you read it, sign up or pay.',
   alternates: { canonical: '/privacy' },
 }
 
@@ -68,8 +68,8 @@ export default function Privacy() {
         <h2>What this website does not do</h2>
         <p>
           It runs no analytics. It loads nothing from anyone else&rsquo;s server. It sets no cookies while
-          you read it. The one exception is the sign-in for a{' '}
-          <a href="#3d-videos" className="rl-link">3D video order</a>, which sets one cookie, and only
+          you read it. The one exception is the sign-in for{' '}
+          <a href="#3dlor" className="rl-link">3Dlor</a>, which sets one cookie, and only
           after you sign in.
         </p>
         <p>
@@ -124,10 +124,10 @@ export default function Privacy() {
           for the same reason — every one of them is somebody else&rsquo;s script.
         </p>
 
-        <h2 id="3d-videos">3D video orders</h2>
+        <h2 id="3dlor">3Dlor orders</h2>
         <p>
           A brand that orders a 3D video library signs in at{' '}
-          <Link href="/3d-videos/signup" className="rl-link">/3d-videos/signup</Link> with an email
+          <Link href="/3dlor/signup" className="rl-link">/3dlor/signup</Link> with an email
           address. We email a sign-in code; there is no password. After you sign in, the site sets{' '}
           <strong className="text-foreground font-medium">one cookie</strong>, <code>v3d_session</code>,
           that keeps you signed in for up to 14 days. While you wait for the code, a second cookie,{' '}

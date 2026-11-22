@@ -63,7 +63,7 @@ export async function POST(req: Request) {
         return Response.json({ outcome: 'ignored' })
     }
   } catch (err) {
-    console.error('[3d-videos] webhook database error', event.type, String(err).slice(0, 200))
+    console.error('[3dlor] webhook database error', event.type, String(err).slice(0, 200))
     return Response.json({ code: 'retry' }, { status: 500 })
   }
   return Response.json({ outcome: 'recorded' })
