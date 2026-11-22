@@ -3,6 +3,7 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { SUPPORT_EMAIL, V3D_NAME } from '@/site'
 import { SignIn, Notice } from '@/components/v3d/SignIn'
+import { PendingButton } from '@/components/v3d/PendingButton'
 import { PLANS, PLAN_KEYS, FREE_MONTHS, depositCents, usd } from '@/app/api/3dlor/_lib/plans'
 import { FIELDS } from '@/app/api/3dlor/_lib/validate'
 import { configured, dbJson, pendingFrom, sessionFrom } from '@/app/api/3dlor/_lib/server'
@@ -125,7 +126,7 @@ export default async function Signup({ searchParams }: PageProps<'/3dlor/signup'
           </label>
 
           <div>
-            <button className="rl-cta rounded-full bg-accent px-6 py-3 text-on-accent font-medium hover:opacity-90">Save and continue</button>
+            <PendingButton className="rl-cta rounded-full bg-accent px-6 py-3 text-on-accent font-medium hover:opacity-90" pending="Saving…">Save and continue</PendingButton>
             <p className="mt-3 text-sm text-muted">Next you upload your photos and files, then pay the first half of the build.</p>
           </div>
         </form>
