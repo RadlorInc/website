@@ -10,8 +10,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: `${COMPANY} — ${TAGLINE}`, template: `%s · ${COMPANY}` },
   description:
-    `${COMPANY} builds learning software that adapts to the learner. The Radlor app teaches math for kindergarten through ` +
-    'grade 8 with practice that changes question by question; Ask Radlor answers any question as a voiced whiteboard video.',
+    `${COMPANY} makes learning and teaching visual. Three products explain by showing: Ask Radlor draws the answer to a ` +
+    'question as a voiced whiteboard video, Radlic teaches math for kindergarten through grade 8, and 3D Product Videos show customers how a product works.',
   applicationName: COMPANY,
   alternates: { canonical: '/' },
   openGraph: { type: 'website', siteName: COMPANY, url: SITE_URL, locale: 'en_US' },

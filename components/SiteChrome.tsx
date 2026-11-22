@@ -11,6 +11,10 @@ import { COMPANY, FOOTER, FOUNDED_YEAR, HEADER, SOCIAL, SUPPORT_EMAIL, TAGLINE }
 export function SiteChrome({ children }: { children: ReactNode }) {
   return (
     <>
+    {/* Keyboard users jump past the header (added 2026-11-22). Invisible until it has focus. */}
+    <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-accent focus:px-5 focus:py-3 focus:font-medium focus:text-on-accent">
+      Skip to main content
+    </a>
     <header className="rl-header border-b border-line">
       <div className="mx-auto max-w-5xl px-6 h-16 grid grid-cols-[1fr_auto_1fr] items-center gap-6">
           {/* The whole lockup is now ONE image — the chrome wordmark with the robot in the
@@ -38,7 +42,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
         {/* No hamburger. On a narrow frame the links drop out of the header and the footer — which
             carries the same list — becomes the navigation. Logo left, links centred (founder, 2026-09-29); no button
             on the right since 2026-10-22 (founder: "remove Our products from the nav"). */}
-        <nav className="hidden md:flex items-center gap-8 text-sm">
+        <nav aria-label="Main" className="hidden md:flex items-center gap-8 text-sm">
           {HEADER.map(n => (
             <Link key={n.href} href={n.href} className="rl-link text-muted hover:text-foreground transition-colors">
               {n.label}
@@ -48,7 +52,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
       </div>
     </header>
 
-    <main className="flex-1">{children}</main>
+    <main id="main" className="flex-1">{children}</main>
 
     <footer className="border-t border-line mt-24">
       <div className="mx-auto max-w-5xl px-6 py-10 flex flex-wrap gap-6 justify-between text-sm text-muted">

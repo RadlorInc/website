@@ -14,7 +14,8 @@
     "check:site-claims": "node --no-warnings scripts/check-site-claims.mjs",
     "check:headers": "node --no-warnings scripts/check-headers.mjs",
     "check:migrations": "node --no-warnings scripts/check-migration-provenance.mjs",
-    "check:og": "node --no-warnings scripts/check-og.mjs"
+    "check:og": "node --no-warnings scripts/check-og.mjs",
+    "check:evidence": "node --experimental-strip-types --no-warnings scripts/check-evidence.mjs"
   },
   "dependencies": {
     "marked": "^18.0.10",
