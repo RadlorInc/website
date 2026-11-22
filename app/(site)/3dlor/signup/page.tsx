@@ -93,6 +93,15 @@ export default async function Signup({ searchParams }: PageProps<'/3dlor/signup'
                 </label>
               )
             })}
+            <div className="rounded-xl border border-line p-5 text-sm">
+              <p className="font-medium text-base">Every care plan includes</p>
+              <ul className="mt-2 list-disc pl-5 space-y-1 text-muted">
+                <li>Your help page: a QR code for your box or manual opens a page with all your videos.</li>
+                <li>Search on that page: a customer types a question and the video plays the exact part that answers it.</li>
+                <li>New videos for the questions your customers ask, each month (the number is in your package).</li>
+                <li>Updates when your product or a step changes, and we keep the page running.</li>
+              </ul>
+            </div>
             <p className="text-sm text-muted">
               More products, CAD import or staff training? <a className="rl-link text-accent" href={`mailto:${SUPPORT_EMAIL}?subject=3Dlor%20Enterprise`}>Contact us</a> for an Enterprise plan.
               Fixed prices. No interest and no late fees.
