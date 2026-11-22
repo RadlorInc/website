@@ -37,6 +37,22 @@
 >   lost "Placement check", "Camera chapters" and "Ages 3–18".
 
 
+## Three products, one idea (2026-11-22, branch `preview/three-products`)
+
+Founder: Radlor is one company for visual learning and visual teaching, with three products. The home page now says
+one thing ("When you can see it, you can understand it."), then shows Ask Radlor, Radlic and 3D Product Videos as
+equal cards (who it is for, 4 benefits, one button), then three research findings, then the vision.
+- **`/3d-videos`**: the third product, for product brands. Its "Sign up" goes to `/3d-videos/signup`, which a
+  separate change builds (with the form and Stripe). No price on this page: the plans are draft. Never say how the
+  videos are made ("our own 3D system"); no delivery-time promise; the "Honest limits" list stays.
+- **`/why-visual-learning`**: the research page. All findings, limits and the 33 sources live in
+  `content/evidence.ts`; the rules for a new row are at the top of that file. Each source was opened on 2026-11-22
+  (mostly the abstract). `npm run check:evidence` fails on an uncited source, a finding with no limit, a myth number,
+  or a content-rule break (how videos are made, an age label, a delivery promise, a price).
+- `TAGLINE` is now "We make learning and teaching visual." The home cards write "Radlic" through a local constant;
+  `APP_NAME` in `site.ts` changes back to Radlic in its own pull request, then that constant goes.
+- A skip link and `id="main"` are in `SiteChrome`. `check:site-claims` now also reads the two new pages.
+
 ## askRadlor on the site (2026-10-22, branch `askradlor`, not pushed)
 
 Founder: radlor.com shows both products. New `/askradlor` landing page (app's dark monochrome look; buttons go to

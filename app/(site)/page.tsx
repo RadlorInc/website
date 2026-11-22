@@ -1,132 +1,167 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import type { ReactNode } from 'react'
-import { APP_NAME, ASK_NAME, COMPANY, SITE_URL, TAGLINE, VISION } from '@/site'
+import { ASK_NAME, COMPANY, SITE_URL, TAGLINE, V3D_NAME, V3D_PATH, VISION, WHY_PATH } from '@/site'
 import { posts } from '@/content/posts'
-import { CircleReveal } from '@/components/scroll/Scroll'
-import { ART, POST_COVERS } from '@/components/scroll/art'
+import { HOME_EVIDENCE, SOURCES } from '@/content/evidence'
+import { POST_COVERS } from '@/components/scroll/art'
 
 /**
- * The home page is the COMPANY's page, not a product's (founder, 2026-10-22: "Radlic dominates, askRadlor is nowhere;
- * the site should show our vision and why we build"). So: who we are and why, then the two products side by side at
- * equal weight, then what they share. Each product's own pitch lives on its landing page (/radlic, /askradlor).
+ * The home page is the COMPANY's page (founder, 2026-10-22), and since 2026-11-22 it says ONE thing: Radlor makes
+ * learning and teaching visual. Then the three products at equal weight, each with what it is, who it is for, its
+ * benefits and one button. Then three findings from the research page, then why we build.
  *
- * ⚠️ Replaced the scroll "journey" first screen (founder's pick 2026-09-25, in git before this change) and the Radlic
- * facts band. Every product line below restates that product's own landing page; add no claim here that its page
- * does not make.
+ * ⚠️ Every product line below restates that product's own page (/radlic, /askradlor, /3d-videos); add no claim here
+ * that its page does not make. Standing rules: no price and no age label for Ask Radlor, never say how any video is
+ * made, no people or animals in the 3D product's pictures.
  *
- * ⚠️ STAYS A SERVER COMPONENT — no client JS on this page beyond the shared scroll styles.
+ * ⚠️ STAYS A SERVER COMPONENT: no client JS on this page. (The hero's circle-reveal picture went on 2026-11-22;
+ * the first screen is now the message alone.)
  */
+
+/** The kids' maths app is called Radlic again (founder, 2026-11-22). `APP_NAME` in site.ts changes in its own pull
+ *  request; when that is merged, replace this constant with `APP_NAME`. */
+const RADLIC = 'Radlic'
 
 const PRODUCTS = [
   {
-    name: APP_NAME,
-    who: 'For children · Math, grades K–8',
-    line: 'Math lessons that adapt. A teacher at the chalkboard, one idea at a time, then practice that follows what your child gets right and wrong.',
-    pic: { src: '/radlic-demo-poster.jpg', w: 1920, h: 1080, alt: 'The Radlor app: picking a math topic by grade' },
-    page: '/radlic',
-  },
-  {
     name: ASK_NAME,
-    who: 'For ages 13+ · Any question',
-    line: 'Ask anything, watch it drawn. Type a question and a short voiced video draws the answer step by step on a whiteboard.',
+    who: 'For students and curious people',
+    what: 'Type a question. A short voiced video draws the answer step by step on a whiteboard.',
+    benefits: [
+      'Biology, physics, chemistry, home improvements and auto repairs',
+      'One question, one video, one step at a time',
+      'Ask a follow-up in the same chat',
+      'Your videos stay in your library',
+    ],
     pic: { src: '/askradlor-demo-poster.jpg', w: 814, h: 512, alt: 'An Ask Radlor answer: a heart drawn on a whiteboard with its conducting system labelled, from the SA node to the Purkinje fibres' },
     page: '/askradlor',
+    cta: `See ${ASK_NAME}`,
+  },
+  {
+    name: RADLIC,
+    who: 'For children and parents · Math, grades K–8',
+    what: 'Math lessons that adapt. A teacher at the chalkboard explains one idea, then practice follows what your child gets right and wrong.',
+    benefits: [
+      'A voice reads every line as it appears on the board',
+      'Practice changes question by question',
+      'A miss brings the worked steps, not a red mark',
+      'Parents choose the lessons; a child needs no email',
+    ],
+    pic: { src: '/radlic-demo-poster.jpg', w: 1920, h: 1080, alt: `The ${RADLIC} app: picking a math topic by grade` },
+    page: '/radlic',
+    cta: `See ${RADLIC}`,
+  },
+  {
+    name: V3D_NAME,
+    who: 'For product brands',
+    what: 'A library of short 3D videos that show your customers how to set up, use, clean and fix your product.',
+    benefits: [
+      'A full library for one product, not one video',
+      'We start from product photos',
+      'Exploded views show what a camera cannot',
+      'Tall, wide and square formats',
+    ],
+    pic: { src: '/3d-videos-card.jpg', w: 1600, h: 1000, alt: 'Three frames of a 3D how-to video: a French press, its plunger pulled out, and its filter taken apart into three labelled parts' },
+    page: V3D_PATH,
+    cta: 'See 3D videos',
   },
 ]
 
-/** What both products share. Each line must be true of BOTH — check both landing pages before adding one. */
-const SHARED: { title: string; body: string; icon: ReactNode }[] = [
-  {
-    title: 'A teacher at the board',
-    body: `Both teach by drawing. A voice explains each step as it appears: chalk in ${APP_NAME}, a whiteboard in ${ASK_NAME}.`,
-    icon: <><rect x="3" y="4" width="18" height="12" rx="1.5" /><path d="M12 16v4M8 20h8M7 12l3-3 2 2 4-4" /></>,
-  },
-  {
-    title: 'One idea at a time',
-    body: `A ${APP_NAME} lesson explains one idea. An ${ASK_NAME} video answers one question. Step by step, never all at once.`,
-    icon: <><circle cx="12" cy="12" r="8" /><circle cx="12" cy="12" r="3" /></>,
-  },
-  {
-    title: 'It answers back',
-    body: `${APP_NAME}’s practice changes with every answer. In ${ASK_NAME} you ask a follow-up in the same chat.`,
-    icon: <><path d="M20 12a8 8 0 0 1-13.7 5.7L4 20v-5h5" /><path d="M4 12a8 8 0 0 1 13.7-5.7L20 4v5h-5" /></>,
-  },
-  {
-    title: 'Honest by default',
-    body: `${APP_NAME} asks no email of a child. ${ASK_NAME} says plainly that AI answers can be wrong.`,
-    icon: <><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" /><path d="M9 12l2 2 4-4" /></>,
-  },
-]
-
+const Check = () => (
+  <svg viewBox="0 0 20 20" className="mt-1 h-4 w-4 shrink-0 text-accent" aria-hidden="true">
+    <path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)
 
 const btn = 'rl-cta inline-flex min-h-11 items-center rounded-full px-6 py-3 font-medium'
 const primary = `${btn} bg-accent text-on-accent hover:opacity-90`
 const quiet = `${btn} rl-cta-quiet border border-line hover:border-foreground transition-colors`
+const eyebrow = 'text-sm uppercase tracking-[0.18em] text-accent font-medium'
 
 export default function Home() {
   return (
     <>
-      {/* WHO WE ARE AND WHY — the company, no product named in the first screen's heading. */}
+      {/* ONE MESSAGE. No product is named in the heading; the three products come next. */}
       <section className="rl-dark overflow-x-clip">
-        <div className="mx-auto grid max-w-5xl items-center gap-10 px-6 pt-14 pb-20 sm:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] sm:pt-20 sm:pb-24">
-          <div className="order-2 sm:order-1">
-            <p className="text-sm uppercase tracking-[0.18em] text-accent font-medium">{COMPANY} · Education technology</p>
-            <h1 className="rl-focus font-display mt-4 text-[2.6rem] leading-[1.05] sm:text-6xl">
-              Learning that adapts to the <span className="rl-lit">learner</span>.
-            </h1>
-            <p className="mt-6 max-w-[32rem] text-lg leading-relaxed text-muted">
-              We build learning products that teach the way a good teacher does: one idea at a time, drawn out on a
-              board, and changed by how you answer.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a href="#products" className={primary}>See our products</a>
-              <a href="#why" className={quiet}>Why we build</a>
-            </div>
+        <div className="mx-auto grid max-w-5xl items-center gap-12 px-6 pt-16 pb-20 sm:pt-24 sm:pb-24 md:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)]">
+          <div>
+          <p className={eyebrow}>{COMPANY} · Visual learning and teaching</p>
+          <h1 className="rl-focus font-display mt-4 max-w-[18ch] text-[2.75rem] leading-[1.03] sm:text-7xl">
+            When you can see it, you can <span className="rl-lit">understand</span> it.
+          </h1>
+          <p className="mt-6 max-w-[38rem] text-lg leading-relaxed text-muted">
+            {COMPANY} builds products that explain by showing: a math lesson at the chalkboard, an answer drawn step
+            by step, a product taken apart in 3D.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <a href="#products" className={primary}>See the three products</a>
+            <Link href={WHY_PATH} className={quiet}>Why visual learning works</Link>
           </div>
-          <CircleReveal pic={ART.journeyTreasure} priority className="order-1 sm:order-2 w-56 sm:w-full max-w-[420px] justify-self-center" />
+          </div>
+          {/* One frame from each product, stacked. Decorative: the cards below name and describe each one. */}
+          <div aria-hidden="true" className="relative mx-auto hidden aspect-[4/5] w-full max-w-[340px] md:block">
+            {PRODUCTS.map((p, i) => (
+              <Image key={p.name} src={p.pic.src} alt="" width={p.pic.w} height={p.pic.h}
+                className="absolute aspect-[16/11] w-[86%] rounded-2xl border border-line object-cover object-top shadow-2xl shadow-black/60"
+                style={{ top: `${i * 31}%`, left: i === 1 ? '14%' : '0%', rotate: `${[-3, 2.5, -1.5][i]}deg` }} />
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* THE TWO PRODUCTS, EQUAL WEIGHT: same card, same size, one link each (the Try / Explore buttons live on each product page, not here). Order is launch order. */}
+      {/* THE THREE PRODUCTS, EQUAL WEIGHT: same card, same parts, one button each. */}
       <section id="products" className="mx-auto max-w-5xl scroll-mt-20 px-6 py-16 sm:py-20">
-        <p className="text-sm uppercase tracking-[0.18em] text-accent font-medium">Our products</p>
-        <h2 className="font-display mt-3 text-4xl sm:text-5xl">Two products, one way of teaching.</h2>
-        <ul className="mt-10 grid gap-6 md:grid-cols-2">
+        <p className={eyebrow}>Our products</p>
+        <h2 className="font-display mt-3 text-4xl sm:text-5xl">Three products, one idea: show it.</h2>
+        <ul className="mt-10 grid gap-6 lg:grid-cols-3">
           {PRODUCTS.map(p => (
-            <li key={p.name}>
-              <Link href={p.page} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface transition-colors hover:border-accent">
-                <Image src={p.pic.src} alt={p.pic.alt} width={p.pic.w} height={p.pic.h}
-                  className="aspect-[16/10] w-full border-b border-line object-cover object-top" />
-                <div className="flex flex-1 flex-col p-6 sm:p-7">
-                  <span className="text-xs uppercase tracking-[0.16em] text-muted font-medium">{p.who}</span>
-                  <h3 className="font-display mt-2 text-3xl">{p.name}</h3>
-                  <span className="mt-3 flex-1 leading-relaxed text-muted">{p.line}</span>
-                  <span className="mt-6 font-medium text-accent">Learn more <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-1">→</span></span>
-                </div>
-              </Link>
+            <li key={p.name} className="flex flex-col overflow-hidden rounded-2xl border border-line bg-surface">
+              <Image src={p.pic.src} alt={p.pic.alt} width={p.pic.w} height={p.pic.h}
+                className="aspect-[16/10] w-full border-b border-line object-cover object-top" />
+              <div className="flex flex-1 flex-col p-6">
+                <p className="text-xs uppercase tracking-[0.14em] text-muted font-medium">{p.who}</p>
+                <h3 className="font-display mt-2 text-3xl">{p.name}</h3>
+                <p className="mt-3 leading-relaxed text-muted">{p.what}</p>
+                <ul className="mt-5 flex-1 space-y-2.5 text-[0.95rem] leading-snug">
+                  {p.benefits.map(b => <li key={b} className="flex gap-2.5"><Check />{b}</li>)}
+                </ul>
+                <Link href={p.page} className={`${primary} mt-7 self-start`}>{p.cta}</Link>
+              </div>
             </li>
           ))}
         </ul>
       </section>
 
-      {/* WHY WE BUILD — the founder's belief, word for word from site.ts, then what both products hold to. */}
-      <section id="why" className="rl-dark scroll-mt-16">
+      {/* WHY VISUAL: three findings from the research page, each with its source. The full list is on WHY_PATH. */}
+      <section className="rl-dark">
         <div className="mx-auto max-w-5xl px-6 py-16 sm:py-24">
-          <p className="text-sm uppercase tracking-[0.18em] text-accent font-medium">Why we build</p>
-          <blockquote className="font-display mt-4 max-w-[46rem] text-3xl leading-snug sm:text-4xl">“{VISION}”</blockquote>
-          <ul className="mt-12 grid gap-5 sm:grid-cols-2">
-            {SHARED.map(s => (
-              <li key={s.title} className="rounded-2xl border border-line bg-surface p-6">
-                <svg viewBox="0 0 24 24" className="h-7 w-7 text-accent" fill="none" stroke="currentColor" strokeWidth="1.8"
-                  strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{s.icon}</svg>
-                <h3 className="font-display mt-4 text-2xl">{s.title}</h3>
-                <p className="mt-2 leading-relaxed text-muted">{s.body}</p>
+          <p className={eyebrow}>Why visual learning works</p>
+          <h2 className="font-display mt-3 max-w-[40rem] text-4xl sm:text-5xl">This is research, not a slogan.</h2>
+          <ul className="mt-10 grid gap-5 md:grid-cols-3">
+            {HOME_EVIDENCE.map(e => (
+              <li key={e.title} className="flex flex-col rounded-2xl border border-line bg-surface p-6">
+                <h3 className="font-display text-2xl leading-snug">{e.title}</h3>
+                <p className="mt-2 flex-1 leading-relaxed text-muted">{e.body}</p>
+                <p className="mt-4 text-sm text-muted">
+                  Source:{' '}
+                  <a href={SOURCES[e.source].url} rel="noopener" className="text-accent underline underline-offset-4">{SOURCES[e.source].short}</a>
+                </p>
               </li>
             ))}
           </ul>
-          <Link href="/about" className="rl-link mt-10 inline-block text-accent font-medium">More about {COMPANY} →</Link>
+          <p className="mt-8 max-w-[42rem] leading-relaxed text-muted">
+            We do not use the “learning styles” idea or the popular “people remember 80% of what they see” numbers.
+            The evidence does not support them.
+          </p>
+          <Link href={WHY_PATH} className="rl-link mt-6 inline-block text-accent font-medium">Read the research, its limits and every source →</Link>
         </div>
+      </section>
+
+      {/* WHY WE BUILD: the founder's belief, word for word from site.ts. */}
+      <section id="why" className="mx-auto max-w-5xl scroll-mt-16 px-6 py-16 sm:py-20">
+        <p className={eyebrow}>Why we build</p>
+        <blockquote className="font-display mt-4 max-w-[46rem] text-3xl leading-snug sm:text-4xl">“{VISION}”</blockquote>
+        <Link href="/about" className="rl-link mt-8 inline-block text-accent font-medium">More about {COMPANY} →</Link>
       </section>
 
       {posts.length > 0 && (
@@ -150,7 +185,7 @@ export default function Home() {
 
       <section className="mx-auto max-w-5xl px-6 pb-20 text-center">
         <h2 className="font-display text-3xl sm:text-4xl">Want to build with us?</h2>
-        <p className="mt-3 text-muted">Schools, partners, press, or just a question.</p>
+        <p className="mt-3 text-muted">Brands, schools, partners, press, or just a question.</p>
         <Link href="/contact" className={`${primary} mt-6`}>Talk to us</Link>
       </section>
 
