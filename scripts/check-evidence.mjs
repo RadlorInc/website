@@ -25,11 +25,22 @@ ok(findings.every(f => f.refs.length > 0 && f.limit.trim().length > 20), `every 
 ok(ev.HOME_EVIDENCE.length === 3 && ev.HOME_EVIDENCE.every(id => ev.FINDINGS[id]?.viz),
   'the home page shows 3 findings from the research page, each with its own chart')
 ok(new Set(findings.map(f => f.id)).size === findings.length, 'every finding id is unique')
-// A chart may only show what its finding says: every bar value must appear in the finding's own text or chart caption.
-const bad = findings.filter(f => f.viz?.kind === 'bars').flatMap(f => f.viz.rows
-  .filter(r => !(f.body + ' ' + f.viz.caption + ' ' + f.limit).includes(r.shown.replace(/^−/, '').replace(/ of \d+$/, '')))
-  .map(r => `${f.id}: ${r.shown}`))
-ok(bad.length === 0, `every chart value is stated in its finding's text${bad.length ? ` — not found: ${bad.join(', ')}` : ''}`)
+// A chart may only show what its finding says, whatever its kind: every `shown` value (bars, rings, waffles, marks…)
+// must appear in the finding's own text or chart caption, and its number must equal the `value` the mark is drawn from.
+const shownIn = (o, out = []) => {
+  if (Array.isArray(o)) o.forEach(x => shownIn(x, out))
+  else if (o && typeof o === 'object') { if (typeof o.shown === 'string') out.push(o); Object.values(o).forEach(x => shownIn(x, out)) }
+  return out
+}
+const bad = findings.filter(f => f.viz).flatMap(f => shownIn(f.viz).flatMap(r => {
+  const text = f.body + ' ' + (f.viz.caption ?? '') + ' ' + f.limit
+  const num = 'hit' in r ? `${r.hit} of ${r.of}` : parseFloat(r.shown.match(/\d+(?:\.\d+)?/)?.[0])
+  const same = 'hit' in r ? num === r.shown : Math.abs(num - r.value) < 1e-9
+  return [...(text.includes(r.shown.replace(/^−/, '')) ? [] : [`${f.id}: "${r.shown}" not in the text`]),
+    ...(same ? [] : [`${f.id}: "${r.shown}" is drawn as ${r.value ?? r.hit}`])]
+}))
+ok(bad.length === 0, `every chart value is stated in its finding's text and drawn at that value${bad.length ? ` — ${bad.join(', ')}` : ''}`)
+ok(shownIn({ a: [{ shown: '5%', value: 6 }] }).length === 1, 'positive control: the chart-value walker finds a nested value')
 
 // Positive control: the detector must SEE a banned phrase before an absence of hits means anything.
 const MYTHS = /(\d+\s?%\s+of what (we|people|you|they) (see|read|hear))|60,?000 times|learning style[s]? (match|meshing)|visual learners? learn/i

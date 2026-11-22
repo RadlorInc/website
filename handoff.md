@@ -10,6 +10,12 @@
 > this sentence** — `du -h handoff.md` is one word longer and cannot go stale. When it creeps back
 > up, split again by the same test: *does this section still change what anyone does next?*
 
+> 📊 **2026-11-22 — `/why-visual-learning` charts.** Each finding now picks a chart by the shape of its fact
+> (`Viz` kinds in `content/evidence.ts`: scale, rings, tally, columns, cut, waffles, stat, dots), drawn in
+> `components/visual/Viz.tsx` with no library. The wound-care waffle has a radio switch (CSS only, works without JS);
+> numbers count up once (`CountUp.tsx`); marks grow on a CSS scroll timeline only when motion is allowed.
+> `check:evidence` now checks EVERY `shown` value of every kind: it must be in the finding's text and equal its `value`.
+
 > 🔄 **2026-09-19 — THE SITE WAS RE-READ AGAINST THE APP.** The app pivoted on 2026-09-13 (RadlorInc/learn):
 > story chapters for ages 3–18, the placement check and the camera chapters are all HIDDEN; it now teaches
 > **grades 3–8** in modules of one-idea lessons, with adaptive practice, parent-chosen lessons, child
