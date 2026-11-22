@@ -13,8 +13,13 @@ const ANON = process.env.SUPABASE_ANON_KEY
 const SECRET = process.env.V3D_SESSION_SECRET ?? ''
 export const BUCKET = 'v3d-uploads'
 
-/** All four must be set, or the pages say "not open yet" and the routes answer 503. */
-export const configured = () => Boolean(URL_ && SERVICE && ANON && SECRET.length >= 32)
+/**
+ * All of these must be set, or the pages say "not open yet" and the routes answer 503. The Stripe
+ * pair is here too, so sign-up cannot open while a customer could not pay (the order of the setup
+ * steps does not matter).
+ */
+export const configured = () =>
+  Boolean(URL_ && SERVICE && ANON && SECRET.length >= 32 && process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET)
 
 // A new-style `sb_secret_` / `sb_publishable_` key goes in `apikey` only; a legacy JWT key also as Bearer.
 const keyHeaders = (key: string) => ({ apikey: key, ...(key.startsWith('eyJ') ? { Authorization: `Bearer ${key}` } : {}) })
