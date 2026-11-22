@@ -100,6 +100,11 @@ export function checkoutParams(o: { orderId: string; uid: string; email: string;
       description: `${FREE_MONTHS} free months, then month to month. Fixed price, no interest and no late fees.`,
     },
     metadata: meta,
+    // People were not sure if they had to press Back after the green tick (founder, 23 Nov 2026).
+    custom_text: {
+      submit: { message: 'After you pay, this page takes you back to radlor.com by itself.' },
+      after_submit: { message: 'Payment done. Taking you back to radlor.com now; please do not press Back.' },
+    },
     success_url: `${o.site}/3dlor/account?paid=1`,
     cancel_url: `${o.site}/3dlor/account`,
   }
