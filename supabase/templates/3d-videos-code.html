@@ -1,0 +1,5 @@
+<!-- Supabase Auth email for the 3D video sign-in. Paste into Auth → Email Templates → "Magic Link" AND
+     "Confirm signup" (a new email gets "Confirm signup"). The site checks the 6-digit {{ .Token }}; no link. -->
+<p>Your Radlor sign-in code is:</p>
+<p style="font-size:24px;font-weight:bold;letter-spacing:4px">{{ .Token }}</p>
+<p>The code works for 1 hour. If you did not ask for it, you can ignore this email.</p>
