@@ -10,6 +10,11 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ASK_NAME, COMPANY, SITE_URL, V3D_NAME, V3D_PATH, WHY_PATH } from '@/site'
 import { CHECKED_ON, NOT_CLAIMED, SECTIONS, SOURCES, SOURCE_ORDER, type SourceId } from '@/content/evidence'
+import { Icon, type IconName } from '@/components/visual/Icon'
+import { Viz } from '@/components/visual/Viz'
+import { WordsVsPictures } from '@/components/visual/WordsVsPictures'
+
+const SECTION_ICON: Record<string, IconName> = { mind: 'eye', video: 'film', math: 'ruler', medicine: 'pill', brain: 'brain' }
 
 const TITLE = 'Why visual learning works'
 
@@ -43,21 +48,30 @@ export default function WhyVisualLearning() {
   return (
     <>
       <section className="rl-dark overflow-x-clip">
-        <div className="mx-auto max-w-3xl px-6 pt-14 pb-14 sm:pt-20 sm:pb-16">
+        <div className="mx-auto max-w-5xl px-6 pt-14 pb-14 sm:pt-20 sm:pb-16">
           <p className={eyebrow}>The research</p>
           <h1 className="rl-focus font-display mt-4 text-[2.75rem] leading-[1.03] sm:text-7xl">
             Why visual learning <span className="rl-lit">works</span>.
           </h1>
-          <p className="mt-6 text-lg leading-relaxed text-muted">
-            The short answer: people learn better from words and pictures together than from words alone. This holds
-            when the picture shows the idea and nothing distracting sits beside it. It does not hold for every picture, every
-            video or every task. Below are the findings, their limits and the sources.
+          <p className="mt-6 max-w-[40rem] text-xl leading-relaxed text-muted">
+            People learn better from words and pictures together than from words alone. Not from every picture, and
+            not for every task. Here is the evidence, with its limits and sources.
           </p>
-          <nav aria-label="On this page" className="mt-8">
+          <div className="mt-10"><WordsVsPictures /></div>
+          <nav aria-label="On this page" className="mt-10">
             <ul className="flex flex-wrap gap-2 text-sm">
-              {[...SECTIONS.map(s => ({ id: s.id, label: s.nav })), { id: 'not-claimed', label: 'What we do not claim' }, { id: 'sources', label: 'Sources' }].map(l => (
+              {SECTIONS.map(sec => (
+                <li key={sec.id}>
+                  <a href={`#${sec.id}`} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line px-4 hover:border-foreground transition-colors">
+                    <Icon name={SECTION_ICON[sec.id]} className="h-4 w-4 text-accent" />{sec.nav}
+                  </a>
+                </li>
+              ))}
+              {[{ id: 'not-claimed', label: 'What we do not claim', icon: 'x' as const }, { id: 'sources', label: 'Sources', icon: 'list' as const }].map(l => (
                 <li key={l.id}>
-                  <a href={`#${l.id}`} className="inline-flex min-h-11 items-center rounded-full border border-line px-4 hover:border-foreground transition-colors">{l.label}</a>
+                  <a href={`#${l.id}`} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line px-4 hover:border-foreground transition-colors">
+                    <Icon name={l.icon} className="h-4 w-4 text-accent" />{l.label}
+                  </a>
                 </li>
               ))}
             </ul>
@@ -65,62 +79,74 @@ export default function WhyVisualLearning() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-3xl px-6">
+      <div className="mx-auto max-w-5xl px-6">
         {SECTIONS.map(sec => (
-          <section key={sec.id} id={sec.id} className="scroll-mt-20 border-b border-line py-14">
-            <p className={eyebrow}>{sec.eyebrow}</p>
-            <h2 className="font-display mt-3 text-4xl leading-tight">{sec.title}</h2>
-            <p className="mt-4 text-lg leading-relaxed text-muted">{sec.intro}</p>
-            <ul className="mt-8 space-y-5">
+          <section key={sec.id} id={sec.id} className="scroll-mt-20 border-b border-line py-16">
+            <div className="flex items-center gap-3">
+              <span className="grid h-11 w-11 place-items-center rounded-xl bg-accent-soft text-accent"><Icon name={SECTION_ICON[sec.id]} className="h-5 w-5" /></span>
+              <p className={eyebrow}>{sec.eyebrow}</p>
+            </div>
+            <h2 className="font-display mt-4 max-w-[36rem] text-4xl leading-tight sm:text-5xl">{sec.title}</h2>
+            <ul className="mt-10 grid items-start gap-5 md:grid-cols-2">
               {sec.findings.map(f => (
-                <li key={f.title} className="rounded-2xl border border-line bg-surface p-6">
-                  <h3 className="text-xl font-semibold leading-snug">{f.title}</h3>
-                  <p className="mt-3 leading-relaxed text-muted">{f.body}<Refs ids={f.refs} /></p>
-                  <p className="mt-4 border-l-2 border-line pl-4 text-[0.95rem] leading-relaxed text-muted">
-                    <strong className="font-semibold text-foreground">The limit. </strong>{f.limit}
-                  </p>
+                <li key={f.id} className="flex flex-col rounded-3xl border border-line bg-surface p-6">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="rounded-full border border-line px-3 py-1 text-xs font-medium text-muted">{f.evidence}</span>
+                    {!f.viz && <span className="grid h-11 w-11 place-items-center rounded-xl bg-accent-soft text-accent"><Icon name={SECTION_ICON[sec.id]} className="h-5 w-5" /></span>}
+                  </div>
+                  <h3 className="mt-4 text-xl font-semibold leading-snug">{f.short}<Refs ids={f.refs} /></h3>
+                  {f.viz && <div className="mt-5"><Viz viz={f.viz} /></div>}
+                  <details className="group mt-5 border-t border-line pt-4">
+                    <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 font-medium text-accent [&::-webkit-details-marker]:hidden">
+                      Details and limits
+                      <svg viewBox="0 0 24 24" className="h-5 w-5 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+                    </summary>
+                    <p className="mt-3 text-sm font-semibold text-foreground">{f.title}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-muted">{f.body}</p>
+                    <p className="mt-3 border-l-2 border-[var(--viz-base)] pl-3 text-sm leading-relaxed text-muted">
+                      <strong className="font-semibold text-foreground">The limit. </strong>{f.limit}
+                    </p>
+                  </details>
                 </li>
               ))}
             </ul>
           </section>
         ))}
 
-        <section id="not-claimed" className="scroll-mt-20 border-b border-line py-14">
+        <section id="not-claimed" className="scroll-mt-20 border-b border-line py-16">
           <p className={eyebrow}>Honest limits</p>
-          <h2 className="font-display mt-3 text-4xl leading-tight">What we do not claim.</h2>
-          <ul className="mt-8 space-y-6">
+          <h2 className="font-display mt-3 text-4xl leading-tight sm:text-5xl">What we do not claim.</h2>
+          <ul className="mt-10 grid gap-5 sm:grid-cols-2">
             {NOT_CLAIMED.map(n => (
-              <li key={n.title}>
-                <h3 className="text-xl font-semibold leading-snug">{n.title}</h3>
-                <p className="mt-2 leading-relaxed text-muted">{n.body}{n.refs.length > 0 && <Refs ids={n.refs} />}</p>
+              <li key={n.title} className="rounded-3xl border border-line bg-surface p-6">
+                <Icon name="x" className="h-8 w-8 text-[var(--viz-base)]" />
+                <h3 className="mt-4 text-lg font-semibold leading-snug">{n.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{n.body}{n.refs.length > 0 && <Refs ids={n.refs} />}</p>
               </li>
             ))}
           </ul>
         </section>
 
-        <section className="border-b border-line py-14">
+        <section className="border-b border-line py-16">
           <p className={eyebrow}>What we do with it</p>
-          <h2 className="font-display mt-3 text-4xl leading-tight">How our products use this.</h2>
-          <ul className="mt-8 space-y-6 leading-relaxed text-muted">
-            <li>
-              <Link href="/askradlor" className="font-semibold text-accent underline underline-offset-4">{ASK_NAME}</Link>{' '}
-              answers one question as one short video. A voice explains each step while the step is drawn, so the words
-              and the picture arrive together.
-            </li>
-            <li>
-              <Link href="/radlic" className="font-semibold text-accent underline underline-offset-4">Radlic</Link>{' '}
-              teaches one math idea in one lesson. The teacher writes or draws each step on the chalkboard and says it
-              aloud, then the child practices.
-            </li>
-            <li>
-              <Link href={V3D_PATH} className="font-semibold text-accent underline underline-offset-4">{V3D_NAME}</Link>{' '}
-              show one task in one short video: the product, the part that moves and where it goes, with a short
-              caption for each step.
-            </li>
+          <h2 className="font-display mt-3 text-4xl leading-tight sm:text-5xl">How our products use this.</h2>
+          <ul className="mt-10 grid gap-5 md:grid-cols-3">
+            {[
+              { href: '/askradlor', name: ASK_NAME, icon: 'voice' as const, line: 'The voice explains each step while the step is drawn.' },
+              { href: '/radlic', name: 'Radlic', icon: 'board' as const, line: 'One math idea per lesson, written and said at the board.' },
+              { href: V3D_PATH, name: V3D_NAME, icon: 'box' as const, line: 'One task per video: the part, and where it goes.' },
+            ].map(p => (
+              <li key={p.href}>
+                <Link href={p.href} className="group flex h-full flex-col rounded-3xl border border-line bg-surface p-6 transition-colors duration-200 hover:border-accent">
+                  <span className="grid h-12 w-12 place-items-center rounded-xl bg-accent-soft text-accent"><Icon name={p.icon} className="h-6 w-6" /></span>
+                  <span className="mt-4 text-lg font-semibold">{p.name}</span>
+                  <span className="mt-1 flex-1 text-sm leading-relaxed text-muted">{p.line}</span>
+                  <span className="mt-4 text-sm font-medium text-accent">See {p.name} →</span>
+                </Link>
+              </li>
+            ))}
           </ul>
-          <p className="mt-6 leading-relaxed text-muted">
-            This research is about learning in general. It does not test our products, and we do not say that it does.
-          </p>
+          <p className="mt-6 text-sm text-muted">This research is about learning in general. It does not test our products, and we do not say that it does.</p>
         </section>
 
         <section id="sources" className="scroll-mt-20 py-14">
@@ -131,9 +157,9 @@ export default function WhyVisualLearning() {
             need a subscription for the full text; the abstract is free to read. If you find a mistake, write to us on
             the <Link href="/contact" className="text-accent underline underline-offset-4">contact page</Link>.
           </p>
-          <ol className="mt-8 list-decimal space-y-4 pl-6 text-[0.95rem] leading-relaxed text-muted marker:text-foreground">
+          <ol className="mt-8 list-decimal gap-10 space-y-3 pl-6 text-sm leading-relaxed text-muted marker:text-foreground md:columns-2">
             {SOURCE_ORDER.map((id, i) => (
-              <li key={id} id={`source-${i + 1}`} className="scroll-mt-24 break-words pl-1 target:text-foreground">
+              <li key={id} id={`source-${i + 1}`} className="scroll-mt-24 break-inside-avoid break-words pl-1 target:text-foreground">
                 {SOURCES[id].cite}{' '}
                 <a href={SOURCES[id].url} rel="noopener" className="text-accent underline underline-offset-4">{SOURCES[id].url.replace(/^https?:\/\//, '')}</a>
               </li>

@@ -22,8 +22,14 @@ ok(unused.length === 0, `every source is cited (${ids.length} sources${unused.le
 ok(ids.every(id => ev.SOURCES[id].url.startsWith('https://')), 'every source URL is https')
 const findings = ev.SECTIONS.flatMap(s => s.findings)
 ok(findings.every(f => f.refs.length > 0 && f.limit.trim().length > 20), `every finding has a source and a limit (${findings.length} findings)`)
-ok(ev.HOME_EVIDENCE.length === 3 && ev.HOME_EVIDENCE.every(h => findings.some(f => f.refs.includes(h.source))),
-  'the home page shows 3 findings, each restating a finding on the research page')
+ok(ev.HOME_EVIDENCE.length === 3 && ev.HOME_EVIDENCE.every(id => ev.FINDINGS[id]?.viz),
+  'the home page shows 3 findings from the research page, each with its own chart')
+ok(new Set(findings.map(f => f.id)).size === findings.length, 'every finding id is unique')
+// A chart may only show what its finding says: every bar value must appear in the finding's own text or chart caption.
+const bad = findings.filter(f => f.viz?.kind === 'bars').flatMap(f => f.viz.rows
+  .filter(r => !(f.body + ' ' + f.viz.caption + ' ' + f.limit).includes(r.shown.replace(/^−/, '').replace(/ of \d+$/, '')))
+  .map(r => `${f.id}: ${r.shown}`))
+ok(bad.length === 0, `every chart value is stated in its finding's text${bad.length ? ` — not found: ${bad.join(', ')}` : ''}`)
 
 // Positive control: the detector must SEE a banned phrase before an absence of hits means anything.
 const MYTHS = /(\d+\s?%\s+of what (we|people|you|they) (see|read|hear))|60,?000 times|learning style[s]? (match|meshing)|visual learners? learn/i
@@ -32,7 +38,7 @@ ok(MYTHS.test('people remember 80% of what they see'), 'positive control: the my
 const claims = JSON.stringify({ s: ev.SECTIONS, h: ev.HOME_EVIDENCE })
 ok(!MYTHS.test(claims), 'no myth number appears as a finding (NOT_CLAIMED may name them to reject them)')
 
-const PAGES = ['app/(site)/page.tsx', 'app/(site)/3d-videos/page.tsx', 'app/(site)/why-visual-learning/page.tsx', 'app/llms.txt/route.ts']
+const PAGES = ['app/(site)/page.tsx', 'app/(site)/3d-videos/page.tsx', 'app/(site)/why-visual-learning/page.tsx', 'app/askradlor/page.tsx', 'app/llms.txt/route.ts']
 // Text a visitor reads, without the comments that explain the rules.
 const visible = f => readFileSync(new URL(`../${f}`, import.meta.url), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '').replace(/<\/?svg\b[^>]*>/gi, '')
 const RULES = [
