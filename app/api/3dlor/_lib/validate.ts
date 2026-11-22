@@ -12,12 +12,11 @@ export const FIELDS = {
   website: { max: 300, required: false, url: true },
   product_name: { max: 300, required: true },
   product_url: { max: 500, required: false, url: true },
-  topics: { max: 5000, required: true },
   languages: { max: 200, required: false },
-  brand_colors: { max: 200, required: false },
   files_link: { max: 500, required: false, url: true },
-  notes: { max: 5000, required: false },
 } as const
+// Not asked any more (founder, 23 Nov 2026: "keep the form easy"): the video topics come from the manual, and the
+// brand look from the logo. The columns `topics`, `brand_colors` and `notes` stay in the table, empty.
 type Field = keyof typeof FIELDS
 export type OrderInput = Record<Field, string | null> & { plan: PlanKey }
 

@@ -110,13 +110,14 @@ export default async function Signup({ searchParams }: PageProps<'/3dlor/signup'
             <legend className="text-2xl font-display mb-2">4. About the product</legend>
             <Field name="product_name" title="Product name and model" hint="For Growth and Pro, list each product." bad={bad === 'product_name'} />
             <Field name="product_url" title="Product page link" type="url" hint="Your store, Amazon or another shop." bad={bad === 'product_url'} />
-            <Field name="topics" area title="What should the videos show?"
-              hint="List the setup steps, how-to topics and the top questions from reviews and support tickets. One a line." bad={bad === 'topics'} />
             <Field name="languages" title="Languages" hint="For example: English, Spanish. Your package sets how many." bad={bad === 'languages'} />
-            <Field name="brand_colors" title="Brand colors" hint="For example: #1A73E8, white." bad={bad === 'brand_colors'} />
             <Field name="files_link" title="Link to large files" type="url"
-              hint="CAD files, videos or photos over 4 MB: a Google Drive, Dropbox or WeTransfer link." bad={bad === 'files_link'} />
-            <Field name="notes" area title="Anything else" bad={bad === 'notes'} />
+              hint="CAD files, or photos and PDFs over 4 MB: a Google Drive, Dropbox or WeTransfer link." bad={bad === 'files_link'} />
+            <p className="text-sm text-muted">
+              You do not need to list the videos. In the next step you upload your manual. We read it and send you the
+              list of videos we will make. Your package sets how many; if your manual has more topics, you can move to a
+              bigger package.
+            </p>
           </fieldset>
 
           <label className={`flex gap-3 text-sm ${bad === 'terms' ? 'text-accent' : 'text-muted'}`}>
