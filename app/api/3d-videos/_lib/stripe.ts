@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
+import { PLANS, depositCents, FREE_MONTHS, type PlanKey } from './plans.ts'
 
 /**
  * Stripe without the SDK: two API calls (Checkout session, portal session) and the webhook check.
@@ -71,6 +72,36 @@ export function verifyWebhook(body: string, header: string | null, secret: strin
     return JSON.parse(body) as { id: string; type: string; livemode: boolean; data: { object: Record<string, unknown> } }
   } catch {
     return null
+  }
+}
+
+/**
+ * The Checkout session for one order, subscription mode:
+ *   1. the first half of the build, a one-time line item, paid today;
+ *   2. the monthly care plan, free until `trial_end`, then month to month.
+ */
+export function checkoutParams(o: { orderId: string; uid: string; email: string; plan: PlanKey; site: string; today: Date }) {
+  const p = PLANS[o.plan]
+  const trialEnd = addMonthsSec(o.today, FREE_MONTHS)
+  const meta = { v3d_order_id: o.orderId, v3d_user_id: o.uid, v3d_plan: o.plan, v3d_trial_end: String(trialEnd) }
+  return {
+    mode: 'subscription',
+    customer_email: o.email,
+    client_reference_id: o.orderId,
+    line_items: [
+      { quantity: 1, price_data: { currency: 'usd', unit_amount: depositCents(o.plan),
+        product_data: { name: `3D video library, ${p.name}: build, first half (second half at delivery)` } } },
+      { quantity: 1, price_data: { currency: 'usd', unit_amount: p.careCents, recurring: { interval: 'month' },
+        product_data: { name: `3D video care plan, ${p.name} (${p.careVideos})` } } },
+    ],
+    subscription_data: {
+      trial_end: trialEnd,
+      metadata: meta,
+      description: `${FREE_MONTHS} free months, then month to month. Fixed price, no interest and no late fees.`,
+    },
+    metadata: meta,
+    success_url: `${o.site}/3d-videos/account?paid=1`,
+    cancel_url: `${o.site}/3d-videos/account`,
   }
 }
 

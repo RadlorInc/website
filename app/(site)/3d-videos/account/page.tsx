@@ -26,7 +26,7 @@ type FileRow = { id: string; order_id: string; kind: string; name: string; size_
 
 const date = (iso: string) => new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 const CARE: Record<string, string> = {
-  trialing: 'free months', active: 'active', past_due: 'card payment failed, please update your card',
+  trialing: 'free months', active: 'active, month to month', past_due: 'card payment failed, please update your card',
   canceled: 'canceled', unpaid: 'card payment failed, please update your card', paused: 'paused',
 }
 
@@ -75,7 +75,7 @@ export default async function Account({ searchParams }: PageProps<'/3d-videos/ac
         <form method="post" action="/api/3d-videos/auth/signout"><button className="rl-link text-accent">Sign out</button></form>
       </div>
       <Notice e={e} />
-      {sp.paid === '1' && (
+      {sp.paid === '1' && orders.some(o => o.payment_status === 'unpaid') && (
         <p role="status" className="mt-6 rounded-lg border border-line px-4 py-3">
           Thank you. Stripe is confirming the payment. This page shows it as paid when the confirmation arrives; reload in a minute.
         </p>
@@ -112,8 +112,9 @@ export default async function Account({ searchParams }: PageProps<'/3d-videos/ac
               <ul className="mt-3 text-muted list-disc pl-5 space-y-1">
                 <li>First half of the build: paid{o.amount_paid_cents != null ? ` (${usd(o.amount_paid_cents)})` : ''}.</li>
                 <li>Second half: {o.balance_paid ? 'paid' : `${usd((o.build_price_cents ?? p.buildCents) - depositCents(o.plan))}, due at delivery`}.</li>
-                <li>Care plan: {CARE[o.care_status ?? ''] ?? o.care_status ?? 'starting'}
-                  {o.care_status === 'trialing' && o.care_starts_at ? `, free until ${date(o.care_starts_at)}, then ${usd(p.careCents)} a month` : ''}.</li>
+                <li>Care plan: {o.care_status === 'trialing' && o.care_starts_at
+                  ? `free until ${date(o.care_starts_at)}, then ${usd(p.careCents)} a month. Cancel any time`
+                  : CARE[o.care_status ?? ''] ?? o.care_status ?? 'starting'}.</li>
               </ul>
             )}
             {o.stripe_customer_id && (

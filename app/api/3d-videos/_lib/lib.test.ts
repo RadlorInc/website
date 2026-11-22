@@ -3,7 +3,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createHmac } from 'node:crypto'
 import { sign, verify, readCookie } from './session.ts'
-import { formEncode, verifyWebhook, addMonthsSec, isLiveKey } from './stripe.ts'
+import { formEncode, verifyWebhook, addMonthsSec, isLiveKey, checkoutParams } from './stripe.ts'
 import { parseOrder, sniffMime, cleanName, isEmail } from './validate.ts'
 import { PLANS, depositCents, balanceCents } from './plans.ts'
 
@@ -49,6 +49,19 @@ test('webhook signature: good, bad, old, missing', () => {
 
 test('trial end is 3 calendar months on', () => {
   assert.equal(new Date(addMonthsSec(new Date('2026-11-22T00:00:00Z'), 3) * 1000).toISOString(), '2027-02-22T00:00:00.000Z')
+})
+
+test('checkout: half the build today, care plan after the free months, our metadata on both', () => {
+  const c = checkoutParams({ orderId: 'o1', uid: 'u1', email: 'a@b.co', plan: 'growth', site: 'http://x', today: new Date('2026-11-22T00:00:00Z') })
+  assert.equal(c.mode, 'subscription')
+  assert.equal(c.line_items[0].price_data.unit_amount, 220000)
+  assert.ok(!('recurring' in c.line_items[0].price_data))
+  assert.equal(c.line_items[1].price_data.unit_amount, 39900)
+  assert.deepEqual(c.line_items[1].price_data.recurring, { interval: 'month' })
+  assert.equal(c.subscription_data.trial_end, Date.parse('2027-02-22T00:00:00Z') / 1000)
+  assert.equal(c.metadata.v3d_order_id, 'o1')
+  assert.equal(c.subscription_data.metadata.v3d_order_id, 'o1')
+  assert.ok(!/interest|late fee/i.test(JSON.stringify(c.line_items)))
 })
 
 test('live keys are recognised', () => {
