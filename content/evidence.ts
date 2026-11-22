@@ -188,14 +188,26 @@ export const SOURCES = {
 export type SourceId = keyof typeof SOURCES
 
 /**
- * A picture of a finding. Every number in `rows` is copied from the finding's own text (and so from its source);
- * the chart adds no number of its own. `tone` says which bar is the condition WITH pictures or video ('visual') and
- * which is the comparison ('base'). Bars are drawn on a scale from 0 to `max`.
+ * A picture of a finding. Every number in it is copied from the finding's own text (and so from its source); the
+ * chart adds no number of its own, and `check:evidence` fails if a `shown` value is not in the text or does not match
+ * its `value`. `tone` says which mark is the condition WITH pictures or video ('visual') and which is the comparison
+ * ('base'). Pick the kind by the shape of the fact (founder, 2026-11-22: "the right chart for each fact"):
+ *   scale   · one or more effect sizes on one axis      rings   · a share of a whole (%), one donut per group
+ *   tally   · "X of N tests"                            columns · values that step up
+ *   cut     · a cut from a baseline (−35%)             waffles · "X out of 100" for two groups, a switch per measure
+ *   stat    · one number                                dots    · a small count
  */
+type Val = { label: string; value: number; shown: string; tone: 'base' | 'visual' }
+type Mark = { value: number; shown: string; label: string }
 export type Viz =
-  | { kind: 'bars'; unit: string; max: number; caption: string; rows: { label: string; value: number; shown: string; tone: 'base' | 'visual' }[] }
   | { kind: 'stat'; value: string; caption: string }
   | { kind: 'dots'; filled: number; total: number; caption: string }
+  | { kind: 'scale'; caption: string; max: number; points: Val[]; mark?: Mark }
+  | { kind: 'rings'; caption: string; rows: Val[]; mark?: Mark }
+  | { kind: 'tally'; caption: string; rows: { label: string; hit: number; of: number; shown: string }[] }
+  | { kind: 'columns'; caption: string; max: number; rows: Val[] }
+  | { kind: 'cut'; caption: string; rows: { label: string; value: number; shown: string }[] }
+  | { kind: 'waffles'; caption: string; options: { label: string; rows: Val[] }[] }
 /** What KIND of evidence a finding rests on. Shown as a badge, so a reader sees a theory or one small study for what it is. */
 type Evidence = 'Meta-analysis' | 'Systematic review' | 'Review' | 'Randomized trial' | 'Series of experiments' | 'Lab studies' | 'Single study' | 'Theory' | 'Strong evidence (IES)' | 'Guidance' | 'Brain-imaging study'
 type Finding = {
@@ -224,7 +236,7 @@ const MIND: Section = {
       title: 'The multimedia principle',
       short: 'Words with pictures beat words alone, by a large margin.',
       evidence: 'Series of experiments',
-      viz: { kind: 'stat', value: 'd = 1.35', caption: 'Median effect size in 13 comparisons. Mayer counts above 0.4 as educationally important.' },
+      viz: { kind: 'scale', max: 1.5, caption: 'Median effect size in 13 comparisons. Mayer counts above 0.4 as educationally important.', points: [{ label: 'Words with graphics vs words alone', value: 1.35, shown: 'd = 1.35', tone: 'visual' }], mark: { value: 0.4, shown: '0.4', label: 'Educationally important' } },
       body: 'In 13 experimental comparisons, students who learned from words and graphics did much better on a test that asked them to use the idea in a new problem than students who learned from words alone. The median effect size was d = 1.35, a large effect.',
       refs: ['mayer2023'],
       limit: 'Most of these were short lessons for college students in one research group, tested soon after the lesson. Mayer also says that not all graphics are equally useful.',
@@ -243,7 +255,7 @@ const MIND: Section = {
       title: 'Picture memory is very large',
       short: 'After 2,500 pictures, people still picked the right one most of the time.',
       evidence: 'Lab studies',
-      viz: { kind: 'bars', unit: '%', max: 100, caption: 'Correct picks out of two (chance is 50%)', rows: [{ label: 'Different object', value: 92, shown: '92%', tone: 'visual' }, { label: 'Same kind, other example', value: 88, shown: '88%', tone: 'visual' }, { label: 'Same object, other state', value: 87, shown: '87%', tone: 'visual' }] },
+      viz: { kind: 'rings', caption: 'Correct picks out of two (chance is 50%)', mark: { value: 50, shown: '50%', label: 'Chance' }, rows: [{ label: 'Different object', value: 92, shown: '92%', tone: 'visual' }, { label: 'Same kind, other example', value: 88, shown: '88%', tone: 'visual' }, { label: 'Same object, other state', value: 87, shown: '87%', tone: 'visual' }] },
       body: 'People who saw 10,000 pictures once, a few seconds each, still recognized most of them about two days later. Memory for pictures was better than memory for words. In a later study, adults who saw 2,500 object pictures picked the right one from a pair 92%, 88% and 87% of the time in three tests, even when the other picture was very similar.',
       refs: ['standing1973', 'brady2008'],
       limit: 'These tests asked “have you seen this before?”, which is easier than understanding or using an idea. The groups were small (5 to 14 people).',
@@ -263,7 +275,7 @@ const MIND: Section = {
       title: 'Design matters as much as the picture',
       short: 'Clean, in-step, well-placed pictures win almost every test.',
       evidence: 'Series of experiments',
-      viz: { kind: 'bars', unit: 'tests', max: 1, caption: 'Share of tests where the design rule helped', rows: [{ label: 'Remove extra material', value: 18 / 19, shown: '18 of 19', tone: 'visual' }, { label: 'Say words with the picture', value: 1, shown: '8 of 8', tone: 'visual' }, { label: 'Put words next to the part', value: 1, shown: '9 of 9', tone: 'visual' }, { label: 'Split into learner-paced parts', value: 1, shown: '7 of 7', tone: 'visual' }] },
+      viz: { kind: 'tally', caption: 'Tests where the design rule helped. One square is one test.', rows: [{ label: 'Remove extra material', hit: 18, of: 19, shown: '18 of 19' }, { label: 'Say words with the picture', hit: 8, of: 8, shown: '8 of 8' }, { label: 'Put words next to the part', hit: 9, of: 9, shown: '9 of 9' }, { label: 'Split into learner-paced parts', hit: 7, of: 7, shown: '7 of 7' }] },
       body: 'The same research found that people learn better when extra material is removed (18 of 19 tests), when spoken words come at the same time as the picture (8 of 8), when words sit next to the part they describe (9 of 9) and when a lesson is split into learner-paced parts (7 of 7).',
       refs: ['mayer2023'],
       limit: 'A picture that is decorative, crowded or out of step with the words can make learning worse, not better. The effects are medians from one research group.',
@@ -284,7 +296,7 @@ const MOTION: Section = {
       title: 'Animation beats still pictures, most for how-to tasks',
       short: 'Animation helps a little in general, and a lot for hands-on skills.',
       evidence: 'Meta-analysis',
-      viz: { kind: 'bars', unit: 'd', max: 1.2, caption: 'Effect size of animation over still pictures (d)', rows: [{ label: 'All topics', value: 0.37, shown: '0.37', tone: 'base' }, { label: 'Realistic, video-like', value: 0.76, shown: '0.76', tone: 'visual' }, { label: 'Hands-on skills', value: 1.06, shown: '1.06', tone: 'visual' }] },
+      viz: { kind: 'columns', max: 1.2, caption: 'Effect size of animation over still pictures (d)', rows: [{ label: 'All topics', value: 0.37, shown: '0.37', tone: 'base' }, { label: 'Realistic, video-like', value: 0.76, shown: '0.76', tone: 'visual' }, { label: 'Hands-on skills', value: 1.06, shown: '1.06', tone: 'visual' }] },
       body: 'A meta-analysis of 26 studies found a medium-sized advantage of instructional animations over static pictures (d = 0.37). The advantage was much larger when people learned a procedural-motor skill, something they must do with their hands (d = 1.06), and when the animation was realistic, for example video (d = 0.76).',
       refs: ['hoffler2007', 'berney2016'],
       limit: 'A later and larger meta-analysis (61 studies, 7,036 learners) found a smaller overall advantage (g = 0.226).',
@@ -303,7 +315,7 @@ const MOTION: Section = {
       title: 'Clear step-by-step drawings cut assembly time',
       short: 'One clear action per step: faster assembly, fewer errors.',
       evidence: 'Single study',
-      viz: { kind: 'bars', unit: '%', max: 60, caption: 'Average cut compared with factory and hand-designed instructions', rows: [{ label: 'Assembly time', value: 35, shown: '−35%', tone: 'visual' }, { label: 'Errors', value: 50, shown: '−50%', tone: 'visual' }] },
+      viz: { kind: 'cut', caption: 'Average cut compared with factory and hand-designed instructions', rows: [{ label: 'Assembly time', value: 35, shown: '−35%' }, { label: 'Errors', value: 50, shown: '−50%' }] },
       body: 'In a furniture-assembly study, step-by-step instructions designed with cognitive principles (one clear action per step) cut assembly time by 35% on average and errors by 50%, compared with factory instructions.',
       refs: ['heiser2004'],
       limit: 'These were still diagrams, not video. The study shows that clear steps matter; it does not test video.',
@@ -313,7 +325,7 @@ const MOTION: Section = {
       title: 'Video helps students, most when it adds to teaching',
       short: 'Video helps students most when it is added to teaching.',
       evidence: 'Systematic review',
-      viz: { kind: 'bars', unit: 'g', max: 1, caption: 'Effect size on learning (g), 105 trials', rows: [{ label: 'Video replaces teaching', value: 0.28, shown: '0.28', tone: 'base' }, { label: 'Video added to teaching', value: 0.8, shown: '0.80', tone: 'visual' }] },
+      viz: { kind: 'scale', max: 1, caption: 'Effect size on learning (g), 105 trials', points: [{ label: 'Video replaces teaching', value: 0.28, shown: '0.28', tone: 'base' }, { label: 'Video added to teaching', value: 0.8, shown: '0.80', tone: 'visual' }] },
       body: 'A review of 105 randomized trials with 7,776 university students found small gains when video replaced other teaching (g = 0.28) and strong gains when video was added to it (g = 0.80). In a study with 111 pupils in grades 5 and 6, a video tutorial beat a paper tutorial for a software task.',
       refs: ['noetel2021', 'vandermeij2014'],
       limit: 'The review is about university students, and adding video also adds study time. The pupils’ study is one task, and all groups improved, the paper group too.',
@@ -390,7 +402,11 @@ const MEDICINE: Section = {
       title: 'Cartoons on wound-care sheets',
       short: 'Cartoon instructions: more patients understood and followed them.',
       evidence: 'Randomized trial',
-      viz: { kind: 'bars', unit: '%', max: 100, caption: 'Patients, text only vs text with cartoons', rows: [{ label: 'All questions right, text only', value: 6, shown: '6%', tone: 'base' }, { label: 'All questions right, with cartoons', value: 46, shown: '46%', tone: 'visual' }, { label: 'Daily wound care, text only', value: 54, shown: '54%', tone: 'base' }, { label: 'Daily wound care, with cartoons', value: 77, shown: '77%', tone: 'visual' }] },
+      viz: { kind: 'waffles', caption: 'Patients, text only vs text with cartoons. One square is 1%.', options: [
+        { label: 'Read the sheet', rows: [{ label: 'Text only', value: 79, shown: '79%', tone: 'base' }, { label: 'With cartoons', value: 98, shown: '98%', tone: 'visual' }] },
+        { label: 'All questions right', rows: [{ label: 'Text only', value: 6, shown: '6%', tone: 'base' }, { label: 'With cartoons', value: 46, shown: '46%', tone: 'visual' }] },
+        { label: 'Daily wound care', rows: [{ label: 'Text only', value: 54, shown: '54%', tone: 'base' }, { label: 'With cartoons', value: 77, shown: '77%', tone: 'visual' }] },
+      ] },
       body: 'In a randomized study of 234 emergency patients, those who got wound-care instructions with cartoons more often read them (98% vs 79%), answered all wound-care questions correctly (46% vs 6%) and did their daily wound care (77% vs 54%).',
       refs: ['delp1996', 'austin1995'],
       limit: 'One hospital, cuts only, and wound care was self-reported by telephone three days later. An earlier study of 101 patients found a smaller gain: 65% vs 43% gave five or more correct answers out of 10.',
@@ -400,7 +416,7 @@ const MEDICINE: Section = {
       title: 'Picture-based medicine instructions cut dosing errors',
       short: 'Picture instructions cut medicine dosing errors.',
       evidence: 'Randomized trial',
-      viz: { kind: 'bars', unit: '%', max: 60, caption: 'Dosing errors for a daily medicine, more than 20% off the dose (lower is better)', rows: [{ label: 'Usual instructions', value: 47.8, shown: '47.8%', tone: 'base' }, { label: 'With pictograms', value: 5.4, shown: '5.4%', tone: 'visual' }] },
+      viz: { kind: 'rings', caption: 'Dosing errors for a daily medicine, more than 20% off the dose (lower is better)', rows: [{ label: 'Usual instructions', value: 47.8, shown: '47.8%', tone: 'base' }, { label: 'With pictograms', value: 5.4, shown: '5.4%', tone: 'visual' }] },
       body: 'In a randomized trial with 245 caregivers of young children, plain-language instructions with pictograms cut dosing errors for a daily liquid medicine from 47.8% to 5.4%.',
       refs: ['yin2008'],
       limit: 'The pictograms came together with plain language and counselling, so the effect of the pictures alone is not known. One hospital emergency department.',
@@ -419,7 +435,7 @@ const MEDICINE: Section = {
       title: 'Video instructions: promising, not proven',
       short: 'Video did best on recall, but the gap was not significant.',
       evidence: 'Meta-analysis',
-      viz: { kind: 'bars', unit: '%', max: 100, caption: 'Average correct recall (differences not significant)', rows: [{ label: 'Spoken', value: 47, shown: '47%', tone: 'base' }, { label: 'Written', value: 58, shown: '58%', tone: 'base' }, { label: 'Video', value: 67, shown: '67%', tone: 'visual' }] },
+      viz: { kind: 'scale', max: 100, caption: 'Average correct recall, from 0 to 100% (differences not significant)', points: [{ label: 'Spoken', value: 47, shown: '47%', tone: 'base' }, { label: 'Written', value: 58, shown: '58%', tone: 'base' }, { label: 'Video', value: 67, shown: '67%', tone: 'visual' }] },
       body: 'Across emergency-department studies, patients correctly recalled on average 47% of spoken discharge instructions, 58% of written ones and 67% of video ones.',
       refs: ['hoek2020', 'tuong2014'],
       limit: 'These differences were not statistically significant, and only 7 of 51 studies used video. A review of video health education found that it changed some health behaviors but not others.',

@@ -784,3 +784,25 @@ body {
   .rl-path-row, .rl-story-pics img, .rl-story-steps li { transition: none; }
   .rl-path-row:not([data-lit]) { opacity: 1; transform: none; }
 }
+
+/* Research charts (`components/visual/Viz.tsx`, 2026-11-22). Marks grow as they scroll into view, on a CSS scroll
+   timeline: no script, and only when the visitor allows motion and the browser has `animation-timeline`. Without
+   either, the marks simply stand at their final size. */
+@keyframes vz-x { from { transform: scaleX(0) } }
+@keyframes vz-y { from { transform: scaleY(0) } }
+@keyframes vz-draw { from { stroke-dasharray: 0 100 } }
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .vz-grow-x, .vz-grow-y, .vz-draw { animation-timing-function: ease-out; animation-fill-mode: both; animation-timeline: view(); animation-range: entry 20% cover 40%; }
+    .vz-grow-x { transform-origin: left; animation-name: vz-x; }
+    .vz-grow-y { transform-origin: bottom; animation-name: vz-y; }
+    .vz-draw { animation-name: vz-draw; }
+  }
+}
+/* Hover one ring or column to compare it: the others fade. */
+.vz-dim:has(> li:hover) > li:not(:hover) { opacity: 0.45; }
+/* The waffle switch: show the panel whose radio is checked. Without `:has`, every panel shows (still readable). */
+.vz-switch:has(input[value="0"]:checked) [data-panel]:not([data-panel="0"]),
+.vz-switch:has(input[value="1"]:checked) [data-panel]:not([data-panel="1"]),
+.vz-switch:has(input[value="2"]:checked) [data-panel]:not([data-panel="2"]),
+.vz-switch:has(input[value="3"]:checked) [data-panel]:not([data-panel="3"]) { display: none; }
