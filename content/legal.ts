@@ -109,7 +109,8 @@ ${SUPPORT_EMAIL} and we will delete it.
 
 **You can read this whole site without giving us anything.**
 
-There is one form on this site: the waitlist. It asks for your email address
+There are two forms on this site: the waitlist, and the sign-up for a 3D video
+order (for brands; the Privacy Policy lists what it stores). The waitlist asks for your email address
 and, if you choose to give it, your child's grade. There is no name field, no date of
 birth and nowhere to type a child's name. The form also carries one hidden field
 that a person never sees and never fills in; it catches automated submissions,
@@ -118,11 +119,12 @@ only to write to you about a place, and we do not sell it.
 
 You can ask us to delete it at any time at ${SUPPORT_EMAIL}.
 
-**We do not use website analytics.** This site sets no cookies at all — not
-analytics cookies, and not "strictly necessary" ones either — and it loads
-nothing from anyone else's server. You do not have to take our word for it: open
-your browser's network tab and reload, and every request you see will be to
-radlor.com. Our Privacy Policy explains the full picture.
+**We do not use website analytics.** This site sets no cookies while you read
+it, and it loads nothing from anyone else's server. You do not have to take our
+word for it: open your browser's network tab and reload, and every request you
+see will be to radlor.com. The one exception is the sign-in for a 3D video
+order: after you sign in, the site sets one cookie that keeps you signed in, and
+payment happens on Stripe's own page. Our Privacy Policy explains the full picture.
 
 ## 4. Information on this site is general
 

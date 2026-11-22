@@ -22,11 +22,11 @@ import { ART } from '@/components/scroll/art'
 const RADLIC = APP_URL
 
 export const metadata: Metadata = {
-  title: { absolute: 'Radlor — math lessons that adapt to your child, grades K–8' },
+  title: { absolute: 'Radlic — math lessons that adapt to your child, grades K–8' },
   description:
     'Math for kindergarten through grade 8. Each lesson explains one idea step by step, the way a teacher would at the board, then practice adapts to what your child gets right and wrong. For parents.',
   alternates: { canonical: '/radlic' },
-  openGraph: { url: `${SITE_URL}/radlic`, title: 'Radlor — math lessons that adapt to your child' },
+  openGraph: { url: `${SITE_URL}/radlic`, title: 'Radlic — math lessons that adapt to your child' },
 }
 
 function AppJsonLd() {
@@ -37,7 +37,7 @@ function AppJsonLd() {
     name: APP_NAME,
     // Its earlier names, so an old link or an answer engine that learned "AdaptiveLearn" resolves to this product
     // (the /adaptivelearn page said so in an FAQ until it became a redirect here, 2026-09-25).
-    alternateName: [`${APP_NAME} app`, 'Radlic', 'AdaptiveLearn', 'Milo'],
+    alternateName: [`${APP_NAME} by ${COMPANY}`, 'AdaptiveLearn', 'Milo'],
     url: `${SITE_URL}/radlic`,
     applicationCategory: 'EducationalApplication',
     operatingSystem: 'Web browser',
@@ -68,8 +68,8 @@ const Check = () => (
 export default function RadlicPage() {
   return (
     <main className={s.page}>
-      <nav className={s.nav} aria-label="Radlor app">
-        <span className={s.brand}>{APP_NAME}</span>
+      <nav className={s.nav} aria-label="Radlic">
+        <span className={s.brand}>Radlic</span>
         <a href={`${RADLIC}/help`} className={s.navLink}>Help</a>
         <a href={`${RADLIC}/auth`} className={s.navLink}>Log in</a>
       </nav>
@@ -99,7 +99,7 @@ export default function RadlicPage() {
         <h2 id="watch" className={s.h2}>What your child sees</h2>
         <video className={s.video} src="/radlic-demo.mp4" poster="/radlic-demo-poster.jpg" width={1920} height={1080}
           autoPlay muted loop playsInline controls preload="metadata"
-          aria-label="The Radlor app: picking a Grade 3 topic, a lesson at the chalkboard, the child's first question, then practice" />
+          aria-label="The Radlic app: picking a Grade 3 topic, a lesson at the chalkboard, the child's first question, then practice" />
         <p className={s.demoNote}>The real app, recorded: one lesson, then practice.</p>
       </section>
 
@@ -129,12 +129,12 @@ export default function RadlicPage() {
 
       {/* The APP's legal pages — they govern an account and a child's data. This site's own /privacy and /terms are
           in the footer below and cover only these pages. */}
-      <footer className={s.foot} aria-label="Radlor app legal">
-        <a href={`${RADLIC}/legal/privacy`}>App Privacy Policy</a>
-        <a href={`${RADLIC}/legal/terms`}>App Terms</a>
+      <footer className={s.foot} aria-label="Radlic legal">
+        <a href={`${RADLIC}/legal/privacy`}>Radlic Privacy Policy</a>
+        <a href={`${RADLIC}/legal/terms`}>Radlic Terms</a>
         <a href={`${RADLIC}/legal/parent-rights`}>Parent rights</a>
         {/* The only way back to the company site from here: this page wears none of radlor.com's chrome. */}
-        <Link href="/" className={s.maker}>Made by {COMPANY}</Link>
+        <Link href="/" className={s.maker}>{APP_NAME} is made by {COMPANY}</Link>
       </footer>
       <AppJsonLd />
     </main>

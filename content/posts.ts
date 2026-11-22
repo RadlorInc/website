@@ -23,7 +23,7 @@ export const posts: Post[] = [
     slug: 'the-gap-is-lower-than-the-grade',
     title: "A seventh-grader's math gap is often in grade four",
     description:
-      'Placing a child by their school year assumes the year taught them. When a seventh-grader is stuck, the skill that is actually missing is frequently several grades below. We built a placement check to find it, then took it out: its accuracy was only ever simulated. Here is what the Radlor app does instead.',
+      'Placing a child by their school year assumes the year taught them. When a seventh-grader is stuck, the skill that is actually missing is frequently several grades below. We built a placement check to find it, then took it out: its accuracy was only ever simulated. Here is what Radlic does instead.',
     date: '2026-08-29',
     updated: '2026-09-30',
   },
@@ -31,7 +31,7 @@ export const posts: Post[] = [
     slug: 'a-camera-claim-you-can-check',
     title: 'A camera claim you can check',
     description:
-      'A promise not to upload video is weaker than an app that cannot open a camera. The Radlor app removed its camera chapters, and a Permissions-Policy header the build tests now makes the browser refuse the camera — here is how to check the same of any app.',
+      'A promise not to upload video is weaker than an app that cannot open a camera. Radlic removed its camera chapters, and a Permissions-Policy header the build tests now makes the browser refuse the camera — here is how to check the same of any app.',
     date: '2026-08-29',
     updated: '2026-09-30',
   },

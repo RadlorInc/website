@@ -6,14 +6,14 @@ import { APP_NAME, ASK_NAME, COMPANY, FOUNDED_YEAR, SUPPORT_EMAIL, VISION } from
 
 export const metadata: Metadata = {
   title: 'About',
-  description: `${COMPANY} is a small software company building learning tools that adapt to the learner. The ${APP_NAME} app is adaptive math for kindergarten through grade 8; ${ASK_NAME} answers any question as a voiced whiteboard video.`,
+  description: `${COMPANY} is a small software company building learning tools that adapt to the learner. ${APP_NAME} is adaptive math for kindergarten through grade 8; ${ASK_NAME} answers any question as a voiced whiteboard video.`,
   alternates: { canonical: '/about' },
 }
 
 // One picture and one line per section (founder, 2026-09-29: "least text on the whole website"), joined by a drawn path
 // (scroll style G) under a circle-reveal top (F). Each line restates the page as it was and adds no claim.
 const ROWS: PathRow[] = [
-  { ...ART.aboutWhat, title: `What is ${COMPANY}?`, body: <>Learning software that adapts to the learner. The {APP_NAME} app: math, kindergarten to grade 8. {ASK_NAME}: ask anything, watch it drawn.</> },
+  { ...ART.aboutWhat, title: `What is ${COMPANY}?`, body: <>Learning software that adapts to the learner. {APP_NAME}: math, kindergarten to grade 8. {ASK_NAME}: ask anything, watch it drawn.</> },
   { ...ART.aboutWhy, title: 'Why we started', body: <>Every child learns differently. Software can find where a child is and change what comes next.</> },
   { ...ART.aboutHow, title: 'How we work', body: <>Could a child get it right without understanding it? Then we fix the lesson.</> },
   {

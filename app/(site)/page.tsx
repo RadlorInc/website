@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { ASK_NAME, COMPANY, SITE_URL, TAGLINE, V3D_NAME, V3D_PATH, VISION, WHY_PATH } from '@/site'
+import { APP_NAME, ASK_NAME, COMPANY, SITE_URL, TAGLINE, V3D_NAME, V3D_PATH, VISION, WHY_PATH } from '@/site'
 import { posts } from '@/content/posts'
 import { FINDINGS, HOME_EVIDENCE, SOURCES } from '@/content/evidence'
 import { ProductTabs, type TabProduct } from '@/components/visual/ProductTabs'
@@ -20,9 +20,6 @@ import { POST_COVERS } from '@/components/scroll/art'
  * and interactive"); every product's text is still in the server HTML.
  */
 
-/** The kids' maths app is called Radlic again (founder, 2026-11-22). `APP_NAME` in site.ts changes in its own pull
- *  request; when that is merged, replace this constant with `APP_NAME`. */
-const RADLIC = 'Radlic'
 
 /** One row per product. `chips` are the benefits as 2-5 word labels with an icon (founder, 2026-11-22: less text). */
 const PRODUCTS: (TabProduct & { pic: { src: string; w: number; h: number } })[] = [
@@ -44,7 +41,7 @@ const PRODUCTS: (TabProduct & { pic: { src: string; w: number; h: number } })[] 
   },
   {
     id: 'radlic',
-    name: RADLIC,
+    name: APP_NAME,
     who: 'For children and parents · Math K–8',
     line: 'A teacher at the chalkboard explains one idea. Then practice follows your child.',
     chips: [
@@ -54,8 +51,8 @@ const PRODUCTS: (TabProduct & { pic: { src: string; w: number; h: number } })[] 
       { icon: 'shield', label: 'No email for a child' },
     ],
     page: '/radlic',
-    cta: `See ${RADLIC}`,
-    media: { video: '/radlic-demo.mp4', poster: '/radlic-demo-poster.jpg', w: 1920, h: 1080, label: `${RADLIC} demo, no sound: a child picks a math topic and a lesson plays at the chalkboard` },
+    cta: `See ${APP_NAME}`,
+    media: { video: '/radlic-demo.mp4', poster: '/radlic-demo-poster.jpg', w: 1920, h: 1080, label: `${APP_NAME} demo, no sound: a child picks a math topic and a lesson plays at the chalkboard` },
     pic: { src: '/radlic-demo-poster.jpg', w: 1920, h: 1080 },
   },
   {
