@@ -49,7 +49,7 @@ export async function POST(req: Request) {
     })
     return json(200, { url: session.url })
   } catch (err) {
-    console.error('[3d-videos] checkout failed', String(err).slice(0, 300))
+    console.error('[3dlor] checkout failed', String(err).slice(0, 300))
     return json(502, { code: 'retry' })
   }
 }

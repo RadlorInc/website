@@ -105,14 +105,14 @@ export const ASK_ID = `${ASK_URL}/#app`
 
 /**
  * The third product (2026-11-22): 3D how-to, setup and support video libraries for product brands, so that their
- * customers understand the product. A service, not an app. Its page is `/3d-videos` here; the sign-up, the form and
- * the payment live under `/3d-videos/signup` (built in a separate change, so this repo only links to it).
+ * customers understand the product. A service, not an app. Its page is `/3dlor` here; the sign-up, the form and
+ * the payment live under `/3dlor/signup` (built in a separate change, so this repo only links to it).
  * ⚠️ Never say how the videos are made: the wording is "our own 3D system". No delivery-time promise, no price here
  * (the plans are draft and live on the sign-up page).
  */
-export const V3D_NAME = '3D Product Videos'
-export const V3D_PATH = '/3d-videos'
-export const V3D_SIGNUP_PATH = '/3d-videos/signup'
+export const V3D_NAME = '3Dlor'   // the product's name (founder, 2026-11-22); sentences still say "3D videos"
+export const V3D_PATH = '/3dlor'
+export const V3D_SIGNUP_PATH = '/3dlor/signup'
 /** The page with the research behind all three products. Every claim on it has a checked source in `content/evidence.ts`. */
 export const WHY_PATH = '/why-visual-learning'
 

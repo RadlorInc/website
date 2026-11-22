@@ -7,7 +7,7 @@ import { auth, configured, ipOf, limited, pendingFrom, sameOrigin, secret, seeOt
  */
 export async function POST(req: Request) {
   const pending = pendingFrom(req.headers.get('cookie'))
-  const next = pending?.next ?? '/3d-videos/account'
+  const next = pending?.next ?? '/3dlor/account'
   const back = (e: string) => seeOther(`${next}?e=${e}`)
   if (!configured()) return back('closed')
   if (!sameOrigin(req)) return back('form')

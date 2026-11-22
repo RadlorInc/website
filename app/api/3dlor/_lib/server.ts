@@ -114,5 +114,5 @@ export function limited(key: string, limit: number, windowMs: number): boolean {
 export const ipOf = (req: Request) => (req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() || 'unknown'
 
 /** Where a sign-in may send the browser next. Anything else goes to the account page. */
-export const NEXT_PAGES = ['/3d-videos/signup', '/3d-videos/account'] as const
-export const safeNext = (v: unknown) => (NEXT_PAGES as readonly unknown[]).includes(v) ? (v as string) : '/3d-videos/account'
+export const NEXT_PAGES = ['/3dlor/signup', '/3dlor/account'] as const
+export const safeNext = (v: unknown) => (NEXT_PAGES as readonly unknown[]).includes(v) ? (v as string) : '/3dlor/account'

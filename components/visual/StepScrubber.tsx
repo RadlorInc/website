@@ -8,7 +8,7 @@ export type Step = { label: string; at: number; thumb: string }
 
 /**
  * "Take it apart": the demo video under the visitor's hand. A slider moves through the video, and each step button
- * plays that one step and stops at the next. Built for /3d-videos (founder, 2026-11-22: "make it interactive").
+ * plays that one step and stops at the next. Built for /3dlor (founder, 2026-11-22: "make it interactive").
  *
  * ⚠️ The video is SILENT and never plays by itself: it moves only when the visitor asks. The slider is a native
  * `<input type="range">` (keyboard and screen reader work by default); its `aria-valuetext` names the step.

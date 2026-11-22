@@ -7,7 +7,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
  * a Supabase signed URL), so no storage URL ever reaches the browser and every request stays on
  * radlor.com. Always a download, never rendered inline, with nosniff.
  */
-export async function GET(req: Request, ctx: RouteContext<'/api/3d-videos/files/[id]'>) {
+export async function GET(req: Request, ctx: RouteContext<'/api/3dlor/files/[id]'>) {
   if (!configured()) return json(503, { code: 'closed' })
   const s = sessionFrom(req.headers.get('cookie'))
   if (!s) return json(401, { code: 'signin' })

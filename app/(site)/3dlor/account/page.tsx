@@ -1,17 +1,17 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { headers } from 'next/headers'
-import { SUPPORT_EMAIL } from '@/site'
+import { SUPPORT_EMAIL, V3D_NAME } from '@/site'
 import { SignIn, Notice } from '@/components/v3d/SignIn'
 import { StripeButton } from '@/components/v3d/StripeButton'
 import { Uploader } from '@/components/v3d/Uploader'
-import { PLANS, isPlan, depositCents, balanceCents, FREE_MONTHS, usd } from '@/app/api/3d-videos/_lib/plans'
-import { configured, dbJson, pendingFrom, sessionFrom } from '@/app/api/3d-videos/_lib/server'
+import { PLANS, isPlan, depositCents, balanceCents, FREE_MONTHS, usd } from '@/app/api/3dlor/_lib/plans'
+import { configured, dbJson, pendingFrom, sessionFrom } from '@/app/api/3dlor/_lib/server'
 
 export const metadata: Metadata = {
-  title: 'Your 3D video order',
-  description: 'The status of your 3D video library order: payment, videos in work and delivered, and what we still need from you.',
-  alternates: { canonical: '/3d-videos/account' },
+  title: `Your ${V3D_NAME} order`,
+  description: 'The status of your 3D video library order with 3Dlor: payment, videos in work and delivered, and what we still need from you.',
+  alternates: { canonical: '/3dlor/account' },
   robots: { index: false, follow: false },
 }
 
@@ -39,7 +39,7 @@ function Stat({ n, label }: { n: number; label: string }) {
   )
 }
 
-export default async function Account({ searchParams }: PageProps<'/3d-videos/account'>) {
+export default async function Account({ searchParams }: PageProps<'/3dlor/account'>) {
   const sp = await searchParams
   const e = typeof sp.e === 'string' ? sp.e : undefined
   const h = await headers()
@@ -49,13 +49,13 @@ export default async function Account({ searchParams }: PageProps<'/3d-videos/ac
   if (!ok || !session) {
     return (
       <section className="mx-auto max-w-3xl px-6 py-16">
-        <h1 className="font-display text-4xl sm:text-5xl leading-tight">Your 3D video order</h1>
+        <h1 className="font-display text-4xl sm:text-5xl leading-tight">Your {V3D_NAME} order</h1>
         {!ok ? (
           <p className="mt-8">Accounts are not open yet. Write to <a className="rl-link text-accent" href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.</p>
         ) : (
           <>
             <p className="mt-5 text-lg text-muted">Sign in with the email you used for your order.</p>
-            <SignIn next="/3d-videos/account" pendingEmail={pendingFrom(h.get('cookie'))?.email} e={e} />
+            <SignIn next="/3dlor/account" pendingEmail={pendingFrom(h.get('cookie'))?.email} e={e} />
           </>
         )}
       </section>
@@ -69,10 +69,10 @@ export default async function Account({ searchParams }: PageProps<'/3d-videos/ac
 
   return (
     <section className="mx-auto max-w-3xl px-6 py-16">
-      <h1 className="font-display text-4xl sm:text-5xl leading-tight">Your 3D video order</h1>
+      <h1 className="font-display text-4xl sm:text-5xl leading-tight">Your {V3D_NAME} order</h1>
       <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-muted">
         <span>Signed in as {session.email}</span>
-        <form method="post" action="/api/3d-videos/auth/signout"><button className="rl-link text-accent">Sign out</button></form>
+        <form method="post" action="/api/3dlor/auth/signout"><button className="rl-link text-accent">Sign out</button></form>
       </div>
       <Notice e={e} />
       {sp.paid === '1' && orders.some(o => o.payment_status === 'unpaid') && (
@@ -82,7 +82,7 @@ export default async function Account({ searchParams }: PageProps<'/3d-videos/ac
       )}
 
       {orders.length === 0 && (
-        <p className="mt-10">You have no order yet. <Link className="rl-link text-accent" href="/3d-videos/signup">Start your library →</Link></p>
+        <p className="mt-10">You have no order yet. <Link className="rl-link text-accent" href="/3dlor/signup">Start your library →</Link></p>
       )}
 
       {orders.map(o => {
@@ -142,7 +142,7 @@ export default async function Account({ searchParams }: PageProps<'/3d-videos/ac
               <ul className="mt-3 text-sm space-y-1">
                 {mine.map(f => (
                   <li key={f.id}>
-                    <a className="rl-link text-accent" href={`/api/3d-videos/files/${f.id}`}>{f.name}</a>
+                    <a className="rl-link text-accent" href={`/api/3dlor/files/${f.id}`}>{f.name}</a>
                     <span className="text-muted"> · {f.kind} · {(f.size_bytes / 1024 / 1024).toFixed(1)} MB</span>
                   </li>
                 ))}

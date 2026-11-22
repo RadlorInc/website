@@ -12,7 +12,7 @@ import { POST_COVERS } from '@/components/scroll/art'
  * learning and teaching visual. Then the three products at equal weight, each with what it is, who it is for, its
  * benefits and one button. Then three findings from the research page, then why we build.
  *
- * ⚠️ Every product line below restates that product's own page (/radlic, /askradlor, /3d-videos); add no claim here
+ * ⚠️ Every product line below restates that product's own page (/radlic, /askradlor, /3dlor); add no claim here
  * that its page does not make. Standing rules: no price and no age label for Ask Radlor, never say how any video is
  * made, no people or animals in the 3D product's pictures.
  *
@@ -67,7 +67,7 @@ const PRODUCTS: (TabProduct & { pic: { src: string; w: number; h: number } })[] 
       { icon: 'formats', label: 'Tall, wide and square' },
     ],
     page: V3D_PATH,
-    cta: 'See 3D videos',
+    cta: `See ${V3D_NAME}`,
     media: { video: '/3d-videos-demo.mp4', poster: '/3d-videos-demo-poster.jpg', w: 720, h: 1280, label: 'Demo, no sound: how to clean a French press, with the filter taken apart into three labelled parts' },
     pic: { src: '/3d-videos-card.jpg', w: 1600, h: 1000 },
   },

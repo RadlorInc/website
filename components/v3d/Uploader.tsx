@@ -32,7 +32,7 @@ export function Uploader({ orderId }: { orderId: string }) {
       fd.set('order_id', orderId)
       fd.set('kind', kind)
       fd.set('file', file)
-      const res = await fetch('/api/3d-videos/files', { method: 'POST', body: fd }).catch(() => null)
+      const res = await fetch('/api/3dlor/files', { method: 'POST', body: fd }).catch(() => null)
       const body = await res?.json().catch(() => null)
       lines.push(res?.ok ? `${file.name}: uploaded.` : `${file.name} ${ERRORS[body?.code] ?? 'did not upload. Please try again.'}`)
       setLog([...lines])

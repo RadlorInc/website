@@ -54,7 +54,7 @@ export async function POST(req: Request) {
     const [row] = await ins.json()
     return json(201, { id: row.id, name, kind, size_bytes: bytes.length })
   } catch (err) {
-    console.error('[3d-videos] upload failed', String(err).slice(0, 300))
+    console.error('[3dlor] upload failed', String(err).slice(0, 300))
     return json(500, { code: 'retry' })
   }
 }

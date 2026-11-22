@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   const res = await auth('otp', { email, create_user: true }).catch(() => null)
   if (!res || !res.ok) {
     if (res?.status === 429) return back('wait')
-    console.error('[3d-videos] otp send failed', res?.status)
+    console.error('[3dlor] otp send failed', res?.status)
     return back('send')
   }
   const pending = sign({ email, next, exp: Date.now() + 15 * 60_000 }, secret())

@@ -22,11 +22,11 @@ export async function POST(req: Request) {
     if (!o?.stripe_customer_id) return json(404, { code: 'not_found' })
     const p = await stripeApi('billing_portal/sessions', {
       customer: o.stripe_customer_id,
-      return_url: `${originOf(req)}/3d-videos/account`,
+      return_url: `${originOf(req)}/3dlor/account`,
     })
     return json(200, { url: p.url })
   } catch (err) {
-    console.error('[3d-videos] portal failed', String(err).slice(0, 300))
+    console.error('[3dlor] portal failed', String(err).slice(0, 300))
     return json(502, { code: 'retry' })
   }
 }

@@ -51,6 +51,10 @@ const nextConfig: NextConfig = {
       // The waitlist is no longer the way in: "Try Radlic" is (founder, N23, 2026-09-26). Exact path only — the form's
       // outcome pages /waitlist/thanks and /waitlist/problem stay, because /api/waitlist still answers old forms.
       { source: "/waitlist", destination: "/radlic", permanent: true },
+      // The third product was named 3Dlor (founder, 2026-11-22); its pages moved from /3d-videos. The API moved too,
+      // but is not redirected: Stripe does not follow redirects, so its webhook URL was changed instead.
+      { source: "/3d-videos", destination: "/3dlor", permanent: true },
+      { source: "/3d-videos/:path*", destination: "/3dlor/:path*", permanent: true },
     ];
   },
 };
