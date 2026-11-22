@@ -1,4 +1,5 @@
 import { SUPPORT_EMAIL } from '@/site'
+import { PendingButton } from './PendingButton'
 
 const MESSAGES: Record<string, string> = {
   closed: `Sign-up is not open yet. Write to ${SUPPORT_EMAIL} and we will set you up.`,
@@ -33,7 +34,7 @@ export function SignIn({ next, pendingEmail, e }: { next: string; pendingEmail?:
             We sent a code to <strong className="text-foreground">{pendingEmail}</strong>. Enter it here.
             <input name="code" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9 ]{6,12}" required className={input} />
           </label>
-          <button className={button}>Sign in</button>
+          <PendingButton className={button} pending="Checking the code…">Sign in</PendingButton>
           <p className="mt-4 text-sm text-muted">No email after a few minutes? Check spam, or enter your email again below.</p>
         </form>
       ) : null}
@@ -43,7 +44,7 @@ export function SignIn({ next, pendingEmail, e }: { next: string; pendingEmail?:
           Work email
           <input name="email" type="email" autoComplete="email" maxLength={254} required className={input} />
         </label>
-        <button className={button}>{pendingEmail ? 'Send a new code' : 'Email me a sign-in code'}</button>
+        <PendingButton className={button} pending="Sending the code…">{pendingEmail ? 'Send a new code' : 'Email me a sign-in code'}</PendingButton>
       </form>
     </div>
   )
