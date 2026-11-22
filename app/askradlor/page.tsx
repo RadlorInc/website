@@ -4,7 +4,8 @@
  *
  * ⚠️ EVERY CLAIM IS THE APP'S OWN LANDING PAGE, re-read from RadlorInc/whiteboard-ai `main` (src/app/page.tsx) on
  * 2026-10-22: the subjects, "ages 13 and over", "answers are written by AI and can be wrong", replays are free. When
- * that page changes, this one is stale until re-read. Price: "around 20¢ a video" (founder, 23 Oct 2026, see metadata). "First 20 videos free" is the
+ * that page changes, this one is stale until re-read. ⚠️ Since 2026-11-22 this page states no price and no age label
+ * (founder rules of 2 and 9 Nov 2026); the app itself still checks age at sign-up. "First 20 videos free" is the
  * founder's statement (2026-10-22), not read from the app; the app's own landing page words its free allowance differently. ⚠️ NOT the Radlic "Ask maths" add-on: it is off pending legal
  * sign-off, and no page here may mention it until it is live.
  *
@@ -18,13 +19,14 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ASK_EXPLORE_URL, ASK_ID, ASK_NAME, ASK_URL, COMPANY, SITE_URL } from '@/site'
 import s from './askradlor.module.css'
+import { Icon, type IconName } from '@/components/visual/Icon'
 
 export const metadata: Metadata = {
   title: { absolute: `${ASK_NAME}: ask anything, watch the answer drawn` },
-  // Price first (founder, 23 Oct 2026). "Around 20¢" on purpose, read off askradlor.com/pricing that day: Pro 17¢,
-  // Plus 20¢, packs 20-25¢. If those prices move far from 20¢, this sentence and FACTS below change with them.
+  // No price and no age label (founder rules: price lines removed from all copy 9 Nov 2026; "Ages 13+" dropped
+  // 2 Nov 2026). The free-videos line stays allowed.
   description:
-    'Your first 20 videos are free, then around 20¢ a video. Type a question and watch a short voiced video draw the answer step by step: biology, physics, chemistry, home and car fixes. Ages 13+.',
+    'Type a question and watch a short voiced video draw the answer step by step: biology, physics, chemistry, home and car fixes. Your first 20 videos are free.',
   alternates: { canonical: '/askradlor' },
   openGraph: { url: `${SITE_URL}/askradlor`, title: `${ASK_NAME}: ask anything, watch the answer drawn` },
 }
@@ -47,16 +49,15 @@ function AppJsonLd() {
   return <script type="application/ld+json">{JSON.stringify(json)}</script>
 }
 
-const STEPS = [
-  { title: 'Type a question', body: 'Biology, physics, chemistry, home improvements or auto repairs. One question per video works best.' },
-  { title: 'Watch it drawn', body: 'A whiteboard lesson, voiced, step by step. Ask a follow-up in the same chat.' },
-  { title: 'Replay any time', body: 'Your videos stay in your library. Watching again is free.' },
+const STEPS: { title: string; body: string; icon: IconName }[] = [
+  { title: 'Type a question', body: 'Biology, physics, chemistry, home or car fixes.', icon: 'chat' },
+  { title: 'Watch it drawn', body: 'Voiced, step by step. Ask a follow-up.', icon: 'board' },
+  { title: 'Replay any time', body: 'Your videos stay in your library, free to rewatch.', icon: 'library' },
 ]
 
 const FACTS = [
-  'Your first 20 videos are free, then around 20¢ a video.',  // founder's wording, 2026-10-22 / 23 (price first)
+  'Your first 20 videos are free.',  // founder's wording, 2026-10-22; the price after it went on 2026-11-22 (no price in copy since 9 Nov)
   'Replaying your own videos is free.',
-  'For ages 13 and over.',
   'Answers are written by AI and can be wrong.',
 ]
 
@@ -78,7 +79,7 @@ export default function AskRadlorPage() {
       <section className={s.hero}>
         <div className={s.heroText}>
           <Image src="/askradlor-logo.png" alt="" width={170} height={115} className={s.logo} priority />
-          <p className={s.eyebrow}>Any question · Ages 13+</p>
+          <p className={s.eyebrow}>Any question, drawn for you</p>
           <h1 className={s.h1}>Ask anything. Watch it drawn.</h1>
           <p className={s.lead}>
             Type a question and get a short voiced video that draws the answer step by step, like a teacher at a
@@ -103,7 +104,7 @@ export default function AskRadlorPage() {
         <ol className={s.steps}>
           {STEPS.map((t, i) => (
             <li key={t.title} className={s.card}>
-              <span className={s.num}>{i + 1}</span>
+              <span className="flex items-center justify-between"><span className={s.num}>{i + 1}</span><Icon name={t.icon} className="h-7 w-7 text-[#fafafa]" /></span>
               <h3 className={s.h3}>{t.title}</h3>
               <p>{t.body}</p>
             </li>

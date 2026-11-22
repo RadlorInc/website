@@ -187,7 +187,28 @@ export const SOURCES = {
 
 export type SourceId = keyof typeof SOURCES
 
-type Finding = { title: string; body: string; refs: readonly SourceId[]; limit: string }
+/**
+ * A picture of a finding. Every number in `rows` is copied from the finding's own text (and so from its source);
+ * the chart adds no number of its own. `tone` says which bar is the condition WITH pictures or video ('visual') and
+ * which is the comparison ('base'). Bars are drawn on a scale from 0 to `max`.
+ */
+export type Viz =
+  | { kind: 'bars'; unit: string; max: number; caption: string; rows: { label: string; value: number; shown: string; tone: 'base' | 'visual' }[] }
+  | { kind: 'stat'; value: string; caption: string }
+  | { kind: 'dots'; filled: number; total: number; caption: string }
+/** What KIND of evidence a finding rests on. Shown as a badge, so a reader sees a theory or one small study for what it is. */
+type Evidence = 'Meta-analysis' | 'Systematic review' | 'Review' | 'Randomized trial' | 'Series of experiments' | 'Lab studies' | 'Single study' | 'Theory' | 'Strong evidence (IES)' | 'Guidance' | 'Brain-imaging study'
+type Finding = {
+  id: string
+  title: string
+  /** One plain line under the chart. No number that `body` does not state. */
+  short: string
+  evidence: Evidence
+  viz?: Viz
+  body: string
+  refs: readonly SourceId[]
+  limit: string
+}
 type Section = { id: string; nav: string; eyebrow: string; title: string; intro: string; findings: Finding[] }
 
 const MIND: Section = {
@@ -199,31 +220,50 @@ const MIND: Section = {
     'Psychologists have tested this for more than fifty years. The strongest result is not “pictures are better”. It is that a picture and the words that explain it work best together.',
   findings: [
     {
+      id: 'multimedia',
       title: 'The multimedia principle',
+      short: 'Words with pictures beat words alone, by a large margin.',
+      evidence: 'Series of experiments',
+      viz: { kind: 'stat', value: 'd = 1.35', caption: 'Median effect size in 13 comparisons. Mayer counts above 0.4 as educationally important.' },
       body: 'In 13 experimental comparisons, students who learned from words and graphics did much better on a test that asked them to use the idea in a new problem than students who learned from words alone. The median effect size was d = 1.35, a large effect.',
       refs: ['mayer2023'],
       limit: 'Most of these were short lessons for college students in one research group, tested soon after the lesson. Mayer also says that not all graphics are equally useful.',
     },
     {
+      id: 'two-channels',
       title: 'Two channels: one for words, one for pictures',
+      short: 'Words and pictures go in through two channels, and each channel is small.',
+      evidence: 'Theory',
       body: 'Dual coding theory says that the mind keeps verbal and image-based representations, and that these two kinds work together. Multimedia learning research assumes that each channel can only process a small amount at a time.',
       refs: ['clarkPaivio1991', 'paivio1991', 'mayerMoreno2003'],
       limit: 'Dual coding is a theory, and it has critics: some researchers argue that all knowledge is stored in one abstract form.',
     },
     {
+      id: 'picture-memory',
       title: 'Picture memory is very large',
-      body: 'People who saw 10,000 pictures once, a few seconds each, still recognized most of them about two days later. Memory for pictures was better than memory for words. In a later study, adults who saw 2,500 object pictures picked the right one from a pair 87% to 92% of the time, even when the other picture was very similar.',
+      short: 'After 2,500 pictures, people still picked the right one most of the time.',
+      evidence: 'Lab studies',
+      viz: { kind: 'bars', unit: '%', max: 100, caption: 'Correct picks out of two (chance is 50%)', rows: [{ label: 'Different object', value: 92, shown: '92%', tone: 'visual' }, { label: 'Same kind, other example', value: 88, shown: '88%', tone: 'visual' }, { label: 'Same object, other state', value: 87, shown: '87%', tone: 'visual' }] },
+      body: 'People who saw 10,000 pictures once, a few seconds each, still recognized most of them about two days later. Memory for pictures was better than memory for words. In a later study, adults who saw 2,500 object pictures picked the right one from a pair 92%, 88% and 87% of the time in three tests, even when the other picture was very similar.',
       refs: ['standing1973', 'brady2008'],
       limit: 'These tests asked “have you seen this before?”, which is easier than understanding or using an idea. The groups were small (5 to 14 people).',
     },
     {
+      id: 'working-memory',
       title: 'Working memory is small',
+      short: 'We hold only about four new things in mind at once.',
+      evidence: 'Review',
+      viz: { kind: 'dots', filled: 4, total: 7, caption: 'About 4 chunks at once (3 to 5), fewer than the older figure of 7' },
       body: 'Adults hold only about three to five chunks of new information in mind at one time, about four on average.',
       refs: ['cowan2001'],
       limit: 'The number depends on the task, and other researchers debate it. It is the reason we teach one idea or one step at a time.',
     },
     {
+      id: 'design',
       title: 'Design matters as much as the picture',
+      short: 'Clean, in-step, well-placed pictures win almost every test.',
+      evidence: 'Series of experiments',
+      viz: { kind: 'bars', unit: 'tests', max: 1, caption: 'Share of tests where the design rule helped', rows: [{ label: 'Remove extra material', value: 18 / 19, shown: '18 of 19', tone: 'visual' }, { label: 'Say words with the picture', value: 1, shown: '8 of 8', tone: 'visual' }, { label: 'Put words next to the part', value: 1, shown: '9 of 9', tone: 'visual' }, { label: 'Split into learner-paced parts', value: 1, shown: '7 of 7', tone: 'visual' }] },
       body: 'The same research found that people learn better when extra material is removed (18 of 19 tests), when spoken words come at the same time as the picture (8 of 8), when words sit next to the part they describe (9 of 9) and when a lesson is split into learner-paced parts (7 of 7).',
       refs: ['mayer2023'],
       limit: 'A picture that is decorative, crowded or out of step with the words can make learning worse, not better. The effects are medians from one research group.',
@@ -240,37 +280,59 @@ const MOTION: Section = {
     'Is a video better than a still picture? On average a little. The gain is much larger for physical, step-by-step tasks, which is what how-to and support videos teach.',
   findings: [
     {
+      id: 'animation',
       title: 'Animation beats still pictures, most for how-to tasks',
+      short: 'Animation helps a little in general, and a lot for hands-on skills.',
+      evidence: 'Meta-analysis',
+      viz: { kind: 'bars', unit: 'd', max: 1.2, caption: 'Effect size of animation over still pictures (d)', rows: [{ label: 'All topics', value: 0.37, shown: '0.37', tone: 'base' }, { label: 'Realistic, video-like', value: 0.76, shown: '0.76', tone: 'visual' }, { label: 'Hands-on skills', value: 1.06, shown: '1.06', tone: 'visual' }] },
       body: 'A meta-analysis of 26 studies found a medium-sized advantage of instructional animations over static pictures (d = 0.37). The advantage was much larger when people learned a procedural-motor skill, something they must do with their hands (d = 1.06), and when the animation was realistic, for example video (d = 0.76).',
       refs: ['hoffler2007', 'berney2016'],
       limit: 'A later and larger meta-analysis (61 studies, 7,036 learners) found a smaller overall advantage (g = 0.226).',
     },
     {
+      id: 'hand-tasks',
       title: 'Hand tasks: knots and puzzle rings',
+      short: 'People learned knots and puzzles better from animation.',
+      evidence: 'Lab studies',
       body: 'In two experiments, students who learned to tie knots or solve puzzle rings from an animation learned more than students who saw the same steps as a series of still diagrams.',
       refs: ['ayres2009', 'watson2010'],
       limit: 'Small laboratory experiments with students. In an assembly study, animated instructions made the first build faster, but the advantage was gone by the third build.',
     },
     {
+      id: 'assembly',
       title: 'Clear step-by-step drawings cut assembly time',
+      short: 'One clear action per step: faster assembly, fewer errors.',
+      evidence: 'Single study',
+      viz: { kind: 'bars', unit: '%', max: 60, caption: 'Average cut compared with factory and hand-designed instructions', rows: [{ label: 'Assembly time', value: 35, shown: '−35%', tone: 'visual' }, { label: 'Errors', value: 50, shown: '−50%', tone: 'visual' }] },
       body: 'In a furniture-assembly study, step-by-step instructions designed with cognitive principles (one clear action per step) cut assembly time by 35% on average and errors by 50%, compared with factory instructions.',
       refs: ['heiser2004'],
       limit: 'These were still diagrams, not video. The study shows that clear steps matter; it does not test video.',
     },
     {
+      id: 'video-students',
       title: 'Video helps students, most when it adds to teaching',
+      short: 'Video helps students most when it is added to teaching.',
+      evidence: 'Systematic review',
+      viz: { kind: 'bars', unit: 'g', max: 1, caption: 'Effect size on learning (g), 105 trials', rows: [{ label: 'Video replaces teaching', value: 0.28, shown: '0.28', tone: 'base' }, { label: 'Video added to teaching', value: 0.8, shown: '0.80', tone: 'visual' }] },
       body: 'A review of 105 randomized trials with 7,776 university students found small gains when video replaced other teaching (g = 0.28) and strong gains when video was added to it (g = 0.80). In a study with 111 pupils in grades 5 and 6, a video tutorial beat a paper tutorial for a software task.',
       refs: ['noetel2021', 'vandermeij2014'],
       limit: 'The review is about university students, and adding video also adds study time. The pupils’ study is one task, and all groups improved, the paper group too.',
     },
     {
+      id: 'short-videos',
       title: 'Short, segmented videos',
+      short: 'Short parts beat one long video.',
+      evidence: 'Meta-analysis',
+      viz: { kind: 'stat', value: '≤ 6 min', caption: 'Median watch time, whatever the video length (6.9 million sessions)' },
       body: 'A meta-analysis of 56 investigations found that people learn better when a lesson comes in segments than as one continuous unit. In a study of 6.9 million video sessions, the median watch time was at most 6 minutes, whatever the length of the video.',
       refs: ['rey2019', 'guo2014'],
       limit: 'Segments also make learning take longer. The watch-time study measured attention, not learning, in adult online courses.',
     },
     {
+      id: 'sceptical',
       title: 'The sceptical view, and the best answer to it',
+      short: 'Motion alone does not teach. Clear content and steps do.',
+      evidence: 'Review',
       body: 'A well-known review found that many wins for animation came from unequal comparisons: the animation showed more information or let the learner interact. Video works best together with a few still key pictures, according to another study.',
       refs: ['tversky2002', 'arguel2009'],
       limit: 'This is why we do not claim that motion itself teaches. Content, clear steps and control over the pace do much of the work.',
@@ -286,13 +348,19 @@ const MATH: Section = {
   intro: 'The US Institute of Education Sciences reviews the research and writes guides for teachers. Two of its math guides give visual representations a strong rating.',
   findings: [
     {
+      id: 'ies-representations',
       title: 'Drawings, diagrams and number lines',
+      short: 'US education research rates visual math as strong evidence.',
+      evidence: 'Strong evidence (IES)',
       body: 'For elementary students who struggle with math, the guide recommends a well-chosen set of concrete and semi-concrete representations, and the number line. It rates the evidence for both as strong.',
       refs: ['ies2021'],
       limit: 'The guide is about small-group teaching led by a teacher, not about apps or video.',
     },
     {
+      id: 'ies-problem-solving',
       title: 'Teach students to use visual representations',
+      short: 'Students should learn to draw the problem, not only watch it.',
+      evidence: 'Strong evidence (IES)',
       body: 'For problem solving in grades 4 to 8, the guide recommends that teachers show students how to use visual representations such as tables and diagrams. It rates the evidence as strong.',
       refs: ['ies2012'],
       limit: 'The recommendation is that students learn to draw and use the visuals themselves, not only watch them.',
@@ -309,37 +377,58 @@ const MEDICINE: Section = {
     'Doctors and nurses give instructions that people must follow at home, often under stress. This is one of the best-tested places for pictures and video.',
   findings: [
     {
+      id: 'health-pictures',
       title: 'Pictures linked to the text raise attention and recall',
+      short: 'Pictures next to the words: more attention, better recall.',
+      evidence: 'Review',
       body: 'A review of health-communication research found that pictures closely linked to written or spoken text can markedly increase attention to and recall of health information, compared with text alone. People with low literacy are especially likely to benefit.',
       refs: ['houts2006'],
       limit: 'A narrative review with no pooled numbers. Pictures can also change adherence in either direction, because the emotional response to a picture matters.',
     },
     {
+      id: 'wound-care',
       title: 'Cartoons on wound-care sheets',
+      short: 'Cartoon instructions: more patients understood and followed them.',
+      evidence: 'Randomized trial',
+      viz: { kind: 'bars', unit: '%', max: 100, caption: 'Patients, text only vs text with cartoons', rows: [{ label: 'All questions right, text only', value: 6, shown: '6%', tone: 'base' }, { label: 'All questions right, with cartoons', value: 46, shown: '46%', tone: 'visual' }, { label: 'Daily wound care, text only', value: 54, shown: '54%', tone: 'base' }, { label: 'Daily wound care, with cartoons', value: 77, shown: '77%', tone: 'visual' }] },
       body: 'In a randomized study of 234 emergency patients, those who got wound-care instructions with cartoons more often read them (98% vs 79%), answered all wound-care questions correctly (46% vs 6%) and did their daily wound care (77% vs 54%).',
       refs: ['delp1996', 'austin1995'],
       limit: 'One hospital, cuts only, and wound care was self-reported by telephone three days later. An earlier study of 101 patients found a smaller gain: 65% vs 43% gave five or more correct answers out of 10.',
     },
     {
+      id: 'dosing',
       title: 'Picture-based medicine instructions cut dosing errors',
+      short: 'Picture instructions cut medicine dosing errors.',
+      evidence: 'Randomized trial',
+      viz: { kind: 'bars', unit: '%', max: 60, caption: 'Dosing errors for a daily medicine, more than 20% off the dose (lower is better)', rows: [{ label: 'Usual instructions', value: 47.8, shown: '47.8%', tone: 'base' }, { label: 'With pictograms', value: 5.4, shown: '5.4%', tone: 'visual' }] },
       body: 'In a randomized trial with 245 caregivers of young children, plain-language instructions with pictograms cut dosing errors for a daily liquid medicine from 47.8% to 5.4%.',
       refs: ['yin2008'],
       limit: 'The pictograms came together with plain language and counselling, so the effect of the pictures alone is not known. One hospital emergency department.',
     },
     {
+      id: 'health-overall',
       title: 'The overall picture: a moderate gain, and it varies',
+      short: 'Across many trials: a moderate gain, and results vary.',
+      evidence: 'Meta-analysis',
       body: 'A meta-analysis of randomized trials found that pictures in health information moderately improved knowledge and recall, with a larger gain for people with lower health literacy. A separate review found that pictures help most when they are used together with written or spoken instructions.',
       refs: ['schubbe2020', 'katz2006'],
       limit: 'The results differ a lot from study to study, and the authors ask readers to interpret them with caution. Some icons, for example clock faces, were too complex to help.',
     },
     {
+      id: 'discharge-video',
       title: 'Video instructions: promising, not proven',
+      short: 'Video did best on recall, but the gap was not significant.',
+      evidence: 'Meta-analysis',
+      viz: { kind: 'bars', unit: '%', max: 100, caption: 'Average correct recall (differences not significant)', rows: [{ label: 'Spoken', value: 47, shown: '47%', tone: 'base' }, { label: 'Written', value: 58, shown: '58%', tone: 'base' }, { label: 'Video', value: 67, shown: '67%', tone: 'visual' }] },
       body: 'Across emergency-department studies, patients correctly recalled on average 47% of spoken discharge instructions, 58% of written ones and 67% of video ones.',
       refs: ['hoek2020', 'tuong2014'],
       limit: 'These differences were not statistically significant, and only 7 of 51 studies used video. A review of video health education found that it changed some health behaviors but not others.',
     },
     {
+      id: 'health-guidance',
       title: 'US health agencies tell writers to use visuals',
+      short: 'US health agencies tell writers to add a clear visual.',
+      evidence: 'Guidance',
       body: 'The US Agency for Healthcare Research and Quality says videos are useful to demonstrate self-care, such as how to use an inhaler. The CDC scores health materials on whether they have at least one visual that supports the main message.',
       refs: ['ahrq', 'cdc'],
       limit: 'This is guidance, not a study. Both agencies also warn that a visual that is unclear or unrelated to the words can confuse people, and AHRQ says not to drop paper materials.',
@@ -355,7 +444,10 @@ const BRAIN: Section = {
   intro: 'Brain-imaging research gives one explanation of why pictures are easier to remember. It is an explanation, not proof.',
   findings: [
     {
+      id: 'brain',
       title: 'Pictures use the visual memory areas more',
+      short: 'Pictures use more of the brain\'s visual memory areas than words.',
+      evidence: 'Brain-imaging study',
       body: 'In a brain-imaging study, memorizing pictures used visual and memory areas of the brain more than memorizing words did. The authors suggest that this may explain why pictures are remembered better than words.',
       refs: ['grady1998'],
       limit: 'A small study of young adults with single objects and single words, not lessons or videos. “May explain” is the authors’ wording.',
@@ -389,23 +481,11 @@ export const NOT_CLAIMED: { title: string; body: string; refs: readonly SourceId
 ]
 
 /** Three findings for the home page. Each restates a finding above, with the same source. */
-export const HOME_EVIDENCE: { title: string; body: string; source: SourceId }[] = [
-  {
-    title: 'Words and pictures beat words alone',
-    body: 'In 13 experiments, students who learned from words and graphics did much better at using the idea than students who learned from words alone.',
-    source: 'mayer2023',
-  },
-  {
-    title: 'Animation helps most with how-to tasks',
-    body: 'Across 26 studies, animations beat still pictures, and the gain was largest for skills that people do with their hands.',
-    source: 'hoffler2007',
-  },
-  {
-    title: 'Pictures cut medicine errors',
-    body: 'In a randomized trial with 245 caregivers, picture-based instructions cut dosing errors for a daily liquid medicine from 47.8% to 5.4%.',
-    source: 'yin2008',
-  },
-]
+/** Three findings for the home page, by id. The home card shows the finding's own chart, line and first source. */
+export const HOME_EVIDENCE = ['multimedia', 'animation', 'dosing'] as const
+
+/** Every finding, by id. */
+export const FINDINGS = Object.fromEntries(SECTIONS.flatMap(s => s.findings).map(f => [f.id, f])) as Record<string, Finding>
 
 /** Number the sources in the order the page first cites them, then any that only the home page cites. */
 function sourceOrder(): SourceId[] {
@@ -413,7 +493,6 @@ function sourceOrder(): SourceId[] {
   const add = (id: SourceId) => { if (!seen.includes(id)) seen.push(id) }
   SECTIONS.forEach(s => s.findings.forEach(f => f.refs.forEach(add)))
   NOT_CLAIMED.forEach(n => n.refs.forEach(add))
-  HOME_EVIDENCE.forEach(h => add(h.source))
   return seen
 }
 /** The order of the numbered source list. */

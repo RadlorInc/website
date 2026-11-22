@@ -38,6 +38,12 @@
   /* THE LIGHT: the ring's core and the robot's eyes. It goes BEHIND words, never in them. */
   --glow: #22e9ff;
   --on-glow: #0a1119;
+
+  /* Chart marks (2026-11-22): the comparison condition and the condition WITH pictures or video. Checked with the
+     dataviz palette validator on --surface: lightness band, chroma, colour-blind and normal-vision separation and
+     contrast all pass. Marks only; chart text keeps the text colours. */
+  --viz-base: #b5853f;
+  --viz-visual: #2f8fe0;
 }
 
 @theme inline {

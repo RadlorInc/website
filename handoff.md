@@ -37,6 +37,17 @@
 >   lost "Placement check", "Camera chapters" and "Ages 3–18".
 
 
+## Visual pass (2026-11-22, branch `preview/visual-pass`)
+
+Founder: "too much text; make it visual and interactive". Client islands in `components/visual/`:
+`ProductTabs` (home: 3 tabs, one demo video plays at a time, none with reduced motion), `StepScrubber`
+(`/3d-videos`: slider + a button per step of the demo), `WordsVsPictures` (`/why-visual-learning`: the same 5
+steps as words or as pictures). Server parts: `Icon` (Lucide paths, inline) and `Viz` (bar chart, big number, dots).
+Findings in `content/evidence.ts` now carry `id`, `short`, `evidence` (a badge) and an optional `viz`; long text
+and limits sit in a "Details and limits" toggle. `check:evidence` fails if a chart shows a value its finding does
+not state. Chart colours `--viz-base` / `--viz-visual` pass the dataviz validator on the dark surface.
+`/askradlor` no longer states a price or "Ages 13+" (founder rules of 2 and 9 Nov 2026).
+
 ## Three products, one idea (2026-11-22, branch `preview/three-products`)
 
 Founder: Radlor is one company for visual learning and visual teaching, with three products. The home page now says
