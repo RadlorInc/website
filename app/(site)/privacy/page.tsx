@@ -7,7 +7,7 @@ import { ART } from '@/components/scroll/art'
 export const metadata: Metadata = {
   title: 'Privacy on this website',
   description:
-    'radlor.com sets no cookies, runs no analytics and loads nothing from a third party. There is one form — the waitlist — and it stores an email address and, if you pick one, your child’s grade. Nothing else. This page says exactly what does and does not happen when you read it.',
+    'radlor.com runs no analytics, loads nothing from a third party and sets no cookie unless you sign in to a 3D video order. This page says exactly what does and does not happen when you read it, sign up or pay.',
   alternates: { canonical: '/privacy' },
 }
 
@@ -66,7 +66,12 @@ export default function Privacy() {
 
       <div className="rl-prose prose mt-10">
         <h2>What this website does not do</h2>
-        <p>It sets no cookies. It runs no analytics. It loads nothing from anyone else&rsquo;s server.</p>
+        <p>
+          It runs no analytics. It loads nothing from anyone else&rsquo;s server. It sets no cookies while
+          you read it. The one exception is the sign-in for a{' '}
+          <a href="#3d-videos" className="rl-link">3D video order</a>, which sets one cookie, and only
+          after you sign in.
+        </p>
         <p>
           There is no Google Analytics, no advertising pixel, no session recorder, no chat widget and no
           embedded video. The typefaces are served from our own domain rather than from a font host, so
@@ -92,9 +97,8 @@ export default function Privacy() {
 
         <h2>The waitlist form</h2>
         <p>
-          There is one form on this site, at{' '}
-          <Link href="/waitlist" className="rl-link">the waitlist</Link>, and it is the only thing here
-          that collects anything. It stores{' '}
+          The waitlist form, at{' '}
+          <Link href="/waitlist" className="rl-link">the waitlist</Link>, stores{' '}
           <strong className="text-foreground font-medium">an email address</strong>, and{' '}
           <strong className="text-foreground font-medium">a grade if you pick one</strong> — that
           field is optional and &ldquo;rather not say&rdquo; is the default. There is no name field, no
@@ -120,6 +124,35 @@ export default function Privacy() {
           for the same reason — every one of them is somebody else&rsquo;s script.
         </p>
 
+        <h2 id="3d-videos">3D video orders</h2>
+        <p>
+          A brand that orders a 3D video library signs in at{' '}
+          <Link href="/3d-videos/signup" className="rl-link">/3d-videos/signup</Link> with an email
+          address. We email a sign-in code; there is no password. After you sign in, the site sets{' '}
+          <strong className="text-foreground font-medium">one cookie</strong>, <code>v3d_session</code>,
+          that keeps you signed in for up to 14 days. While you wait for the code, a second cookie,{' '}
+          <code>v3d_pending</code>, holds your email for 15 minutes. Both are needed for the sign-in.
+          Neither is used for tracking or analytics, and the sign-out button deletes them.
+        </p>
+        <p>
+          For an order we store what you type in the form (company, your name, phone, website, product,
+          video topics, languages, brand colors, links and notes), the files you upload (product photos,
+          manuals, logo) and the state of the order. It is stored in our database and a private file store,
+          hosted by <strong>Supabase</strong>. Only you, signed in, and our team can see it. We use it
+          only to make your videos and to write to you about the order.
+        </p>
+        <p>
+          Payments go through <strong>Stripe</strong>. When you press &ldquo;Pay&rdquo;, your browser goes
+          to Stripe&rsquo;s own checkout page, and your card details go to Stripe, never to us. Stripe
+          tells us that the payment went through, the amount, and its own customer and subscription ids.
+          Stripe&rsquo;s privacy policy covers what Stripe does with your payment.
+        </p>
+        <p>
+          Ask us to delete an order or your files at{' '}
+          <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>. We keep payment records for as long as
+          the law tells us to.
+        </p>
+
         <h2>If you write to us</h2>
         <p>
           The address on this site is <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>, and you
@@ -131,7 +164,7 @@ export default function Privacy() {
         <h2>Children</h2>
         <p>
           This website is written for adults — parents, teachers, people deciding whether to try{' '}
-          the {APP_NAME} app. It is not aimed at children, and the one form on it asks for an adult&rsquo;s email
+          the {APP_NAME} app. It is not aimed at children, and the waitlist form asks for an adult&rsquo;s email
           address so that we can write back about an account an adult would set up. We do not ask a
           child for anything here. Everything about what we store when a child actually uses the product
           is on <Link href="/data-and-safety" className="rl-link">data and safety</Link>.
