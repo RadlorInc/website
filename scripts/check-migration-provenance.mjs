@@ -50,7 +50,8 @@ try {
  * through a different door. The version stamp is all this gate needs: it maps a ledger row to an
  * owner, and a human verifying an entry looks the version up in that repo, where it is not secret.
  */
-const REVIEWER = 'RadlorInc/video-reviewer (private)'
+const REVIEWER = 'RadlorInc/radlor-ops (private; formerly RadlorInc/video-reviewer)'
+const FINANCE = 'RadlorInc/radlor-finance (private)'
 
 const SIBLING_OWNED = {
   '20260831165802': REVIEWER,
@@ -69,6 +70,31 @@ const SIBLING_OWNED = {
   '20260901143556': REVIEWER,
   '20260901150933': REVIEWER,
   '20260903185815': REVIEWER,
+  // Verified 2026-11-22: each version below was looked up in the named repo's `main`, and its
+  // ledger `statements` equal that file's SQL once comments and whitespace are removed. The file
+  // carries a different, earlier version stamp (written before the connector applied it); the
+  // migration name is the same. Look a version up by the ledger row's name, not by its stamp.
+  '20260908163402': REVIEWER,
+  '20260908184438': REVIEWER,
+  '20260909071020': REVIEWER,
+  '20260910131542': REVIEWER,
+  '20260910131551': REVIEWER,
+  '20260910131606': REVIEWER,
+  '20260910134722': REVIEWER,
+  '20260911141728': REVIEWER,
+  '20260921134721': REVIEWER,
+  '20260924175120': REVIEWER,
+  '20260924185753': REVIEWER,
+  '20260927012952': FINANCE,
+  '20260927020350': FINANCE,
+  '20260928023145': REVIEWER,
+  '20260928024748': REVIEWER,
+  '20260928030705': REVIEWER,
+  '20260928032950': REVIEWER,
+  '20260928035232': REVIEWER,
+  '20260929012603': REVIEWER,
+  '20261001175237': REVIEWER,
+  '20261004224345': REVIEWER,
 }
 
 const LEDGER_SQL =
