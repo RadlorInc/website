@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { ASK_NAME, COMPANY, SITE_URL, TAGLINE, V3D_NAME, V3D_PATH, VISION, WHY_PATH } from '@/site'
+import { APP_NAME, ASK_NAME, COMPANY, SITE_URL, TAGLINE, V3D_NAME, V3D_PATH, VISION, WHY_PATH } from '@/site'
 import { posts } from '@/content/posts'
 import { HOME_EVIDENCE, SOURCES } from '@/content/evidence'
 import { POST_COVERS } from '@/components/scroll/art'
@@ -18,9 +18,6 @@ import { POST_COVERS } from '@/components/scroll/art'
  * the first screen is now the message alone.)
  */
 
-/** The kids' maths app is called Radlic again (founder, 2026-11-22). `APP_NAME` in site.ts changes in its own pull
- *  request; when that is merged, replace this constant with `APP_NAME`. */
-const RADLIC = 'Radlic'
 
 const PRODUCTS = [
   {
@@ -38,7 +35,7 @@ const PRODUCTS = [
     cta: `See ${ASK_NAME}`,
   },
   {
-    name: RADLIC,
+    name: APP_NAME,
     who: 'For children and parents · Math, grades K–8',
     what: 'Math lessons that adapt. A teacher at the chalkboard explains one idea, then practice follows what your child gets right and wrong.',
     benefits: [
@@ -47,9 +44,9 @@ const PRODUCTS = [
       'A miss brings the worked steps, not a red mark',
       'Parents choose the lessons; a child needs no email',
     ],
-    pic: { src: '/radlic-demo-poster.jpg', w: 1920, h: 1080, alt: `The ${RADLIC} app: picking a math topic by grade` },
+    pic: { src: '/radlic-demo-poster.jpg', w: 1920, h: 1080, alt: `The ${APP_NAME} app: picking a math topic by grade` },
     page: '/radlic',
-    cta: `See ${RADLIC}`,
+    cta: `See ${APP_NAME}`,
   },
   {
     name: V3D_NAME,

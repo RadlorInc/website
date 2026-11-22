@@ -23,7 +23,7 @@ import { DRAFT, WEBSITE_TERMS, unresolvedPlaceholders } from '@/content/legal'
 export const metadata: Metadata = {
   title: 'Terms of Use',
   description:
-    'The Terms of Use for radlor.com, the website — what this site is, what it collects, and what its content does and does not promise. It is a separate and much shorter agreement than the one covering the Radlor app.',
+    'The Terms of Use for radlor.com, the website — what this site is, what it collects, and what its content does and does not promise. It is a separate and much shorter agreement than the one covering the Radlic app.',
   alternates: { canonical: '/terms' },
 }
 
@@ -43,7 +43,7 @@ export default async function Terms() {
         <h1 className="rl-focus font-display text-5xl">{WEBSITE_TERMS.title}</h1>
         <p className="rl-rise mt-6 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.12s' } as React.CSSProperties}>
           These cover <strong className="text-foreground font-medium">radlor.com</strong>, the website
-          you are reading. The {APP_NAME} app — the product — is a separate service with its own Terms of
+          you are reading. {APP_NAME} — the product — is a separate service with its own Terms of
           Service, which you accept when you create an account there.
         </p>
         </div>

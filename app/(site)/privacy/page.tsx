@@ -56,7 +56,7 @@ export default function Privacy() {
       <h1 className="rl-focus font-display text-5xl">Privacy on this website</h1>
       <p className="rl-rise mt-6 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.12s' } as React.CSSProperties}>
         This page is about <strong className="text-foreground font-medium">radlor.com</strong>, the site
-        you are reading. The {APP_NAME} app — the product — handles children&rsquo;s data and has its own,
+        you are reading. {APP_NAME} — the product — handles children&rsquo;s data and has its own,
         longer policy.
       </p>
         </div>
@@ -164,7 +164,7 @@ export default function Privacy() {
         <h2>Children</h2>
         <p>
           This website is written for adults — parents, teachers, people deciding whether to try{' '}
-          the {APP_NAME} app. It is not aimed at children, and the waitlist form asks for an adult&rsquo;s email
+          {APP_NAME}. It is not aimed at children, and the waitlist form asks for an adult&rsquo;s email
           address so that we can write back about an account an adult would set up. We do not ask a
           child for anything here. Everything about what we store when a child actually uses the product
           is on <Link href="/data-and-safety" className="rl-link">data and safety</Link>.
@@ -179,8 +179,8 @@ export default function Privacy() {
               policy on /data-and-safety is a different case and stays clickable — a policy
               nobody can open is not a published policy. */}
           {/* Founder-approved wording, 2026-09-25 (the rename, and the product page moving here). */}
-          The {APP_NAME} app lives at{' '}
-          <strong className="text-foreground font-medium">app.radlor.com</strong> and is a different piece of
+          {APP_NAME}, the app, lives at{' '}
+          <strong className="text-foreground font-medium">radlic.com</strong> and is a different piece of
           software with accounts and a database. This page also covers radlor.com/radlic, which only
           describes it. Its policy is published there, and the plain-English version is on{' '}
           <Link href="/data-and-safety" className="rl-link">data and safety</Link>.
