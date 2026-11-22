@@ -87,7 +87,7 @@ test('order form: accepts good input, refuses bad', () => {
   const cases: [string, string, string][] = [
     ['plan', 'enterprise', 'plan'], ['terms', '', 'terms'], ['company', '', 'company'],
     ['company', 'x'.repeat(201), 'company'], ['website', 'javascript:alert(1)', 'website'],
-    ['product_url', 'ftp://x.y', 'product_url'], ['notes', 'a\u0000b', 'notes'],
+    ['product_url', 'ftp://x.y', 'product_url'], ['product_name', 'a\u0000b', 'product_name'],
     ['languages', 'English, Spanish', 'languages'],
   ]
   for (const [k, v, err] of cases) {
