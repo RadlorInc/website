@@ -43,7 +43,7 @@ ${COMPANY} is a company with one purpose: visual learning and visual teaching. I
 It makes three products. The first is ${APP_NAME}: adaptive math for kindergarten through grade 8. It runs at ${APP_URL} and is
 open to try: ${APP_URL}/auth is where a parent makes an account, and the URL to give somebody who
 wants to try it. ${APP_NAME} was called Milo until August 2026 and
-AdaptiveLearn, at adaptivelearn.radlor.com, until September 2026. Its old address radlic.com redirects to ${APP_URL}.
+AdaptiveLearn, at adaptivelearn.radlor.com, until September 2026. Its address app.radlor.com (14–22 November 2026) redirects to ${APP_URL}.
 
 ${APP_NAME} teaches one idea per lesson: a teacher says each step out loud and writes or draws it on
 the board, then the child tries one with hints and worked steps to fall back on. Practice adapts

@@ -155,7 +155,7 @@ export default function DataAndSafety() {
           <p>
             <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a> reaches the people who built the thing.
             The full legal policy is published inside the product at{' '}
-            <a href={`${APP_URL}/legal/privacy`}>app.radlor.com/legal/privacy</a>; this page is
+            <a href={`${APP_URL}/legal/privacy`}>radlic.com/legal/privacy</a>; this page is
             the same facts without the lawyering. Privacy on this website — as opposed to in the product —
             is <Link href="/privacy" className="rl-link">its own short page</Link>.
           </p>

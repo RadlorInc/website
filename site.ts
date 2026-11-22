@@ -85,9 +85,9 @@ export const SUPPORT_TEL = '+18888129373'
 
 /** The live product. Its own origin — a separate Vercel project, deployed from the app repo. Called AdaptiveLearn at
  *  adaptivelearn.radlor.com until 2026-09-24 (RENAME-MANUAL §D in the app repo); its landing page is `/radlic` here. */
-export const APP_URL = 'https://app.radlor.com'
-/** The name is Radlic again (founder, 2026-11-22; it was "Radlor" from 2026-11-14). The app stays at app.radlor.com
- *  until the founder decides the domain; radlic.com redirects there. */
+export const APP_URL = 'https://radlic.com'
+/** The name is Radlic again (founder, 2026-11-22; it was "Radlor" from 2026-11-14). The app is at radlic.com again (founder, 2026-11-22);
+ *  app.radlor.com (its address 2026-11-14 to 2026-11-22) redirects there. */
 export const APP_NAME = 'Radlic'
 
 /**
