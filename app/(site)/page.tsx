@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { APP_NAME, ASK_NAME, COMPANY, SITE_URL, TAGLINE, V3D_NAME, V3D_PATH, VISION, WHY_PATH } from '@/site'
+import { APP_NAME, ASK_NAME, COMPANY, SITE_URL, TAGLINE, V3D_CTA, V3D_LINE, V3D_NAME, V3D_PATH, V3D_SIGNUP_PATH, VISION, WHY_PATH } from '@/site'
 import { posts } from '@/content/posts'
 import { FINDINGS, HOME_EVIDENCE, SOURCES } from '@/content/evidence'
 import { ProductTabs, type TabProduct } from '@/components/visual/ProductTabs'
@@ -21,8 +21,24 @@ import { POST_COVERS } from '@/components/scroll/art'
  */
 
 
-/** One row per product. `chips` are the benefits as 2-5 word labels with an icon (founder, 2026-11-22: less text). */
+/** One row per product, in tab order: 3Dlor, Ask Radlor, Radlic (founder, 2026-11-23). `chips` are the benefits as 2-5 word labels with an icon (founder, 2026-11-22: less text). */
 const PRODUCTS: (TabProduct & { pic: { src: string; w: number; h: number } })[] = [
+  {
+    id: '3d',
+    name: V3D_NAME,
+    who: 'For product brands',
+    line: 'Short 3D videos that show your customers how to set up, use, clean and fix your product.',
+    chips: [
+      { icon: 'library', label: 'A full library, not one video' },
+      { icon: 'camera', label: 'Starts from product photos' },
+      { icon: 'box', label: 'Exploded views' },
+      { icon: 'formats', label: 'Tall, wide and square' },
+    ],
+    page: V3D_PATH,
+    cta: `See ${V3D_NAME}`,
+    media: { video: '/3d-videos-demo.mp4', poster: '/3d-videos-demo-poster.jpg', w: 720, h: 1280, label: 'Demo, no sound: how to clean a French press, with the filter taken apart into three labelled parts' },
+    pic: { src: '/3d-videos-card.jpg', w: 1600, h: 1000 },
+  },
   {
     id: 'ask',
     name: ASK_NAME,
@@ -55,22 +71,6 @@ const PRODUCTS: (TabProduct & { pic: { src: string; w: number; h: number } })[] 
     media: { video: '/radlic-demo.mp4', poster: '/radlic-demo-poster.jpg', w: 1920, h: 1080, label: `${APP_NAME} demo, no sound: a child picks a math topic and a lesson plays at the chalkboard` },
     pic: { src: '/radlic-demo-poster.jpg', w: 1920, h: 1080 },
   },
-  {
-    id: '3d',
-    name: V3D_NAME,
-    who: 'For product brands',
-    line: 'Short 3D videos that show your customers how to set up, use, clean and fix your product.',
-    chips: [
-      { icon: 'library', label: 'A full library, not one video' },
-      { icon: 'camera', label: 'Starts from product photos' },
-      { icon: 'box', label: 'Exploded views' },
-      { icon: 'formats', label: 'Tall, wide and square' },
-    ],
-    page: V3D_PATH,
-    cta: `See ${V3D_NAME}`,
-    media: { video: '/3d-videos-demo.mp4', poster: '/3d-videos-demo-poster.jpg', w: 720, h: 1280, label: 'Demo, no sound: how to clean a French press, with the filter taken apart into three labelled parts' },
-    pic: { src: '/3d-videos-card.jpg', w: 1600, h: 1000 },
-  },
 ]
 
 const btn = 'rl-cta inline-flex min-h-11 items-center rounded-full px-6 py-3 font-medium'
@@ -92,10 +92,14 @@ export default function Home() {
           <p className="mt-6 max-w-[38rem] text-xl leading-relaxed text-muted">
             {COMPANY} builds products that explain by showing.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a href="#products" className={primary}>See the three products</a>
-            <Link href={WHY_PATH} className={quiet}>Why visual learning works</Link>
+          {/* ONE PRIMARY ACTION (founder, 2026-11-23: 3Dlor first): its sign-up, then its page as the quiet second.
+              The other two products stay one link away and in the tabs below. */}
+          <p className="mt-8 text-lg"><span className="font-semibold">{V3D_NAME}</span> <span className="text-muted">· {V3D_LINE}</span></p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Link href={V3D_SIGNUP_PATH} className={`${primary} font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent`}>{V3D_CTA}</Link>
+            <Link href={V3D_PATH} className={quiet}>See {V3D_NAME}</Link>
           </div>
+          <a href="#products" className="rl-link mt-5 inline-block text-sm text-muted hover:text-foreground">Or see all three products ↓</a>
           </div>
           {/* One frame from each product, stacked. Decorative: the cards below name and describe each one. */}
           <div aria-hidden="true" className="relative mx-auto hidden aspect-[4/5] w-full max-w-[340px] md:block">
@@ -154,7 +158,7 @@ export default function Home() {
             {posts.slice(0, 3).map(p => (
               <li key={p.slug}>
                 <Link href={`/writing/${p.slug}`} className="group block">
-                  <Image src={POST_COVERS[p.slug].src} alt="" width={POST_COVERS[p.slug].w} height={POST_COVERS[p.slug].h} className="h-44 w-auto mx-auto" />
+                  <Image src={POST_COVERS[p.slug].src} alt="" width={POST_COVERS[p.slug].w} height={POST_COVERS[p.slug].h} className={`h-44 w-auto mx-auto${POST_COVERS[p.slug].photo ? ' rl-photo' : ''}`} />
                   <span className="mt-4 block font-display text-xl leading-snug group-hover:text-accent transition-colors">{p.title}</span>
                 </Link>
               </li>

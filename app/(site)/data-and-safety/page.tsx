@@ -148,7 +148,7 @@ export default function DataAndSafety() {
       ),
     },
     {
-      ...ART.contactHero, title: 'Asking us anything',
+      ...ART.contactPhoto, title: 'Asking us anything',
       body: <><a href={`mailto:${SUPPORT_EMAIL}`} className="rl-link text-accent">{SUPPORT_EMAIL}</a> reaches the people who built it.</>,
       more: (
         <>

@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { APP_NAME, APP_URL, HEADER, SUPPORT_EMAIL } from '@/site'
 import { SiteChrome } from '@/components/SiteChrome'
+import { ART } from '@/components/scroll/art'
 
 /**
  * The 404. Until 2026-09-07 this file did not exist and Next served its own default — an unstyled
@@ -23,8 +24,8 @@ export default function NotFound() {
   return (
     <SiteChrome>
     <section className="mx-auto max-w-5xl px-6 pt-20 pb-24">
-      {/* `rl-dark` keeps this panel dark in both themes, like the header. The picture is a 2D illustration on a
-          transparent ground (2026-09-29), so it needs no blend. */}
+      {/* `rl-dark` keeps this panel dark in both themes, like the header. The picture is a real photo (2026-11-23):
+          an empty frame, with the soft `.rl-photo` edges so it is not a box inside the box. */}
       <div className="rl-dark rounded-2xl border border-line overflow-hidden">
         <div className="flex flex-col sm:flex-row items-center gap-8 p-8 sm:p-12">
           {/* Decorative: the sentence beside it already says everything this says.
@@ -32,15 +33,15 @@ export default function NotFound() {
               accessibility tree, and there is real text next to it, so announcing the mascot would
               add a noun a screen reader user cannot use. */}
           <Image
-            src="/about-how.webp"
+            src={ART.notFound.src}
             alt=""
             aria-hidden="true"
-            width={804}
-            height={723}
+            width={ART.notFound.w}
+            height={ART.notFound.h}
             /* Above the fold on this page — lazy-loading it leaves an empty panel for a beat on the
                one page a visitor arrives at already confused. */
             priority
-            className="w-40 sm:w-56 h-auto shrink-0"
+            className="rl-photo w-48 sm:w-64 h-auto shrink-0"
           />
           <div className="text-center sm:text-left">
             <p className="text-sm uppercase tracking-[0.18em] text-accent font-medium">404</p>
