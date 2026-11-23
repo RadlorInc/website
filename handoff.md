@@ -10,6 +10,43 @@
 > this sentence** — `du -h handoff.md` is one word longer and cannot go stale. When it creeps back
 > up, split again by the same test: *does this section still change what anyone does next?*
 
+> 🧭 **2026-11-23 — START HERE: where the 14–23 Nov sessions left off** (one long founder session and its side sessions).
+> Written in the past tense on purpose: re-check anything here before you act on it.
+> - **Merged on `main` by 23 Nov:** company home page with 3 products (#21, #24); the app named Radlic again (#22, #26;
+>   also learn#489, internal#4); `/why-visual-learning` charts (#27); `check:migrations` owners (#25); the 3Dlor product:
+>   sign-up, Stripe, rename to 3Dlor, Stripe gate, faster steps, shorter form (#23, #28–#31); "Start with 3Dlor" as the
+>   one primary button in the header and home hero, and the home tabs in the order 3Dlor, Ask Radlor, Radlic (#34);
+>   real photos instead of the generated drawings on every company page except `/radlic` (#35, #36; credits in
+>   `docs/image-credits.md`, rules: no people, no hands, no logos, checked at full size, soft `.rl-photo` edges).
+> - **#32** (simpler consent checkbox, feedback on every click, the customer comes back after payment, a care-plan
+>   list): `main` was merged into it on 23 Nov and every check passed. Its care-plan list describes the #33 help page,
+>   which is not live; fix that text before sign-up opens if #33 is still not merged.
+> - **Waiting for the founder:** #33 (3Dlor help page: live videos in the 3D player, part search). It needs a hand-run
+>   migration on the shared Supabase project (3 tables, an anon read grant, a storage bucket) and adds the public route
+>   `/help/<brand>/<product>`. Do not merge it or run its migration without the founder's word. learn#486 (old handoff,
+>   stale since the rename went back) can be closed.
+> - **Orphaned folder:** `w-site-home-order` (branch `preview/home-3dlor-first`) holds uncommitted work from a deleted
+>   session. Its useful parts are now on `main` (home order via #34; this note and the 3Dlor row in CLAUDE.md). Its SVG
+>   figures and image deletes are obsolete (real photos won), and the founder chose to keep the drawings on `/radlic`.
+>   Do not push it; remove the folder once the founder agrees.
+> - **Still open with the founder:** the 3Dlor prices and the steps to open sign-up (next note); which domain Radlic uses
+>   (`radlic.com` is in `site.ts`); the #33 migration.
+> - **Disk:** on 23 Nov the Mac was nearly full (383 MB free that day). Delete `node_modules` in old `w-site-*` worktrees first.
+
+> 🧊 **2026-11-23 — 3Dlor sign-up code is merged; it was CLOSED on production that day** (PRs #23, #30, #31). Code:
+> `/3dlor/signup`, `/3dlor/account`, `app/api/3dlor/`; prices only in `app/api/3dlor/_lib/plans.ts` (draft; read the
+> file, not a copy here). Tests: `npm run test:3d`, `scripts/test-3dlor-flow.mjs` (local).
+> To open it, the founder does these, in order, asking before each live step:
+> 1. Confirm the prices in `plans.ts`.
+> 2. Apply `20261122000000_v3d_orders.sql` then `20261123000000_v3d_topics_optional.sql` by hand on radlor-site (not `db push`).
+> 3. Auth: allow sign-ups, paste `supabase/templates/3dlor-code.html` into "Magic Link" and "Confirm signup", set own SMTP.
+> 4. Vercel env (Production): `V3D_SESSION_SECRET`, `STRIPE_SECRET_KEY` (live), `STRIPE_WEBHOOK_SECRET`, `SUPABASE_ANON_KEY`; redeploy.
+> 5. Live Stripe: webhook `https://radlor.com/api/3dlor/webhook` (checkout.session.completed, checkout.session.async_payment_succeeded,
+>    customer.subscription.updated, customer.subscription.deleted); save the live customer portal.
+> 6. Vercel firewall: add a bypass rule for `/api/3dlor/webhook`.
+> Until step 4, `configured()` is false and the pages say "not open yet". Whether steps 2–6 ran is not recorded here;
+> `npm run check:migrations` and the live `/3dlor/signup` page tell you.
+
 > 📊 **2026-11-22 — `/why-visual-learning` charts.** Each finding now picks a chart by the shape of its fact
 > (`Viz` kinds in `content/evidence.ts`: scale, rings, tally, columns, cut, waffles, stat, dots), drawn in
 > `components/visual/Viz.tsx` with no library. The wound-care waffle has a radio switch (CSS only, works without JS);
