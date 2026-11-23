@@ -80,6 +80,29 @@
 >   lost "Placement check", "Camera chapters" and "Ages 3–18".
 
 
+## 3Dlor help pages (2026-11-23, branch `preview/3dlor-help-page`, not merged)
+
+Founder: one public page per brand product at `/help/<brand>/<product>` (from the QR code on the box or manual), with
+all its videos and a search that plays the exact part that answers a question. Founder's choice (option C): the page
+plays the videos LIVE in the 3D player (no MP4 stored); an MP4 is rendered only when a brand asks for one.
+- **Data:** `supabase/migrations/20261124000000_v3d_help.sql` (apply by hand, after the two `v3d_orders` files):
+  `v3d_help_products` → `v3d_help_videos` (model id + step script + optional voice file) → `v3d_help_parts`
+  (title, start/end seconds, keywords, optional still picture). Private bucket `v3d-help`. `npm run test:help-rls`
+  re-checks the grants on a throwaway local database (Docker).
+- **Page:** `app/help/[brand]/[product]/page.tsx` + `components/help/HelpPlayer.tsx`. Reads with the anon key (RLS shows
+  published rows only; changes show within about a minute). Files come through `app/api/help/[kind]/[id]/route.ts`
+  (voice with Range, still pictures, player files), so the browser talks only to radlor.com. Pages are `noindex`
+  and not in `PAGES` or the sitemap.
+- **Search:** `app/help/_lib/help.ts`, in the browser (no API call, no AI). Keyword 3, title 2, spoken text 1; small
+  same-meaning list. Without JavaScript the form sends `?q=` and the same code runs on the server.
+- **Weak phones:** data saver, 2G, ≤ 2 GB memory or no WebGL get the part's still picture + voice + captions; the 3D
+  player itself draws fewer pixels when frames are slow. "Pictures only" button too.
+- **Upload:** `node --env-file=.env.local scripts/help-upload.mjs <folder>` (format at the top of the file;
+  `--check` uploads nothing). The player files come from the player's shipped copy (`ship-player.mjs --out`). A new
+  product is a draft; `HELP_SHOW_DRAFTS=1` + `npm run dev` shows drafts locally; the founder sets `published = true`.
+- **Not in v1:** turning/zooming the model by hand, a QR code maker, an admin upload page, a log of unanswered
+  questions, embeddings search (needs a paid AI call per question: founder decision).
+
 ## Visual pass (2026-11-22, branch `preview/visual-pass`)
 
 Founder: "too much text; make it visual and interactive". Client islands in `components/visual/`:
