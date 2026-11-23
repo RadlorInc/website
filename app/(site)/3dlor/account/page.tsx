@@ -5,6 +5,8 @@ import { SUPPORT_EMAIL, V3D_NAME } from '@/site'
 import { SignIn, Notice } from '@/components/v3d/SignIn'
 import { StripeButton } from '@/components/v3d/StripeButton'
 import { Uploader } from '@/components/v3d/Uploader'
+import { PendingButton } from '@/components/v3d/PendingButton'
+import { PaymentWait } from '@/components/v3d/PaymentWait'
 import { PLANS, isPlan, depositCents, balanceCents, FREE_MONTHS, usd } from '@/app/api/3dlor/_lib/plans'
 import { configured, dbJson, pendingFrom, sessionFrom } from '@/app/api/3dlor/_lib/server'
 
@@ -28,6 +30,19 @@ const date = (iso: string) => new Date(iso).toLocaleDateString('en-US', { year: 
 const CARE: Record<string, string> = {
   trialing: 'free months', active: 'active, month to month', past_due: 'card payment failed, please update your card',
   canceled: 'canceled', unpaid: 'card payment failed, please update your card', paused: 'paused',
+}
+
+/** One plain sentence: what the customer does now, so nobody has to guess. */
+function nextStep(payment: Order['payment_status'], hasManual: boolean): string {
+  if (payment === 'refunded') return 'nothing. This order was refunded.'
+  if (payment === 'unpaid') {
+    return hasManual
+      ? 'pay the first half below to start. You can add more files at any time.'
+      : 'upload your manual, photos and logo at the bottom of this page, then pay the first half to start.'
+  }
+  return hasManual
+    ? 'nothing for you right now. We read your manual and email you the list of videos we will make. You approve each script before we make a video.'
+    : 'upload your manual at the bottom of this page. We read it and email you the list of videos we will make.'
 }
 
 function Stat({ n, label }: { n: number; label: string }) {
@@ -72,14 +87,10 @@ export default async function Account({ searchParams }: PageProps<'/3dlor/accoun
       <h1 className="font-display text-4xl sm:text-5xl leading-tight">Your {V3D_NAME} order</h1>
       <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-muted">
         <span>Signed in as {session.email}</span>
-        <form method="post" action="/api/3dlor/auth/signout"><button className="rl-link text-accent">Sign out</button></form>
+        <form method="post" action="/api/3dlor/auth/signout"><PendingButton className="rl-link text-accent" pending="Signing out…">Sign out</PendingButton></form>
       </div>
       <Notice e={e} />
-      {sp.paid === '1' && orders.some(o => o.payment_status === 'unpaid') && (
-        <p role="status" className="mt-6 rounded-lg border border-line px-4 py-3">
-          Thank you. Stripe is confirming the payment. This page shows it as paid when the confirmation arrives; reload in a minute.
-        </p>
-      )}
+      {sp.paid === '1' && <PaymentWait waiting={orders.some(o => o.payment_status === 'unpaid')} />}
 
       {orders.length === 0 && (
         <p className="mt-10">You have no order yet. <Link className="rl-link text-accent" href="/3dlor/signup">Start your library →</Link></p>
@@ -95,6 +106,11 @@ export default async function Account({ searchParams }: PageProps<'/3dlor/accoun
           <article key={o.id} className="mt-12 rounded-2xl border border-line p-6">
             <h2 className="text-2xl font-display">{o.product_name}</h2>
             <p className="text-muted text-sm mt-1">{o.company} · {p.name} package · ordered {date(o.created_at)}</p>
+
+            <p className="mt-6 rounded-lg border border-accent/50 bg-accent-soft px-4 py-3">
+              <strong>Next step: </strong>
+              {nextStep(o.payment_status, mine.some(f => f.kind === 'manual'))}
+            </p>
 
             <h3 className="mt-8 font-medium">Payment</h3>
             {o.payment_status === 'unpaid' ? (
