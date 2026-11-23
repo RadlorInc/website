@@ -16,7 +16,8 @@ import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 're
  * drawn: the circle open, the picture full size, the path drawn. JS moves things back to their start only after mount.
  */
 
-export type Pic = { src: string; w: number; h: number }
+/** `photo`: a real photo (2026-11-23), drawn with the soft `.rl-photo` edges instead of as a hard box. */
+export type Pic = { src: string; w: number; h: number; photo?: boolean }
 
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v))
 
@@ -67,7 +68,7 @@ export function CircleReveal({ pic, priority = false, className = '' }: { pic: P
   useEffect(() => () => cancelAnimationFrame(anim.current), [])
   return (
     <div ref={box} className={`rl-circle ${className}`}>
-      <Image src={pic.src} alt="" width={pic.w} height={pic.h} priority={priority} sizes="(max-width: 760px) 80vw, 460px" />
+      <Image src={pic.src} alt="" width={pic.w} height={pic.h} priority={priority} sizes="(max-width: 760px) 80vw, 460px" className={pic.photo ? 'rl-photo' : undefined} />
     </div>
   )
 }
@@ -141,7 +142,7 @@ export function PathRows({ rows }: { rows: PathRow[] }) {
       </svg>
       {rows.map((row, i) => (
         <div key={row.title} className="rl-path-row" data-lit={i < lit || undefined}>
-          <Image src={row.src} alt="" width={row.w} height={row.h} className="rl-path-pic" sizes="(max-width: 760px) 70vw, 320px" />
+          <Image src={row.src} alt="" width={row.w} height={row.h} className={`rl-path-pic${row.photo ? ' rl-photo' : ''}`} sizes="(max-width: 760px) 70vw, 320px" />
           <div className="rl-path-text">
             <h2 className="font-display text-3xl leading-tight">
               {row.href ? <Link href={row.href} className="hover:text-accent transition-colors">{row.title}</Link> : row.title}

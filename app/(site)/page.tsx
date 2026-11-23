@@ -158,7 +158,7 @@ export default function Home() {
             {posts.slice(0, 3).map(p => (
               <li key={p.slug}>
                 <Link href={`/writing/${p.slug}`} className="group block">
-                  <Image src={POST_COVERS[p.slug].src} alt="" width={POST_COVERS[p.slug].w} height={POST_COVERS[p.slug].h} className="h-44 w-auto mx-auto" />
+                  <Image src={POST_COVERS[p.slug].src} alt="" width={POST_COVERS[p.slug].w} height={POST_COVERS[p.slug].h} className={`h-44 w-auto mx-auto${POST_COVERS[p.slug].photo ? ' rl-photo' : ''}`} />
                   <span className="mt-4 block font-display text-xl leading-snug group-hover:text-accent transition-colors">{p.title}</span>
                 </Link>
               </li>
