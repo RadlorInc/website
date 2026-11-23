@@ -733,7 +733,7 @@ body {
 
 /* F · circle reveal */
 .rl-circle { clip-path: circle(var(--r, 8%) at 50% 48%); }
-.rl-circle img { width: 100%; height: auto; border-radius: 1.25rem; }  /* the corner shows only on a photo; a drawing's edge is transparent */
+.rl-circle img { width: 100%; height: auto; }
 
 /* E · zoom: a pinned stretch two screens tall; the picture scales, the heading fades in last */
 .rl-zoom { position: relative; height: 210svh; }
@@ -752,7 +752,20 @@ body {
 .rl-path-row { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: clamp(1.5rem, 5vw, 4rem); transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1); }
 .rl-path-row:not([data-lit]) { opacity: 0.18; transform: translateY(24px); }
 .rl-path-row:nth-child(odd of .rl-path-row) .rl-path-pic { order: 2; }
-.rl-path-pic { width: min(340px, 100%); height: auto; justify-self: center; border-radius: 1rem; }
+.rl-path-pic { width: min(340px, 100%); height: auto; justify-self: center; }
+
+/* REAL PHOTOS (2026-11-23). A photo drawn as a plain rectangle reads as a big box on this dark page (founder). So every
+   edge fades out over 14% and the picture melts into the ground, the way the drawings' transparent edges did, and its
+   colour is calmed a little toward the night palette. Drawings never get this class. */
+.rl-photo {
+  filter: saturate(0.85) brightness(0.92);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent),
+    linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent),
+    linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+  mask-composite: intersect;
+}
 .rl-path-text { position: relative; min-width: 0; max-width: 28rem; background: var(--background); border-radius: 12px; padding: 0.5rem 0.25rem; } /* the line passes behind the words, never through them */
 .rl-more summary { cursor: pointer; color: var(--accent); font-size: 0.95rem; font-weight: 500; list-style: none; }
 .rl-more summary::-webkit-details-marker { display: none; }

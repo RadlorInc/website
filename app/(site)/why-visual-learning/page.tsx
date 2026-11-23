@@ -84,16 +84,21 @@ export default function WhyVisualLearning() {
       <div className="mx-auto max-w-5xl px-6">
         {SECTIONS.map(sec => (
           <section key={sec.id} id={sec.id} className="scroll-mt-20 border-b border-line py-16">
-            <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-xl bg-accent-soft text-accent"><Icon name={SECTION_ICON[sec.id]} className="h-5 w-5" /></span>
-              <p className={eyebrow}>{sec.eyebrow}</p>
+            {/* Heading left, the section's photo right (2026-11-23): smaller than a full-width banner and with soft edges,
+                so it sits beside the words instead of as a box between them. Decorative; credits in docs/image-credits.md. */}
+            <div className="grid items-center gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
+              <div>
+                <div className="flex items-center gap-3">
+                  <span className="grid h-11 w-11 place-items-center rounded-xl bg-accent-soft text-accent"><Icon name={SECTION_ICON[sec.id]} className="h-5 w-5" /></span>
+                  <p className={eyebrow}>{sec.eyebrow}</p>
+                </div>
+                <h2 className="font-display mt-4 max-w-[36rem] text-4xl leading-tight sm:text-5xl">{sec.title}</h2>
+              </div>
+              {WHY_PHOTOS[sec.id] && (
+                <Image src={WHY_PHOTOS[sec.id].src} alt="" width={WHY_PHOTOS[sec.id].w} height={WHY_PHOTOS[sec.id].h}
+                  sizes="(max-width: 768px) 100vw, 352px" className="rl-photo aspect-[3/2] w-full object-cover" />
+              )}
             </div>
-            <h2 className="font-display mt-4 max-w-[36rem] text-4xl leading-tight sm:text-5xl">{sec.title}</h2>
-            {/* A real photo for the section (2026-11-23); decorative, the heading says it. Credits: docs/image-credits.md. */}
-            {WHY_PHOTOS[sec.id] && (
-              <Image src={WHY_PHOTOS[sec.id].src} alt="" width={WHY_PHOTOS[sec.id].w} height={WHY_PHOTOS[sec.id].h}
-                sizes="(max-width: 1024px) 100vw, 976px" className="mt-8 aspect-[16/7] w-full rounded-3xl border border-line object-cover" />
-            )}
             <ul className="mt-10 grid items-start gap-5 md:grid-cols-2">
               {sec.findings.map(f => (
                 <li key={f.id} className="flex flex-col rounded-3xl border border-line bg-surface p-6">
