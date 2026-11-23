@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { APP_NAME, ASK_NAME, COMPANY, SITE_URL, TAGLINE, V3D_NAME, V3D_PATH, VISION, WHY_PATH } from '@/site'
+import { APP_NAME, ASK_NAME, COMPANY, SITE_URL, TAGLINE, V3D_CTA, V3D_LINE, V3D_NAME, V3D_PATH, V3D_SIGNUP_PATH, VISION, WHY_PATH } from '@/site'
 import { posts } from '@/content/posts'
 import { FINDINGS, HOME_EVIDENCE, SOURCES } from '@/content/evidence'
 import { ProductTabs, type TabProduct } from '@/components/visual/ProductTabs'
@@ -92,10 +92,14 @@ export default function Home() {
           <p className="mt-6 max-w-[38rem] text-xl leading-relaxed text-muted">
             {COMPANY} builds products that explain by showing.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a href="#products" className={primary}>See the three products</a>
-            <Link href={WHY_PATH} className={quiet}>Why visual learning works</Link>
+          {/* ONE PRIMARY ACTION (founder, 2026-11-23: 3Dlor first): its sign-up, then its page as the quiet second.
+              The other two products stay one link away and in the tabs below. */}
+          <p className="mt-8 text-lg"><span className="font-semibold">{V3D_NAME}</span> <span className="text-muted">· {V3D_LINE}</span></p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Link href={V3D_SIGNUP_PATH} className={`${primary} font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent`}>{V3D_CTA}</Link>
+            <Link href={V3D_PATH} className={quiet}>See {V3D_NAME}</Link>
           </div>
+          <a href="#products" className="rl-link mt-5 inline-block text-sm text-muted hover:text-foreground">Or see all three products ↓</a>
           </div>
           {/* One frame from each product, stacked. Decorative: the cards below name and describe each one. */}
           <div aria-hidden="true" className="relative mx-auto hidden aspect-[4/5] w-full max-w-[340px] md:block">
