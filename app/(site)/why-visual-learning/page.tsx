@@ -7,12 +7,14 @@
  * how the products use it, and the numbered source list that every [n] links to.
  */
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { ASK_NAME, COMPANY, SITE_URL, V3D_NAME, V3D_PATH, WHY_PATH } from '@/site'
 import { CHECKED_ON, NOT_CLAIMED, SECTIONS, SOURCES, SOURCE_ORDER, type SourceId } from '@/content/evidence'
 import { Icon, type IconName } from '@/components/visual/Icon'
 import { Viz } from '@/components/visual/Viz'
 import { WordsVsPictures } from '@/components/visual/WordsVsPictures'
+import { WHY_PHOTOS } from '@/components/scroll/art'
 
 const SECTION_ICON: Record<string, IconName> = { mind: 'eye', video: 'film', math: 'ruler', medicine: 'pill', brain: 'brain' }
 
@@ -87,6 +89,11 @@ export default function WhyVisualLearning() {
               <p className={eyebrow}>{sec.eyebrow}</p>
             </div>
             <h2 className="font-display mt-4 max-w-[36rem] text-4xl leading-tight sm:text-5xl">{sec.title}</h2>
+            {/* A real photo for the section (2026-11-23); decorative, the heading says it. Credits: docs/image-credits.md. */}
+            {WHY_PHOTOS[sec.id] && (
+              <Image src={WHY_PHOTOS[sec.id].src} alt="" width={WHY_PHOTOS[sec.id].w} height={WHY_PHOTOS[sec.id].h}
+                sizes="(max-width: 1024px) 100vw, 976px" className="mt-8 aspect-[16/7] w-full rounded-3xl border border-line object-cover" />
+            )}
             <ul className="mt-10 grid items-start gap-5 md:grid-cols-2">
               {sec.findings.map(f => (
                 <li key={f.id} className="flex flex-col rounded-3xl border border-line bg-surface p-6">

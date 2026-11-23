@@ -25,7 +25,7 @@ export default function Contact() {
   return (
     <section className="relative isolate overflow-hidden">
       <div className="relative z-10 mx-auto max-w-5xl px-6 pb-20">
-        <PageHero title="Contact" line="One address, read by the people who build the thing." pic={ART.contactHero}>
+        <PageHero title="Contact" line="One address, read by the people who build the thing." pic={ART.contactPhoto}>
           <a
             href={`mailto:${SUPPORT_EMAIL}`}
             className="rl-cta mt-8 inline-block rounded-full bg-accent px-6 py-3 text-on-accent font-medium hover:opacity-90"
