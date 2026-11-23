@@ -7,8 +7,8 @@ import type { Pic } from './Scroll'
  * Two kinds (2026-11-23). The `/photos/*.webp` rows are REAL PHOTOS (founder: "use real images"), chosen by the founder
  * from a side-by-side proposal: free Unsplash License, no people, no hands, no logos. Every one has its source,
  * photographer and licence in `docs/image-credits.md`; a new photo needs a row there in the same commit. The other
- * rows are the older flat drawings (generated 2026-09-29, transparent ground), still used on pages the photos did not
- * reach (/privacy, /terms, /data-and-safety, /radlic, the 404 page and the hidden /for-schools).
+ * rows are the older flat drawings (generated 2026-09-29, transparent ground), still used only on /radlic and the
+ * hidden /for-schools.
  */
 export const ART = {
   radlicWatch: { src: '/il-radlic-watch.webp', w: 895, h: 606 },
@@ -23,7 +23,6 @@ export const ART = {
   schoolsTeacher: { src: '/il-schools-teacher.webp', w: 922, h: 735 },
   schoolsDevices: { src: '/il-schools-devices.webp', w: 1246, h: 557 },
   schoolsWrite: { src: '/il-schools-write.webp', w: 924, h: 406 },
-  contactHero: { src: '/il-contact-hero.webp', w: 928, h: 701 },  // drawing: /data-and-safety still uses it
   contactPhoto: { src: '/photos/contact-hero.webp', w: 1200, h: 900, photo: true },
   contactSupport: { src: '/photos/contact-support.webp', w: 1200, h: 900, photo: true },
   contactPress: { src: '/photos/contact-press.webp', w: 1200, h: 900, photo: true },
@@ -31,15 +30,16 @@ export const ART = {
   postGap: { src: '/photos/post-gap.webp', w: 1200, h: 900, photo: true },
   postCamera: { src: '/photos/post-camera.webp', w: 1200, h: 900, photo: true },
   postInvisible: { src: '/photos/post-invisible.webp', w: 1200, h: 900, photo: true },
-  safetyHero: { src: '/il-safety-hero.webp', w: 517, h: 566 },
-  safetyStore: { src: '/il-safety-store.webp', w: 721, h: 642 },
-  safetyNever: { src: '/il-safety-never.webp', w: 1018, h: 822 },
-  safetyAccess: { src: '/il-safety-access.webp', w: 1091, h: 366 },
-  safetyDelete: { src: '/il-safety-delete.webp', w: 747, h: 860 },
-  safetyUnfinished: { src: '/il-safety-unfinished.webp', w: 1200, h: 884 },
+  safetyHero: { src: '/photos/safety-hero.webp', w: 1200, h: 900, photo: true },
+  safetyStore: { src: '/photos/safety-store.webp', w: 1200, h: 900, photo: true },
+  safetyNever: { src: '/photos/safety-never.webp', w: 1200, h: 900, photo: true },
+  safetyAccess: { src: '/photos/safety-access.webp', w: 1200, h: 900, photo: true },
+  safetyDelete: { src: '/photos/safety-delete.webp', w: 1200, h: 900, photo: true },
+  safetyUnfinished: { src: '/photos/safety-unfinished.webp', w: 1200, h: 900, photo: true },
   homeInvisible: { src: '/il-home-invisible.webp', w: 900, h: 602 },
-  privacy: { src: '/il-privacy.webp', w: 952, h: 656 },
-  terms: { src: '/il-terms.webp', w: 872, h: 869 },
+  privacy: { src: '/photos/privacy.webp', w: 1200, h: 900, photo: true },
+  terms: { src: '/photos/terms.webp', w: 1200, h: 900, photo: true },
+  notFound: { src: '/photos/not-found.webp', w: 1200, h: 900, photo: true },
   aboutWhat: { src: '/photos/about-what.webp', w: 1200, h: 900, photo: true },
   aboutWhy: { src: '/photos/about-why.webp', w: 1200, h: 900, photo: true },
   aboutHow: { src: '/photos/about-how.webp', w: 1200, h: 900, photo: true },
