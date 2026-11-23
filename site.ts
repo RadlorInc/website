@@ -113,6 +113,16 @@ export const ASK_ID = `${ASK_URL}/#app`
 export const V3D_NAME = '3Dlor'   // the product's name (founder, 2026-11-22); sentences still say "3D videos"
 export const V3D_PATH = '/3dlor'
 export const V3D_SIGNUP_PATH = '/3dlor/signup'
+/**
+ * The site's main action (founder, 2026-11-23: 3Dlor is the focus product): the header button on every company page
+ * and the home hero's first button, both to V3D_SIGNUP_PATH.
+ * ⚠️ TRUE IN BOTH STATES. Until sign-up opens, that page says "Sign-up is not open yet. Write to us and we will set you
+ * up." So do not write "Sign up now" or "Create your account" here; "Start" is true whether the form or the email
+ * answers.
+ */
+export const V3D_CTA = `Start with ${V3D_NAME}`
+/** One line under the home hero's heading: what 3Dlor is, said the way its own page says it. */
+export const V3D_LINE = '3D how-to and support videos for product brands.'
 /** The page with the research behind all three products. Every claim on it has a checked source in `content/evidence.ts`. */
 export const WHY_PATH = '/why-visual-learning'
 
