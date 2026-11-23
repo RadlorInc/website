@@ -18,9 +18,9 @@
 >   one primary button in the header and home hero, and the home tabs in the order 3Dlor, Ask Radlor, Radlic (#34);
 >   real photos instead of the generated drawings on every company page except `/radlic` (#35, #36; credits in
 >   `docs/image-credits.md`, rules: no people, no hands, no logos, checked at full size, soft `.rl-photo` edges).
-> - **#32** (simpler consent checkbox, feedback on every click, the customer comes back after payment, a care-plan
->   list): `main` was merged into it on 23 Nov and every check passed. Its care-plan list describes the #33 help page,
->   which is not live; fix that text before sign-up opens if #33 is still not merged.
+> - **#32 merged on 23 Nov** (simpler consent checkbox, feedback on every click, the customer comes back after payment,
+>   a care-plan list on `/3dlor/signup`). ⚠️ That care-plan list describes the #33 help page (QR code, part search),
+>   which is not live; change that text before sign-up opens if #33 is still not merged.
 > - **Waiting for the founder:** #33 (3Dlor help page: live videos in the 3D player, part search). It needs a hand-run
 >   migration on the shared Supabase project (3 tables, an anon read grant, a storage bucket) and adds the public route
 >   `/help/<brand>/<product>`. Do not merge it or run its migration without the founder's word. learn#486 (old handoff,
