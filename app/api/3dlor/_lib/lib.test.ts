@@ -62,6 +62,7 @@ test('checkout: half the build today, care plan after the free months, our metad
   assert.equal(c.metadata.v3d_order_id, 'o1')
   assert.equal(c.subscription_data.metadata.v3d_order_id, 'o1')
   assert.ok(!/interest|late fee/i.test(JSON.stringify(c.line_items)))
+  assert.match(c.custom_text.after_submit.message, /do not press Back/)
 })
 
 test('live keys are recognised', () => {
