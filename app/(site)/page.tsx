@@ -21,8 +21,24 @@ import { POST_COVERS } from '@/components/scroll/art'
  */
 
 
-/** One row per product. `chips` are the benefits as 2-5 word labels with an icon (founder, 2026-11-22: less text). */
+/** One row per product, in tab order: 3Dlor, Ask Radlor, Radlic (founder, 2026-11-23). `chips` are the benefits as 2-5 word labels with an icon (founder, 2026-11-22: less text). */
 const PRODUCTS: (TabProduct & { pic: { src: string; w: number; h: number } })[] = [
+  {
+    id: '3d',
+    name: V3D_NAME,
+    who: 'For product brands',
+    line: 'Short 3D videos that show your customers how to set up, use, clean and fix your product.',
+    chips: [
+      { icon: 'library', label: 'A full library, not one video' },
+      { icon: 'camera', label: 'Starts from product photos' },
+      { icon: 'box', label: 'Exploded views' },
+      { icon: 'formats', label: 'Tall, wide and square' },
+    ],
+    page: V3D_PATH,
+    cta: `See ${V3D_NAME}`,
+    media: { video: '/3d-videos-demo.mp4', poster: '/3d-videos-demo-poster.jpg', w: 720, h: 1280, label: 'Demo, no sound: how to clean a French press, with the filter taken apart into three labelled parts' },
+    pic: { src: '/3d-videos-card.jpg', w: 1600, h: 1000 },
+  },
   {
     id: 'ask',
     name: ASK_NAME,
@@ -54,22 +70,6 @@ const PRODUCTS: (TabProduct & { pic: { src: string; w: number; h: number } })[] 
     cta: `See ${APP_NAME}`,
     media: { video: '/radlic-demo.mp4', poster: '/radlic-demo-poster.jpg', w: 1920, h: 1080, label: `${APP_NAME} demo, no sound: a child picks a math topic and a lesson plays at the chalkboard` },
     pic: { src: '/radlic-demo-poster.jpg', w: 1920, h: 1080 },
-  },
-  {
-    id: '3d',
-    name: V3D_NAME,
-    who: 'For product brands',
-    line: 'Short 3D videos that show your customers how to set up, use, clean and fix your product.',
-    chips: [
-      { icon: 'library', label: 'A full library, not one video' },
-      { icon: 'camera', label: 'Starts from product photos' },
-      { icon: 'box', label: 'Exploded views' },
-      { icon: 'formats', label: 'Tall, wide and square' },
-    ],
-    page: V3D_PATH,
-    cta: `See ${V3D_NAME}`,
-    media: { video: '/3d-videos-demo.mp4', poster: '/3d-videos-demo-poster.jpg', w: 720, h: 1280, label: 'Demo, no sound: how to clean a French press, with the filter taken apart into three labelled parts' },
-    pic: { src: '/3d-videos-card.jpg', w: 1600, h: 1000 },
   },
 ]
 
