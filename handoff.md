@@ -17,7 +17,8 @@
 >   sign-up, Stripe, rename to 3Dlor, Stripe gate, faster steps, shorter form (#23, #28–#31); "Start with 3Dlor" as the
 >   one primary button in the header and home hero, and the home tabs in the order 3Dlor, Ask Radlor, Radlic (#34);
 >   real photos instead of the generated drawings on every company page except `/radlic` (#35, #36; credits in
->   `docs/image-credits.md`, rules: no people, no hands, no logos, checked at full size, soft `.rl-photo` edges).
+>   `docs/image-credits.md`, rules: no people, no hands, no logos, checked at full size, soft `.rl-photo` edges); this
+>   note and the 3Dlor row in CLAUDE.md (#37).
 > - **#32 merged on 23 Nov** (simpler consent checkbox, feedback on every click, the customer comes back after payment,
 >   a care-plan list on `/3dlor/signup`). ⚠️ That care-plan list describes the #33 help page (QR code, part search),
 >   which is not live; change that text before sign-up opens if #33 is still not merged.
@@ -25,13 +26,17 @@
 >   migration on the shared Supabase project (3 tables, an anon read grant, a storage bucket) and adds the public route
 >   `/help/<brand>/<product>`. Do not merge it or run its migration without the founder's word. learn#486 (old handoff,
 >   stale since the rename went back) can be closed.
-> - **Orphaned folder:** `w-site-home-order` (branch `preview/home-3dlor-first`) holds uncommitted work from a deleted
->   session. Its useful parts are now on `main` (home order via #34; this note and the 3Dlor row in CLAUDE.md). Its SVG
->   figures and image deletes are obsolete (real photos won), and the founder chose to keep the drawings on `/radlic`.
->   Do not push it; remove the folder once the founder agrees.
+> - **No owner session:** the sessions that built the 3Dlor sign-up and the #33 help page were deleted on 23 Nov. The
+>   steps to open sign-up and #33 have no owner now; the next session picks them up from this note.
+> - **Old folder `w-site-home-order`:** on the founder's word (23 Nov) it went to the Trash
+>   (`~/.Trash/w-site-home-order-2026-11-23`, 701 MB) and out of `git worktree list`. Its useful parts were already on
+>   `main` (#34, #37). The local branch `preview/home-3dlor-first` stayed; it has no commits of its own. Empty the Trash
+>   copy once the founder agrees.
 > - **Still open with the founder:** the 3Dlor prices and the steps to open sign-up (next note); which domain Radlic uses
 >   (`radlic.com` is in `site.ts`); the #33 migration.
-> - **Disk:** on 23 Nov the Mac was nearly full (383 MB free that day). Delete `node_modules` in old `w-site-*` worktrees first.
+> - **Disk:** on 23 Nov the Mac was nearly full (383 MB free that morning). A cleanup session that day removed 18
+>   finished worktrees (free space went from 9.7 GB to 17 GB) and kept 20 that had uncommitted work, unpushed commits
+>   or an open PR. Check `df -h` before you trust these numbers.
 
 > 🧊 **2026-11-23 — 3Dlor sign-up code is merged; it was CLOSED on production that day** (PRs #23, #30, #31). Code:
 > `/3dlor/signup`, `/3dlor/account`, `app/api/3dlor/`; prices only in `app/api/3dlor/_lib/plans.ts` (draft; read the
