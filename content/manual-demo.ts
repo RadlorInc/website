@@ -27,7 +27,7 @@ export const MANUAL = {
  * the same amount (a frame each 1/5 s made every camera move jump; founder, 2026-11-24). `from` is each step's first frame.
  * The files are packs of webp frames: uint32 count, count × uint32 sizes, then the frames.
  */
-export const FILM = { dir: '/stop/water-filter/film', packs: 32, count: 896, w: 1080, h: 810, from: [23, 150, 312, 421, 504, 626, 763] }
+export const FILM = { dir: '/stop/water-filter/film', packs: 32, count: 896, w: 1080, h: 810, from: [23, 150, 312, 421, 503, 625, 762] }
 
 /** The whole product, put together. */
 export const WHOLE = 319
