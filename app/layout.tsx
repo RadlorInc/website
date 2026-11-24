@@ -8,7 +8,7 @@ const display = Instrument_Serif({ variable: '--font-display-src', subsets: ['la
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: `${COMPANY} — ${TAGLINE}`, template: `%s · ${COMPANY}` },
+  title: { default: `${COMPANY}: ${TAGLINE}`, template: `%s · ${COMPANY}` },
   description:
     `${COMPANY} makes 3Dlor: short 3D videos that show customers how to set up, use, clean and fix a product. ` +
     'They open the product up and show one step at a time. Other products: Ask Radlor and Radlic.',

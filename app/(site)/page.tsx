@@ -137,7 +137,7 @@ export default function Home() {
         '@type': 'WebPage',
         '@id': `${SITE_URL}/#webpage`,
         url: SITE_URL,
-        name: `${COMPANY} — ${TAGLINE}`,
+        name: `${COMPANY}: ${TAGLINE}`,
         isPartOf: { '@id': `${SITE_URL}/#website` },
         about: { '@id': `${SITE_URL}/#organization` },
         mainEntity: { '@id': `${SITE_URL}${V3D_PATH}#service` },

@@ -12,7 +12,7 @@ We took the other road. In Radlic the difficulty moves constantly and is never s
 The engine tracks one thing per skill: how the child is doing right now.
 
 - Three correct in a row, at eighty percent or better, and the difficulty goes up one tier.
-- Six correct in a row at the top tier and the chapter ends early — the child has shown they know it,
+- Six correct in a row at the top tier and the chapter ends early: the child has shown they know it,
   so we stop asking.
 - Three wrong and the chapter stops scoring and teaches the idea again, from the beginning, with the
   same characters and a worked example.
@@ -26,7 +26,7 @@ ones and finishes sooner. Both of them just experience "the game".
 Hiding the level is the easy half. The hard half is making sure the questions are honest.
 
 The moment you remove the visible score, you have to be certain that a right answer really means the
-child knows something — because nothing else is measuring them. That rules out most of the question
+child knows something, because nothing else is measuring them. That rules out most of the question
 formats an app would reach for by default:
 
 - **Two options is a coin flip.** "Which is bigger?" over two choices is answered correctly half the
@@ -44,7 +44,7 @@ counting in the youngest band, you hold that many fingers up to the camera.
 
 ## What we watch for
 
-The failure mode of invisible difficulty is that nobody notices when it stops working — there is no
+The failure mode of invisible difficulty is that nobody notices when it stops working: there is no
 number on screen going wrong. So the checks are in the software rather than in the UI: a chapter
 cannot finish until every idea it teaches has been asked at least once, and a question generator that
 starts producing answerable-by-guessing rounds fails the build.
