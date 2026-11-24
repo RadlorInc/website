@@ -25,6 +25,10 @@ export const VIDEOS_PER_PRODUCT = 12
 export const EXTRA_PRODUCT_CENTS = 20000
 export const EXTRA_LANGUAGE_CENTS = 2000 // each video, each language after the first
 
+/** Picked from a list, never typed (founder, 24 Nov 2026): "Spanish Tamil" counted as one language. English is always in the
+ *  price; each other one is an extra. */
+export const LANGUAGES = ['Arabic', 'Bengali', 'Chinese', 'Czech', 'Danish', 'Dutch', 'Finnish', 'French', 'German', 'Greek', 'Gujarati', 'Hebrew', 'Hindi', 'Hungarian', 'Indonesian', 'Italian', 'Japanese', 'Kannada', 'Korean', 'Malay', 'Malayalam', 'Marathi', 'Norwegian', 'Polish', 'Portuguese', 'Punjabi', 'Romanian', 'Russian', 'Spanish', 'Swedish', 'Tagalog', 'Tamil', 'Telugu', 'Thai', 'Turkish', 'Ukrainian', 'Urdu', 'Vietnamese'] as const
+
 /** The monthly care plan follows the size of the order. The keys are the `plan` values the database allows. */
 export type PlanKey = 'basic' | 'growth' | 'pro'
 export const CARE: Record<PlanKey, { from: number; cents: number; videos: string }> = {

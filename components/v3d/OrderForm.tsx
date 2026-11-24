@@ -37,16 +37,13 @@ export function OrderForm({ bad, notice, closing }: { bad?: string; notice: Reac
   const badIn = (s: Element) => s.querySelector<HTMLInputElement>('input:invalid')
   const sizeNow = () => {
     const d = new FormData(form.current!)
-    return { videos: Number(d.get('videos')), products: Number(d.get('products')), languages: Math.max(1, languagesIn(String(d.get('languages') ?? '')).length) }
+    return { videos: Number(d.get('videos')), products: Number(d.get('products')), languages: languagesIn(String(d.get('languages') ?? ''))?.length ?? 1 }
   }
   const sheets = () => Array.from(form.current!.querySelectorAll('fieldset'))
 
   /** The first sheet with something wrong, with the browser's own message on the field. -1 when all good. */
   function wrong(upTo: number) {
     const f = form.current!
-    const langs = f.elements.namedItem('languages') as HTMLInputElement
-    const n = languagesIn(langs.value).length
-    langs.setCustomValidity(n < 1 ? 'Write a language, or leave it empty.' : '')
     const size = sizeNow()
     const videos = f.elements.namedItem('videos') as HTMLInputElement
     videos.setCustomValidity(payable(quote(size).buildCents) ? '' : 'Stripe cannot take one card payment this large. Please write to us.')
