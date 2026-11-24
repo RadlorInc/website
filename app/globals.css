@@ -858,7 +858,7 @@ body:has(.rl-paper) {
   .ms-sheet li[aria-current] span { background-size: 100% 92%; }
 
   /* phone: the sheet peeks under the heading, then only the current step stays, over the film */
-  .ms-sheet { left: 1.5rem; right: 1.5rem; max-width: none; top: 57svh; transform: translateY(calc(-54svh * var(--e, 0))) rotate(calc(-1.5deg * (1 - var(--e, 0)))); }
+  .ms-sheet { left: 1.5rem; right: 1.5rem; max-width: none; --t: max(57svh, 26rem); top: var(--t); transform: translateY(calc((3svh - var(--t)) * var(--e, 0))) rotate(calc(-1.5deg * (1 - var(--e, 0)))); }
   .ms-film { left: 50%; translate: -50% 0; bottom: 0; width: min(118vw, 88svh); aspect-ratio: 4/3; bottom: 15svh; }
   @media (max-width: 899px) {
     .ms:not([data-step="-1"]):not([data-step="0"]) .ms-sheet :is(.ms-run, h2, .ms-note, li:not([aria-current])) { display: none; }
