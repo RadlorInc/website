@@ -1,37 +1,37 @@
 import type { Metadata } from 'next'
-import { PathRows, type PathRow } from '@/components/scroll/Scroll'
+import { Pile } from '@/components/scroll/Pile'
+import type { PathRow } from '@/components/scroll/Scroll'
 import { PageHero } from '@/components/scroll/PageHero'
 import { ART } from '@/components/scroll/art'
-import { APP_NAME, ASK_NAME, COMPANY, FOUNDED_YEAR, SUPPORT_EMAIL, VISION } from '@/site'
+import { APP_NAME, ASK_NAME, COMPANY, FOUNDED_YEAR, SUPPORT_EMAIL, V3D_NAME, VISION } from '@/site'
 
 export const metadata: Metadata = {
   title: 'About',
-  description: `${COMPANY} is a small software company building learning tools that adapt to the learner. ${APP_NAME} is adaptive math for kindergarten through grade 8; ${ASK_NAME} answers any question as a voiced whiteboard video.`,
+  description: `${COMPANY} makes ${V3D_NAME}: short 3D videos that show customers how a product works. Its other products are ${ASK_NAME} and ${APP_NAME}.`,
   alternates: { canonical: '/about' },
 }
 
-// One picture and one line per section (founder, 2026-09-29: "least text on the whole website"), joined by a drawn path
-// (scroll style G) under a circle-reveal top (F). Each line restates the page as it was and adds no claim.
+// One picture and one line per section (founder, 2026-09-29: "least text on the whole website"), on paper sheets that pile up (2026-11-24), under a circle-reveal top (F). Each line restates the page as it was and adds no claim.
 const ROWS: PathRow[] = [
-  { ...ART.aboutWhat, title: `What is ${COMPANY}?`, body: <>Learning software that adapts to the learner. {APP_NAME}: math, kindergarten to grade 8. {ASK_NAME}: ask anything, watch it drawn.</> },
-  { ...ART.aboutWhy, title: 'Why we started', body: <>Every child learns differently. Software can find where a child is and change what comes next.</> },
-  { ...ART.aboutHow, title: 'How we work', body: <>Could a child get it right without understanding it? Then we fix the lesson.</> },
+  { ...ART.homeExploded, title: `What is ${COMPANY}?`, body: <>We make {V3D_NAME}: short 3D videos that show how a product works. Other products: {ASK_NAME} and {APP_NAME}.</> },
+  { ...ART.washerOpen, title: 'Why we started', body: <>Most things hide how they work. A manual tells you. A picture that opens shows you.</> },
+  { ...ART.sewingOpen, title: 'How we work', body: <>One step at a time. The product’s maker approves every step.</> },
   {
-    ...ART.aboutWhere, title: 'Where we are',
-    body: <>Founded {FOUNDED_YEAR}, in early access with a small group of families. <a className="rl-link text-accent" href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></>,
+    ...ART.lockOpen, title: 'Where we are',
+    body: <>Founded {FOUNDED_YEAR}. {V3D_NAME} is new and has no case studies yet. <a className="rl-link text-accent" href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></>,
   },
 ]
 
 export default function About() {
   return (
-    <section className="relative isolate overflow-hidden">
+    <section className="relative isolate overflow-x-clip">
       <div className="relative z-10 mx-auto max-w-5xl px-6 pb-20">
         <PageHero
           title={<>About <span className="rl-lit" style={{ '--lit': 0.55 } as React.CSSProperties}>{COMPANY}</span></>}
           line={VISION}
-          pic={ART.journeyTreasure}
+          pic={ART.fanOpen}
         />
-        <PathRows rows={ROWS} />
+        <Pile rows={ROWS} />
       </div>
     </section>
   )

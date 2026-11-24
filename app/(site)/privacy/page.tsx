@@ -137,7 +137,7 @@ export default function Privacy() {
         <p>
           For an order we store what you type in the form (company, your name, phone, website, product,
           video topics, languages, brand colors, links and notes), the files you upload (product photos,
-          manuals, logo) and the state of the order. It is stored in our database and a private file store,
+          manuals, logo), your answers and notes about each script and video, and the state of the order. It is stored in our database and a private file store,
           hosted by <strong>Supabase</strong>. Only you, signed in, and our team can see it. We use it
           only to make your videos and to write to you about the order.
         </p>

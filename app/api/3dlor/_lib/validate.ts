@@ -1,24 +1,28 @@
-import { isPlan, PLANS, type PlanKey } from './plans.ts'
+import { MIN_VIDEOS, payable, quote } from './plans.ts'
 
 /**
  * What we need from a brand to start a library (from video_ads/CLAUDE.md and PITCH-POINTS.md):
- * who they are, the product, the topics (from reviews and support tickets), languages, brand look,
+ * who they are, the product, the topics (from the instruction manual), languages, brand look,
  * and files: product photos from several sides, the manual, the logo. CAD and big files come as a link.
  */
 export const FIELDS = {
   company: { max: 200, required: true },
   contact_name: { max: 200, required: true },
-  phone: { max: 40, required: false },
-  website: { max: 300, required: false, url: true },
-  product_name: { max: 300, required: true },
-  product_url: { max: 500, required: false, url: true },
   languages: { max: 200, required: false },
+} as const
+/** Asked on the order page AFTER payment, all optional (founder, 24 Nov 2026: the sign-up asks as little as possible). */
+export const DETAILS = {
+  product_name: { max: 300, required: false },
+  product_url: { max: 500, required: false, url: true },
   files_link: { max: 500, required: false, url: true },
+  website: { max: 300, required: false, url: true },
+  phone: { max: 40, required: false },
 } as const
 // Not asked any more (founder, 23 Nov 2026: "keep the form easy"): the video topics come from the manual, and the
 // brand look from the logo. The columns `topics`, `brand_colors` and `notes` stay in the table, empty.
 type Field = keyof typeof FIELDS
-export type OrderInput = Record<Field, string | null> & { plan: PlanKey }
+export type Detail = keyof typeof DETAILS
+export type OrderInput = Record<Field, string | null>
 
 const isHttpUrl = (s: string) => {
   try {
@@ -31,12 +35,13 @@ const isHttpUrl = (s: string) => {
 // Control characters other than tab and newline.
 const CONTROL = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/
 
-export function parseOrder(form: FormData): { ok: true; data: OrderInput } | { ok: false; error: string } {
-  const plan = String(form.get('plan') ?? '')
-  if (!isPlan(plan)) return { ok: false, error: 'plan' }
-  if (form.get('terms') !== 'yes') return { ok: false, error: 'terms' }
-  const data = { plan } as OrderInput
-  for (const [name, rule] of Object.entries(FIELDS) as [Field, (typeof FIELDS)[Field]][]) {
+/** "English, Spanish and French" → 3 names. The form uses the same count before it posts. */
+export const languagesIn = (v: string | null) => (v || 'English').split(/[,/]| and /).map(s => s.trim()).filter(Boolean)
+
+type Rule = { max: number; required: boolean; url?: boolean }
+function readFields<K extends string>(form: FormData, rules: Record<K, Rule>): { ok: true; data: Record<K, string | null> } | { ok: false; error: K } {
+  const data = {} as Record<K, string | null>
+  for (const [name, rule] of Object.entries(rules) as [K, Rule][]) {
     const raw = form.get(name)
     if (raw !== null && typeof raw !== 'string') return { ok: false, error: name }
     const v = (raw ?? '').trim()
@@ -45,13 +50,31 @@ export function parseOrder(form: FormData): { ok: true; data: OrderInput } | { o
       data[name] = null
       continue
     }
-    if (v.length > rule.max || CONTROL.test(v)) return { ok: false, error: name }
-    if ('url' in rule && !isHttpUrl(v)) return { ok: false, error: name }
+    if (v.length > rule.max || CONTROL.test(v) || (rule.url && !isHttpUrl(v))) return { ok: false, error: name }
     data[name] = v
   }
-  const langs = (data.languages ?? 'English').split(/[,/]| and /).map(s => s.trim()).filter(Boolean)
-  if (langs.length > PLANS[plan].languages) return { ok: false, error: 'languages' }
   return { ok: true, data }
+}
+
+export const parseDetails = (form: FormData) => readFields<Detail>(form, DETAILS)
+
+const whole = (v: unknown, min: number) => {
+  const n = typeof v === 'string' && /^\d{1,7}$/.test(v.trim()) ? Number(v) : NaN
+  return n >= min ? n : null
+}
+
+export function parseOrder(form: FormData): { ok: true; data: OrderInput; size: { videos: number; products: number; languages: number } } | { ok: false; error: string } {
+  const videos = whole(form.get('videos'), MIN_VIDEOS)
+  if (videos === null) return { ok: false, error: 'videos' }
+  const products = whole(form.get('products'), 1)
+  if (products === null) return { ok: false, error: 'products' }
+  const read = readFields(form, FIELDS)
+  if (!read.ok) return read
+  const data: OrderInput = read.data
+  const languages = languagesIn(data.languages).length
+  if (languages < 1) return { ok: false, error: 'languages' }
+  if (!payable(quote({ videos, products, languages }).buildCents)) return { ok: false, error: 'videos' }
+  return { ok: true, data, size: { videos, products, languages } }
 }
 
 /** Upload rules. 4 MB keeps one file under Vercel's 4.5 MB request limit. */

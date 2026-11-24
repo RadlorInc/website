@@ -20,32 +20,34 @@ export function Notice({ e }: { e?: string }) {
   return m ? <p role="alert" className="mt-6 rounded-lg border border-accent/50 bg-accent-soft px-4 py-3 text-sm">{m}</p> : null
 }
 
-const input = 'mt-2 w-full rounded-lg border border-line bg-surface px-4 py-3 text-foreground'
-const button = 'rl-cta mt-4 rounded-full bg-accent px-6 py-3 text-on-accent font-medium hover:opacity-90'
-
 /** Email, then a 6-digit code. Plain forms: they work with JavaScript off. */
 export function SignIn({ next, pendingEmail, e }: { next: string; pendingEmail?: string; e?: string }) {
+  const email = (
+    <form method="post" action="/api/3dlor/auth/start" className="su-fields">
+      <input type="hidden" name="next" value={next} />
+      <label className="su-field">
+        <span>Work email</span>
+        <input name="email" type="email" autoComplete="email" maxLength={254} required />
+      </label>
+      <PendingButton className="su-next" pending="Sending the code…">{pendingEmail ? 'Send a new code' : 'Email me a code'}</PendingButton>
+      {!pendingEmail && <p className="su-foot">No password.</p>}
+    </form>
+  )
   return (
     <div className="max-w-md">
       <Notice e={e} />
       {pendingEmail && e !== 'expired' ? (
-        <form method="post" action="/api/3dlor/auth/verify" className="mt-6">
-          <label className="block text-sm text-muted">
-            We sent a code to <strong className="text-foreground">{pendingEmail}</strong>. Enter it here.
-            <input name="code" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9 ]{6,12}" required className={input} />
-          </label>
-          <PendingButton className={button} pending="Checking the code…">Sign in</PendingButton>
-          <p className="mt-4 text-sm text-muted">No email after a few minutes? Check spam, or enter your email again below.</p>
-        </form>
-      ) : null}
-      <form method="post" action="/api/3dlor/auth/start" className="mt-6">
-        <input type="hidden" name="next" value={next} />
-        <label className="block text-sm text-muted">
-          Work email
-          <input name="email" type="email" autoComplete="email" maxLength={254} required className={input} />
-        </label>
-        <PendingButton className={button} pending="Sending the code…">{pendingEmail ? 'Send a new code' : 'Email me a sign-in code'}</PendingButton>
-      </form>
+        <>
+          <form method="post" action="/api/3dlor/auth/verify" className="su-fields">
+            <label className="su-field">
+              <span>Code from {pendingEmail}</span>
+              <input name="code" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9 ]{6,12}" required />
+            </label>
+            <PendingButton className="su-next" pending="Checking the code…">Sign in</PendingButton>
+          </form>
+          <details className="su-more"><summary>No email? Check spam, or get a new code</summary>{email}</details>
+        </>
+      ) : email}
     </div>
   )
 }

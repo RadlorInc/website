@@ -66,9 +66,10 @@ export const BRAND = {
 } as const
 
 export const COMPANY = 'Radlor'
+/** 2026-11-23 (founder: the site is 3Dlor's, and must not read like school): was "We make learning and teaching visual." */
 /** 2026-11-22 (founder: one company, three products, one purpose: visual learning and visual teaching). It was
  *  "Learning software that adapts to the learner in front of it." while the company had only learning apps. */
-export const TAGLINE = 'We make learning and teaching visual.'
+export const TAGLINE = 'See how it works.'
 
 /**
  * The company belief, in the founder's own words (2026-08-20; "children/child" became "every learner" on 2026-10-22
@@ -76,8 +77,10 @@ export const TAGLINE = 'We make learning and teaching visual.'
  * is what the PRODUCT does, this is why we build it at all. Both are stated on `/about` and in
  * `llms.txt`, from here, so the two surfaces cannot drift apart.
  */
+// 2026-11-23: the education sentence ("Education technology. We build learning products; the treasure is already inside
+// every learner, we just light it up.") left the site with the 3Dlor-first change. DRAFT until the founder approves it.
 export const VISION =
-  'Education technology. We build learning products; the treasure is already inside every learner, we just light it up.'
+  'Anyone can understand how a thing works when they can see inside it. So we show it.'
 export const SUPPORT_EMAIL = 'support@radlor.com'
 /** Toll-free support line (founder, 2026-10-14). `SUPPORT_TEL` is the same number for `tel:` links. */
 export const SUPPORT_PHONE = '1-888-812-9373'
@@ -113,8 +116,19 @@ export const ASK_ID = `${ASK_URL}/#app`
 export const V3D_NAME = '3Dlor'   // the product's name (founder, 2026-11-22); sentences still say "3D videos"
 export const V3D_PATH = '/3dlor'
 export const V3D_SIGNUP_PATH = '/3dlor/signup'
+/**
+ * The site's main action (founder, 2026-11-23: 3Dlor is the focus product): the header button on every company page
+ * and the home hero's first button, both to V3D_SIGNUP_PATH.
+ * ⚠️ TRUE IN BOTH STATES. Until sign-up opens, that page says "Sign-up is not open yet. Write to us and we will set you
+ * up." So do not write "Sign up now" or "Create your account" here; "Start" is true whether the form or the email
+ * answers.
+ */
+export const V3D_CTA = `Start with ${V3D_NAME}`
+/** One line under the home hero's heading: what 3Dlor is, said the way its own page says it. */
+export const V3D_LINE = '3D how-to and support videos for product brands.'
 /** The page with the research behind all three products. Every claim on it has a checked source in `content/evidence.ts`. */
 export const WHY_PATH = '/why-visual-learning'
+export const SAMPLES_PATH = '/samples'
 
 /**
  * The app's entity id, declared HERE and referenced by the app itself at the same string.
@@ -239,9 +253,11 @@ export const PAGES = [
   // The second product's landing page (founder, 2026-10-22); the app itself stays on askradlor.com.
   { href: '/askradlor', label: ASK_NAME, where: 'footer' },
   // The third product's page (founder, 2026-11-22). Its sign-up lives under it and is not a row here.
-  { href: V3D_PATH, label: V3D_NAME, where: 'footer' },
+  { href: V3D_PATH, label: V3D_NAME, where: 'both' },
+  // The seven sample videos, one page for each field (founder, 2026-11-24).
+  { href: SAMPLES_PATH, label: 'Samples', where: 'both' },
   // The research behind all three products, with its source list (founder, 2026-11-22).
-  { href: WHY_PATH, label: 'Why visual learning', where: 'both' },
+  { href: WHY_PATH, label: 'Why visuals work', where: 'both' },
   // ⚠️ HIDDEN 2026-09-10, founder's call. The page still exists at `app/(site)/_pricing/` — the
   // underscore keeps it out of routing, so /pricing 404s and it is absent from the header, the
   // footer, the sitemap and llms.txt because all four read this list. Restore by renaming the
@@ -254,13 +270,13 @@ export const PAGES = [
   // `app/(site)/_for-schools/`, so /for-schools 404s and is in no list. Restore: rename the folder, uncomment this row,
   // its BLURB line in llms.txt and its entry in check-site-claims' CLAIM_PAGES.
   // { href: '/for-schools', label: 'Schools', where: 'both' },
-  { href: '/writing', label: 'Writing', where: 'both' },
+  { href: '/writing', label: 'Radlic notes', where: 'footer' },
   { href: '/about', label: 'About', where: 'both' },
   // Hidden 2026-09-25 (founder: "hide the waitlist from everywhere"; the CTA is now "Try Radlic").
   // The page still answers at /waitlist for old links; restore this row to list it again.
   // { href: '/waitlist', label: 'Waitlist', where: 'footer' },
   { href: '/contact', label: 'Contact', where: 'both' },
-  { href: '/data-and-safety', label: 'Data & safety', where: 'footer' },
+  { href: '/data-and-safety', label: 'Radlic data & safety', where: 'footer' },
   { href: '/privacy', label: 'Privacy', where: 'footer' },
   // ⚠️ The WEBSITE's terms, not the app's. The app has its own, longer Terms of Service on its
   // own origin covering an account and a child's data. Do not point this row at that document.
@@ -268,7 +284,10 @@ export const PAGES = [
 ] as const
 
 export const HEADER = PAGES.filter(p => p.where === 'both')
-export const FOOTER = PAGES.filter(p => p.href !== '/')
+/** The footer's "Other products" group (founder, 2026-11-23): the two other products and the pages that are theirs. */
+const OTHER_HREFS: readonly string[] = ['/askradlor', '/radlic', '/writing', '/data-and-safety']
+export const FOOTER = PAGES.filter(p => p.href !== '/' && !OTHER_HREFS.includes(p.href))
+export const FOOTER_OTHER = PAGES.filter(p => OTHER_HREFS.includes(p.href))
 
 /**
  * Company facts — the only strings on the site not derived from the product itself. They were

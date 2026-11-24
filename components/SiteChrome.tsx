@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { COMPANY, FOOTER, FOUNDED_YEAR, HEADER, SOCIAL, SUPPORT_EMAIL, TAGLINE } from '@/site'
+import { COMPANY, FOOTER, FOOTER_OTHER, FOUNDED_YEAR, HEADER, SOCIAL, SUPPORT_EMAIL, TAGLINE, V3D_CTA, V3D_SIGNUP_PATH } from '@/site'
 
 /**
  * The Radlor header and footer around a company page. Worn by `app/(site)/layout.tsx` (every company page) and by
@@ -16,7 +16,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
       Skip to main content
     </a>
     <header className="rl-header border-b border-line">
-      <div className="mx-auto max-w-5xl px-6 h-16 grid grid-cols-[1fr_auto_1fr] items-center gap-6">
+      <div className="mx-auto max-w-5xl px-6 h-16 grid grid-cols-[1fr_auto_1fr] items-center gap-4 sm:gap-6">
           {/* The whole lockup is now ONE image — the chrome wordmark with the robot in the
               'o'. The `<span>Radlor</span>` that used to sit beside the mark is gone because
               the picture contains the word.
@@ -41,7 +41,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
           </Link>
         {/* No hamburger. On a narrow frame the links drop out of the header and the footer — which
             carries the same list — becomes the navigation. Logo left, links centred (founder, 2026-09-29); no button
-            on the right since 2026-10-22 (founder: "remove Our products from the nav"). */}
+            on the right from 2026-10-22 (founder: "remove Our products from the nav") until the 3Dlor button below. */}
         <nav aria-label="Main" className="hidden md:flex items-center gap-8 text-sm">
           {HEADER.map(n => (
             <Link key={n.href} href={n.href} className="rl-link text-muted hover:text-foreground transition-colors">
@@ -49,10 +49,16 @@ export function SiteChrome({ children }: { children: ReactNode }) {
             </Link>
           ))}
         </nav>
+        {/* THE SITE'S ONE PRIMARY ACTION (founder, 2026-11-23). Right column, at EVERY width: below md the nav links
+            drop out (no hamburger), so this button is the phone's only header action. Accent on the pinned-dark
+            header is 12.9:1 for its text; min-h-11 is the 44 px touch target. */}
+        <Link href={V3D_SIGNUP_PATH} className="rl-cta col-start-3 justify-self-end inline-flex min-h-11 items-center whitespace-nowrap rounded-full bg-accent px-4 text-sm font-semibold text-on-accent hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:px-5">
+          {V3D_CTA}
+        </Link>
       </div>
     </header>
 
-    <main id="main" className="flex-1">{children}</main>
+    <main id="main" className="rl-paper flex-1">{children}</main>
 
     <footer className="border-t border-line mt-24">
       <div className="mx-auto max-w-5xl px-6 py-10 flex flex-wrap gap-6 justify-between text-sm text-muted">
@@ -80,6 +86,14 @@ export function SiteChrome({ children }: { children: ReactNode }) {
             </a>
           ))}
         </div>
+        <nav aria-label="Other products" className="flex w-full flex-wrap gap-x-5 gap-y-2 border-t border-line pt-6">
+          <span className="font-medium text-foreground">Other products</span>
+          {FOOTER_OTHER.map(n => (
+            <Link key={n.href} href={n.href} className="rl-link hover:text-foreground transition-colors">
+              {n.label}
+            </Link>
+          ))}
+        </nav>
       </div>
     </footer>
     </>

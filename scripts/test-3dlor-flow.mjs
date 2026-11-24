@@ -44,7 +44,7 @@ async function signIn(email) {
   return cookieOf(b, 'v3d_session')
 }
 
-const ORDER = { plan: 'growth', terms: 'yes', company: 'Acme', contact_name: 'Sam', product_name: 'Kettle K1', topics: 'Descale\nFirst use', languages: 'English, Spanish' }
+const ORDER = { videos: '40', products: '3', terms: 'yes', company: 'Acme', contact_name: 'Sam', product_name: 'Kettle K1', topics: 'Descale\nFirst use', languages: 'English, Spanish' }
 async function makeOrder(cookie, extra = {}) {
   const r = await fetch(`${BASE}/api/3dlor/order`, { method: 'POST', headers: { ...H, Cookie: cookie }, body: form({ ...ORDER, ...extra }), redirect: 'manual' })
   return r.headers.get('location')
@@ -60,7 +60,7 @@ const JPEG = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, ...new Array(200).fill(1)])
 const PDF = new TextEncoder().encode('%PDF-1.4\n%test\n')
 async function upload(cookie, order_id, kind, bytes, name, type) {
   const r = await fetch(`${BASE}/api/3dlor/files`, { method: 'POST', headers: { ...H, Cookie: cookie },
-    body: form({ order_id, kind, file: new File([bytes], name, { type }) }) })
+    body: form({ order_id, kind, terms: 'yes', file: new File([bytes], name, { type }) }) })
   return { status: r.status, body: await r.json().catch(() => null) }
 }
 const post = (path, cookie, body, headers = H) =>
@@ -75,6 +75,7 @@ ok((await makeOrder(ca)) === '/3dlor/account?new=1', 'A submits the onboarding f
 ok((await makeOrder(ca)) === '/3dlor/account', 'a second submit makes no duplicate open order')
 const { uid: uidA, order: oa } = await orderOf(A)
 ok(oa?.plan === 'growth' && oa.payment_status === 'unpaid' && oa.videos_ordered === 40, 'order saved: growth, unpaid, 40 videos')
+{ const r = await fetch(`${BASE}/api/3dlor/files`, { method: 'POST', headers: { ...H, Cookie: ca }, body: form({ order_id: oa.id, kind: 'photo', file: new File([JPEG], 'a.jpg', { type: 'image/jpeg' }) }) }); ok(r.status === 403, 'no consent, no upload (403)') }
 const upJ = await upload(ca, oa.id, 'photo', JPEG, 'front.jpg', 'image/jpeg')
 const upP = await upload(ca, oa.id, 'manual', PDF, 'manual.pdf', 'application/pdf')
 ok(upJ.status === 201 && upP.status === 201, 'A uploads a photo and a PDF')
@@ -82,7 +83,7 @@ const dl = await fetch(`${BASE}/api/3dlor/files/${upJ.body.id}`, { headers: { Co
 const dlBytes = new Uint8Array(await dl.arrayBuffer())
 ok(dl.status === 200 && dlBytes.length === JPEG.length && /attachment/.test(dl.headers.get('content-disposition') ?? ''), 'A downloads the photo (as an attachment)')
 const page = await fetch(`${BASE}/3dlor/account`, { headers: { Cookie: ca } }).then(r => r.text())
-ok(page.includes('Kettle K1') && page.includes('front.jpg') && page.includes('$2,200'), 'account page shows the order, the file and the amount due today')
+ok(page.includes('Acme') && page.includes('front.jpg') && page.includes('$2,600'), 'account page shows the order, the file and the amount due today')
 
 console.log('\nAttack: bad uploads')
 ok((await upload(ca, oa.id, 'photo', new TextEncoder().encode('<svg onload=alert(1)>'), 'x.jpg', 'image/jpeg')).status === 415, 'SVG named .jpg → 415')
@@ -97,18 +98,18 @@ ok(nameRow.status === 201 && nameRow.body.name === 'scriptx.jpg', 'path and HTML
 
 console.log('\nAttack: another customer')
 const cb = await signIn(B)
-await makeOrder(cb, { company: 'Other', product_name: 'Lamp L2', plan: 'basic', languages: 'English' })
+await makeOrder(cb, { company: 'Other', product_name: 'Lamp L2', videos: '10', languages: 'English' })
 const { order: ob } = await orderOf(B)
 ok((await fetch(`${BASE}/api/3dlor/files/${upJ.body.id}`, { headers: { Cookie: cb } })).status === 404, "B cannot download A's file")
 ok((await upload(cb, oa.id, 'photo', JPEG, 'x.jpg', 'image/jpeg')).status === 404, "B cannot upload into A's order")
 ok((await post('/api/3dlor/checkout', cb, { order_id: oa.id })).status !== 200, "B cannot open a checkout for A's order")
 ok((await post('/api/3dlor/portal', cb, { order_id: oa.id })).status !== 200, "B cannot open A's billing portal")
 const pageB = await fetch(`${BASE}/3dlor/account`, { headers: { Cookie: cb } }).then(r => r.text())
-ok(!pageB.includes('Kettle K1') && !pageB.includes('front.jpg'), "B's account page shows nothing of A's")
+ok(!pageB.includes('Acme') && !pageB.includes('front.jpg'), "B's account page shows nothing of A's")
 const forged = (() => { const [body, mac] = cb.split('=')[1].split('.'); const p = JSON.parse(Buffer.from(body, 'base64url')); p.uid = uidA
   return `v3d_session=${Buffer.from(JSON.stringify(p)).toString('base64url')}.${mac}` })()
 ok((await fetch(`${BASE}/api/3dlor/files/${upJ.body.id}`, { headers: { Cookie: forged } })).status === 401, "B's cookie edited to A's user id → 401")
-await makeOrder(cb, { payment_status: 'paid', videos_delivered: '99', user_id: uidA, plan: 'pro', languages: 'English' })
+await makeOrder(cb, { payment_status: 'paid', videos_delivered: '99', user_id: uidA, plan: 'pro', build_price_cents: '1', languages: 'English' })
 const [obAfter] = await admin(`v3d_orders?select=payment_status,videos_delivered,user_id&id=eq.${ob.id}`).then(r => r.json())
 ok(obAfter.payment_status === 'unpaid' && obAfter.videos_delivered === 0, 'B cannot set payment_status or progress through the form')
 

@@ -1,31 +1,32 @@
 import type { Metadata } from 'next'
-import { PathRows, type PathRow } from '@/components/scroll/Scroll'
+import Link from 'next/link'
+import { Pile } from '@/components/scroll/Pile'
+import type { PathRow } from '@/components/scroll/Scroll'
 import { PageHero } from '@/components/scroll/PageHero'
 import { ART } from '@/components/scroll/art'
-import { APP_NAME, APP_URL, COMPANY, SUPPORT_EMAIL, SUPPORT_PHONE, SUPPORT_TEL } from '@/site'
+import { COMPANY, SUPPORT_EMAIL, SUPPORT_PHONE, SUPPORT_TEL, V3D_CTA, V3D_NAME, V3D_SIGNUP_PATH } from '@/site'
 
 export const metadata: Metadata = {
   title: 'Contact',
-  description: `Get in touch with ${COMPANY} — support, early access to ${APP_NAME}, schools, and press.`,
+  description: `Get in touch with ${COMPANY} — ${V3D_NAME} for your product, support, partnerships and press.`,
   alternates: { canonical: '/contact' },
 }
 
-// One picture and one line per reason to write, joined by a drawn path (G) under a circle-reveal top (F) (2026-09-29).
+// One picture and one line per reason to write, on paper sheets that pile up (2026-11-24).
 const ROWS: PathRow[] = [
   {
-    ...ART.aboutWhere, title: 'Try it',
-    body: <>Make a parent account and add your child. <a href={`${APP_URL}/auth`} className="rl-link text-accent">Try {APP_NAME} →</a></>,
+    ...ART.fanOpen, title: `Start with ${V3D_NAME}`,
+    body: <>Tell us about one product. <Link href={V3D_SIGNUP_PATH} className="rl-link text-accent">{V3D_CTA} →</Link></>,
   },
-  { ...ART.schoolsHero, title: 'Schools', body: 'Classroom accounts are paused while we build school consent. Write and we will tell you when they open.' },
   { ...ART.contactSupport, title: 'Support', body: 'Something broken, a question about your account, or a request to delete your data. We answer each one ourselves.' },
-  { ...ART.contactPress, title: 'Press and partnerships', body: 'Happy to talk about what we are building and what we have learned.' },
+  { ...ART.contactPress, title: 'Press and partnerships', body: 'Happy to talk about what we are building.' },
 ]
 
 export default function Contact() {
   return (
-    <section className="relative isolate overflow-hidden">
+    <section className="relative isolate overflow-x-clip">
       <div className="relative z-10 mx-auto max-w-5xl px-6 pb-20">
-        <PageHero title="Contact" line="One address, read by the people who build the thing." pic={ART.contactHero}>
+        <PageHero title="Contact" line="One address, read by the people who build the thing." pic={ART.contactPhoto}>
           <a
             href={`mailto:${SUPPORT_EMAIL}`}
             className="rl-cta mt-8 inline-block rounded-full bg-accent px-6 py-3 text-on-accent font-medium hover:opacity-90"
@@ -39,7 +40,7 @@ export default function Contact() {
             </a>
           </p>
         </PageHero>
-        <PathRows rows={ROWS} />
+        <Pile rows={ROWS} />
       </div>
     </section>
   )

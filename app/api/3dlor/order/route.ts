@@ -1,4 +1,4 @@
-import { PLANS } from '../_lib/plans.ts'
+import { quote } from '../_lib/plans.ts'
 import { parseOrder } from '../_lib/validate.ts'
 import { configured, db, dbJson, sameOrigin, seeOther, sessionFrom } from '../_lib/server.ts'
 
@@ -23,15 +23,19 @@ export async function POST(req: Request) {
       `v3d_orders?select=id&user_id=eq.${s.uid}&payment_status=eq.unpaid&limit=1`)
     if (open.length) return seeOther('/3dlor/account')
 
+    const q = quote(parsed.size)
     const res = await db('v3d_orders', {
       method: 'POST',
       headers: { Prefer: 'return=minimal' },
       body: JSON.stringify({
         ...parsed.data,
+        product_name: 'Your product', // the customer names it after payment, on the order page
         user_id: s.uid,
-        videos_ordered: PLANS[parsed.data.plan].videos,
+        plan: q.plan,
+        videos_ordered: parsed.size.videos,
+        build_price_cents: q.buildCents, // the price, worked out here; Checkout charges this saved number
+        notes: `Products: ${parsed.size.products}. Languages: ${parsed.size.languages}. Rate: ${q.rateCents / 100} USD a video.`,
         waiting_on_customer: 'Product photos from all sides\nThe manual or instruction PDF\nYour logo',
-        terms_accepted_at: new Date().toISOString(),
       }),
     })
     if (!res.ok) throw new Error(`insert ${res.status} ${await res.text().catch(() => '')}`)
