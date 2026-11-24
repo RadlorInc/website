@@ -125,7 +125,7 @@ export const V3D_SIGNUP_PATH = '/3dlor/signup'
  */
 export const V3D_CTA = `Start with ${V3D_NAME}`
 /** One line under the home hero's heading: what 3Dlor is, said the way its own page says it. */
-export const V3D_LINE = '3D how-to and support videos for product brands.'
+export const V3D_LINE = 'Short 3D videos that show every step so customers set up, use, and fix your product with confidence. Fewer returns. Less support. Better reviews.'
 /** The page with the research behind all three products. Every claim on it has a checked source in `content/evidence.ts`. */
 export const WHY_PATH = '/why-visual-learning'
 export const SAMPLES_PATH = '/samples'
