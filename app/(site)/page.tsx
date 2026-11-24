@@ -4,6 +4,7 @@ import type { CSSProperties, ReactNode } from 'react'
 import { APP_NAME, ASK_NAME, COMPANY, SITE_URL, TAGLINE, V3D_CTA, V3D_LINE, V3D_NAME, V3D_PATH, V3D_SIGNUP_PATH, WHY_PATH } from '@/site'
 import { FINDINGS, HOME_EVIDENCE, SOURCES } from '@/content/evidence'
 import { MANUAL, WHOLE, frame } from '@/content/manual-demo'
+import { HomeStory } from '@/components/visual/HomeStory'
 import { SampleStory } from '@/components/visual/SampleStory'
 import { ManualScroll } from '@/components/visual/ManualScroll'
 
@@ -12,7 +13,7 @@ import { ManualScroll } from '@/components/visual/ManualScroll'
  * Paper, stepped stop-motion movement, real frames. No drawn icons, no card grids, no glow: the founder read those as
  * "AI generated". It must not look or read like school. The other two products are two lines at the bottom.
  *
- * ⚠️ Every 3Dlor line restates /3dlor, except V3D_LINE, WHY and FOR (founder-approved, 2026-11-24); add no other claim. Standing rules: no price, no
+ * ⚠️ Every 3Dlor line restates /3dlor, except V3D_LINE and HomeStory (founder-approved, 2026-11-24); add no other claim. Standing rules: no price, no
  * delivery time (only the founder-approved "a single step in minutes"), never say how any video is made, no people or animals in the pictures. The water filter is our own generic sample.
  */
 const focus = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
@@ -64,15 +65,6 @@ const SHEETS: { title: string; line: string; show: ReactNode }[] = [
   },
 ]
 
-/** Who it is for, and the lines that sell it (outside feedback, the founder's go-ahead 2026-11-24). */
-const FOR = ['Furniture', 'Fitness gear', 'Appliances', 'Smart-home devices', 'Outdoor equipment']
-const WHY: [string, string][] = [
-  ['Show the inside.', 'Exploded views, hidden mechanisms, parts that come apart. What a camera often cannot show.'],
-  ['One clear action per video.', 'No more walls of text.'],
-  ['Watch the step, then do the step.', 'So customers get it right the first time.'],
-  ['Update a single step in minutes.', 'No reshoot required.'],
-]
-
 const OTHERS = [
   { name: ASK_NAME, href: '/askradlor', line: 'Type a question. A short voiced video draws the answer.' },
   { name: APP_NAME, href: '/radlic', line: 'A math app for children, from kindergarten through grade 8.' },
@@ -94,25 +86,7 @@ export default function Home() {
 
       <SampleStory />
 
-      <section className={`${wrap} pt-24 sm:pt-36`}>
-        <h2 className={`${h2} max-w-[18ch]`}>From static PDF to <span className="whitespace-nowrap">step-by-step</span> 3D.</h2>
-        <dl className="mt-12 border-t border-line">
-          {WHY.map(([t, d]) => (
-            <div key={t} className="grid gap-2 border-b border-line py-6 sm:grid-cols-2 sm:gap-10">
-              <dt className="text-2xl font-semibold tracking-[-0.02em] sm:text-3xl">{t}</dt>
-              <dd className="text-lg text-muted">{d}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
-
-      <section className={`${wrap} pt-24 sm:pt-36`}>
-        <h2 className={`${h2} max-w-[20ch]`}>For products people assemble, install, clean or fix.</h2>
-        <ul className="mt-8 flex flex-wrap gap-x-8 gap-y-2 text-xl font-medium sm:text-2xl">
-          {FOR.map(t => <li key={t}>{t}</li>)}
-        </ul>
-        <p className="mt-6 text-lg text-muted">The goal: fewer “how does this work?” tickets, happier customers, better reviews.</p>
-      </section>
+      <HomeStory />
 
       <section className={`${wrap} pt-24 sm:pt-36`}>
         <h2 className={`${h2} max-w-[16ch]`}>From your page to their screen.</h2>
