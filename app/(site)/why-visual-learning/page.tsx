@@ -7,23 +7,17 @@
  * how the products use it, and the numbered source list that every [n] links to.
  */
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
-import { ASK_NAME, COMPANY, SITE_URL, V3D_NAME, V3D_PATH, WHY_PATH } from '@/site'
+import { COMPANY, SITE_URL, V3D_NAME, V3D_PATH, WHY_PATH } from '@/site'
 import { CHECKED_ON, NOT_CLAIMED, SECTIONS, SOURCES, SOURCE_ORDER, type SourceId } from '@/content/evidence'
-import { Icon, type IconName } from '@/components/visual/Icon'
-import { Viz } from '@/components/visual/Viz'
-import { WordsVsPictures } from '@/components/visual/WordsVsPictures'
-import { WHY_PHOTOS } from '@/components/scroll/art'
+import { WhyStory } from '@/components/visual/WhyStory'
 
-const SECTION_ICON: Record<string, IconName> = { mind: 'eye', video: 'film', math: 'ruler', medicine: 'pill', brain: 'brain' }
-
-const TITLE = 'Why visual learning works'
+const TITLE = 'Why visuals make things clear'
 
 export const metadata: Metadata = {
   title: TITLE,
   description:
-    'People learn better from words and pictures together than from words alone. Here is the research from psychology, medicine and education, where it is mixed, and every source.',
+    'People understand better from words and pictures together than from words alone. Here is the research from psychology, medicine and how-to tasks, where it is mixed, and every source.',
   alternates: { canonical: WHY_PATH },
   openGraph: { url: `${SITE_URL}${WHY_PATH}`, title: `${TITLE} · ${COMPANY}`, type: 'article' },
 }
@@ -44,125 +38,59 @@ function Refs({ ids }: { ids: readonly SourceId[] }) {
   )
 }
 
-const eyebrow = 'text-sm uppercase tracking-[0.18em] text-accent font-medium'
-
 export default function WhyVisualLearning() {
   return (
     <>
-      <section className="rl-dark overflow-x-clip">
-        <div className="mx-auto max-w-5xl px-6 pt-14 pb-14 sm:pt-20 sm:pb-16">
-          <p className={eyebrow}>The research</p>
-          <h1 className="rl-focus font-display mt-4 text-[2.75rem] leading-[1.03] sm:text-7xl">
-            Why visual learning <span className="rl-lit">works</span>.
-          </h1>
-          <p className="mt-6 max-w-[40rem] text-xl leading-relaxed text-muted">
-            People learn better from words and pictures together than from words alone. Not from every picture, and
-            not for every task. Here is the evidence, with its limits and sources.
-          </p>
-          <div className="mt-10"><WordsVsPictures /></div>
-          <nav aria-label="On this page" className="mt-10">
-            <ul className="flex flex-wrap gap-2 text-sm">
-              {SECTIONS.map(sec => (
-                <li key={sec.id}>
-                  <a href={`#${sec.id}`} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line px-4 hover:border-foreground transition-colors">
-                    <Icon name={SECTION_ICON[sec.id]} className="h-4 w-4 text-accent" />{sec.nav}
-                  </a>
-                </li>
-              ))}
-              {[{ id: 'not-claimed', label: 'What we do not claim', icon: 'x' as const }, { id: 'sources', label: 'Sources', icon: 'list' as const }].map(l => (
-                <li key={l.id}>
-                  <a href={`#${l.id}`} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line px-4 hover:border-foreground transition-colors">
-                    <Icon name={l.icon} className="h-4 w-4 text-accent" />{l.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
+      <section className="mx-auto max-w-[76rem] px-6 pt-14 pb-6 sm:pt-24">
+        <h1 className="font-display max-w-[14ch] text-[2.9rem] leading-[0.98] sm:text-8xl">Why visuals make things clear.</h1>
+        <p className="mt-6 max-w-[34rem] text-xl leading-relaxed text-muted">
+          Six short ideas from research. Scroll, and watch each one happen.
+        </p>
       </section>
 
+      <WhyStory />
+
       <div className="mx-auto max-w-5xl px-6">
-        {SECTIONS.map(sec => (
-          <section key={sec.id} id={sec.id} className="scroll-mt-20 border-b border-line py-16">
-            {/* Heading left, the section's photo right (2026-11-23): smaller than a full-width banner and with soft edges,
-                so it sits beside the words instead of as a box between them. Decorative; credits in docs/image-credits.md. */}
-            <div className="grid items-center gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
-              <div>
-                <div className="flex items-center gap-3">
-                  <span className="grid h-11 w-11 place-items-center rounded-xl bg-accent-soft text-accent"><Icon name={SECTION_ICON[sec.id]} className="h-5 w-5" /></span>
-                  <p className={eyebrow}>{sec.eyebrow}</p>
-                </div>
-                <h2 className="font-display mt-4 max-w-[36rem] text-4xl leading-tight sm:text-5xl">{sec.title}</h2>
-              </div>
-              {WHY_PHOTOS[sec.id] && (
-                <Image src={WHY_PHOTOS[sec.id].src} alt="" width={WHY_PHOTOS[sec.id].w} height={WHY_PHOTOS[sec.id].h}
-                  sizes="(max-width: 768px) 100vw, 352px" className="rl-photo aspect-[3/2] w-full object-cover" />
-              )}
-            </div>
-            <ul className="mt-10 grid items-start gap-5 md:grid-cols-2">
-              {sec.findings.map(f => (
-                <li key={f.id} className="flex flex-col rounded-3xl border border-line bg-surface p-6">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="rounded-full border border-line px-3 py-1 text-xs font-medium text-muted">{f.evidence}</span>
-                    {!f.viz && <span className="grid h-11 w-11 place-items-center rounded-xl bg-accent-soft text-accent"><Icon name={SECTION_ICON[sec.id]} className="h-5 w-5" /></span>}
-                  </div>
-                  <h3 className="mt-4 text-xl font-semibold leading-snug">{f.short}<Refs ids={f.refs} /></h3>
-                  {f.viz && <div className="mt-5"><Viz viz={f.viz} /></div>}
-                  <details className="group mt-5 border-t border-line pt-4">
-                    <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 font-medium text-accent [&::-webkit-details-marker]:hidden">
-                      Details and limits
-                      <svg viewBox="0 0 24 24" className="h-5 w-5 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
-                    </summary>
-                    <p className="mt-3 text-sm font-semibold text-foreground">{f.title}</p>
-                    <p className="mt-2 text-sm leading-relaxed text-muted">{f.body}</p>
-                    <p className="mt-3 border-l-2 border-[var(--viz-base)] pl-3 text-sm leading-relaxed text-muted">
-                      <strong className="font-semibold text-foreground">The limit. </strong>{f.limit}
-                    </p>
-                  </details>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))}
-
-        <section id="not-claimed" className="scroll-mt-20 border-b border-line py-16">
-          <p className={eyebrow}>Honest limits</p>
-          <h2 className="font-display mt-3 text-4xl leading-tight sm:text-5xl">What we do not claim.</h2>
-          <ul className="mt-10 grid gap-5 sm:grid-cols-2">
+        <section id="not-claimed" className="scroll-mt-20 py-20">
+          <h2 className="font-display text-4xl leading-tight sm:text-6xl">What we do not claim.</h2>
+          <dl className="mt-10 border-t border-line">
             {NOT_CLAIMED.map(n => (
-              <li key={n.title} className="rounded-3xl border border-line bg-surface p-6">
-                <Icon name="x" className="h-8 w-8 text-[var(--viz-base)]" />
-                <h3 className="mt-4 text-lg font-semibold leading-snug">{n.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{n.body}{n.refs.length > 0 && <Refs ids={n.refs} />}</p>
-              </li>
+              <div key={n.title} className="grid gap-2 border-b border-line py-6 sm:grid-cols-[20rem_1fr] sm:gap-8">
+                <dt className="text-lg font-semibold leading-snug">{n.title}</dt>
+                <dd className="leading-relaxed text-muted">{n.body}{n.refs.length > 0 && <Refs ids={n.refs} />}</dd>
+              </div>
             ))}
-          </ul>
-        </section>
-
-        <section className="border-b border-line py-16">
-          <p className={eyebrow}>What we do with it</p>
-          <h2 className="font-display mt-3 text-4xl leading-tight sm:text-5xl">How our products use this.</h2>
-          <ul className="mt-10 grid gap-5 md:grid-cols-3">
-            {[
-              { href: '/askradlor', name: ASK_NAME, icon: 'voice' as const, line: 'The voice explains each step while the step is drawn.' },
-              { href: '/radlic', name: 'Radlic', icon: 'board' as const, line: 'One math idea per lesson, written and said at the board.' },
-              { href: V3D_PATH, name: V3D_NAME, icon: 'box' as const, line: 'One task per video: the part, and where it goes.' },
-            ].map(p => (
-              <li key={p.href}>
-                <Link href={p.href} className="group flex h-full flex-col rounded-3xl border border-line bg-surface p-6 transition-colors duration-200 hover:border-accent">
-                  <span className="grid h-12 w-12 place-items-center rounded-xl bg-accent-soft text-accent"><Icon name={p.icon} className="h-6 w-6" /></span>
-                  <span className="mt-4 text-lg font-semibold">{p.name}</span>
-                  <span className="mt-1 flex-1 text-sm leading-relaxed text-muted">{p.line}</span>
-                  <span className="mt-4 text-sm font-medium text-accent">See {p.name} →</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          </dl>
           <p className="mt-6 text-sm text-muted">This research is about learning in general. It does not test our products, and we do not say that it does.</p>
         </section>
 
+        <section id="evidence" className="scroll-mt-20 py-10">
+          <h2 className="font-display text-4xl leading-tight sm:text-6xl">All the research, with its limits.</h2>
+          {SECTIONS.map(sec => (
+            <div key={sec.id} className="mt-12">
+              <h3 className="text-xl font-semibold">{sec.eyebrow}</h3>
+              <ul className="mt-4 border-t border-line">
+                {sec.findings.map(f => (
+                  <li key={f.id} className="border-b border-line">
+                    <details className="group">
+                      <summary className="flex min-h-14 cursor-pointer list-none items-baseline justify-between gap-4 py-4 text-lg hover:text-accent [&::-webkit-details-marker]:hidden">
+                        {f.short}<span aria-hidden="true" className="text-2xl leading-none group-open:rotate-45">+</span>
+                      </summary>
+                      <div className="max-w-[44rem] pb-6 leading-relaxed text-muted">
+                        <p>{f.body}<Refs ids={f.refs} /></p>
+                        <p className="mt-3"><strong className="font-semibold text-foreground">The limit. </strong>{f.limit}</p>
+                        <p className="mt-3 text-sm">Kind of evidence: {f.evidence.toLowerCase()}.</p>
+                      </div>
+                    </details>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+          <p className="mt-12"><Link href={V3D_PATH} className="font-medium underline underline-offset-4 hover:text-accent">See how {V3D_NAME} uses this</Link></p>
+        </section>
+
         <section id="sources" className="scroll-mt-20 py-14">
-          <p className={eyebrow}>Sources</p>
           <h2 className="font-display mt-3 text-4xl leading-tight">Every source on this page.</h2>
           <p className="mt-4 leading-relaxed text-muted">
             We opened each source and compared it with our sentence. Last check: {CHECKED_ON}. Many journal articles

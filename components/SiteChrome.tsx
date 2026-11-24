@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { COMPANY, FOOTER, FOUNDED_YEAR, HEADER, SOCIAL, SUPPORT_EMAIL, TAGLINE, V3D_CTA, V3D_SIGNUP_PATH } from '@/site'
+import { COMPANY, FOOTER, FOOTER_OTHER, FOUNDED_YEAR, HEADER, SOCIAL, SUPPORT_EMAIL, TAGLINE, V3D_CTA, V3D_SIGNUP_PATH } from '@/site'
 
 /**
  * The Radlor header and footer around a company page. Worn by `app/(site)/layout.tsx` (every company page) and by
@@ -58,7 +58,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
       </div>
     </header>
 
-    <main id="main" className="flex-1">{children}</main>
+    <main id="main" className="rl-paper flex-1">{children}</main>
 
     <footer className="border-t border-line mt-24">
       <div className="mx-auto max-w-5xl px-6 py-10 flex flex-wrap gap-6 justify-between text-sm text-muted">
@@ -86,6 +86,14 @@ export function SiteChrome({ children }: { children: ReactNode }) {
             </a>
           ))}
         </div>
+        <nav aria-label="Other products" className="flex w-full flex-wrap gap-x-5 gap-y-2 border-t border-line pt-6">
+          <span className="font-medium text-foreground">Other products</span>
+          {FOOTER_OTHER.map(n => (
+            <Link key={n.href} href={n.href} className="rl-link hover:text-foreground transition-colors">
+              {n.label}
+            </Link>
+          ))}
+        </nav>
       </div>
     </footer>
     </>

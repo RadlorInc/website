@@ -5,9 +5,9 @@ import { ART, POST_COVERS } from '@/components/scroll/art'
 import { posts } from '@/content/posts'
 
 export const metadata: Metadata = {
-  title: 'Writing',
+  title: 'Radlic notes',
   description:
-    'How Radlor builds adaptive learning software: what we got wrong, what the research says, and what we do differently.',
+    'Notes on how we build Radlic, our math app: what we got wrong and what we do differently.',
   alternates: { canonical: '/writing' },
 }
 
@@ -20,7 +20,7 @@ export default function Writing() {
   return (
     <section className="relative isolate overflow-hidden">
       <div className="relative z-10 mx-auto max-w-5xl px-6 pb-20">
-        <PageHero title="Writing" line="Design decisions, the ones we got wrong first, and what we changed." pic={ART.writingHero} />
+        <PageHero title="Radlic notes" line="Our math app: design decisions, the ones we got wrong first, and what we changed." pic={ART.postCamera} />
         <PathRows rows={rows} />
       </div>
     </section>
