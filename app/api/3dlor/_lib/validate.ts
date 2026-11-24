@@ -1,4 +1,4 @@
-import { MIN_VIDEOS, payable, quote } from './plans.ts'
+import { LANGUAGES, MIN_VIDEOS, payable, quote } from './plans.ts'
 
 /**
  * What we need from a brand to start a library (from video_ads/CLAUDE.md and PITCH-POINTS.md):
@@ -8,7 +8,7 @@ import { MIN_VIDEOS, payable, quote } from './plans.ts'
 export const FIELDS = {
   company: { max: 200, required: true },
   contact_name: { max: 200, required: true },
-  languages: { max: 200, required: false },
+  languages: { max: 600, required: false },
 } as const
 /** Asked on the order page AFTER payment, all optional (founder, 24 Nov 2026: the sign-up asks as little as possible). */
 export const DETAILS = {
@@ -35,8 +35,13 @@ const isHttpUrl = (s: string) => {
 // Control characters other than tab and newline.
 const CONTROL = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/
 
-/** "English, Spanish and French" → 3 names. The form uses the same count before it posts. */
-export const languagesIn = (v: string | null) => (v || 'English').split(/[,/]| and /).map(s => s.trim()).filter(Boolean)
+/** The list the form sends, "Spanish, Tamil", as names. English is added, doubles go, and a name that is not on our list makes
+ *  it null: the price counts these, so nothing may hide two languages in one name. */
+export function languagesIn(v: string | null): string[] | null {
+  const names = (v ?? '').split(',').map(s => s.trim()).filter(Boolean)
+  if (names.some(n => n !== 'English' && !(LANGUAGES as readonly string[]).includes(n))) return null
+  return ['English', ...new Set(names.filter(n => n !== 'English'))]
+}
 
 type Rule = { max: number; required: boolean; url?: boolean }
 function readFields<K extends string>(form: FormData, rules: Record<K, Rule>): { ok: true; data: Record<K, string | null> } | { ok: false; error: K } {
@@ -63,7 +68,7 @@ const whole = (v: unknown, min: number) => {
   return n >= min ? n : null
 }
 
-export function parseOrder(form: FormData): { ok: true; data: OrderInput; size: { videos: number; products: number; languages: number } } | { ok: false; error: string } {
+export function parseOrder(form: FormData): { ok: true; data: OrderInput; size: { videos: number; products: number; languages: number }; names: string[] } | { ok: false; error: string } {
   const videos = whole(form.get('videos'), MIN_VIDEOS)
   if (videos === null) return { ok: false, error: 'videos' }
   const products = whole(form.get('products'), 1)
@@ -71,10 +76,13 @@ export function parseOrder(form: FormData): { ok: true; data: OrderInput; size: 
   const read = readFields(form, FIELDS)
   if (!read.ok) return read
   const data: OrderInput = read.data
-  const languages = languagesIn(data.languages).length
-  if (languages < 1) return { ok: false, error: 'languages' }
+  const names = languagesIn(data.languages)
+  if (!names) return { ok: false, error: 'languages' }
+  const listed = names.join(', ')
+  data.languages = listed.length <= 200 ? listed : `${names.length} languages (see notes)` // the column holds 200
+  const languages = names.length
   if (!payable(quote({ videos, products, languages }).buildCents)) return { ok: false, error: 'videos' }
-  return { ok: true, data, size: { videos, products, languages } }
+  return { ok: true, data, size: { videos, products, languages }, names }
 }
 
 /** Upload rules. 4 MB keeps one file under Vercel's 4.5 MB request limit. */
