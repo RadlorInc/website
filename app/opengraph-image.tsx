@@ -18,7 +18,7 @@ const MARK =
 
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
-export const alt = `${COMPANY} — ${TAGLINE}`
+export const alt = `${COMPANY}: ${TAGLINE}`
 
 /** One card for the whole site. Per-page images are worth adding when a page earns its own share. */
 export default function OpengraphImage() {

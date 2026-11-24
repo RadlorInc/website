@@ -98,7 +98,7 @@ nothing here governs your use of the app.
 
 ## 2. Who this site is for
 
-This site is written for **adults** — parents, guardians, educators and people
+This site is written for **adults**: parents, guardians, educators and people
 interested in the company. It is not directed at children and we do not knowingly
 collect information from children through it.
 
@@ -155,7 +155,7 @@ you, or scrape it for training data or a commercial database.
 
 ## 6. Anything you send us
 
-If you send us an idea, a suggestion or feedback — by email or through a form —
+If you send us an idea, a suggestion or feedback, by email or through a form,
 you agree we may use it without obligation, payment or confidentiality. Please
 do not send us anything you consider confidential or want to be paid for.
 

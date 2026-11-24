@@ -30,8 +30,8 @@ const BLURB: Record<(typeof PAGES)[number]['href'], string> = {
   '/about': `why ${COMPANY} started and how we work`,
   '/contact': '3Dlor for your product, support, partnerships, press',
   '/data-and-safety': "what we store about a child, who can see it, how to delete it, and what we do not collect",
-  '/terms': 'the terms of use for this website, in force since 6 September 2026 — what this site is, what it collects, and what its content does and does not promise; the Radlic app has its own separate Terms of Service on its own origin',
-  '/privacy': 'the privacy policy for this website: no cookies, no analytics, nothing loaded from a third party, and one form — the waitlist — which stores an email address and an optional grade, and nothing else',
+  '/terms': 'the terms of use for this website, in force since 6 September 2026: what this site is, what it collects, and what its content does and does not promise; the Radlic app has its own separate Terms of Service on its own origin',
+  '/privacy': 'the privacy policy for this website: no cookies, no analytics, nothing loaded from a third party, and one form, the waitlist, which stores an email address and an optional grade, and nothing else',
 }
 
 export function GET() {
@@ -54,8 +54,8 @@ AdaptiveLearn, at adaptivelearn.radlor.com, until September 2026. Its address ap
 
 ${APP_NAME} teaches one idea per lesson: a teacher says each step out loud and writes or draws it on
 the board, then the child tries one with hints and worked steps to fall back on. Practice adapts
-question by question — each harder level is a different kind of question, not the same question
-with bigger numbers — and the level is never shown on screen; a wrong answer is never marked wrong.
+question by question: each harder level is a different kind of question, not the same question
+with bigger numbers, and the level is never shown on screen; a wrong answer is never marked wrong.
 Kindergarten, grade 1 and grade 2 have 23 story chapters. Grade 3 through grade 8 are split into
 modules: ${APP_GRADES.map(g => `Grade ${g.grade}: ${g.modules.join('; ')}`).join('. ')}.
 
@@ -70,7 +70,7 @@ same chat. It covers biology, physics, chemistry, home improvements and auto rep
 by AI and can be wrong. Public videos are at ${ASK_EXPLORE_URL} and need no account.
 
 ## Pages
-${PAGES.map(p => `- [${p.label} — ${BLURB[p.href]}](${SITE_URL}${p.href === '/' ? '' : p.href})`).join('\n')}
+${PAGES.map(p => `- [${p.label}: ${BLURB[p.href]}](${SITE_URL}${p.href === '/' ? '' : p.href})`).join('\n')}
 
 ## Writing
 ${posts.map(p => `- [${p.title}](${SITE_URL}/writing/${p.slug}): ${p.description}`).join('\n')}

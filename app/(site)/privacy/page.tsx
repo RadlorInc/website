@@ -56,7 +56,7 @@ export default function Privacy() {
       <h1 className="rl-focus font-display text-5xl">Privacy on this website</h1>
       <p className="rl-rise mt-6 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.12s' } as React.CSSProperties}>
         This page is about <strong className="text-foreground font-medium">radlor.com</strong>, the site
-        you are reading. {APP_NAME} — the product — handles children&rsquo;s data and has its own,
+        you are reading. {APP_NAME}, the product, handles children&rsquo;s data and has its own,
         longer policy.
       </p>
         </div>
@@ -83,13 +83,13 @@ export default function Privacy() {
           You can check all of that yourself: open your browser&rsquo;s network tab and reload. Every
           request goes to radlor.com. Do it on{' '}
           <Link href="/waitlist" className="rl-link">the waitlist page</Link> too, and submit the form
-          while you watch — the only request that leaves is a POST to radlor.com.
+          while you watch: the only request that leaves is a POST to radlor.com.
         </p>
 
         <h2>What does happen</h2>
         <p>
           The site is hosted by <strong>Vercel</strong>, and like any web server theirs records the
-          requests it serves — an IP address, the page asked for, a timestamp, the browser&rsquo;s own
+          requests it serves: an IP address, the page asked for, a timestamp, the browser&rsquo;s own
           description of itself. We do not build profiles from those logs and they expire on Vercel&rsquo;s
           own schedule. It is the minimum a server does in order to be a server, and we would be lying if
           we said nothing was recorded anywhere.
@@ -100,7 +100,7 @@ export default function Privacy() {
           The waitlist form, at{' '}
           <Link href="/waitlist" className="rl-link">the waitlist</Link>, stores{' '}
           <strong className="text-foreground font-medium">an email address</strong>, and{' '}
-          <strong className="text-foreground font-medium">a grade if you pick one</strong> — that
+          <strong className="text-foreground font-medium">a grade if you pick one</strong>; that
           field is optional and &ldquo;rather not say&rdquo; is the default. There is no name field, no
           date of birth and nowhere to type a child&rsquo;s name, because a waitlist does not need any of
           it.
@@ -108,20 +108,20 @@ export default function Privacy() {
         <p>
           It is stored in a database we run, hosted by <strong>Supabase</strong>, and used to write to
           you about a place and for nothing else. It is not a mailing list, it is not sold, and nobody
-          else is given it. Ask us to remove you —{' '}
-          <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a> — and the row is deleted, not marked
+          else is given it. Ask us to remove you at{' '}
+          <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>, and the row is deleted, not marked
           as unsubscribed.
         </p>
         <p>
           <strong className="text-foreground font-medium">
             The form does not change what your browser talks to.
           </strong>{' '}
-          It posts to radlor.com, and our own server passes it on to the database — so the request
+          It posts to radlor.com, and our own server passes it on to the database, so the request
           leaves your machine addressed to us and to nobody else. That is unusual enough to be worth
           saying out loud: most forms hand your browser a key and let it talk straight to the database
           vendor, which would put a second name in the network tab below. Ours does not, and the check
           further up this page still passes on the waitlist page itself. There is no CAPTCHA either,
-          for the same reason — every one of them is somebody else&rsquo;s script.
+          for the same reason: every one of them is somebody else&rsquo;s script.
         </p>
 
         <h2 id="3dlor">3Dlor orders</h2>
@@ -163,7 +163,7 @@ export default function Privacy() {
 
         <h2>Children</h2>
         <p>
-          This website is written for adults — parents, teachers, people deciding whether to try{' '}
+          This website is written for adults: parents, teachers, people deciding whether to try{' '}
           {APP_NAME}. It is not aimed at children, and the waitlist form asks for an adult&rsquo;s email
           address so that we can write back about an account an adult would set up. We do not ask a
           child for anything here. Everything about what we store when a child actually uses the product
@@ -189,7 +189,7 @@ export default function Privacy() {
         <h2>Changes, and who to ask</h2>
         <p>
           If this page ever stops being true we will change it in the same breath as the thing that made
-          it untrue — that is a rule we hold ourselves to, not a promise about a review cycle. Questions
+          it untrue; that is a rule we hold ourselves to, not a promise about a review cycle. Questions
           about any of it go to <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>, and a person at{' '}
           {COMPANY} answers them.
         </p>

@@ -34,7 +34,7 @@ export default function Problem() {
       </p>
       <p className="rl-rise mt-4 text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.18s' } as React.CSSProperties}>
         Go back and try once more, or skip the form entirely and write to{' '}
-        <a href={`mailto:${SUPPORT_EMAIL}`} className="rl-link text-accent">{SUPPORT_EMAIL}</a> — that
+        <a href={`mailto:${SUPPORT_EMAIL}`} className="rl-link text-accent">{SUPPORT_EMAIL}</a>; that
         reaches a person and works just as well.
       </p>
       <div className="rl-rise mt-9" style={{ '--d': '0.24s' } as React.CSSProperties}>

@@ -22,11 +22,11 @@ import { ART } from '@/components/scroll/art'
 const RADLIC = APP_URL
 
 export const metadata: Metadata = {
-  title: { absolute: 'Radlic — math lessons that adapt to your child, grades K–8' },
+  title: { absolute: 'Radlic: math lessons that adapt to your child, grades K–8' },
   description:
     'Math for kindergarten through grade 8. Each lesson explains one idea step by step, the way a teacher would at the board, then practice adapts to what your child gets right and wrong. For parents.',
   alternates: { canonical: '/radlic' },
-  openGraph: { url: `${SITE_URL}/radlic`, title: 'Radlic — math lessons that adapt to your child' },
+  openGraph: { url: `${SITE_URL}/radlic`, title: 'Radlic: math lessons that adapt to your child' },
 }
 
 function AppJsonLd() {

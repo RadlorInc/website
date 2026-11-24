@@ -31,7 +31,7 @@ export const posts: Post[] = [
     slug: 'a-camera-claim-you-can-check',
     title: 'A camera claim you can check',
     description:
-      'A promise not to upload video is weaker than an app that cannot open a camera. Radlic removed its camera chapters, and a Permissions-Policy header the build tests now makes the browser refuse the camera — here is how to check the same of any app.',
+      'A promise not to upload video is weaker than an app that cannot open a camera. Radlic removed its camera chapters, and a Permissions-Policy header the build tests now makes the browser refuse the camera: here is how to check the same of any app.',
     date: '2026-08-29',
     updated: '2026-09-30',
   },
@@ -39,7 +39,7 @@ export const posts: Post[] = [
     slug: 'difficulty-should-be-invisible',
     title: 'A child should never see their level',
     description:
-      'Showing a child a difficulty level, a rank or a score turns learning into a verdict. Adaptive software can move the difficulty without ever naming it — here is how we do it, and what breaks when you get it wrong.',
+      'Showing a child a difficulty level, a rank or a score turns learning into a verdict. Adaptive software can move the difficulty without ever naming it: here is how we do it, and what breaks when you get it wrong.',
     date: '2026-08-19',
   },
 ]
