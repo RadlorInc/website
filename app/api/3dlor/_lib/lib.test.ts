@@ -5,8 +5,8 @@ import { createHmac } from 'node:crypto'
 import { sign, verify, readCookie } from './session.ts'
 import { formEncode, verifyWebhook, addMonthsSec, isLiveKey, checkoutParams } from './stripe.ts'
 import { decide, timeline, type Video } from './track.ts'
-import { parseDetails, parseOrder, sniffMime, cleanName, isEmail } from './validate.ts'
-import { CARE, balanceCents, cheaperAt, depositCents, quote } from './plans.ts'
+import { languagesIn, parseDetails, parseOrder, sniffMime, cleanName, isEmail } from './validate.ts'
+import { CARE, LANGUAGES, balanceCents, cheaperAt, depositCents, quote } from './plans.ts'
 
 const SECRET = 'x'.repeat(40)
 
@@ -103,7 +103,7 @@ test('order form: accepts good input, refuses bad', () => {
     ['videos', '2', 'videos'], ['videos', '99999999', 'videos'], ['videos', '9999999', 'videos'], ['videos', '-5', 'videos'], ['videos', '5.5', 'videos'], ['videos', '1e2', 'videos'], ['videos', '', 'videos'],
     ['products', '0', 'products'], ['products', '9999999', 'videos'], ['company', '', 'company'],
     ['company', 'x'.repeat(201), 'company'], ['contact_name', 'a\u0000b', 'contact_name'],
-    ['languages', ', ,', 'languages'],
+    ['languages', 'Spanish Tamil', 'languages'], ['languages', 'Spanish/Tamil', 'languages'], ['languages', 'Spanish and Tamil', 'languages'], ['languages', 'Klingon', 'languages'], ['languages', 'spanish', 'languages'],
   ]
   for (const [k, v, err] of cases) {
     const f = good()
@@ -178,4 +178,20 @@ test('details: optional, checked, and only these columns', () => {
   f.set('build_price_cents', '1')
   const r = parseDetails(f)
   assert.ok(r.ok && !('payment_status' in r.data) && !('build_price_cents' in r.data))
+})
+
+test('languages: exact count, English always in, no doubles', () => {
+  assert.deepEqual(languagesIn(''), ['English'])
+  assert.deepEqual(languagesIn(null), ['English'])
+  assert.deepEqual(languagesIn('Spanish, Tamil'), ['English', 'Spanish', 'Tamil'])
+  assert.deepEqual(languagesIn('Spanish, Spanish, English'), ['English', 'Spanish'])
+  assert.equal(languagesIn('Spanish Tamil'), null)
+  const f = good()
+  f.set('languages', 'Spanish, Tamil')
+  const r = parseOrder(f)
+  assert.ok(r.ok && r.size.languages === 3 && r.data.languages === 'English, Spanish, Tamil')
+  f.set('languages', LANGUAGES.join(', '))
+  const all = parseOrder(f)
+  assert.ok(all.ok && all.data.languages!.length <= 200 && all.size.languages === LANGUAGES.length + 1)
+  assert.equal(quote({ videos: 10, products: 1, languages: 3 }).buildCents, 135000 + 2 * 10 * 2000)
 })

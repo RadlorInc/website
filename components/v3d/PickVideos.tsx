@@ -1,8 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { FREE_MONTHS, EXTRA_LANGUAGE_CENTS, EXTRA_PRODUCT_CENTS, MIN_VIDEOS, RATES, START_VIDEOS, cheaperAt, depositCents, payable, quote, usd } from '@/app/api/3dlor/_lib/plans'
-import { languagesIn } from '@/app/api/3dlor/_lib/validate'
+import { FREE_MONTHS, LANGUAGES, EXTRA_LANGUAGE_CENTS, EXTRA_PRODUCT_CENTS, MIN_VIDEOS, RATES, START_VIDEOS, cheaperAt, depositCents, payable, quote, usd } from '@/app/api/3dlor/_lib/plans'
 
 function Count({ name, title, note, value, set, min }: { name: string; title: string; note?: string; value: string; set: (v: string) => void; min: number }) {
   const step = (d: number) => set(String(Math.max(min, (Number(value) || min) + d)))
@@ -20,9 +19,9 @@ function Count({ name, title, note, value, set, min }: { name: string; title: st
 export function PickVideos({ bad }: { bad?: string }) {
   const [videos, setVideos] = useState(String(START_VIDEOS))
   const [products, setProducts] = useState('1')
-  const [langs, setLangs] = useState('')
+  const [langs, setLangs] = useState<string[]>([])
   const clamp = (v: string, min: number) => Math.max(min, Math.floor(Number(v)) || min)
-  const order = { videos: clamp(videos, MIN_VIDEOS), products: clamp(products, 1), languages: Math.max(1, languagesIn(langs).length) }
+  const order = { videos: clamp(videos, MIN_VIDEOS), products: clamp(products, 1), languages: 1 + langs.length }
   const q = quote(order)
   const better = cheaperAt(order)
   return (
@@ -40,11 +39,23 @@ export function PickVideos({ bad }: { bad?: string }) {
         </tbody>
       </table>
       <Count name="products" title="Products" note={`${q.included} included, then ${usd(EXTRA_PRODUCT_CENTS)} each`} value={products} set={setProducts} min={1} />
-      <label className="su-field">
-        <span>Languages <small>1 included, then {usd(EXTRA_LANGUAGE_CENTS)} a video each</small></span>
-        <input name="languages" maxLength={200} placeholder="English" value={langs} aria-invalid={bad === 'languages' || undefined}
-          onChange={e => { e.target.setCustomValidity(''); setLangs(e.target.value) }} />
-      </label>
+      <div className="su-langs">
+        <p id="su-langs">Languages <small>English included, then {usd(EXTRA_LANGUAGE_CENTS)} a video each</small></p>
+        <ul aria-labelledby="su-langs">
+          <li>English</li>
+          {langs.map(l => (
+            <li key={l}>{l}<button type="button" aria-label={`Remove ${l}`} onClick={() => setLangs(x => x.filter(y => y !== l))}>×</button></li>
+          ))}
+          <li className="su-add">
+            <select aria-label="Add a language" value="" aria-invalid={bad === 'languages' || undefined} onChange={e => { const v = e.target.value; if (v) setLangs(x => [...x, v]) }}>
+              <option value="">+ Add a language</option>
+              {LANGUAGES.filter(l => !langs.includes(l)).map(l => <option key={l}>{l}</option>)}
+            </select>
+          </li>
+        </ul>
+        <input type="hidden" name="languages" value={langs.join(', ')} />
+        {langs.length > 0 && <p className="su-sum">{langs.length} extra × {order.videos} videos × {usd(EXTRA_LANGUAGE_CENTS)} = <strong>{usd(langs.length * order.videos * EXTRA_LANGUAGE_CENTS)}</strong></p>}
+      </div>
       <div className="su-total" aria-live="polite">
         <p><span>Total</span><strong>{usd(q.buildCents)}</strong></p>
         <p>{usd(depositCents(q.buildCents))} today, the other half at delivery. Care plan: free for {FREE_MONTHS} months, then {usd(q.careCents)} a month. Cancel any time.</p>

@@ -34,7 +34,7 @@ export async function POST(req: Request) {
         plan: q.plan,
         videos_ordered: parsed.size.videos,
         build_price_cents: q.buildCents, // the price, worked out here; Checkout charges this saved number
-        notes: `Products: ${parsed.size.products}. Languages: ${parsed.size.languages}. Rate: ${q.rateCents / 100} USD a video.`,
+        notes: `Products: ${parsed.size.products}. Languages: ${parsed.names.join(', ')}. Rate: ${q.rateCents / 100} USD a video.`,
         waiting_on_customer: 'Product photos from all sides\nThe manual or instruction PDF\nYour logo',
       }),
     })
