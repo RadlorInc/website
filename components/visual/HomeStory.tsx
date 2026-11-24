@@ -10,8 +10,8 @@ import { Scene, on } from './Scene'
 const LINES = [
   'One clear action per video. No more walls of text.',
   'Customers watch the step, then do the step.',
-  'Show them the inside, the exploded view, the exact step — so they get it right the first time.',
-  'Update a single step in minutes — no reshoot required.',
+  'Show them the inside, the exploded view, the exact step, so they get it right the first time.',
+  'Update a single step in minutes, no reshoot required.',
 ]
 
 const pic = (id: string) => SAMPLES.find(s => s.id === id)!.whole
@@ -23,7 +23,7 @@ export function HomeStory() {
   return (
     <>
       <Scene beats={LINES.length * 2} title="From static PDF to step‑by‑step 3D."
-        small="Exploded views, internal mechanisms, parts that come apart — things a camera often can’t show cleanly or repeatedly."
+        small="Exploded views, internal mechanisms, parts that come apart: things a camera often can’t show cleanly or repeatedly."
         words={b => (
           <ol className="get">
             {LINES.map((l, i) => <li key={l} {...on(Math.ceil(b / 2) === i + 1)}><strong>{l}</strong></li>)}
@@ -43,7 +43,7 @@ export function HomeStory() {
         }}
       </Scene>
 
-      <Scene beats={6} title="Turn frustrating manuals into videos customers actually finish — and succeed with."
+      <Scene beats={6} title="Turn frustrating manuals into videos customers actually finish and succeed with."
         line="For brands whose products involve assembly, installation, cleaning, or troubleshooting."
         words={b => <ul className="get"><li {...on(b > 5)}><strong>Fewer ‘how does this work?’ tickets. Happier customers. Better reviews.</strong></li></ul>}>
         {b => (
