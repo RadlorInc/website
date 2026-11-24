@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: PageProps<'/samples/[id]'>): 
     title,
     description: `A ${s.seconds}-second narrated 3D sample from a written manual page. ${V3D_NAME} makes videos like this for ${s.name.toLowerCase()} brands.`,
     alternates: { canonical: samplePath(s.id) },
-    openGraph: { url: `${SITE_URL}${samplePath(s.id)}`, title: `${title} · ${COMPANY}`, images: [`/samples/${s.id}/poster.webp`] },
+    openGraph: { url: `${SITE_URL}${samplePath(s.id)}`, title: `${title} · ${COMPANY}` },
   }
 }
 
