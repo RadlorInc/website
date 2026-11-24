@@ -1,5 +1,5 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
-import { PLANS, depositCents, FREE_MONTHS, type PlanKey } from './plans.ts'
+import { CARE, depositCents, FREE_MONTHS, type PlanKey } from './plans.ts'
 
 /**
  * Stripe without the SDK: two API calls (Checkout session, portal session) and the webhook check.
@@ -80,8 +80,8 @@ export function verifyWebhook(body: string, header: string | null, secret: strin
  *   1. the first half of the build, a one-time line item, paid today;
  *   2. the monthly care plan, free until `trial_end`, then month to month.
  */
-export function checkoutParams(o: { orderId: string; uid: string; email: string; plan: PlanKey; site: string; today: Date }) {
-  const p = PLANS[o.plan]
+export function checkoutParams(o: { orderId: string; uid: string; email: string; plan: PlanKey; videos: number; buildCents: number; site: string; today: Date }) {
+  const care = CARE[o.plan]
   const trialEnd = addMonthsSec(o.today, FREE_MONTHS)
   const meta = { v3d_order_id: o.orderId, v3d_user_id: o.uid, v3d_plan: o.plan, v3d_trial_end: String(trialEnd) }
   return {
@@ -89,10 +89,10 @@ export function checkoutParams(o: { orderId: string; uid: string; email: string;
     customer_email: o.email,
     client_reference_id: o.orderId,
     line_items: [
-      { quantity: 1, price_data: { currency: 'usd', unit_amount: depositCents(o.plan),
-        product_data: { name: `3Dlor, ${p.name}: library build, first half (second half at delivery)` } } },
-      { quantity: 1, price_data: { currency: 'usd', unit_amount: p.careCents, recurring: { interval: 'month' },
-        product_data: { name: `3Dlor care plan, ${p.name} (${p.careVideos})` } } },
+      { quantity: 1, price_data: { currency: 'usd', unit_amount: depositCents(o.buildCents),
+        product_data: { name: `3Dlor, ${o.videos} videos: first half (second half at delivery)` } } },
+      { quantity: 1, price_data: { currency: 'usd', unit_amount: care.cents, recurring: { interval: 'month' },
+        product_data: { name: `3Dlor care plan (${care.videos})` } } },
     ],
     subscription_data: {
       trial_end: trialEnd,

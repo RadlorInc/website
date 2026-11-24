@@ -22,8 +22,8 @@ ok(unused.length === 0, `every source is cited (${ids.length} sources${unused.le
 ok(ids.every(id => ev.SOURCES[id].url.startsWith('https://')), 'every source URL is https')
 const findings = ev.SECTIONS.flatMap(s => s.findings)
 ok(findings.every(f => f.refs.length > 0 && f.limit.trim().length > 20), `every finding has a source and a limit (${findings.length} findings)`)
-ok(ev.HOME_EVIDENCE.length === 3 && ev.HOME_EVIDENCE.every(id => ev.FINDINGS[id]?.viz),
-  'the home page shows 3 findings from the research page, each with its own chart')
+ok(ev.HOME_EVIDENCE.length === 1 && ev.HOME_EVIDENCE.every(id => ev.FINDINGS[id]?.viz),
+  'the home page shows 1 finding from the research page')
 ok(new Set(findings.map(f => f.id)).size === findings.length, 'every finding id is unique')
 // A chart may only show what its finding says, whatever its kind: every `shown` value (bars, rings, waffles, marks…)
 // must appear in the finding's own text or chart caption, and its number must equal the `value` the mark is drawn from.
@@ -49,7 +49,7 @@ ok(MYTHS.test('people remember 80% of what they see'), 'positive control: the my
 const claims = JSON.stringify({ s: ev.SECTIONS, h: ev.HOME_EVIDENCE })
 ok(!MYTHS.test(claims), 'no myth number appears as a finding (NOT_CLAIMED may name them to reject them)')
 
-const PAGES = ['app/(site)/page.tsx', 'app/(site)/3dlor/page.tsx', 'app/(site)/why-visual-learning/page.tsx', 'app/askradlor/page.tsx', 'app/llms.txt/route.ts']
+const PAGES = ['app/(site)/page.tsx', 'app/(site)/3dlor/page.tsx', 'app/(site)/why-visual-learning/page.tsx', 'components/visual/WhyStory.tsx', 'components/visual/ManualScroll.tsx', 'components/visual/V3dStory.tsx', 'components/visual/SampleStory.tsx', 'app/(site)/samples/page.tsx', 'app/(site)/samples/[id]/page.tsx', 'app/askradlor/page.tsx', 'app/llms.txt/route.ts']
 // Text a visitor reads, without the comments that explain the rules.
 const visible = f => readFileSync(new URL(`../${f}`, import.meta.url), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '').replace(/<\/?svg\b[^>]*>/gi, '')
 const RULES = [

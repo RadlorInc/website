@@ -38,7 +38,7 @@ export default function Pricing() {
           <div className="rl-glow rl-parallax" style={{ '--p': '32px' } as React.CSSProperties} />
         </div>
         <div className="relative z-10 mx-auto max-w-5xl px-6 pt-20 pb-14">
-          <p className="rl-rise text-sm uppercase tracking-[0.18em] text-accent font-medium">Pricing</p>
+          <p className="rl-rise font-medium text-muted">Pricing</p>
           <h1 className="rl-focus font-display text-5xl sm:text-6xl leading-[1.05] mt-4 max-w-3xl" style={{ '--d': '0.09s' } as React.CSSProperties}>
             <span className="rl-lit" style={{ '--lit': 0.62 } as React.CSSProperties}>{first}</span> a month for the first child.
           </h1>

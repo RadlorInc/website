@@ -26,7 +26,6 @@ export const ART = {
   contactPhoto: { src: '/photos/contact-hero.webp', w: 1200, h: 900, photo: true },
   contactSupport: { src: '/photos/contact-support.webp', w: 1200, h: 900, photo: true },
   contactPress: { src: '/photos/contact-press.webp', w: 1200, h: 900, photo: true },
-  writingHero: { src: '/photos/writing-hero.webp', w: 1200, h: 900, photo: true },
   postGap: { src: '/photos/post-gap.webp', w: 1200, h: 900, photo: true },
   postCamera: { src: '/photos/post-camera.webp', w: 1200, h: 900, photo: true },
   postInvisible: { src: '/photos/post-invisible.webp', w: 1200, h: 900, photo: true },
@@ -40,26 +39,18 @@ export const ART = {
   privacy: { src: '/photos/privacy.webp', w: 1200, h: 900, photo: true },
   terms: { src: '/photos/terms.webp', w: 1200, h: 900, photo: true },
   notFound: { src: '/photos/not-found.webp', w: 1200, h: 900, photo: true },
-  aboutWhat: { src: '/photos/about-what.webp', w: 1200, h: 900, photo: true },
-  aboutWhy: { src: '/photos/about-why.webp', w: 1200, h: 900, photo: true },
-  aboutHow: { src: '/photos/about-how.webp', w: 1200, h: 900, photo: true },
-  aboutWhere: { src: '/photos/about-where.webp', w: 1200, h: 900, photo: true },
-  journeyTreasure: { src: '/photos/about-hero.webp', w: 1200, h: 900, photo: true },
   journeyAdapts: { src: '/journey-adapts.webp', w: 750, h: 1001 },
   journeySteps: { src: '/journey-steps.webp', w: 836, h: 822 },
   journeyTogether: { src: '/journey-together.webp', w: 914, h: 672 },
   journeyRules: { src: '/journey-rules.webp', w: 903, h: 872 },
   journeyNext: { src: '/journey-next.webp', w: 638, h: 538 },
+  // Stills of the samples; the names are from the pictures they replaced (2026-11-24).
+  homeExploded: { src: '/stop/samples/kitchen-b.webp', w: 1200, h: 900 },
+  lockOpen: { src: '/stop/samples/furniture-a.webp', w: 1200, h: 900 },
+  washerOpen: { src: '/stop/water-filter/242.webp', w: 1200, h: 900 },
+  sewingOpen: { src: '/stop/samples/smarthome-b.webp', w: 1200, h: 900 },
+  fanOpen: { src: '/stop/samples/baby-pet-b.webp', w: 1200, h: 900 },
 } satisfies Record<string, Pic>
-
-/** One wide photo under each research section's heading on /why-visual-learning, by section id in content/evidence.ts. */
-export const WHY_PHOTOS: Record<string, Pic> = {
-  mind: { src: '/photos/why-mind.webp', w: 1600, h: 900, photo: true },
-  video: { src: '/photos/why-video.webp', w: 1600, h: 900, photo: true },
-  math: { src: '/photos/why-math.webp', w: 1600, h: 900, photo: true },
-  medicine: { src: '/photos/why-medicine.webp', w: 1600, h: 900, photo: true },
-  brain: { src: '/photos/why-brain.webp', w: 1600, h: 900, photo: true },
-}
 
 /** The cover picture for each post in content/posts.ts, by slug. */
 export const POST_COVERS: Record<string, Pic> = {

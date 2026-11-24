@@ -1,4 +1,4 @@
-import { PLANS, depositCents, isPlan } from '../_lib/plans.ts'
+import { CARE, depositCents, isPlan } from '../_lib/plans.ts'
 import { checkoutParams, stripeApi, stripeKey } from '../_lib/stripe.ts'
 import { configured, db, dbJson, json, originOf, sameOrigin, sessionFrom } from '../_lib/server.ts'
 
@@ -20,9 +20,9 @@ export async function POST(req: Request) {
   if (!UUID.test(orderId)) return json(400, { code: 'bad_request' })
 
   try {
-    const [o] = await dbJson<{ plan: string; payment_status: string; stripe_session_id: string | null }[]>(
-      `v3d_orders?select=plan,payment_status,stripe_session_id&id=eq.${orderId}&user_id=eq.${s.uid}`)
-    if (!o || !isPlan(o.plan)) return json(404, { code: 'not_found' })
+    const [o] = await dbJson<{ plan: string; videos_ordered: number; build_price_cents: number | null; payment_status: string; stripe_session_id: string | null }[]>(
+      `v3d_orders?select=plan,videos_ordered,build_price_cents,payment_status,stripe_session_id&id=eq.${orderId}&user_id=eq.${s.uid}`)
+    if (!o || !isPlan(o.plan) || !o.build_price_cents) return json(404, { code: 'not_found' })
     if (o.payment_status !== 'unpaid') return json(409, { code: 'already_paid' })
     let key: string | null
     try { key = stripeKey() } catch { key = null }
@@ -36,16 +36,15 @@ export async function POST(req: Request) {
     }
 
     const today = new Date(new Date().toISOString().slice(0, 10))
-    const plan = PLANS[o.plan]
     const session = await stripeApi(
       'checkout/sessions',
-      checkoutParams({ orderId, uid: s.uid, email: s.email, plan: o.plan, site: originOf(req), today }),
-      `v3d-checkout-${orderId}-${today.toISOString().slice(0, 10)}-${depositCents(o.plan)}-${plan.careCents}`,
+      checkoutParams({ orderId, uid: s.uid, email: s.email, plan: o.plan, videos: o.videos_ordered, buildCents: o.build_price_cents, site: originOf(req), today }),
+      `v3d-checkout-${orderId}-${today.toISOString().slice(0, 10)}-${depositCents(o.build_price_cents)}-${CARE[o.plan].cents}`,
     )
 
     await db(`v3d_orders?id=eq.${orderId}&user_id=eq.${s.uid}&payment_status=eq.unpaid`, {
       method: 'PATCH',
-      body: JSON.stringify({ stripe_session_id: session.id, build_price_cents: plan.buildCents }),
+      body: JSON.stringify({ stripe_session_id: session.id }),
     })
     return json(200, { url: session.url })
   } catch (err) {

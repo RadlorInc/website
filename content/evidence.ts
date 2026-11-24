@@ -1,6 +1,6 @@
 /**
  * THE RESEARCH BEHIND "WHY VISUAL LEARNING WORKS", AND THE ONLY PLACE IT IS WRITTEN.
- * `/why-visual-learning` renders all of it; the home page shows three findings from it (`HOME_EVIDENCE`).
+ * `/why-visual-learning` renders all of it; the home page shows one finding from it (`HOME_EVIDENCE`).
  *
  * ⚠️ THE RULES FOR A ROW HERE (founder, 2026-11-22):
  *   1. A real source: a peer-reviewed paper, or a university or government page. No blog, no vendor, no infographic.
@@ -53,16 +53,6 @@ export const SOURCES = {
     cite: 'Heiser J, Phan D, Agrawala M, Tversky B, Hanrahan P. Identification and validation of cognitive design principles for automated generation of assembly instructions. Proceedings of the Working Conference on Advanced Visual Interfaces (AVI ’04). ACM; 2004:311–319.',
     url: 'https://doi.org/10.1145/989863.989917',
   },
-  noetel2021: {
-    short: 'Noetel et al., 2021',
-    cite: 'Noetel M, Griffith S, Delaney O, et al. Video improves learning in higher education: a systematic review. Review of Educational Research. 2021;91(2):204–236.',
-    url: 'https://eric.ed.gov/?id=EJ1290063',
-  },
-  vandermeij2014: {
-    short: 'van der Meij & van der Meij, 2014',
-    cite: 'van der Meij H, van der Meij J. A comparison of paper-based and video tutorials for software learning. Computers & Education. 2014;78:150–159.',
-    url: 'https://doi.org/10.1016/j.compedu.2014.06.003',
-  },
   rey2019: {
     short: 'Rey et al., 2019',
     cite: 'Rey GD, Beege M, Nebel S, Wirzberger M, Schmitt TH, Schneider S. A meta-analysis of the segmenting effect. Educational Psychology Review. 2019;31(2):389–419.',
@@ -72,16 +62,6 @@ export const SOURCES = {
     short: 'Guo et al., 2014',
     cite: 'Guo PJ, Kim J, Rubin R. How video production affects student engagement: an empirical study of MOOC videos. Proceedings of the First ACM Conference on Learning @ Scale (L@S ’14). ACM; 2014:41–50.',
     url: 'https://doi.org/10.1145/2556325.2566239',
-  },
-  ies2021: {
-    short: 'IES practice guide, 2021',
-    cite: 'Fuchs LS, Newman-Gonchar R, Schumacher R, et al. Assisting Students Struggling with Mathematics: Intervention in the Elementary Grades (WWC 2021006). Institute of Education Sciences, US Department of Education; 2021.',
-    url: 'https://ies.ed.gov/ncee/wwc/PracticeGuide/26',
-  },
-  ies2012: {
-    short: 'IES practice guide, 2012',
-    cite: 'Woodward J, Beckmann S, Driscoll M, et al. Improving Mathematical Problem Solving in Grades 4 Through 8 (NCEE 2012-4055). Institute of Education Sciences, US Department of Education; 2012.',
-    url: 'https://ies.ed.gov/ncee/wwc/PracticeGuide/16',
   },
   mayer2023: {
     short: 'Mayer, 2023',
@@ -209,7 +189,7 @@ export type Viz =
   | { kind: 'cut'; caption: string; rows: { label: string; value: number; shown: string }[] }
   | { kind: 'waffles'; caption: string; options: { label: string; rows: Val[] }[] }
 /** What KIND of evidence a finding rests on. Shown as a badge, so a reader sees a theory or one small study for what it is. */
-type Evidence = 'Meta-analysis' | 'Systematic review' | 'Review' | 'Randomized trial' | 'Series of experiments' | 'Lab studies' | 'Single study' | 'Theory' | 'Strong evidence (IES)' | 'Guidance' | 'Brain-imaging study'
+type Evidence = 'Meta-analysis' | 'Systematic review' | 'Review' | 'Randomized trial' | 'Series of experiments' | 'Lab studies' | 'Single study' | 'Theory' | 'Guidance' | 'Brain-imaging study'
 type Finding = {
   id: string
   title: string
@@ -321,16 +301,6 @@ const MOTION: Section = {
       limit: 'These were still diagrams, not video. The study shows that clear steps matter; it does not test video.',
     },
     {
-      id: 'video-students',
-      title: 'Video helps students, most when it adds to teaching',
-      short: 'Video helps students most when it is added to teaching.',
-      evidence: 'Systematic review',
-      viz: { kind: 'scale', max: 1, caption: 'Effect size on learning (g), 105 trials', points: [{ label: 'Video replaces teaching', value: 0.28, shown: '0.28', tone: 'base' }, { label: 'Video added to teaching', value: 0.8, shown: '0.80', tone: 'visual' }] },
-      body: 'A review of 105 randomized trials with 7,776 university students found small gains when video replaced other teaching (g = 0.28) and strong gains when video was added to it (g = 0.80). In a study with 111 pupils in grades 5 and 6, a video tutorial beat a paper tutorial for a software task.',
-      refs: ['noetel2021', 'vandermeij2014'],
-      limit: 'The review is about university students, and adding video also adds study time. The pupils’ study is one task, and all groups improved, the paper group too.',
-    },
-    {
       id: 'short-videos',
       title: 'Short, segmented videos',
       short: 'Short parts beat one long video.',
@@ -348,34 +318,6 @@ const MOTION: Section = {
       body: 'A well-known review found that many wins for animation came from unequal comparisons: the animation showed more information or let the learner interact. Video works best together with a few still key pictures, according to another study.',
       refs: ['tversky2002', 'arguel2009'],
       limit: 'This is why we do not claim that motion itself teaches. Content, clear steps and control over the pace do much of the work.',
-    },
-  ],
-}
-
-const MATH: Section = {
-  id: 'math',
-  nav: 'Math in school',
-  eyebrow: 'Education',
-  title: 'US education research recommends visual math.',
-  intro: 'The US Institute of Education Sciences reviews the research and writes guides for teachers. Two of its math guides give visual representations a strong rating.',
-  findings: [
-    {
-      id: 'ies-representations',
-      title: 'Drawings, diagrams and number lines',
-      short: 'US education research rates visual math as strong evidence.',
-      evidence: 'Strong evidence (IES)',
-      body: 'For elementary students who struggle with math, the guide recommends a well-chosen set of concrete and semi-concrete representations, and the number line. It rates the evidence for both as strong.',
-      refs: ['ies2021'],
-      limit: 'The guide is about small-group teaching led by a teacher, not about apps or video.',
-    },
-    {
-      id: 'ies-problem-solving',
-      title: 'Teach students to use visual representations',
-      short: 'Students should learn to draw the problem, not only watch it.',
-      evidence: 'Strong evidence (IES)',
-      body: 'For problem solving in grades 4 to 8, the guide recommends that teachers show students how to use visual representations such as tables and diagrams. It rates the evidence as strong.',
-      refs: ['ies2012'],
-      limit: 'The recommendation is that students learn to draw and use the visuals themselves, not only watch them.',
     },
   ],
 }
@@ -471,7 +413,7 @@ const BRAIN: Section = {
   ],
 }
 
-export const SECTIONS: Section[] = [MIND, MOTION, MATH, MEDICINE, BRAIN]
+export const SECTIONS: Section[] = [MIND, MOTION, MEDICINE, BRAIN]
 
 export const NOT_CLAIMED: { title: string; body: string; refs: readonly SourceId[] }[] = [
   {
@@ -496,9 +438,8 @@ export const NOT_CLAIMED: { title: string; body: string; refs: readonly SourceId
   },
 ]
 
-/** Three findings for the home page. Each restates a finding above, with the same source. */
-/** Three findings for the home page, by id. The home card shows the finding's own chart, line and first source. */
-export const HOME_EVIDENCE = ['multimedia', 'animation', 'dosing'] as const
+/** The finding for the home page, by id. It shows the finding's own line and first source. */
+export const HOME_EVIDENCE = ['animation'] as const
 
 /** Every finding, by id. */
 export const FINDINGS = Object.fromEntries(SECTIONS.flatMap(s => s.findings).map(f => [f.id, f])) as Record<string, Finding>

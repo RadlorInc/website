@@ -12,7 +12,7 @@ export function PageHero({ eyebrow, title, line, pic, children }: {
   return (
     <div className="grid items-center gap-8 sm:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] pt-12 sm:pt-16 pb-10">
       <div className="order-2 sm:order-1">
-        {eyebrow && <p className="text-sm uppercase tracking-[0.18em] text-accent font-medium mb-4">{eyebrow}</p>}
+        {eyebrow && <p className="font-medium text-muted mb-4">{eyebrow}</p>}
         <h1 className="rl-focus font-display text-5xl sm:text-6xl leading-[1.05]">{title}</h1>
         {line && <p className="mt-5 text-lg text-muted max-w-md leading-relaxed">{line}</p>}
         {children}

@@ -12,6 +12,7 @@ const SERVICE = process.env.SUPABASE_SERVICE_ROLE_KEY
 const ANON = process.env.SUPABASE_ANON_KEY
 const SECRET = process.env.V3D_SESSION_SECRET ?? ''
 export const BUCKET = 'v3d-uploads'
+export const VIDEO_BUCKET = 'v3d-videos'
 
 /**
  * All of these must be set, or the pages say "not open yet" and the routes answer 503. The Stripe
@@ -38,8 +39,8 @@ export async function dbJson<T>(path: string, init: RequestInit = {}): Promise<T
   return res.json() as Promise<T>
 }
 
-export function storage(path: string, init: RequestInit = {}) {
-  return fetch(`${URL_}/storage/v1/object/${BUCKET}/${path}`, {
+export function storage(path: string, init: RequestInit = {}, bucket = BUCKET) {
+  return fetch(`${URL_}/storage/v1/object/${bucket}/${path}`, {
     ...init,
     cache: 'no-store',
     headers: { ...keyHeaders(SERVICE!), ...(init.headers ?? {}) },

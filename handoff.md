@@ -33,6 +33,24 @@
 >   (`radlic.com` is in `site.ts`); the #33 migration.
 > - **Disk:** on 23 Nov the Mac was nearly full (383 MB free that day). Delete `node_modules` in old `w-site-*` worktrees first.
 
+> 🔎 **2026-11-23 — 3Dlor first (branch `preview/3dlor-first`).** Founder: the site is about 3Dlor and about learning
+> anything by seeing, and must not look like school. 2026-11-24: the founder said the first version looked AI-generated.
+> Home is now paper and stop motion: `components/visual/ManualScroll.tsx` (the scroll turns a written manual page into the
+> product; frames in `public/stop/water-filter/`, text in `content/manual-demo.ts`) and a pile of sheets (`.pile`, CSS only).
+> No drawn icons on the company pages. The paper ground is on every company page (`.rl-paper` in SiteChrome); the header stays dark for the
+> wordmark. The school pictures and the math section of the research page are gone. `TAGLINE` and `VISION` are DRAFT.
+> `/3dlor` is told as scenes too (`V3dStory.tsx`, `Scene.tsx`); About and Contact are sheet piles (`Pile.tsx`).
+> Sign-up is five steps (product details come after payment) (`components/v3d/`); prices are the per-video rate card (DRAFT 2) in `plans.ts`, saved on the order as
+> `build_price_cents` (no migration; `plan` is now the care tier). See it: `node scripts/demo-3dlor-signup.mjs`.
+> After payment `/3dlor/account` shows a timeline (`_lib/track.ts`, worked out from rows) and lets the customer approve scripts
+> and videos (`/api/3dlor/videos`). It needs the hand-run migration `20261124000000_v3d_videos.sql` (its header says how the
+> founder uses it). ⚠️ Founder steps grow by one: apply it after the other two. The second half has no online payment yet.
+> Movement is smooth now, not stepped; paper has a texture (`public/paper.webp`).
+> `/why-visual-learning` is a scroll story (`WhyStory.tsx`, numbers read from `content/evidence.ts`). The demo everywhere is the water filter
+> sample (, `public/stop/water-filter`, `content/manual-demo.ts`); stills of all 7 samples are in `public/stop/samples`, `content/samples.ts`; the videos come later.
+> The 7 narrated samples are at `/samples` and `/samples/<id>` (one link per field; `content/samples.ts`, files in
+> `public/samples`, 58 MB). They are also linked from home and `/3dlor`. `/writing` and `/data-and-safety` are Radlic's, in the footer. `/radlic` and `/askradlor` page code: not changed.
+
 > 🧊 **2026-11-23 — 3Dlor sign-up code is merged; it was CLOSED on production that day** (PRs #23, #30, #31). Code:
 > `/3dlor/signup`, `/3dlor/account`, `app/api/3dlor/`; prices only in `app/api/3dlor/_lib/plans.ts` (draft; read the
 > file, not a copy here). Tests: `npm run test:3d`, `scripts/test-3dlor-flow.mjs` (local).

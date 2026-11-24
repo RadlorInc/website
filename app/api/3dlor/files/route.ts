@@ -21,6 +21,8 @@ export async function POST(req: Request) {
   const file = form?.get('file')
   const orderId = String(form?.get('order_id') ?? '')
   const kind = form?.get('kind')
+  // The right to share the files: ticked once, kept on the order, and checked here for every upload.
+  const consent = form?.get('terms') === 'yes'
   if (!(file instanceof File) || !UUID.test(orderId) || !isKind(kind)) return json(400, { code: 'bad_request' })
   if (file.size === 0 || file.size > MAX_FILE_BYTES) return json(413, { code: 'too_big' })
 
@@ -31,8 +33,13 @@ export async function POST(req: Request) {
 
   try {
     // The order must be this customer's. Same answer for "not yours" and "does not exist".
-    const own = await dbJson<{ id: string }[]>(`v3d_orders?select=id&id=eq.${orderId}&user_id=eq.${s.uid}`)
+    const own = await dbJson<{ id: string; terms_accepted_at: string | null }[]>(`v3d_orders?select=id,terms_accepted_at&id=eq.${orderId}&user_id=eq.${s.uid}`)
     if (!own.length) return json(404, { code: 'not_found' })
+    if (!own[0].terms_accepted_at) {
+      if (!consent) return json(403, { code: 'consent' })
+      const t = await db(`v3d_orders?id=eq.${orderId}&user_id=eq.${s.uid}`, { method: 'PATCH', headers: { Prefer: 'return=minimal' }, body: JSON.stringify({ terms_accepted_at: new Date().toISOString() }) })
+      if (!t.ok) throw new Error(`consent ${t.status}`)
+    }
     const count = await db(`v3d_files?select=id&order_id=eq.${orderId}`, { method: 'HEAD', headers: { Prefer: 'count=exact' } })
     const n = Number(count.headers.get('content-range')?.split('/')[1] ?? 0)
     if (n >= MAX_FILES_PER_ORDER) return json(409, { code: 'too_many' })
