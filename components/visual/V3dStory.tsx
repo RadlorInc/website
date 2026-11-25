@@ -39,7 +39,7 @@ export function V3dStory() {
   return (
     <>
       {/* Two beats per line: the prop lands on the table, then it does what the line says. */}
-      <Scene beats={12} title="What you get."
+      <Scene beats={12} stops={GET.map((_, i) => (i + 1) * 2)} title="What you get."
         words={b => (
           <ol className="get">
             {GET.map((g, i) => (

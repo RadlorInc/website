@@ -962,8 +962,11 @@ body:has(.rl-paper) {
 .sc-film[data-on] span { transform: translate(calc(var(--k) * 0.35rem), calc(var(--k) * var(--k) * 0.35rem - 0.5rem)) rotate(calc(var(--k) * 2.5deg)) scale(0.92); }
 @media (min-width: 900px) { .sc-stage { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 4.5rem; } .sc:nth-of-type(even) .sc-words { order: 2; } }
 @media (prefers-reduced-motion: no-preference) {
-  .sc { height: calc(150svh + var(--beats) * 16svh); }
-  .sc-near .sc { height: calc(118svh + var(--beats) * 12svh); }
+  .sc { position: relative; height: calc(100svh + (var(--stops) + 1) * var(--swipe, 40svh)); }
+  .sc-near .sc { --swipe: 30svh; }
+  /* One swipe, one step (components/visual/Stops.tsx). A finger drag moves the page itself, so its steps are further apart. */
+  .stop { position: absolute; width: 1px; height: 1px; visibility: hidden; }
+  @media (pointer: coarse) { html:has(.stop) { scroll-snap-type: y proximity; } .stop { scroll-snap-align: start; scroll-snap-stop: always; } .sc, .sc-near .sc { --swipe: 60svh; } .ms { height: 720svh; } }
   @media (min-width: 900px) { .sc-near .sc-stage { min-height: 62svh; top: 16svh; padding-block: 0; } }
   .sc-stage { position: sticky; top: 0; min-height: 100svh; overflow: hidden; padding-block: 1rem; }
   @media (max-width: 899px) { .sc-stage { align-content: center; gap: 1.4rem; }

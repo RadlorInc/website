@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
+import { Stops } from './Stops'
 import { FILM, MANUAL, frame } from '@/content/manual-demo'
 
 /**
@@ -13,6 +14,8 @@ import { FILM, MANUAL, frame } from '@/content/manual-demo'
  * reduced motion, or without JS (see the noscript), the section is the page and a still per step.
  */
 const LENGTH = 0.96 // where the film ends; what is left holds the finished product
+/** One swipe plays one step: the product comes together, then each step of the page, up to just before the next one. */
+const STOPS = [...FILM.from.map(f => f - 3), FILM.count - 1].map(f => f / (FILM.count - 1) * LENGTH)
 const clamp = (v: number) => Math.min(1, Math.max(0, v))
 const smooth = (x: number) => x * x * (3 - 2 * x)
 
@@ -126,6 +129,7 @@ export function ManualScroll() {
   return (
     <section ref={root} className="ms" data-step={step} aria-label="A manual page, shown step by step">
       <noscript><style>{'.ms{height:auto!important}.ms-stage{position:static!important;height:auto!important}.ms-stage>*{position:static!important;transform:none!important;translate:none!important;width:auto!important}.ms-film{display:none!important}.ms-stills{display:grid!important}'}</style></noscript>
+      <Stops at={STOPS} />
       <div className="ms-stage">
         <canvas ref={canvas} width={FILM.w} height={FILM.h} className="ms-film" role="img"
           aria-label={`${MANUAL.product}: the parts come together, then each step of the manual page happens.`} />
