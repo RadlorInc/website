@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 // One picture and one line per section (founder, 2026-09-29: "least text on the whole website"), on paper sheets that pile up (2026-11-24), under a circle-reveal top (F). Each line restates the page as it was and adds no claim.
 const ROWS: PathRow[] = [
-  { ...ART.homeExploded, title: `What is ${COMPANY}?`, body: <>We make {V3D_NAME}: short 3D videos that show how a product works. Other products: {ASK_NAME} and {APP_NAME}.</> },
+  { ...ART.homeExploded, title: `What is ${COMPANY}?`, body: <>We make {V3D_NAME}: short 3D videos that show how a product works. <span className="mt-3 block">Other products: {ASK_NAME} and {APP_NAME}.</span></> },
   { ...ART.washerOpen, title: 'Why we started', body: <>Most things hide how they work. A manual tells you. A picture that opens shows you.</> },
   { ...ART.sewingOpen, title: 'How we work', body: <>One step at a time. The product’s maker approves every step.</> },
   {

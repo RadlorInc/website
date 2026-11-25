@@ -5,7 +5,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { FILM, MANUAL, frame } from '@/content/manual-demo'
 
 /**
- * The home page's first screen (founder, 2026-11-24): a written manual page that the scroll turns into the product. The
+ * The first screen of /3dlor, and the story under home's first screen (no children: the page starts in its place; founder, 2026-11-24): a written manual page that the scroll turns into the product. The
  * visitor's scroll is the only clock, and the picture glides after it: each frame moves a part of the way that is left, so a
  * mouse wheel's jumps become one smooth move. Nothing plays by itself.
  *
@@ -13,13 +13,14 @@ import { FILM, MANUAL, frame } from '@/content/manual-demo'
  * reduced motion, or without JS (see the noscript), the section is the heading, the page and a still per step.
  */
 const HEAD = 0.08 // the share of the scroll in which the page travels to its place
-const LENGTH = 0.88 // the film; what is left holds the finished product
+const LENGTH = 0.96 // where the film ends; what is left holds the finished product
 const clamp = (v: number) => Math.min(1, Math.max(0, v))
 const smooth = (x: number) => x * x * (3 - 2 * x)
 
-export function ManualScroll({ children }: { children: ReactNode }) {
+export function ManualScroll({ children }: { children?: ReactNode }) {
   const root = useRef<HTMLElement>(null)
   const canvas = useRef<HTMLCanvasElement>(null)
+  const head = children ? HEAD : 0
   const [step, setStep] = useState(-1) // -1: the heading; 0: the product comes together; then the manual's steps
 
   useEffect(() => {
@@ -74,15 +75,15 @@ export function ManualScroll({ children }: { children: ReactNode }) {
       then = time
       now = now < 0 ? goal : now + (goal - now) * (1 - Math.exp(-dt / 85))
       if (Math.abs(goal - now) < 0.00002) now = goal
-      const nextE = Math.round(smooth(clamp(now / HEAD)) * 2000) / 2000
+      const nextE = Math.round((head ? smooth(clamp(now / head)) : 1) * 2000) / 2000
       if (nextE !== e) { e = nextE; el.style.setProperty('--e', String(e)) }
-      const to = clamp((now - HEAD) / LENGTH) * last
+      const to = clamp((now - head) / (LENGTH - head)) * last
       if (to !== at) dir = to > at ? 1 : -1
       speed += (Math.abs(to - at) - speed) * 0.4
       at = to
       moving = now !== goal
       if (!moving) speed = 0
-      setStep(now < HEAD * 0.96 ? -1 : from.filter(f => at >= f).length)
+      setStep(now < head * 0.96 ? -1 : from.filter(f => at >= f).length)
       draw()
       queued = now === goal || dead ? 0 : requestAnimationFrame(tick)
     }
@@ -124,13 +125,13 @@ export function ManualScroll({ children }: { children: ReactNode }) {
       removeEventListener('scroll', on)
       removeEventListener('resize', on)
     }
-  }, [])
+  }, [head])
 
   return (
-    <section ref={root} className="ms" data-step={step} aria-label="A manual page, shown step by step">
+    <section ref={root} className="ms" style={head ? undefined : { ['--e' as string]: 1 }} data-step={step} aria-label="A manual page, shown step by step">
       <noscript><style>{'.ms{height:auto!important}.ms-stage{position:static!important;height:auto!important}.ms-stage>*{position:static!important;transform:none!important;translate:none!important;width:auto!important}.ms-film{display:none!important}.ms-stills{display:grid!important}'}</style></noscript>
       <div className="ms-stage">
-        <div className="ms-words">{children}</div>
+        {children && <div className="ms-words">{children}</div>}
         <canvas ref={canvas} width={FILM.w} height={FILM.h} className="ms-film" role="img"
           aria-label={`${MANUAL.product}: the parts come together, then each step of the manual page happens.`} />
         <div className="ms-sheet">
