@@ -6,6 +6,7 @@ import { FINDINGS, HOME_EVIDENCE, SOURCES } from '@/content/evidence'
 import { MANUAL, WHOLE, frame } from '@/content/manual-demo'
 import { HomeStory } from '@/components/visual/HomeStory'
 import { SampleStory } from '@/components/visual/SampleStory'
+import { ManualToVideo } from '@/components/visual/ManualToVideo'
 import { ManualScroll } from '@/components/visual/ManualScroll'
 
 /**
@@ -74,15 +75,17 @@ export default function Home() {
   const f = FINDINGS[HOME_EVIDENCE[0]]
   return (
     <div>
-      <ManualScroll>
+      <section className={`${wrap} pt-8 pb-16 sm:pt-12`}>
         <p className="font-medium text-muted">{V3D_NAME} by {COMPANY}</p>
-        <h1 className="mt-4 text-[2.9rem] font-semibold leading-[0.98] tracking-[-0.045em] sm:text-7xl">Your manual, made visible.</h1>
-        <p className="mt-5 max-w-[30rem] text-lg leading-relaxed text-muted sm:text-xl">{V3D_LINE}</p>
-        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <Link href={V3D_SIGNUP_PATH} className={primary}>{V3D_CTA}</Link>
-          <span className="hidden text-muted sm:inline">Scroll: this page becomes the product.</span>
+        <h1 className="mt-3 text-[2.9rem] font-semibold leading-[0.98] tracking-[-0.045em] sm:text-6xl lg:text-7xl">Your manual, made visible.</h1>
+        <div className="mt-4 flex flex-col items-start gap-x-10 gap-y-5 lg:flex-row lg:items-center lg:justify-between">
+          <p className="max-w-[46rem] text-lg leading-relaxed text-muted">{V3D_LINE}</p>
+          <Link href={V3D_SIGNUP_PATH} className={`${primary} shrink-0`}>{V3D_CTA}</Link>
         </div>
-      </ManualScroll>
+        <ManualToVideo />
+      </section>
+
+      <ManualScroll />
 
       <SampleStory />
 

@@ -45,7 +45,7 @@ export function HandsScene() {
               <div key={r.label}><strong>{b > i ? r.shown : ''}</strong><span style={{ height: b > i ? `calc((100% - 6.5rem) * ${r.value / Math.max(...rowsOf('animation').map(x => x.value))})` : 0 }} data-hot={i === 2 || undefined} /><p>{HANDS[i]}</p></div>
             ))}
           </div>
-          <p className="sc-src">Gain over still pictures (effect size d).</p>
+          <p className="sc-src">The scale is effect size (d): the gain over still pictures, counted in standard deviations. 0 is no gain. Cohen’s guide: 0.2 is small, 0.5 is medium, 0.8 is large.</p>
         </div>
       )}
     </Claim>
@@ -92,8 +92,7 @@ export function WhyStory() {
               <div key={r.label}>
                 <p>{r.label}</p>
                 <div className="sc-strip">
-                  <span style={{ width: `${100 - r.value}%` }} />
-                  <span className="sc-cut" {...on(b > 1)} style={{ width: `${r.value}%` }}>{r.shown}</span>
+                  <span className="sc-cut" {...on(b > 1)} style={{ width: `${r.value}%` }}>{r.value}% Less</span>
                 </div>
               </div>
             ))}

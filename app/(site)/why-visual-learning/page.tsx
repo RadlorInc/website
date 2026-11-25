@@ -41,6 +41,7 @@ function Refs({ ids }: { ids: readonly SourceId[] }) {
 export default function WhyVisualLearning() {
   return (
     <>
+      <div className="sc-near">
       <section className="mx-auto max-w-[76rem] px-6 pt-14 pb-6 sm:pt-24">
         <h1 className="font-display max-w-[14ch] text-[2.9rem] leading-[0.98] sm:text-8xl">Why visuals make things clear.</h1>
         <p className="mt-6 max-w-[34rem] text-xl leading-relaxed text-muted">
@@ -49,6 +50,7 @@ export default function WhyVisualLearning() {
       </section>
 
       <WhyStory />
+      </div>
 
       <div className="mx-auto max-w-5xl px-6">
         <section id="not-claimed" className="scroll-mt-20 py-20">
