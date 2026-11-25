@@ -13,10 +13,9 @@
  */
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
 import { ManualScroll } from '@/components/visual/ManualScroll'
+import { ManualToVideo } from '@/components/visual/ManualToVideo'
 import { V3dStory } from '@/components/visual/V3dStory'
-import { MANUAL, frame } from '@/content/manual-demo'
 import { COMPANY, SAMPLES_PATH, SITE_URL, SUPPORT_EMAIL, V3D_NAME, V3D_PATH, V3D_SIGNUP_PATH, WHY_PATH } from '@/site'
 
 const TITLE = `${V3D_NAME}: how-to and support videos for your product`
@@ -52,34 +51,23 @@ const eyebrow = 'font-medium text-muted'
 export default function ThreeDVideos() {
   return (
     <>
-      <section className="rl-dark overflow-x-clip">
-        <div className="mx-auto grid max-w-5xl items-center gap-10 px-6 pt-12 pb-16 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] sm:pt-16 sm:pb-20">
-          <div>
-            <p className={eyebrow}>For product brands</p>
-            <h1 className="rl-focus font-display mt-4 text-[2.5rem] leading-[1.05] sm:text-6xl">
-              Show customers how your product <span className="rl-lit">works</span>.
-            </h1>
-            <p className="mt-6 max-w-[30rem] text-xl leading-relaxed text-muted">
-              Short 3D videos for one product. Your customers watch the step, then do the step.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href={V3D_SIGNUP_PATH} className={primary}>Sign up</Link>
-              <Link href={SAMPLES_PATH} className={quiet}>See the samples</Link>
-            </div>
-            <p className="mt-4 text-sm text-muted">Plans are on the sign-up page.</p>
+      <section className="mx-auto max-w-[76rem] px-6 pt-8 pb-16 sm:pt-12">
+        <p className={eyebrow}>For product brands</p>
+        <h1 className="mt-3 text-[2.5rem] font-semibold leading-[1.02] tracking-[-0.045em] sm:text-6xl">Show customers how your product works.</h1>
+        <div className="mt-4 flex flex-col items-start gap-x-10 gap-y-5 lg:flex-row lg:items-center lg:justify-between">
+          <p className="max-w-[46rem] text-lg leading-relaxed text-muted">
+            Short 3D videos for one product. Your customers watch the step, then do the step. <span className="block text-sm">Plans are on the sign-up page.</span>
+          </p>
+          <div className="flex shrink-0 flex-wrap gap-3">
+            <Link href={V3D_SIGNUP_PATH} className={primary}>Sign up</Link>
+            <Link href={SAMPLES_PATH} className={quiet}>See the samples</Link>
           </div>
-          <Image src={frame(MANUAL.steps[5].still)} alt="A water filter cut open: the O-ring presses on the cap" width={MANUAL.w} height={MANUAL.h}
-            sizes="(max-width: 768px) 100vw, 460px" priority className="rl-fade w-full" />
         </div>
+        <ManualToVideo />
       </section>
 
       {/* THE DEMO IS THE VISITOR'S SCROLL, the same as home (2026-11-24). */}
-      <div id="demo">
-        <ManualScroll>
-          <h2 className="font-display text-4xl sm:text-6xl">One page of a manual, step by step.</h2>
-          <p className="mt-5 max-w-[28rem] text-lg text-muted">Scroll. Our demo, not the maker’s official instructions.</p>
-        </ManualScroll>
-      </div>
+      <div id="demo"><ManualScroll /></div>
 
       <V3dStory />
 

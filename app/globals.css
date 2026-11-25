@@ -829,7 +829,7 @@ body:has(.rl-paper) {
   --accent: #0b4fb3; --on-accent: #ffffff; --accent-soft: #dfe6ee;
 }
 /* Smooth movement (founder, 2026-11-24, replaces the stepped stop motion): one long ease-out everywhere, and the first
-   screen is driven by --e, the eased scroll position that ManualScroll.tsx writes. */
+   screen's film follows the eased scroll position in ManualScroll.tsx. */
 .ms { --hop: 1.1s cubic-bezier(0.16, 1, 0.3, 1); position: relative; }
 .ms-film { display: none; }
 .ms-stage { max-width: 76rem; margin-inline: auto; padding: 3rem 1.5rem; }
@@ -849,16 +849,13 @@ body:has(.rl-paper) {
   .ms-film { display: block; }
   .ms-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; padding-block: 0; }
   .ms-stage > * { position: absolute; }
-  .ms-words { left: 1.5rem; right: 1.5rem; top: 4svh; transform: translateY(calc(-34svh * var(--e, 0))); opacity: calc(1 - 1.7 * var(--e, 0)); will-change: transform, opacity; }
-  .ms[data-step]:not([data-step="-1"]) .ms-words { visibility: hidden; }
-  .ms-film { opacity: calc(2.4 * var(--e, 0) - 1.2); will-change: opacity; }
-  .ms-sheet { margin: 0; will-change: transform; }
+  .ms-sheet { margin: 0; }
   .ms-sheet li { transition: color 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
   .ms-sheet li span { transition: background-size 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
   .ms-sheet li[aria-current] span { background-size: 100% 92%; }
 
-  /* phone: the sheet peeks under the heading, then only the current step stays, over the film */
-  .ms-sheet { left: 1.5rem; right: 1.5rem; max-width: none; --t: max(57svh, 26rem); top: var(--t); transform: translateY(calc((3svh - var(--t)) * var(--e, 0))) rotate(calc(-1.5deg * (1 - var(--e, 0)))); }
+  /* phone: only the current step stays, over the film */
+  .ms-sheet { left: 1.5rem; right: 1.5rem; max-width: none; top: 3svh; }
   .ms-film { left: 50%; translate: -50% 0; bottom: 0; width: min(118vw, 88svh); aspect-ratio: 4/3; bottom: 15svh; }
   @media (max-width: 899px) {
     .ms:not([data-step="-1"]):not([data-step="0"]) .ms-sheet :is(.ms-run, h2, .ms-note, li:not([aria-current])) { display: none; }
@@ -866,8 +863,7 @@ body:has(.rl-paper) {
     .ms[data-step="0"] .ms-sheet ol { display: none; }
   }
   @media (min-width: 900px) {
-    .ms-words { right: auto; width: 33rem; top: 50%; translate: 0 -50%; }
-    .ms-sheet { left: auto; right: 4rem; width: 30rem; top: 50%; transform: translate(calc(-1 * (min(76rem, 100vw) - 30rem - 5.5rem) * var(--e, 0)), -50%) rotate(calc(2.5deg - 3.5deg * var(--e, 0))); }
+    .ms-sheet { left: auto; right: 4rem; width: 30rem; top: 50%; transform: translate(calc(-1 * (min(76rem, 100vw) - 30rem - 5.5rem)), -50%) rotate(-1deg); }
     .ms-film { left: auto; translate: none; right: 0; bottom: auto; top: 0; height: 100svh; width: auto; max-width: calc(100% - 31rem); object-fit: contain; object-position: center; }
   }
 }
