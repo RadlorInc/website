@@ -6,7 +6,7 @@
  *   · never say how the videos are made: the wording is "our own 3D system";
  *   · no delivery-time promise and no price (the plans are draft; they live on the sign-up page);
  *   · no people and no animals in any picture or video of this product;
- *   · the limits section stays: we are new and have no case studies, and the page says so.
+ *   · the limits section stays, without the "no case studies yet" line (founder, 2026-11-25); never claim case studies we do not have.
  * The demo is the water filter sample, frames only, no third party.
  *
  * ⚠️ The sign-up route (`/3dlor/signup`) is built in a separate change. This page only links to it.
