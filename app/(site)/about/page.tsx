@@ -3,7 +3,7 @@ import { Pile } from '@/components/scroll/Pile'
 import type { PathRow } from '@/components/scroll/Scroll'
 import { PageHero } from '@/components/scroll/PageHero'
 import { ART } from '@/components/scroll/art'
-import { APP_NAME, ASK_NAME, COMPANY, FOUNDED_YEAR, SUPPORT_EMAIL, V3D_NAME, VISION } from '@/site'
+import { APP_NAME, ASK_NAME, COMPANY, V3D_NAME, VISION } from '@/site'
 
 export const metadata: Metadata = {
   title: 'About',
@@ -16,10 +16,6 @@ const ROWS: PathRow[] = [
   { ...ART.homeExploded, title: `What is ${COMPANY}?`, body: <>We make {V3D_NAME}: short 3D videos that show how a product works. <span className="mt-3 block">Other products: {ASK_NAME} and {APP_NAME}.</span></> },
   { ...ART.washerOpen, title: 'Why we started', body: <>Most things hide how they work. A manual tells you. A picture that opens shows you.</> },
   { ...ART.sewingOpen, title: 'How we work', body: <>One step at a time. The product’s maker approves every step.</> },
-  {
-    ...ART.lockOpen, title: 'Where we are',
-    body: <>Founded {FOUNDED_YEAR}. {V3D_NAME} is new and has no case studies yet. <a className="rl-link text-accent" href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></>,
-  },
 ]
 
 export default function About() {

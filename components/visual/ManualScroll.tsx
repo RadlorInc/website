@@ -1,27 +1,25 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FILM, MANUAL, frame } from '@/content/manual-demo'
 
 /**
- * The first screen of /3dlor, and the story under home's first screen (no children: the page starts in its place; founder, 2026-11-24): a written manual page that the scroll turns into the product. The
+ * The story under the first screen of home and /3dlor (founder, 2026-11-24): a written manual page that the scroll turns into the product. The
  * visitor's scroll is the only clock, and the picture glides after it: each frame moves a part of the way that is left, so a
  * mouse wheel's jumps become one smooth move. Nothing plays by itself.
  *
  * ⚠️ THE WORDS ARE ALWAYS IN THE HTML. The pinned layout is CSS under `prefers-reduced-motion: no-preference`; with
- * reduced motion, or without JS (see the noscript), the section is the heading, the page and a still per step.
+ * reduced motion, or without JS (see the noscript), the section is the page and a still per step.
  */
-const HEAD = 0.08 // the share of the scroll in which the page travels to its place
 const LENGTH = 0.96 // where the film ends; what is left holds the finished product
 const clamp = (v: number) => Math.min(1, Math.max(0, v))
 const smooth = (x: number) => x * x * (3 - 2 * x)
 
-export function ManualScroll({ children }: { children?: ReactNode }) {
+export function ManualScroll() {
   const root = useRef<HTMLElement>(null)
   const canvas = useRef<HTMLCanvasElement>(null)
-  const head = children ? HEAD : 0
-  const [step, setStep] = useState(-1) // -1: the heading; 0: the product comes together; then the manual's steps
+  const [step, setStep] = useState(-1) // -1: before the script; 0: the product comes together; then the manual's steps
 
   useEffect(() => {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
@@ -30,7 +28,7 @@ export function ManualScroll({ children }: { children?: ReactNode }) {
     const last = count - 1
     const blobs: (Blob | undefined)[] = []
     const bitmaps = new Map<number, ImageBitmap | null>() // null: being decoded
-    let goal = 0, now = -1, at = 0, queued = 0, then = 0, dead = false, dir = 1, e = -1, speed = 0, moving = false
+    let goal = 0, now = -1, at = 0, queued = 0, then = 0, dead = false, dir = 1, speed = 0, moving = false
 
     /** The nearest loaded frame from `n` in direction `d`, or -1. */
     const near = (n: number, d: 1 | -1) => { while (n >= 0 && n <= last && !blobs[n]) n += d; return n >= 0 && n <= last ? n : -1 }
@@ -75,15 +73,13 @@ export function ManualScroll({ children }: { children?: ReactNode }) {
       then = time
       now = now < 0 ? goal : now + (goal - now) * (1 - Math.exp(-dt / 85))
       if (Math.abs(goal - now) < 0.00002) now = goal
-      const nextE = Math.round((head ? smooth(clamp(now / head)) : 1) * 2000) / 2000
-      if (nextE !== e) { e = nextE; el.style.setProperty('--e', String(e)) }
-      const to = clamp((now - head) / (LENGTH - head)) * last
+      const to = clamp(now / LENGTH) * last
       if (to !== at) dir = to > at ? 1 : -1
       speed += (Math.abs(to - at) - speed) * 0.4
       at = to
       moving = now !== goal
       if (!moving) speed = 0
-      setStep(now < head * 0.96 ? -1 : from.filter(f => at >= f).length)
+      setStep(from.filter(f => at >= f).length)
       draw()
       queued = now === goal || dead ? 0 : requestAnimationFrame(tick)
     }
@@ -125,13 +121,12 @@ export function ManualScroll({ children }: { children?: ReactNode }) {
       removeEventListener('scroll', on)
       removeEventListener('resize', on)
     }
-  }, [head])
+  }, [])
 
   return (
-    <section ref={root} className="ms" style={head ? undefined : { ['--e' as string]: 1 }} data-step={step} aria-label="A manual page, shown step by step">
+    <section ref={root} className="ms" data-step={step} aria-label="A manual page, shown step by step">
       <noscript><style>{'.ms{height:auto!important}.ms-stage{position:static!important;height:auto!important}.ms-stage>*{position:static!important;transform:none!important;translate:none!important;width:auto!important}.ms-film{display:none!important}.ms-stills{display:grid!important}'}</style></noscript>
       <div className="ms-stage">
-        {children && <div className="ms-words">{children}</div>}
         <canvas ref={canvas} width={FILM.w} height={FILM.h} className="ms-film" role="img"
           aria-label={`${MANUAL.product}: the parts come together, then each step of the manual page happens.`} />
         <div className="ms-sheet">
