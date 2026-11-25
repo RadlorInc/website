@@ -45,7 +45,7 @@ The main product is ${V3D_NAME}, a service for product brands, described at ${SI
 ${COMPANY} makes a library of short 3D videos for one product: how to set it up, use it, clean it and fix
 it, with exploded views and the inside of the product. The work starts from the instruction manual and product photos (a CAD file is
 optional), the brand approves each script before a video is made, and the videos come in tall, wide and
-square formats. The look is clean 3D, not photoreal. The service is new and has no customer case studies yet.
+square formats. The look is clean 3D, not photoreal.
 
 ${COMPANY} has two other products. The first is ${APP_NAME}: adaptive math for kindergarten through grade 8. It runs at ${APP_URL} and is
 open to try: ${APP_URL}/auth is where a parent makes an account, and the URL to give somebody who
