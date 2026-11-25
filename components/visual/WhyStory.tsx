@@ -14,7 +14,7 @@ import { Scene, on } from './Scene'
  * finding's own chart data, so `check:evidence` still covers it. The limits sit in the list under the story.
  * ⚠️ THE RESTING STATE IS THE FINISHED STATE: without JS, or with reduced motion, every scene shows its last beat.
  */
-function Claim({ id, note, ...rest }: { id: string; note?: string; beats: number; title: string; line: string; children: (beat: number) => ReactNode }) {
+function Claim({ id, note, ...rest }: { id: string; note?: string; beats: number; stops?: number[]; title: string; line: string; children: (beat: number) => ReactNode }) {
   const src = SOURCES[FINDINGS[id].refs[0]]
   return <Scene {...rest} small={<>{FINDINGS[id].evidence}: <a href={src.url} rel="noopener">{src.short}</a>.{note && <> {note}</>}</>} />
 }
@@ -36,7 +36,7 @@ function Dots({ label, value, shown, go }: { label: string; value: number; shown
 /** Also the "why video" scene of /3dlor. */
 export function HandsScene() {
   return (
-    <Claim id="animation" beats={4} title="Moving pictures help most with hand work." note="A later, larger study found a smaller gain overall."
+    <Claim id="animation" beats={3} title="Moving pictures help most with hand work." note="A later, larger study found a smaller gain overall."
       line="Animation beats still pictures a little for any topic. For things you do with your hands, it helps a lot.">
       {b => (
         <div>
@@ -84,7 +84,7 @@ export function WhyStory() {
         )}
       </Claim>
 
-      <Claim id="assembly" beats={3} title="One clear action per step." note="This study used still drawings, not video."
+      <Claim id="assembly" beats={2} stops={[2]} title="One clear action per step." note="This study used still drawings, not video."
         line="In a furniture study, instructions with one clear action per step cut the work down.">
         {b => (
           <div className="sc-strips">
@@ -103,7 +103,7 @@ export function WhyStory() {
 
       <HandsScene />
 
-      <Claim id="wound-care" beats={3} title="Pictures help people understand." note="One hospital, cuts only."
+      <Claim id="wound-care" beats={2} title="Pictures help people understand." note="One hospital, cuts only."
         line="Emergency patients got a page about wound care. Some pages had only text. Some had text and cartoons. This many answered every question correctly.">
         {b => (
           <div className="sc-two">
@@ -112,7 +112,7 @@ export function WhyStory() {
         )}
       </Claim>
 
-      <Claim id="short-videos" beats={3} title="Short parts beat one long video."
+      <Claim id="short-videos" beats={2} stops={[2]} title="Short parts beat one long video."
         line="People learn better when a lesson comes in parts. So each 3Dlor video shows one task.">
         {b => (
           <div className="sc-film" {...on(b > 1)}>

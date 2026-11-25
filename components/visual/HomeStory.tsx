@@ -22,7 +22,7 @@ const shot = (n: number) => <Image src={frame(n)} alt="" width={MANUAL.w} height
 export function HomeStory() {
   return (
     <>
-      <Scene beats={LINES.length * 2} title="From static PDF to step‑by‑step 3D."
+      <Scene beats={LINES.length * 2} stops={LINES.map((_, i) => (i + 1) * 2)} title="From static PDF to step‑by‑step 3D."
         small="Exploded views, internal mechanisms, parts that come apart: things a camera often can’t show cleanly or repeatedly."
         words={b => (
           <ol className="get">

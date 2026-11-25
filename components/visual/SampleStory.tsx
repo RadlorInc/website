@@ -10,7 +10,7 @@ import { Scene, on } from './Scene'
  *  2026-11-24). Each one links to its narrated video. */
 export function SampleStory() {
   return (
-    <Scene beats={SAMPLES.length * 2} title="Seven manuals, made visible."
+    <Scene beats={SAMPLES.length * 2} stops={SAMPLES.map((_, i) => (i + 1) * 2)} title="Seven manuals, made visible."
       small={<>Our own samples. Generic products, and manual pages written by us; not a maker’s official instructions. <Link href={SAMPLES_PATH}>All samples</Link></>}
       words={b => (
         <ol className="get">
