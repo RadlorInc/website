@@ -39,8 +39,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
               className="h-8 w-auto"
             />
           </Link>
-        {/* No hamburger. On a narrow frame the links drop out of the header and the footer — which
-            carries the same list — becomes the navigation. Logo left, links centred (founder, 2026-09-29); no button
+        {/* No hamburger. On a narrow frame the links move to the second row below (2026-11-26). Logo left, links centred (founder, 2026-09-29); no button
             on the right from 2026-10-22 (founder: "remove Our products from the nav") until the 3Dlor button below. */}
         <nav aria-label="Main" className="hidden md:flex items-center gap-8 text-sm">
           {HEADER.map(n => (
@@ -56,6 +55,15 @@ export function SiteChrome({ children }: { children: ReactNode }) {
           {V3D_CTA}
         </Link>
       </div>
+      {/* Phone nav (founder, 2026-11-26: "upar nav options dikh hi nahi rahe"). Below md the links sit in a second row
+          that wraps, so every page stays one tap away without a hamburger. */}
+      <nav aria-label="Main" className="md:hidden mx-auto max-w-5xl px-6 pb-2 flex flex-wrap gap-x-5 text-sm">
+        {HEADER.map(n => (
+          <Link key={n.href} href={n.href} className="rl-link inline-flex min-h-11 items-center text-muted hover:text-foreground transition-colors">
+            {n.label}
+          </Link>
+        ))}
+      </nav>
     </header>
 
     <main id="main" className="rl-paper flex-1">{children}</main>
