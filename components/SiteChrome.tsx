@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
+import { MobileMenu } from './MobileMenu'
 import { COMPANY, FOOTER, FOOTER_OTHER, FOUNDED_YEAR, HEADER, SOCIAL, SUPPORT_EMAIL, TAGLINE, V3D_CTA, V3D_SIGNUP_PATH } from '@/site'
 
 /**
@@ -39,7 +40,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
               className="h-8 w-auto"
             />
           </Link>
-        {/* No hamburger. On a narrow frame the links move to the second row below (2026-11-26). Logo left, links centred (founder, 2026-09-29); no button
+        {/* Below md these links and the 3Dlor button move into <MobileMenu /> (founder, 2026-11-26). Logo left, links centred (founder, 2026-09-29); no button
             on the right from 2026-10-22 (founder: "remove Our products from the nav") until the 3Dlor button below. */}
         <nav aria-label="Main" className="hidden md:flex items-center gap-8 text-sm">
           {HEADER.map(n => (
@@ -48,22 +49,14 @@ export function SiteChrome({ children }: { children: ReactNode }) {
             </Link>
           ))}
         </nav>
-        {/* THE SITE'S ONE PRIMARY ACTION (founder, 2026-11-23). Right column, at EVERY width: below md the nav links
-            drop out (no hamburger), so this button is the phone's only header action. Accent on the pinned-dark
+        {/* THE SITE'S ONE PRIMARY ACTION (founder, 2026-11-23). Right column from md up; below md it is the
+            last item in the phone menu. Accent on the pinned-dark
             header is 12.9:1 for its text; min-h-11 is the 44 px touch target. */}
-        <Link href={V3D_SIGNUP_PATH} className="rl-cta col-start-3 justify-self-end inline-flex min-h-11 items-center whitespace-nowrap rounded-full bg-accent px-4 text-sm font-semibold text-on-accent hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:px-5">
+        <Link href={V3D_SIGNUP_PATH} className="rl-cta col-start-3 justify-self-end hidden md:inline-flex min-h-11 items-center whitespace-nowrap rounded-full bg-accent px-4 text-sm font-semibold text-on-accent hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:px-5">
           {V3D_CTA}
         </Link>
+        <MobileMenu />
       </div>
-      {/* Phone nav (founder, 2026-11-26: "upar nav options dikh hi nahi rahe"). Below md the links sit in a second row
-          that wraps, so every page stays one tap away without a hamburger. */}
-      <nav aria-label="Main" className="md:hidden mx-auto max-w-5xl px-6 pb-2 flex flex-wrap gap-x-5 text-sm">
-        {HEADER.map(n => (
-          <Link key={n.href} href={n.href} className="rl-link inline-flex min-h-11 items-center text-muted hover:text-foreground transition-colors">
-            {n.label}
-          </Link>
-        ))}
-      </nav>
     </header>
 
     <main id="main" className="rl-paper flex-1">{children}</main>
