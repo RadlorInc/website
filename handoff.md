@@ -33,6 +33,11 @@
 >   (`radlic.com` is in `site.ts`); the #33 migration.
 > - **Disk:** on 23 Nov the Mac was nearly full (383 MB free that day). Delete `node_modules` in old `w-site-*` worktrees first.
 
+> 🔑 **2026-11-27 — 3Dlor sign-in (branch `preview/3dlor-signin`, a PR to `main`; not merged when written).** `/3dlor/signin`
+> uses the same email code and cookie. A signed-out `/3dlor/account` goes there. A signed-in customer with any order goes
+> from `/3dlor/signup` to the account page; `?edit=1` opens the unpaid order, `?new=1` an empty form only when nothing is
+> unpaid. The account page lists all orders. `scripts/test-3dlor-flow.mjs` (local stack only) checks all of this.
+
 > 🔎 **2026-11-23 — 3Dlor first (branch `preview/3dlor-first`).** Founder: the site is about 3Dlor and about learning
 > anything by seeing, and must not look like school. 2026-11-24: the founder said the first version looked AI-generated.
 > Home is now paper and stop motion: `components/visual/ManualScroll.tsx` (the scroll turns a written manual page into the

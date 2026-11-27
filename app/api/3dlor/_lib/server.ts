@@ -115,5 +115,17 @@ export function limited(key: string, limit: number, windowMs: number): boolean {
 export const ipOf = (req: Request) => (req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() || 'unknown'
 
 /** Where a sign-in may send the browser next. Anything else goes to the account page. */
-export const NEXT_PAGES = ['/3dlor/signup', '/3dlor/account'] as const
+export const NEXT_PAGES = ['/3dlor/signup', '/3dlor/account', '/3dlor/signin'] as const
 export const safeNext = (v: unknown) => (NEXT_PAGES as readonly unknown[]).includes(v) ? (v as string) : '/3dlor/account'
+
+/**
+ * Where /3dlor/signup takes a signed-in customer (founder, 2026-11-27: a returning customer goes to the account page).
+ * `open` = they have the one unpaid order the database allows; `any` = they have an order at all.
+ * `edit` (?edit=1) opens the form on the unpaid order; `fresh` (?new=1, the account page's "Start a new order") opens an
+ * empty form, but only when no unpaid order exists. A new customer with no order goes straight on to the form.
+ */
+export function signupGo(o: { open: boolean; any: boolean; edit: boolean; fresh: boolean }): 'form' | 'account' {
+  if (o.open) return o.edit ? 'form' : 'account'
+  if (o.any) return o.fresh ? 'form' : 'account'
+  return 'form'
+}

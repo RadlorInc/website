@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { headers } from 'next/headers'
-import { SUPPORT_EMAIL, V3D_NAME } from '@/site'
-import { SignIn, Notice } from '@/components/v3d/SignIn'
+import { redirect } from 'next/navigation'
+import { SUPPORT_EMAIL, V3D_NAME, V3D_SIGNIN_PATH, V3D_SIGNUP_PATH } from '@/site'
+import { Notice } from '@/components/v3d/SignIn'
 import { Timeline } from '@/components/v3d/Timeline'
 import { VideoCards } from '@/components/v3d/VideoCards'
 import { DETAILS, type Detail } from '@/app/api/3dlor/_lib/validate'
@@ -13,10 +14,10 @@ import { Uploader } from '@/components/v3d/Uploader'
 import { PendingButton } from '@/components/v3d/PendingButton'
 import { PaymentWait } from '@/components/v3d/PaymentWait'
 import { CARE as CARE_PLANS, isPlan, depositCents, balanceCents, FREE_MONTHS, usd } from '@/app/api/3dlor/_lib/plans'
-import { configured, dbJson, pendingFrom, sessionFrom } from '@/app/api/3dlor/_lib/server'
+import { configured, dbJson, sessionFrom } from '@/app/api/3dlor/_lib/server'
 
 export const metadata: Metadata = {
-  title: `Your ${V3D_NAME} order`,
+  title: `Your ${V3D_NAME} account`,
   description: 'The status of your 3D video library order with 3Dlor: payment, videos in work and delivered, and what we still need from you.',
   alternates: { canonical: '/3dlor/account' },
   robots: { index: false, follow: false },
@@ -55,21 +56,16 @@ export default async function Account({ searchParams }: PageProps<'/3dlor/accoun
   const ok = configured()
   const session = ok ? sessionFrom(h.get('cookie')) : null
 
-  if (!ok || !session) {
+  if (!ok) {
     return (
       <section className="mx-auto max-w-3xl px-6 py-16">
-        <h1 className="font-display text-4xl sm:text-5xl leading-tight">Your {V3D_NAME} order</h1>
-        {!ok ? (
-          <p className="mt-8">Accounts are not open yet. Write to <a className="rl-link text-accent" href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.</p>
-        ) : (
-          <>
-            <p className="mt-5 text-lg text-muted">Sign in with the email you used for your order.</p>
-            <SignIn next="/3dlor/account" pendingEmail={pendingFrom(h.get('cookie'))?.email} e={e} />
-          </>
-        )}
+        <h1 className="font-display text-4xl sm:text-5xl leading-tight">Your {V3D_NAME} account</h1>
+        <p className="mt-8">Accounts are not open yet. Write to <a className="rl-link text-accent" href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.</p>
       </section>
     )
   }
+  // Signed out: the one sign-in page (founder, 2026-11-27). It comes back here after the code.
+  if (!session) redirect(e ? `${V3D_SIGNIN_PATH}?e=${encodeURIComponent(e)}` : V3D_SIGNIN_PATH)
 
   const [orders, files, videos] = await Promise.all([
     dbJson<Order[]>(`v3d_orders?select=*&user_id=eq.${session.uid}&order=created_at.desc`),
@@ -78,19 +74,45 @@ export default async function Account({ searchParams }: PageProps<'/3dlor/accoun
     dbJson<Video[]>(`v3d_videos?select=id,order_id,position,title,status,script,video_path,final_path,rounds_used,customer_note,updated_at&user_id=eq.${session.uid}&order=position`).catch(() => [] as Video[]),
   ])
 
+  // The database allows ONE unpaid order per customer (v3d_orders_one_unpaid_per_user). So "Start a new order" opens
+  // that order when there is one, and says so, instead of a form that could only fail.
+  const open = orders.find(o => o.payment_status === 'unpaid')
+  const nameOf = (o: Order) => o.product_name === NEW_PRODUCT ? `Order of ${date(o.created_at)}` : o.product_name
+
   return (
     <section className="mx-auto max-w-4xl px-6 py-16">
-      <h1 className="font-display text-4xl sm:text-5xl leading-tight">Your {V3D_NAME} order</h1>
+      <h1 className="font-display text-4xl sm:text-5xl leading-tight">Your {V3D_NAME} account</h1>
       <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-muted">
-        <span>Signed in as {session.email}</span>
+        <span className="break-all">Signed in as {session.email}</span>
         <form method="post" action="/api/3dlor/auth/signout"><PendingButton className="rl-link text-accent" pending="Signing out…">Sign out</PendingButton></form>
       </div>
       <Notice e={e} />
       {sp.saved === '1' && <p role="status" className="mt-6"><strong>Saved. Thank you.</strong></p>}
       {sp.paid === '1' && <PaymentWait waiting={orders.some(o => o.payment_status === 'unpaid')} />}
 
-      {orders.length === 0 && (
-        <p className="mt-10">You have no order yet. <Link className="rl-link text-accent" href="/3dlor/signup">Start your library →</Link></p>
+      <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3">
+        <h2 className="text-2xl font-display">Your orders</h2>
+        <Link href={open ? `${V3D_SIGNUP_PATH}?edit=1` : `${V3D_SIGNUP_PATH}?new=1`}
+          className="rl-cta inline-flex min-h-11 items-center rounded-full bg-accent px-5 text-sm font-semibold text-on-accent hover:opacity-90">
+          {open ? 'Finish your open order' : 'Start a new order'}
+        </Link>
+      </div>
+      {open && <p className="mt-3 text-sm text-muted">You can have one unpaid order at a time. Pay or change it first, then start the next one.</p>}
+      {orders.length === 0 ? (
+        <p className="mt-6">You have no order yet.</p>
+      ) : (
+        <ul className="mt-6 divide-y divide-line border-y border-line">
+          {orders.map(o => (
+            <li key={o.id}>
+              <a href={`#order-${o.id}`} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-3 hover:text-accent">
+                <span className="font-medium">{nameOf(o)}</span>
+                <span className="text-sm text-muted">{o.company} · {o.videos_ordered} videos · {
+                  o.payment_status === 'unpaid' ? 'not paid yet' : o.payment_status === 'refunded' ? 'refunded'
+                  : o.videos_delivered > 0 ? `${o.videos_delivered} of ${o.videos_ordered} delivered` : 'paid, in work'}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
       )}
 
       {orders.map(o => {
@@ -119,8 +141,8 @@ export default async function Account({ searchParams }: PageProps<'/3dlor/accoun
           </>
         )
         return (
-          <article key={o.id} className="su-sheet">
-            <h2 className="text-2xl font-display">{o.product_name}</h2>
+          <article key={o.id} id={`order-${o.id}`} className="su-sheet scroll-mt-24">
+            <h2 className="text-2xl font-display">{nameOf(o)}</h2>
             <p className="text-muted text-sm mt-1">{o.company} · {o.videos_ordered} videos · ordered {date(o.created_at)}</p>
 
             {/* Going back (founder, 2026-11-27): the finished steps in the bar are links, and "← Back" opens the

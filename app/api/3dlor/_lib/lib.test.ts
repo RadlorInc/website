@@ -210,3 +210,23 @@ test('back to the order form: a saved order fills it again (2026-11-27)', () => 
   assert.deepEqual(languagesSaved(null, null), [])
   assert.deepEqual(languagesSaved('Klingon', 'Languages: Klingon.'), []) // not a language we offer
 })
+
+test('signupGo: a returning customer goes to the account page; edit and new only where the one-unpaid rule allows', async () => {
+  const { signupGo } = await import('./server.ts')
+  const go = (open: boolean, any: boolean, edit = false, fresh = false) => signupGo({ open, any, edit, fresh })
+  assert.equal(go(false, false), 'form')               // new customer: straight on to the form
+  assert.equal(go(false, true), 'account')             // returning customer: account page
+  assert.equal(go(false, true, false, true), 'form')   // "Start a new order" with only paid orders
+  assert.equal(go(false, true, true), 'account')       // ?edit=1 with nothing open: never a blank second order
+  assert.equal(go(true, true), 'account')              // open order, no flag: account page as before
+  assert.equal(go(true, true, true), 'form')           // ?edit=1 keeps working
+  assert.equal(go(true, true, false, true), 'account') // ?new=1 cannot make a second unpaid order
+})
+
+test('safeNext: only the three 3Dlor pages, never off-site', async () => {
+  const { safeNext } = await import('./server.ts')
+  for (const ok of ['/3dlor/signup', '/3dlor/account', '/3dlor/signin']) assert.equal(safeNext(ok), ok)
+  for (const bad of ['//evil.com', 'https://evil.com', '/3dlor/signin?x=1', '/3dlor/signin/../../x', '\\\\evil.com', '', null, undefined, ['/3dlor/signin']]) {
+    assert.equal(safeNext(bad), '/3dlor/account')
+  }
+})

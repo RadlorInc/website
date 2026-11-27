@@ -116,6 +116,9 @@ export const ASK_ID = `${ASK_URL}/#app`
 export const V3D_NAME = '3Dlor'   // the product's name (founder, 2026-11-22); sentences still say "3D videos"
 export const V3D_PATH = '/3dlor'
 export const V3D_SIGNUP_PATH = '/3dlor/signup'
+/** Sign-in for returning customers (founder, 2026-11-27): the same email code as sign-up, then the account page. */
+export const V3D_SIGNIN_PATH = '/3dlor/signin'
+export const V3D_ACCOUNT_PATH = '/3dlor/account'
 /**
  * The site's main action (founder, 2026-11-23: 3Dlor is the focus product): the header button on every company page
  * and the home hero's first button, both to V3D_SIGNUP_PATH.
@@ -278,6 +281,8 @@ export const PAGES = [
   // The page still answers at /waitlist for old links; restore this row to list it again.
   // { href: '/waitlist', label: 'Waitlist', where: 'footer' },
   { href: '/contact', label: 'Contact', where: 'both' },
+  // Returning 3Dlor customers (founder, 2026-11-27): the email code, then their account page. Last in the header.
+  { href: V3D_SIGNIN_PATH, label: 'Sign in', where: 'both' },
   { href: '/data-and-safety', label: 'Radlic data & safety', where: 'footer' },
   { href: SOURCES_PATH, label: 'Research sources', where: 'footer' },
   { href: '/privacy', label: 'Privacy', where: 'footer' },
