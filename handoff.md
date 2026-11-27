@@ -33,7 +33,18 @@
 >   (`radlic.com` is in `site.ts`); the #33 migration.
 > - **Disk:** on 23 Nov the Mac was nearly full (383 MB free that day). Delete `node_modules` in old `w-site-*` worktrees first.
 
-> 🔑 **2026-11-27 — 3Dlor sign-in (branch `preview/3dlor-signin`, a PR to `main`; not merged when written).** `/3dlor/signin`
+> 🧭 **2026-11-27 — START HERE: 3Dlor went live** (written in the past tense; re-check before you act).
+> - **Merged:** #41 (Back on every sign-up step, order edit expires the old Checkout session, one unpaid order per user,
+>   sources page for `/why-visual-learning`, footer "Other products" = Ask Radlor + Radlic only) and #42 (sign-in page).
+> - **Database:** the Supabase project of this site moved into the Radlor organisation on 27 Nov (same URL and keys).
+>   Migrations `20261124000000_v3d_videos.sql` and `20261127000000_v3d_one_unpaid_order.sql` were applied by hand that day.
+>   The old test orders were deleted, so `v3d_orders` started empty. Run `check:migrations` before you trust this line.
+> - **Stripe:** live keys in Vercel Production, a live webhook endpoint for `/api/3dlor/webhook` (5 events, the same list
+>   the route handles). The Stripe account is shared with other Radlor apps: the route ignores events without
+>   `v3d_order_id` metadata. Checkout was tested up to the payment page on 27 Nov; the webhook was not yet seen on a live
+>   payment. Auth email goes through custom SMTP. Prices in `plans.ts` were still the draft.
+
+> 🔑 **2026-11-27 — 3Dlor sign-in (PR #42, merged 27 Nov).** `/3dlor/signin`
 > uses the same email code and cookie. A signed-out `/3dlor/account` goes there. A signed-in customer with any order goes
 > from `/3dlor/signup` to the account page; `?edit=1` opens the unpaid order, `?new=1` an empty form only when nothing is
 > unpaid. The account page lists all orders. `scripts/test-3dlor-flow.mjs` (local stack only) checks all of this.
