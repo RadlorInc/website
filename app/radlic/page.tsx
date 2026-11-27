@@ -133,6 +133,9 @@ export default function RadlicPage() {
         <a href={`${RADLIC}/legal/privacy`}>Radlic Privacy Policy</a>
         <a href={`${RADLIC}/legal/terms`}>Radlic Terms</a>
         <a href={`${RADLIC}/legal/parent-rights`}>Parent rights</a>
+        {/* Radlic's own pages on radlor.com live here, not in the company footer (founder, 2026-11-27). */}
+        <Link href="/data-and-safety">Data &amp; safety</Link>
+        <Link href="/writing">Notes</Link>
         {/* The only way back to the company site from here: this page wears none of radlor.com's chrome. */}
         <Link href="/" className={s.maker}>{APP_NAME} is made by {COMPANY}</Link>
       </footer>

@@ -49,7 +49,7 @@ ok(MYTHS.test('people remember 80% of what they see'), 'positive control: the my
 const claims = JSON.stringify({ s: ev.SECTIONS, h: ev.HOME_EVIDENCE })
 ok(!MYTHS.test(claims), 'no myth number appears as a finding (NOT_CLAIMED may name them to reject them)')
 
-const PAGES = ['app/(site)/page.tsx', 'app/(site)/3dlor/page.tsx', 'app/(site)/why-visual-learning/page.tsx', 'components/visual/WhyStory.tsx', 'components/visual/ManualScroll.tsx', 'components/visual/ManualToVideo.tsx', 'components/visual/V3dStory.tsx', 'components/visual/SampleStory.tsx', 'app/(site)/samples/page.tsx', 'app/(site)/samples/[id]/page.tsx', 'app/askradlor/page.tsx', 'app/llms.txt/route.ts']
+const PAGES = ['app/(site)/page.tsx', 'app/(site)/3dlor/page.tsx', 'app/(site)/why-visual-learning/page.tsx', 'app/(site)/why-visual-learning/sources/page.tsx', 'components/visual/WhyStory.tsx', 'components/visual/ManualScroll.tsx', 'components/visual/ManualToVideo.tsx', 'components/visual/V3dStory.tsx', 'components/visual/SampleStory.tsx', 'app/(site)/samples/page.tsx', 'app/(site)/samples/[id]/page.tsx', 'app/askradlor/page.tsx', 'app/llms.txt/route.ts']
 // Text a visitor reads, without the comments that explain the rules.
 const visible = f => readFileSync(new URL(`../${f}`, import.meta.url), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '').replace(/<\/?svg\b[^>]*>/gi, '')
 const RULES = [

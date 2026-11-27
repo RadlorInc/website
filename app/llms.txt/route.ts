@@ -1,5 +1,5 @@
 import { SAMPLES } from '@/content/samples'
-import { APP_GRADES, APP_NAME, APP_URL, ASK_EXPLORE_URL, ASK_NAME, ASK_URL, COMPANY, PAGES, SAMPLES_PATH, SITE_URL, SOCIAL, SUPPORT_EMAIL, SUPPORT_PHONE, TAGLINE, V3D_NAME, V3D_PATH, V3D_SIGNUP_PATH, VISION, WHY_PATH } from '@/site'
+import { APP_GRADES, APP_NAME, APP_URL, ASK_EXPLORE_URL, ASK_NAME, ASK_URL, COMPANY, PAGES, SAMPLES_PATH, SITE_URL, SOCIAL, SUPPORT_EMAIL, SUPPORT_PHONE, TAGLINE, V3D_NAME, V3D_PATH, SOURCES_PATH, V3D_SIGNUP_PATH, VISION, WHY_PATH } from '@/site'
 import { posts } from '@/content/posts'
 
 /**
@@ -16,7 +16,8 @@ const BLURB: Record<(typeof PAGES)[number]['href'], string> = {
   '/': `${V3D_NAME}: how people understand a product when they can see inside it; the two other products are at the bottom`,
   [V3D_PATH]: `${V3D_NAME}, for product brands: a library of short 3D how-to, setup and support videos for one product, made from product photos; the sign-up and the plans are at ${SITE_URL}${V3D_SIGNUP_PATH}`,
   [SAMPLES_PATH]: `seven ${V3D_NAME} sample videos, each made from a written manual page: ${SAMPLES.map(s => s.product.toLowerCase()).join(', ')}; each has its own page`,
-  [WHY_PATH]: 'the research on why people understand better when they see a thing (dual coding, the picture superiority effect, multimedia learning, working-memory limits, pictures and video in patient instructions, animation for step-by-step tasks), where the evidence is mixed, and the full source list',
+  [WHY_PATH]: 'the research on why people understand better when they see a thing (dual coding, the picture superiority effect, multimedia learning, working-memory limits, pictures and video in patient instructions, animation for step-by-step tasks), where the evidence is mixed, and a link to the full source list',
+  [SOURCES_PATH]: `every source behind ${WHY_PATH}, numbered, with a link to each study`,
   '/askradlor': `${ASK_NAME}: ask any question and watch a short voiced whiteboard video draw the answer; sign-up is on ${ASK_URL}, and ${ASK_EXPLORE_URL} shows public videos with no account`,
   '/radlic': `${APP_NAME}, the math app: how a lesson teaches, how practice adapts, and two real lesson chalkboards; sign-up is on ${APP_URL}`,
   // hidden 2026-09-25 with its footer row in site.ts — restore both together:
