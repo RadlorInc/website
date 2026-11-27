@@ -181,5 +181,53 @@ ok(tries.slice(0, 5).every(l => l.includes('e=code')) && tries[5].includes('e=wa
 const nxt = await fetch(`${BASE}/api/3dlor/auth/start`, { method: 'POST', headers: H, body: form({ email: 'bad', next: 'https://evil.example' }), redirect: 'manual' })
 ok(nxt.headers.get('location')?.startsWith('/3dlor/account'), 'an outside "next" URL is not followed (no open redirect)')
 
+console.log('\nSign-in page and account home (2026-11-27)')
+const pg = (path, cookie) => fetch(`${BASE}${path}`, { headers: cookie ? { Cookie: cookie } : {}, redirect: 'manual' })
+// A page under a loading.tsx streams, so its redirect() is a 200 with a meta refresh (the browser follows it) rather than a 307.
+const at = async r => {
+  const l = r.headers.get('location') ?? (r.status === 200 ? /id="__next-page-redirect" http-equiv="refresh" content="\d+;url=([^"]+)"/.exec(await r.clone().text())?.[1] : null)
+  return l ? new URL(l.replaceAll('&amp;', '&'), BASE) : null
+}
+const html = async (path, cookie) => (await pg(path, cookie)).text()
+ok((await at(await pg('/3dlor/account')))?.pathname === '/3dlor/signin', 'signed out: /3dlor/account goes to the sign-in page')
+const crafted = (await at(await pg('/3dlor/account?e=//evil.example/x')))
+ok(crafted?.origin === new URL(BASE).origin && crafted.pathname === '/3dlor/signin', 'signed out with a crafted ?e=: still our own sign-in page')
+ok((await pg('/3dlor/signin')).status === 200 && (await html('/3dlor/signin')).includes('Email me a code'), 'signed out: the sign-in page shows the email form')
+const si = await fetch(`${BASE}/api/3dlor/auth/start`, { method: 'POST', headers: H, body: form({ email: A, next: '/3dlor/signin' }), redirect: 'manual' })
+ok((await at(si))?.pathname === '/3dlor/signin', 'the sign-in page asks for the code on itself')
+const sv = await fetch(`${BASE}/api/3dlor/auth/verify`, { method: 'POST', headers: { ...H, Cookie: cookieOf(si, 'v3d_pending') }, body: form({ code: await mailCode(A) }), redirect: 'manual' })
+const ca2 = cookieOf(sv, 'v3d_session')
+ok(!!ca2 && (await at(sv))?.pathname === '/3dlor/signin', 'the right code gives a session')
+ok((await at(await pg('/3dlor/signin', ca2)))?.pathname === '/3dlor/account', 'signed in: the sign-in page goes to the account page')
+
+// A has one PAID order now.
+ok((await at(await pg('/3dlor/signup', ca2)))?.pathname === '/3dlor/account', 'returning customer: /3dlor/signup goes to the account page')
+const homeA = await html('/3dlor/account', ca2)
+ok(homeA.includes('Start a new order') && homeA.includes('href="/3dlor/signup?new=1"'), 'account page: "Start a new order" when nothing is unpaid')
+const newForm = await pg('/3dlor/signup?new=1', ca2)
+ok(newForm.status === 200 && (await newForm.text()).includes('How many videos?'), '"Start a new order" opens an empty form')
+ok((await makeOrder(ca2)) === '/3dlor/account?new=1', 'a customer with a paid order can make a second order')
+const both = await admin(`v3d_orders?select=id,payment_status&user_id=eq.${uidA}`).then(r => r.json())
+const open2 = both.find(o => o.payment_status === 'unpaid')
+const homeA2 = await html('/3dlor/account', ca2)
+ok(both.length === 2 && both.every(o => homeA2.includes(`id="order-${o.id}"`) && homeA2.includes(`href="#order-${o.id}"`)), 'account page lists both orders, paid and unpaid')
+ok(homeA2.includes('Finish your open order') && homeA2.includes('href="/3dlor/signup?edit=1"') && !homeA2.includes('?new=1'), 'with an unpaid order the button opens that order, not a new one')
+ok((await at(await pg('/3dlor/signup?new=1', ca2)))?.pathname === '/3dlor/account', '?new=1 typed by hand with an unpaid order: back to the account page')
+const edit = await html('/3dlor/signup?edit=1', ca2)
+ok(edit.includes(`name="edit" value="${open2.id}"`), '?edit=1 still opens the open order')
+const dbl = await Promise.all([makeOrder(ca2), makeOrder(ca2)])
+const after = await admin(`v3d_orders?select=id&user_id=eq.${uidA}&payment_status=eq.unpaid`).then(r => r.json())
+ok(dbl.every(l => l === '/3dlor/account') && after.length === 1, 'double submit of a new order: still one unpaid order')
+const [obBefore] = await admin(`v3d_orders?select=company,videos_ordered&id=eq.${ob.id}`).then(r => r.json())
+ok((await makeOrder(ca2, { edit: ob.id, company: 'Hijack', videos: '5' })) === '/3dlor/account', "A posts an edit with B's order id: refused")
+const [obNow] = await admin(`v3d_orders?select=company,videos_ordered&id=eq.${ob.id}`).then(r => r.json())
+ok(obNow.company === obBefore.company && obNow.videos_ordered === obBefore.videos_ordered, "B's order is unchanged")
+const homeB = await html('/3dlor/account', cb)
+ok(both.every(o => !homeB.includes(o.id)), "B's account page shows none of A's order ids")
+const D = `d-${run}@example.com`
+const cd = await signIn(D)
+const fresh = await pg('/3dlor/signup', cd)
+ok(fresh.status === 200 && (await fresh.text()).includes('How many videos?'), 'a new customer with no order goes straight on to the form')
+
 console.log(fail ? '\n❌ FAILED' : '\n✅ all checks passed')
 process.exit(fail)

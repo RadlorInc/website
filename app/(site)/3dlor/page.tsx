@@ -16,7 +16,7 @@ import Link from 'next/link'
 import { ManualScroll } from '@/components/visual/ManualScroll'
 import { ManualToVideo } from '@/components/visual/ManualToVideo'
 import { V3dStory } from '@/components/visual/V3dStory'
-import { COMPANY, SAMPLES_PATH, SITE_URL, SUPPORT_EMAIL, V3D_NAME, V3D_PATH, V3D_SIGNUP_PATH, WHY_PATH } from '@/site'
+import { COMPANY, SAMPLES_PATH, SITE_URL, SUPPORT_EMAIL, V3D_NAME, V3D_PATH, V3D_SIGNIN_PATH, V3D_SIGNUP_PATH, WHY_PATH } from '@/site'
 
 const TITLE = `${V3D_NAME}: how-to and support videos for your product`
 
@@ -61,6 +61,7 @@ export default function ThreeDVideos() {
           <div className="flex shrink-0 flex-wrap gap-3">
             <Link href={V3D_SIGNUP_PATH} className={primary}>Sign up</Link>
             <Link href={SAMPLES_PATH} className={quiet}>See the samples</Link>
+            <p className="w-full text-sm text-muted">Already a customer? <Link href={V3D_SIGNIN_PATH} className="rl-link text-accent">Sign in</Link></p>
           </div>
         </div>
         <ManualToVideo />
@@ -77,6 +78,7 @@ export default function ThreeDVideos() {
           Pick a plan on the sign-up page. Questions first? <a className="rl-link text-accent" href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
         </p>
         <Link href={V3D_SIGNUP_PATH} className={`${primary} mt-6`}>Sign up</Link>
+        <p className="mt-4 text-sm text-muted">Already a customer? <Link href={V3D_SIGNIN_PATH} className="rl-link text-accent">Sign in</Link></p>
         <p className="mt-6"><Link href={WHY_PATH} className="rl-link text-accent">The research and its limits</Link></p>
       </section>
       <ServiceJsonLd />

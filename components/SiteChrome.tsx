@@ -42,7 +42,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
           </Link>
         {/* Below md these links and the 3Dlor button move into <MobileMenu /> (founder, 2026-11-26). Logo left, links centred (founder, 2026-09-29); no button
             on the right from 2026-10-22 (founder: "remove Our products from the nav") until the 3Dlor button below. */}
-        <nav aria-label="Main" className="hidden md:flex items-center gap-8 text-sm">
+        <nav aria-label="Main" className="hidden md:flex items-center gap-5 lg:gap-8 text-sm">
           {HEADER.map(n => (
             <Link key={n.href} href={n.href} className="rl-link text-muted hover:text-foreground transition-colors">
               {n.label}
