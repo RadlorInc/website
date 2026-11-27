@@ -125,9 +125,11 @@ export const V3D_SIGNUP_PATH = '/3dlor/signup'
  */
 export const V3D_CTA = `Start with ${V3D_NAME}`
 /** One line under the home hero's heading: what 3Dlor is, said the way its own page says it. */
-export const V3D_LINE = '3D how-to and support videos for product brands.'
+export const V3D_LINE = 'Short 3D videos that show every step so customers set up, use, and fix your product with confidence. Fewer returns. Less support. Better reviews.'
 /** The page with the research behind all three products. Every claim on it has a checked source in `content/evidence.ts`. */
 export const WHY_PATH = '/why-visual-learning'
+/** Every source behind WHY_PATH, on its own page, like /privacy (founder, 2026-11-26). */
+export const SOURCES_PATH = `${WHY_PATH}/sources` as const
 export const SAMPLES_PATH = '/samples'
 
 /**
@@ -277,6 +279,7 @@ export const PAGES = [
   // { href: '/waitlist', label: 'Waitlist', where: 'footer' },
   { href: '/contact', label: 'Contact', where: 'both' },
   { href: '/data-and-safety', label: 'Radlic data & safety', where: 'footer' },
+  { href: SOURCES_PATH, label: 'Research sources', where: 'footer' },
   { href: '/privacy', label: 'Privacy', where: 'footer' },
   // ⚠️ The WEBSITE's terms, not the app's. The app has its own, longer Terms of Service on its
   // own origin covering an account and a child's data. Do not point this row at that document.
@@ -284,10 +287,12 @@ export const PAGES = [
 ] as const
 
 export const HEADER = PAGES.filter(p => p.where === 'both')
-/** The footer's "Other products" group (founder, 2026-11-23): the two other products and the pages that are theirs. */
-const OTHER_HREFS: readonly string[] = ['/askradlor', '/radlic', '/writing', '/data-and-safety']
-export const FOOTER = PAGES.filter(p => p.href !== '/' && !OTHER_HREFS.includes(p.href))
+/** The footer's "Other products" group (founder, 2026-11-23): the two other products, and nothing else. Radlic's own pages
+ *  (notes, data & safety) are linked from `/radlic` only, not from the company footer (founder, 2026-11-27). */
+const OTHER_HREFS: readonly string[] = ['/askradlor', '/radlic']
+const RADLIC_OWN: readonly string[] = ['/writing', '/data-and-safety']
 export const FOOTER_OTHER = PAGES.filter(p => OTHER_HREFS.includes(p.href))
+export const FOOTER = PAGES.filter(p => p.href !== '/' && !OTHER_HREFS.includes(p.href) && !RADLIC_OWN.includes(p.href))
 
 /**
  * Company facts — the only strings on the site not derived from the product itself. They were

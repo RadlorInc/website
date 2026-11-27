@@ -23,7 +23,7 @@ import { DRAFT, WEBSITE_TERMS, unresolvedPlaceholders } from '@/content/legal'
 export const metadata: Metadata = {
   title: 'Terms of Use',
   description:
-    'The Terms of Use for radlor.com, the website — what this site is, what it collects, and what its content does and does not promise. It is a separate and much shorter agreement than the one covering the Radlic app.',
+    'The Terms of Use for radlor.com, the website: what this site is, what it collects, and what its content does and does not promise. It is a separate and much shorter agreement than the one covering the Radlic app.',
   alternates: { canonical: '/terms' },
 }
 
@@ -43,7 +43,7 @@ export default async function Terms() {
         <h1 className="rl-focus font-display text-5xl">{WEBSITE_TERMS.title}</h1>
         <p className="rl-rise mt-6 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.12s' } as React.CSSProperties}>
           These cover <strong className="text-foreground font-medium">radlor.com</strong>, the website
-          you are reading. {APP_NAME} — the product — is a separate service with its own Terms of
+          you are reading. {APP_NAME}, the product, is a separate service with its own Terms of
           Service, which you accept when you create an account there.
         </p>
         </div>
@@ -68,13 +68,13 @@ export default async function Terms() {
             className="rl-rise mt-8 max-w-2xl rounded-xl border-2 border-accent bg-accent-soft px-4 py-3 text-foreground"
             style={{ '--d': '0.18s' } as React.CSSProperties}
           >
-            <p className="font-semibold">⚠️ Draft — not reviewed by a lawyer, and not in force.</p>
+            <p className="font-semibold">⚠️ Draft: not reviewed by a lawyer, and not in force.</p>
             <p className="mt-1 text-sm text-muted">
               This text is published so it can be read and corrected. It is not a binding agreement,
               it is not final, and the passages marked{' '}
               <strong className="text-foreground font-medium">[LAWYER REVIEW]</strong> and the{' '}
               <strong className="text-foreground font-medium">[DATE]</strong> below are decisions
-              nobody has made yet — they are left visible on purpose rather than filled in with a
+              nobody has made yet; they are left visible on purpose rather than filled in with a
               guess.
             </p>
           </div>
@@ -101,7 +101,7 @@ export default async function Terms() {
           '@context': 'https://schema.org',
           '@type': 'WebPage',
           '@id': `${SITE_URL}/terms`,
-          name: `${WEBSITE_TERMS.title} — radlor.com`,
+          name: `${WEBSITE_TERMS.title}: radlor.com`,
           description: metadata.description,
           isPartOf: { '@id': `${SITE_URL}/#website` },
           publisher: { '@id': `${SITE_URL}/#organization` },

@@ -39,7 +39,7 @@ export default function Thanks() {
         You are on the list.
       </h1>
       <p className="rl-rise mt-6 text-lg text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.12s' } as React.CSSProperties}>
-        We will write when there is a place. If you were already on it, you still are — signing up
+        We will write when there is a place. If you were already on it, you still are; signing up
         twice does not move you up or down.
       </p>
       <p className="rl-rise mt-4 text-muted max-w-2xl leading-relaxed" style={{ '--d': '0.18s' } as React.CSSProperties}>

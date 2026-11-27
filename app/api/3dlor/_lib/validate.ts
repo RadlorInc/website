@@ -68,6 +68,15 @@ const whole = (v: unknown, min: number) => {
   return n >= min ? n : null
 }
 
+/** The product count of a saved order. The order route writes it only into `notes` ("Products: 3. …"); there is no
+ *  column for it. ponytail: read back from text; add a `products` column if anything else ever needs it. */
+export const productsIn = (notes: string | null) => Number(/^Products: (\d{1,7})\./.exec(notes ?? '')?.[1]) || 1
+
+/** The extra languages of a saved order. The `languages` column holds 200 characters and says "N languages (see notes)"
+ *  when the list is longer, so the full list is read from `notes` then. */
+export const languagesSaved = (languages: string | null, notes: string | null) =>
+  (languagesIn(languages) ?? languagesIn(/Languages: ([^.]*)\./.exec(notes ?? '')?.[1] ?? '') ?? []).filter(l => l !== 'English')
+
 export function parseOrder(form: FormData): { ok: true; data: OrderInput; size: { videos: number; products: number; languages: number }; names: string[] } | { ok: false; error: string } {
   const videos = whole(form.get('videos'), MIN_VIDEOS)
   if (videos === null) return { ok: false, error: 'videos' }

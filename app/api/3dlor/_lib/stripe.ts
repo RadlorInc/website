@@ -101,9 +101,10 @@ export function checkoutParams(o: { orderId: string; uid: string; email: string;
     },
     metadata: meta,
     // People were not sure if they had to press Back after the green tick (founder, 23 Nov 2026).
+    // ⚠️ One line only, true BEFORE payment too: Stripe shows `after_submit` under the button all the time, not after
+    // payment, so "Payment done" showed before anyone paid (found in a sandbox test, 27 Nov 2026).
     custom_text: {
-      submit: { message: 'After you pay, this page takes you back to radlor.com by itself.' },
-      after_submit: { message: 'Payment done. Taking you back to radlor.com now; please do not press Back.' },
+      submit: { message: 'After you pay, this page takes you back to radlor.com by itself. Please do not press Back.' },
     },
     success_url: `${o.site}/3dlor/account?paid=1`,
     cancel_url: `${o.site}/3dlor/account`,

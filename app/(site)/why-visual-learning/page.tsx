@@ -4,12 +4,12 @@
  * ⚠️ THIS PAGE HOLDS NO CLAIM OF ITS OWN. Every finding, limit and source is in `content/evidence.ts`, and the rules
  * for adding one are at the top of that file: a real source that somebody opened, a claim no stronger than the source,
  * and the limit beside it. The page only lays the data out: the short answer, the sections, what we do not claim,
- * how the products use it, and the numbered source list that every [n] links to.
+ * how the products use it. The numbered source list that every [n] links to is on its own page, SOURCES_PATH.
  */
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { COMPANY, SITE_URL, V3D_NAME, V3D_PATH, WHY_PATH } from '@/site'
-import { CHECKED_ON, NOT_CLAIMED, SECTIONS, SOURCES, SOURCE_ORDER, type SourceId } from '@/content/evidence'
+import { COMPANY, SITE_URL, SOURCES_PATH, V3D_NAME, V3D_PATH, WHY_PATH } from '@/site'
+import { NOT_CLAIMED, SECTIONS, SOURCES, SOURCE_ORDER, type SourceId } from '@/content/evidence'
 import { WhyStory } from '@/components/visual/WhyStory'
 
 const TITLE = 'Why visuals make things clear'
@@ -24,12 +24,12 @@ export const metadata: Metadata = {
 
 const num = (id: SourceId) => SOURCE_ORDER.indexOf(id) + 1
 
-/** The bracketed source numbers after a finding. Each is a link to its row in the source list. */
+/** The bracketed source numbers after a finding. Each is a link to its row on the sources page. */
 function Refs({ ids }: { ids: readonly SourceId[] }) {
   return (
     <span className="whitespace-nowrap text-sm">
       {ids.map(id => (
-        <a key={id} href={`#source-${num(id)}`} aria-label={`Source ${num(id)}: ${SOURCES[id].short}`}
+        <a key={id} href={`${SOURCES_PATH}#source-${num(id)}`} aria-label={`Source ${num(id)}: ${SOURCES[id].short}`}
           className="ml-1 inline-block rounded px-1 py-0.5 text-accent underline underline-offset-2 hover:bg-accent-soft">
           [{num(id)}]
         </a>
@@ -41,6 +41,7 @@ function Refs({ ids }: { ids: readonly SourceId[] }) {
 export default function WhyVisualLearning() {
   return (
     <>
+      <div className="sc-near">
       <section className="mx-auto max-w-[76rem] px-6 pt-14 pb-6 sm:pt-24">
         <h1 className="font-display max-w-[14ch] text-[2.9rem] leading-[0.98] sm:text-8xl">Why visuals make things clear.</h1>
         <p className="mt-6 max-w-[34rem] text-xl leading-relaxed text-muted">
@@ -49,6 +50,7 @@ export default function WhyVisualLearning() {
       </section>
 
       <WhyStory />
+      </div>
 
       <div className="mx-auto max-w-5xl px-6">
         <section id="not-claimed" className="scroll-mt-20 py-20">
@@ -91,20 +93,10 @@ export default function WhyVisualLearning() {
         </section>
 
         <section id="sources" className="scroll-mt-20 py-14">
-          <h2 className="font-display mt-3 text-4xl leading-tight">Every source on this page.</h2>
-          <p className="mt-4 leading-relaxed text-muted">
-            We opened each source and compared it with our sentence. Last check: {CHECKED_ON}. Many journal articles
-            need a subscription for the full text; the abstract is free to read. If you find a mistake, write to us on
-            the <Link href="/contact" className="text-accent underline underline-offset-4">contact page</Link>.
+          <p className="leading-relaxed text-muted">
+            Each [n] on this page opens its row in the source list.{' '}
+            <Link href={SOURCES_PATH} className="font-medium text-accent underline underline-offset-4">See all {SOURCE_ORDER.length} research sources</Link>
           </p>
-          <ol className="mt-8 list-decimal gap-10 space-y-3 pl-6 text-sm leading-relaxed text-muted marker:text-foreground md:columns-2">
-            {SOURCE_ORDER.map((id, i) => (
-              <li key={id} id={`source-${i + 1}`} className="scroll-mt-24 break-inside-avoid break-words pl-1 target:text-foreground">
-                {SOURCES[id].cite}{' '}
-                <a href={SOURCES[id].url} rel="noopener" className="text-accent underline underline-offset-4">{SOURCES[id].url.replace(/^https?:\/\//, '')}</a>
-              </li>
-            ))}
-          </ol>
         </section>
       </div>
 

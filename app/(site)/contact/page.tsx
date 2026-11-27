@@ -8,7 +8,7 @@ import { COMPANY, SUPPORT_EMAIL, SUPPORT_PHONE, SUPPORT_TEL, V3D_CTA, V3D_NAME, 
 
 export const metadata: Metadata = {
   title: 'Contact',
-  description: `Get in touch with ${COMPANY} — ${V3D_NAME} for your product, support, partnerships and press.`,
+  description: `Get in touch with ${COMPANY}: ${V3D_NAME} for your product, support, partnerships and press.`,
   alternates: { canonical: '/contact' },
 }
 

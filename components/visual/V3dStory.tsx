@@ -31,7 +31,6 @@ const FOR = [
 const LIMITS = [
   'Clean 3D, not a photoreal advert',
   'You approve every step and its accuracy',
-  'We are new: no case studies yet',
 ]
 
 const shot = (n: number) => <Image src={frame(n)} alt="" width={MANUAL.w} height={MANUAL.h} sizes="240px" />
@@ -40,7 +39,7 @@ export function V3dStory() {
   return (
     <>
       {/* Two beats per line: the prop lands on the table, then it does what the line says. */}
-      <Scene beats={12} title="What you get."
+      <Scene beats={12} stops={GET.map((_, i) => (i + 1) * 2)} title="What you get."
         words={b => (
           <ol className="get">
             {GET.map((g, i) => (
@@ -103,7 +102,7 @@ export function V3dStory() {
 
       <HandsScene />
 
-      <Scene beats={3} title="What this is not." line="Our limits, before you ask.">
+      <Scene beats={LIMITS.length} title="What this is not." line="Our limits, before you ask.">
         {b => (
           <ul className="slips">
             {LIMITS.map((l, i) => <li key={l} className="drop" {...on(b > i)} style={{ rotate: `${[-1.5, 1, -0.6, 1.6][i]}deg`, marginLeft: `${[0, 12, 4, 16][i]}%` }}>{l}</li>)}

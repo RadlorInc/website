@@ -22,11 +22,11 @@ import { ART } from '@/components/scroll/art'
 const RADLIC = APP_URL
 
 export const metadata: Metadata = {
-  title: { absolute: 'Radlic — math lessons that adapt to your child, grades K–8' },
+  title: { absolute: 'Radlic: math lessons that adapt to your child, grades K–8' },
   description:
     'Math for kindergarten through grade 8. Each lesson explains one idea step by step, the way a teacher would at the board, then practice adapts to what your child gets right and wrong. For parents.',
   alternates: { canonical: '/radlic' },
-  openGraph: { url: `${SITE_URL}/radlic`, title: 'Radlic — math lessons that adapt to your child' },
+  openGraph: { url: `${SITE_URL}/radlic`, title: 'Radlic: math lessons that adapt to your child' },
 }
 
 function AppJsonLd() {
@@ -133,6 +133,9 @@ export default function RadlicPage() {
         <a href={`${RADLIC}/legal/privacy`}>Radlic Privacy Policy</a>
         <a href={`${RADLIC}/legal/terms`}>Radlic Terms</a>
         <a href={`${RADLIC}/legal/parent-rights`}>Parent rights</a>
+        {/* Radlic's own pages on radlor.com live here, not in the company footer (founder, 2026-11-27). */}
+        <Link href="/data-and-safety">Data &amp; safety</Link>
+        <Link href="/writing">Notes</Link>
         {/* The only way back to the company site from here: this page wears none of radlor.com's chrome. */}
         <Link href="/" className={s.maker}>{APP_NAME} is made by {COMPANY}</Link>
       </footer>

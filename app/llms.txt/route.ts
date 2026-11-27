@@ -1,5 +1,5 @@
 import { SAMPLES } from '@/content/samples'
-import { APP_GRADES, APP_NAME, APP_URL, ASK_EXPLORE_URL, ASK_NAME, ASK_URL, COMPANY, PAGES, SAMPLES_PATH, SITE_URL, SOCIAL, SUPPORT_EMAIL, SUPPORT_PHONE, TAGLINE, V3D_NAME, V3D_PATH, V3D_SIGNUP_PATH, VISION, WHY_PATH } from '@/site'
+import { APP_GRADES, APP_NAME, APP_URL, ASK_EXPLORE_URL, ASK_NAME, ASK_URL, COMPANY, PAGES, SAMPLES_PATH, SITE_URL, SOCIAL, SUPPORT_EMAIL, SUPPORT_PHONE, TAGLINE, V3D_NAME, V3D_PATH, SOURCES_PATH, V3D_SIGNUP_PATH, VISION, WHY_PATH } from '@/site'
 import { posts } from '@/content/posts'
 
 /**
@@ -16,7 +16,8 @@ const BLURB: Record<(typeof PAGES)[number]['href'], string> = {
   '/': `${V3D_NAME}: how people understand a product when they can see inside it; the two other products are at the bottom`,
   [V3D_PATH]: `${V3D_NAME}, for product brands: a library of short 3D how-to, setup and support videos for one product, made from product photos; the sign-up and the plans are at ${SITE_URL}${V3D_SIGNUP_PATH}`,
   [SAMPLES_PATH]: `seven ${V3D_NAME} sample videos, each made from a written manual page: ${SAMPLES.map(s => s.product.toLowerCase()).join(', ')}; each has its own page`,
-  [WHY_PATH]: 'the research on why people understand better when they see a thing (dual coding, the picture superiority effect, multimedia learning, working-memory limits, pictures and video in patient instructions, animation for step-by-step tasks), where the evidence is mixed, and the full source list',
+  [WHY_PATH]: 'the research on why people understand better when they see a thing (dual coding, the picture superiority effect, multimedia learning, working-memory limits, pictures and video in patient instructions, animation for step-by-step tasks), where the evidence is mixed, and a link to the full source list',
+  [SOURCES_PATH]: `every source behind ${WHY_PATH}, numbered, with a link to each study`,
   '/askradlor': `${ASK_NAME}: ask any question and watch a short voiced whiteboard video draw the answer; sign-up is on ${ASK_URL}, and ${ASK_EXPLORE_URL} shows public videos with no account`,
   '/radlic': `${APP_NAME}, the math app: how a lesson teaches, how practice adapts, and two real lesson chalkboards; sign-up is on ${APP_URL}`,
   // hidden 2026-09-25 with its footer row in site.ts — restore both together:
@@ -30,8 +31,8 @@ const BLURB: Record<(typeof PAGES)[number]['href'], string> = {
   '/about': `why ${COMPANY} started and how we work`,
   '/contact': '3Dlor for your product, support, partnerships, press',
   '/data-and-safety': "what we store about a child, who can see it, how to delete it, and what we do not collect",
-  '/terms': 'the terms of use for this website, in force since 6 September 2026 — what this site is, what it collects, and what its content does and does not promise; the Radlic app has its own separate Terms of Service on its own origin',
-  '/privacy': 'the privacy policy for this website: no cookies, no analytics, nothing loaded from a third party, and one form — the waitlist — which stores an email address and an optional grade, and nothing else',
+  '/terms': 'the terms of use for this website, in force since 6 September 2026: what this site is, what it collects, and what its content does and does not promise; the Radlic app has its own separate Terms of Service on its own origin',
+  '/privacy': 'the privacy policy for this website: no cookies, no analytics, nothing loaded from a third party, and one form, the waitlist, which stores an email address and an optional grade, and nothing else',
 }
 
 export function GET() {
@@ -45,7 +46,7 @@ The main product is ${V3D_NAME}, a service for product brands, described at ${SI
 ${COMPANY} makes a library of short 3D videos for one product: how to set it up, use it, clean it and fix
 it, with exploded views and the inside of the product. The work starts from the instruction manual and product photos (a CAD file is
 optional), the brand approves each script before a video is made, and the videos come in tall, wide and
-square formats. The look is clean 3D, not photoreal. The service is new and has no customer case studies yet.
+square formats. The look is clean 3D, not photoreal.
 
 ${COMPANY} has two other products. The first is ${APP_NAME}: adaptive math for kindergarten through grade 8. It runs at ${APP_URL} and is
 open to try: ${APP_URL}/auth is where a parent makes an account, and the URL to give somebody who
@@ -54,8 +55,8 @@ AdaptiveLearn, at adaptivelearn.radlor.com, until September 2026. Its address ap
 
 ${APP_NAME} teaches one idea per lesson: a teacher says each step out loud and writes or draws it on
 the board, then the child tries one with hints and worked steps to fall back on. Practice adapts
-question by question — each harder level is a different kind of question, not the same question
-with bigger numbers — and the level is never shown on screen; a wrong answer is never marked wrong.
+question by question: each harder level is a different kind of question, not the same question
+with bigger numbers, and the level is never shown on screen; a wrong answer is never marked wrong.
 Kindergarten, grade 1 and grade 2 have 23 story chapters. Grade 3 through grade 8 are split into
 modules: ${APP_GRADES.map(g => `Grade ${g.grade}: ${g.modules.join('; ')}`).join('. ')}.
 
@@ -70,7 +71,7 @@ same chat. It covers biology, physics, chemistry, home improvements and auto rep
 by AI and can be wrong. Public videos are at ${ASK_EXPLORE_URL} and need no account.
 
 ## Pages
-${PAGES.map(p => `- [${p.label} — ${BLURB[p.href]}](${SITE_URL}${p.href === '/' ? '' : p.href})`).join('\n')}
+${PAGES.map(p => `- [${p.label}: ${BLURB[p.href]}](${SITE_URL}${p.href === '/' ? '' : p.href})`).join('\n')}
 
 ## Writing
 ${posts.map(p => `- [${p.title}](${SITE_URL}/writing/${p.slug}): ${p.description}`).join('\n')}

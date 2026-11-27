@@ -9,7 +9,7 @@ The question worth asking is not whether an app promises not to upload. It is wh
 A promise is a sentence in a privacy policy. It is enforced by whoever remembers it, and it survives
 exactly as long as the person who wrote it stays at the company.
 
-An architecture is different. If there is no code that uploads a frame, no frame is uploaded — not
+An architecture is different. If there is no code that uploads a frame, no frame is uploaded, not
 because anybody is being careful, but because there is nothing to run. And if the browser is also
 instructed to refuse what the app is not allowed to do, then adding that code later is not a quiet
 one-line change. It breaks visibly, in front of whoever tries.
@@ -22,7 +22,7 @@ described how that was built so nothing could leave the device.
 
 Those chapters are gone. We removed them on 20 September 2026, along with the 9–11 band they lived in.
 Radlic now has no camera feature at all, and the stronger version of the claim is now the true one:
-the app does not merely avoid uploading video — the browser will not let it open a camera.
+the app does not merely avoid uploading video: the browser will not let it open a camera.
 
 ## The three things that make it checkable
 
@@ -32,7 +32,7 @@ request for the camera from the app is refused by the browser before any prompt 
 Adding a camera back would mean changing that header, in public, not slipping a call into a screen.
 
 **Two: the browser is told what the app is allowed to contact.** The app ships a content security
-policy whose `connect-src` names its permitted destinations explicitly — the app itself, its
+policy whose `connect-src` names its permitted destinations explicitly: the app itself, its
 database, and the server its recorded lessons are played from. A request to anywhere else does not
 fail quietly; the browser refuses it.
 
@@ -64,7 +64,7 @@ The three things above are not special to us. You can look for them in anything 
 
 Cameras in children's software deserve the suspicion they get. The way to answer that suspicion is
 not a warmer sentence in a privacy policy. It is to build the thing so the sentence would be hard to
-make false, and to say plainly when the thing itself changes — including when a feature this post
+make false, and to say plainly when the thing itself changes, including when a feature this post
 once described is no longer there.
 
 A claim you can check is worth more than a claim you have to believe.

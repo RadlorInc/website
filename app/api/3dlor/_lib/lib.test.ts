@@ -5,7 +5,7 @@ import { createHmac } from 'node:crypto'
 import { sign, verify, readCookie } from './session.ts'
 import { formEncode, verifyWebhook, addMonthsSec, isLiveKey, checkoutParams } from './stripe.ts'
 import { decide, timeline, type Video } from './track.ts'
-import { languagesIn, parseDetails, parseOrder, sniffMime, cleanName, isEmail } from './validate.ts'
+import { languagesIn, languagesSaved, parseDetails, parseOrder, productsIn, sniffMime, cleanName, isEmail } from './validate.ts'
 import { CARE, LANGUAGES, balanceCents, cheaperAt, depositCents, quote } from './plans.ts'
 
 const SECRET = 'x'.repeat(40)
@@ -63,7 +63,8 @@ test('checkout: half the build today, care plan after the free months, our metad
   assert.equal(c.metadata.v3d_order_id, 'o1')
   assert.equal(c.subscription_data.metadata.v3d_order_id, 'o1')
   assert.ok(!/interest|late fee/i.test(JSON.stringify(c.line_items)))
-  assert.match(c.custom_text.after_submit.message, /do not press Back/)
+  assert.match(c.custom_text.submit.message, /do not press Back/)
+  assert.equal('after_submit' in c.custom_text, false) // Stripe shows it before payment too
 })
 
 test('live keys are recognised', () => {
@@ -194,4 +195,18 @@ test('languages: exact count, English always in, no doubles', () => {
   const all = parseOrder(f)
   assert.ok(all.ok && all.data.languages!.length <= 200 && all.size.languages === LANGUAGES.length + 1)
   assert.equal(quote({ videos: 10, products: 1, languages: 3 }).buildCents, 135000 + 2 * 10 * 2000)
+})
+
+test('back to the order form: a saved order fills it again (2026-11-27)', () => {
+  // What the order route writes into notes, read back.
+  assert.equal(productsIn('Products: 3. Languages: English, Spanish. Rate: 40 USD a video.'), 3)
+  assert.equal(productsIn(null), 1)
+  assert.equal(productsIn('Products: x.'), 1)
+  assert.equal(productsIn('Note. Products: 9.'), 1) // only the start of the text counts
+  const [a, b] = LANGUAGES
+  assert.deepEqual(languagesSaved(`English, ${a}`, null), [a])
+  // A long list: the column says "N languages (see notes)", so the notes give the list.
+  assert.deepEqual(languagesSaved('2 languages (see notes)', `Products: 1. Languages: English, ${a}, ${b}. Rate: 1 USD a video.`), [a, b])
+  assert.deepEqual(languagesSaved(null, null), [])
+  assert.deepEqual(languagesSaved('Klingon', 'Languages: Klingon.'), []) // not a language we offer
 })

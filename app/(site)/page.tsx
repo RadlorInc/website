@@ -4,7 +4,9 @@ import type { CSSProperties, ReactNode } from 'react'
 import { APP_NAME, ASK_NAME, COMPANY, SITE_URL, TAGLINE, V3D_CTA, V3D_LINE, V3D_NAME, V3D_PATH, V3D_SIGNUP_PATH, WHY_PATH } from '@/site'
 import { FINDINGS, HOME_EVIDENCE, SOURCES } from '@/content/evidence'
 import { MANUAL, WHOLE, frame } from '@/content/manual-demo'
+import { HomeStory } from '@/components/visual/HomeStory'
 import { SampleStory } from '@/components/visual/SampleStory'
+import { ManualToVideo } from '@/components/visual/ManualToVideo'
 import { ManualScroll } from '@/components/visual/ManualScroll'
 
 /**
@@ -12,8 +14,8 @@ import { ManualScroll } from '@/components/visual/ManualScroll'
  * Paper, stepped stop-motion movement, real frames. No drawn icons, no card grids, no glow: the founder read those as
  * "AI generated". It must not look or read like school. The other two products are two lines at the bottom.
  *
- * ⚠️ Every 3Dlor line restates /3dlor; add no claim here that its page does not make. Standing rules: no price, no
- * delivery time, never say how any video is made, no people or animals in the pictures. The water filter is our own generic sample.
+ * ⚠️ Every 3Dlor line restates /3dlor, except V3D_LINE and HomeStory (founder-approved, 2026-11-24); add no other claim. Standing rules: no price, no
+ * delivery time (only the founder-approved "a single step in minutes"), never say how any video is made, no people or animals in the pictures. The water filter is our own generic sample.
  */
 const focus = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
 const primary = `inline-flex min-h-12 items-center bg-foreground px-6 font-semibold text-background transition-colors hover:bg-accent hover:text-on-accent ${focus}`
@@ -73,17 +75,21 @@ export default function Home() {
   const f = FINDINGS[HOME_EVIDENCE[0]]
   return (
     <div>
-      <ManualScroll>
+      <section className={`${wrap} pt-8 pb-16 sm:pt-12`}>
         <p className="font-medium text-muted">{V3D_NAME} by {COMPANY}</p>
-        <h1 className="mt-4 text-[2.9rem] font-semibold leading-[0.98] tracking-[-0.045em] sm:text-7xl">Your manual, made visible.</h1>
-        <p className="mt-5 max-w-[30rem] text-lg leading-relaxed text-muted sm:text-xl">{V3D_LINE}</p>
-        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <Link href={V3D_SIGNUP_PATH} className={primary}>{V3D_CTA}</Link>
-          <span className="text-muted">Scroll: this page becomes the product.</span>
+        <h1 className="mt-3 text-[2.9rem] font-semibold leading-[0.98] tracking-[-0.045em] sm:text-6xl lg:text-7xl">Your manual, made visible.</h1>
+        <div className="mt-4 flex flex-col items-start gap-x-10 gap-y-5 lg:flex-row lg:items-center lg:justify-between">
+          <p className="max-w-[46rem] text-lg leading-relaxed text-muted">{V3D_LINE}</p>
+          <Link href={V3D_SIGNUP_PATH} className={`${primary} shrink-0`}>{V3D_CTA}</Link>
         </div>
-      </ManualScroll>
+        <ManualToVideo />
+      </section>
+
+      <ManualScroll />
 
       <SampleStory />
+
+      <HomeStory />
 
       <section className={`${wrap} pt-24 sm:pt-36`}>
         <h2 className={`${h2} max-w-[16ch]`}>From your page to their screen.</h2>
@@ -134,7 +140,7 @@ export default function Home() {
         '@type': 'WebPage',
         '@id': `${SITE_URL}/#webpage`,
         url: SITE_URL,
-        name: `${COMPANY} — ${TAGLINE}`,
+        name: `${COMPANY}: ${TAGLINE}`,
         isPartOf: { '@id': `${SITE_URL}/#website` },
         about: { '@id': `${SITE_URL}/#organization` },
         mainEntity: { '@id': `${SITE_URL}${V3D_PATH}#service` },

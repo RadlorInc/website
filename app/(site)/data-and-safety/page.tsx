@@ -33,13 +33,13 @@ export const metadata: Metadata = {
  */
 
 const STORE = [
-  ['The child’s name', 'Whatever you type — a first name or a nickname is fine, and plenty of our families use one — and which of four animal pictures they picked. It is there so the child sees themselves in the app.'],
+  ['The child’s name', 'Whatever you type: a first name or a nickname is fine, and plenty of our families use one, along with which of four animal pictures they picked. It is there so the child sees themselves in the app.'],
   ['An age band', 'Which of six bands they are in. Not a date of birth: we used to have a field for one, never filled it in, and removed it.'],
   ['A username, if you give them one', 'So your child can sign in as themselves. You choose it; they do not need an email address. The password is kept only in scrambled form by the sign-in system, where nobody at Radlor can read it.'],
-  ['Their lessons and progress', 'Which lessons you gave them and any due dates, which topics they have finished, and where practice stands on each — the level reached and whether it is mastered. This is the whole point: it is what lets the next question be the right one.'],
+  ['Their lessons and progress', 'Which lessons you gave them and any due dates, which topics they have finished, and where practice stands on each: the level reached and whether it is mastered. This is the whole point: it is what lets the next question be the right one.'],
   ['Points and game time', 'Each time points were earned or spent, and the game-time settings you choose: on or off, and the most minutes per day.'],
   ['Class exercise results', 'Only if a teacher’s class sets exercises: how each question went and when, which that class’s teacher can see.'],
-  ['The parent’s email, and your PIN', 'Your email is for the account — the address you signed up with, or the one attached to your Google account. The four-digit PIN that guards your dashboard is kept only in scrambled form.'],
+  ['The parent’s email, and your PIN', 'Your email is for the account: the address you signed up with, or the one attached to your Google account. The four-digit PIN that guards your dashboard is kept only in scrambled form.'],
 ]
 
 const NEVER = [
@@ -85,7 +85,7 @@ export default function DataAndSafety() {
             <strong>You.</strong> A parent account can see its own children, and no other family&rsquo;s.
           </p>
           <p>
-            That is not a rule we wrote down and hope everybody follows — the database itself refuses to
+            That is not a rule we wrote down and hope everybody follows: the database itself refuses to
             return another family&rsquo;s rows, and we test that by trying it.
           </p>
           <p>
@@ -94,7 +94,7 @@ export default function DataAndSafety() {
           </p>
           <p>
             <strong>Your child&rsquo;s teacher, if a school is using it.</strong> A teacher can see the
-            students in a class they created — including their class exercise results — and nothing
+            students in a class they created, including their class exercise results, and nothing
             outside it. If you are not using {APP_NAME} through a school, no teacher can see anything.
           </p>
           <p>
@@ -117,7 +117,7 @@ export default function DataAndSafety() {
       more: (
         <>
           <p>
-            Delete a child from your account and everything attached to them goes with it — every session,
+            Delete a child from your account and everything attached to them goes with it: every session,
             every answer, every record. Not marked as hidden: removed. You can download a copy of each
             child&rsquo;s data first, and close the whole account yourself from the account page in the
             parent dashboard, which removes your children and their logins with it. If anything is left
@@ -133,15 +133,14 @@ export default function DataAndSafety() {
         <>
           <p>
             We would rather write this than let you find it out later. {APP_NAME} is early software.
-            Signing up is an email address and a password, or a Google account — it is not one of the
+            Signing up is an email address and a password, or a Google account; it is not one of the
             formal age-verification methods that a regulator such as the American COPPA rules expect of a
             service aimed at young children, and we are not going to claim it is. We are working on it. In
             the meantime the honest position is that an adult sets the account up, and the design assumes
             that adult is nearby.
           </p>
           <p>
-            If a specific requirement matters to you — for a school, a district, or your own peace of mind
-            — write and ask. You will get a straight answer about what we do and do not have, including
+            If a specific requirement matters to you, for a school, a district, or your own peace of mind, write and ask. You will get a straight answer about what we do and do not have, including
             the parts we have not built yet.
           </p>
         </>
@@ -156,7 +155,7 @@ export default function DataAndSafety() {
             <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a> reaches the people who built the thing.
             The full legal policy is published inside the product at{' '}
             <a href={`${APP_URL}/legal/privacy`}>radlic.com/legal/privacy</a>; this page is
-            the same facts without the lawyering. Privacy on this website — as opposed to in the product —
+            the same facts without the lawyering. Privacy on this website, as opposed to in the product,
             is <Link href="/privacy" className="rl-link">its own short page</Link>.
           </p>
         </>
