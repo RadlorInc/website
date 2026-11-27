@@ -102,7 +102,7 @@ export default async function Account({ searchParams }: PageProps<'/3dlor/accoun
         const vids = videos.filter(v => v.order_id === o.id)
         const filesBlock = (
           <>
-            <h3 className="mt-8 font-medium">Your files</h3>
+            <h3 id={`files-${o.id}`} className="mt-8 scroll-mt-24 font-medium">Your files</h3>
             {mine.length > 0 ? (
               <ul className="mt-3 text-sm space-y-1">
                 {mine.map(f => (
@@ -123,7 +123,13 @@ export default async function Account({ searchParams }: PageProps<'/3dlor/accoun
             <h2 className="text-2xl font-display">{o.product_name}</h2>
             <p className="text-muted text-sm mt-1">{o.company} · {o.videos_ordered} videos · ordered {date(o.created_at)}</p>
 
-            {o.payment_status === 'unpaid' && <Progress step={mine.some(f => f.kind === 'manual') ? 5 : 4} />}
+            {/* Going back (founder, 2026-11-27): the finished steps in the bar are links, and "← Back" opens the
+                order form again on this order. Step 1 (email) is "Sign out" at the top. */}
+            {o.payment_status === 'unpaid' && <Progress step={mine.some(f => f.kind === 'manual') ? 5 : 4}
+              go={{ 2: '/3dlor/signup?edit=1', 3: '/3dlor/signup?edit=1&at=you', 4: `#files-${o.id}` }} />}
+            {o.payment_status === 'unpaid' && (
+              <p className="mt-4"><Link className="su-back inline-flex items-center" href="/3dlor/signup?edit=1&at=you">← Back: change videos or details</Link></p>
+            )}
             {o.payment_status === 'unpaid' && filesBlock}
             {o.payment_status === 'refunded' && <p className="mt-6">This order was refunded.</p>}
             {o.payment_status === 'paid' && (

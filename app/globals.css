@@ -1046,6 +1046,10 @@ body:has(.rl-paper) {
 .su-progress ol { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: 0.5rem; list-style: none; padding: 0; }
 .su-progress li { font-size: 0.75rem; color: var(--muted); } .su-progress li::before { content: ''; display: block; height: 12px; margin-bottom: 0.3rem; background: linear-gradient(#ffdf4d, #ffdf4d) 0 / 0% 100% no-repeat #fdfcf8; border: 1px solid #cbc6b9; transition: background-size 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
 .su-progress li[data-done]::before { background-size: 100% 100%; } .su-progress li[data-done] { color: var(--foreground); }
+/* A finished step you can go back to: the whole cell (bar and name) is the tap target, about 44 px tall. */
+.su-progress li { position: relative; } .su-progress li > a, .su-progress li > button { color: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font: inherit; padding: 0; background: none; }
+.su-progress li > a::after, .su-progress li > button::after { content: ''; position: absolute; inset: -10px 0 -10px; }
+.su-progress li:has(> a, > button):hover::before { background: #0b4fb3; } .su-progress li > a:focus-visible, .su-progress li > button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .su-sheet { background: #fdfcf8; color: #23211d; border: 1px solid #d9d4c7; box-shadow: 4px 5px 0 -1px #f4f1e8, 4px 5px 0 0 #d9d4c7, 8px 10px 0 -1px #efebe0, 8px 10px 0 0 #d9d4c7, 0 30px 40px -26px #3a2c1888; padding: clamp(1.3rem, 3vw, 2.2rem); margin-top: 1.6rem; min-width: 0; }
 fieldset.su-sheet:not([hidden]) { animation: su-in 0.72s cubic-bezier(0.16, 1, 0.3, 1); } fieldset.su-sheet[hidden] { display: none; }
 @keyframes su-in { from { transform: translateY(-5rem) rotate(4deg); opacity: 0; } 20% { opacity: 1; } to { transform: none; } }
@@ -1058,8 +1062,9 @@ fieldset.su-sheet:not([hidden]) { animation: su-in 0.72s cubic-bezier(0.16, 1, 0
 .su-check input[aria-invalid] { outline: 2px solid #b3341c; }
 
 .su-pick summary, .su-more summary { cursor: pointer; min-height: 2.75rem; display: flex; align-items: center; text-decoration: underline; text-underline-offset: 4px; font-size: 0.95rem; } .su-pick details p { font-size: 0.95rem; line-height: 1.5; padding-bottom: 0.5rem; } .su-more { margin-top: 1rem; }
-.su-nav { display: flex; gap: 1rem; align-items: center; margin-top: 2rem; }
-.su-next { min-height: 3rem; padding: 0 1.7rem; background: #16181b; color: #fdfcf8; font-weight: 600; cursor: pointer; justify-self: start; } .su-next:hover { background: #0b4fb3; } .su-back { min-height: 3rem; padding: 0 0.6rem; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+.su-nav { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-top: 2rem; }
+.su-next { min-height: 3rem; padding: 0 1.7rem; white-space: nowrap; background: #16181b; color: #fdfcf8; font-weight: 600; cursor: pointer; justify-self: start; } .su-next:hover { background: #0b4fb3; } /* "← Back" is a real button with a border (founder, 2026-11-27: going back must be obvious), lighter than Next. */
+.su-back { min-height: 3rem; padding: 0 1.1rem; border: 2px solid currentColor; white-space: nowrap; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; } .su-back:hover { background: #fff3b0; color: #16181b; }
 .su-next:focus-visible, .su-back:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .su-foot { color: var(--muted); font-size: 0.9rem; margin-top: 1.2rem; overflow-wrap: anywhere; } .su-foot a { text-decoration: underline; text-underline-offset: 3px; } .su-sheet .su-foot { margin: 0; color: #6a665c; }
 .su-art { position: relative; aspect-ratio: 4/3; } .su-art img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; } .su-art img[data-on] { opacity: 1; }

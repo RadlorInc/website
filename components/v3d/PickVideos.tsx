@@ -16,10 +16,11 @@ function Count({ name, title, note, value, set, min }: { name: string; title: st
 }
 
 /** The rate card under the visitor's hand. The browser only shows the sum; the order route works it out again and saves it. */
-export function PickVideos({ bad }: { bad?: string }) {
-  const [videos, setVideos] = useState(String(START_VIDEOS))
-  const [products, setProducts] = useState('1')
-  const [langs, setLangs] = useState<string[]>([])
+export type Picked = { videos: number; products: number; langs: string[] }
+export function PickVideos({ bad, initial }: { bad?: string; initial?: Picked }) {
+  const [videos, setVideos] = useState(String(initial?.videos ?? START_VIDEOS))
+  const [products, setProducts] = useState(String(initial?.products ?? 1))
+  const [langs, setLangs] = useState<string[]>(initial?.langs ?? [])
   const clamp = (v: string, min: number) => Math.max(min, Math.floor(Number(v)) || min)
   const order = { videos: clamp(videos, MIN_VIDEOS), products: clamp(products, 1), languages: 1 + langs.length }
   const q = quote(order)
